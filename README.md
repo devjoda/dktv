@@ -32,3 +32,5 @@ To check whether DR has changed something, run the tests against the real DRTV:
 $ DRTV_LIVE_TESTS=1 pytest tests/test_live_dr.py
 ```
 If they fail, refresh the fixtures with `python -m tests.update_fixtures`, and look at the diff.
+
+GitHub Actions runs the tests on every push, and the tests against DR every morning.
