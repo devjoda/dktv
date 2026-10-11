@@ -18,3 +18,17 @@ Contribution guidelines can be found [here](https://www.youtube.com/watch?v=gWex
 
 ## Hacking instructions
 To start a repl where all the async stuff works, do `python3 -m asyncio`.
+
+Everything we know about DR's JSON format lives in `drtvrss/models.py`.
+
+## Tests
+```
+$ pytest
+```
+The tests run against DR data saved in `tests/fixtures`, so they need no network.
+
+To check whether DR has changed something, run the tests against the real DRTV:
+```
+$ DRTV_LIVE_TESTS=1 pytest tests/test_live_dr.py
+```
+If they fail, refresh the fixtures with `python -m tests.update_fixtures`, and look at the diff.

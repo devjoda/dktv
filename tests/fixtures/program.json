@@ -1,0 +1,102 @@
+{
+ "cache": {
+  "page": {
+   "/program/lise-noergaard_-ikke-kun-en-pige_362031": {
+    "item": {
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='362031'&Width=4933&Height=2775&ImageId='43968372'",
+      "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='362031'&Width=2680&Height=4020&ImageId='43994085'",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='362031'&Width=4933&Height=2775&ImageId='43968374'"
+     },
+     "advisoryText": "",
+     "copyright": "",
+     "credits": [],
+     "customMetadata": [],
+     "distributor": "DRTV",
+     "duration": 2903,
+     "releaseYear": 2023,
+     "eventDate": "0001-01-01T00:00:00.000Z",
+     "sequenceNumber": 0,
+     "offers": [
+      {
+       "deliveryType": "None",
+       "endDate": "2028-01-06T22:59:00Z",
+       "scopes": [
+        "362031"
+       ],
+       "exclusionRules": [],
+       "resolution": "Unknown",
+       "name": "D468078_Program ComingSoon Program_Anonymous2",
+       "availability": "ComingSoon",
+       "ownership": "None",
+       "price": 0,
+       "startDate": "2023-01-07T17:00:00Z"
+      }
+     ],
+     "trailers": [],
+     "scopes": [
+      "362031"
+     ],
+     "categories": [
+      "dokumentar",
+      "kultur",
+      "dr1"
+     ],
+     "channelPath": "",
+     "customFields": {
+      "OwnedCategory": "Dokumentar,Kultur,DR1",
+      "AccessServicesOffered": "StandardVideo",
+      "BrandingChannelShort": "DR1",
+      "BrandingChannelDisplayName": "DR1",
+      "ProductionCountry": "DANMARK",
+      "DisplayCategory": "Dokumentar,Kultur",
+      "TargetAudience": "Adults",
+      "RatingSegment": "DRTV",
+      "PrimaryContentUniverse": "DRTV",
+      "ClassificationRating": "MRAM-ALL",
+      "IsGeoRestricted": "False",
+      "ContextualTitleExtraDetails": "7. JAN 2023 | 48M",
+      "AvailableFrom": "2023-01-07T17:00:00.0000000Z",
+      "PageTitle": "Lise Nørgaard: Ikke kun en pige",
+      "ExtraDetails": "Dokumentar | 48M",
+      "TitleExtraDetails": "DR1 | 48M",
+      "ShortVideoUrl": "https://drod20g.akamaized.net/all/clear/none/3a/63b97270ab5a6223dc40323a/63b97269f54b410c302029a5/stream_fmp4/master_manifest.m3u8",
+      "PathIdSegment": "lise-noergaard_-ikke-kun-en-pige_362031",
+      "ContentUniverses": [
+       "drtv"
+      ]
+     },
+     "customId": "urn:dr:ocs:tv:content:playable:00212124010",
+     "genres": [
+      "ukendt"
+     ],
+     "id": "362031",
+     "type": "program",
+     "keywords": [
+      "person_lise nørgaard",
+      "editorialptaxtop_dokumentar",
+      "editorialptaxsub_kunst/kultur",
+      "culturalorigin_dansk"
+     ],
+     "description": "Forfatter, journalist, folkeeje. Lise Nørgaard har sat sit præg på Danmark gennem sin journalistik, bøger, tv-serier og film. De fleste kender \"Matador\", \"Kun en pige\" og \"Huset på Christianshavn\", men hun har skrevet meget mere end det - og hvis man vil forstå, hvem vi danskere er i dag, og hvad vi kommer fra, så er Lise Nørgaards livsværk et godt sted at starte. Udløber: 6. jan 2028",
+     "shortDescription": "Forfatter, journalist, folkeeje. Lise Nørgaard har sat sit præg på Danmark gennem sin journalistik, bøger, tv-serier og film. De fleste kender \"Matador\", \"Kun en pige\" og \"Huset på Christianshavn\", men hun har skrevet meget mere end det - og hvis man vil ",
+     "contextualTitle": "",
+     "sports": [],
+     "subtype": "",
+     "tagline": "Forfatteren og journalisten satte sit præg på Danmark og danskerne",
+     "themes": [],
+     "title": "Lise Nørgaard: Ikke kun en pige",
+     "vodItemWatchPath": "",
+     "classification": {
+      "code": "DR-Voksen",
+      "name": "Voksen"
+     },
+     "path": "/program/lise-noergaard_-ikke-kun-en-pige_362031",
+     "watchPath": "/se/lise-noergaard_-ikke-kun-en-pige_362031",
+     "genrePaths": [],
+     "totalUserRatings": 0
+    }
+   }
+  }
+ }
+}

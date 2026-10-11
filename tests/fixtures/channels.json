@@ -1,0 +1,313 @@
+{
+ "cache": {
+  "list": {
+   "155156|page_size=24": {
+    "pageRefs": [
+     "/kanal/dr1_20875"
+    ],
+    "list": {
+     "id": "155156",
+     "customFields": {
+      "PathIdSegment": "dr-channels--eva_155156"
+     },
+     "itemTypes": [
+      "channel"
+     ],
+     "description": "",
+     "title": "DR's kanaler",
+     "shortDescription": "",
+     "tagline": "",
+     "themes": [],
+     "path": "/liste/dr-channels--eva_155156",
+     "items": [
+      {
+       "images": {
+        "logo": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20875'&Width=2160&Height=2160&ImageId='2344194'",
+        "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20875'&Width=2160&Height=2160&ImageId='2344192'",
+        "custom": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20875'&Width=3200&Height=1800&ImageId='16087282'",
+        "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20875'&Width=3200&Height=1800&ImageId='16087286'",
+        "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20875'&Width=3200&Height=1800&ImageId='16087284'"
+       },
+       "channelShortCode": "DR1",
+       "offers": [
+        {
+         "deliveryType": "None",
+         "scopes": [
+          "20875"
+         ],
+         "resolution": "Unknown",
+         "availability": "Available",
+         "ownership": "Free",
+         "price": 0
+        }
+       ],
+       "scopes": [
+        "20875"
+       ],
+       "categories": [
+        "dr"
+       ],
+       "channelPath": "",
+       "customFields": {
+        "CHANNEL_GROUPS": "all,danish,largest,drs,news",
+        "channelHexColour": "#FF001E",
+        "noScheduleTitle_max39char": "Programinformation mangler",
+        "noScheduleText_max145char": "DR1 | Vi har lige nu ikke mulighed for at vise mere information om programmet",
+        "isBrandChannel": "True",
+        "PathIdSegment": "dr1_20875",
+        "ContentUniverses": [
+         "drtv"
+        ],
+        "hlsURL": "https://drlivedr1hls.akamaized.net/hls/live/2113625/drlivedr1/master.m3u8",
+        "hlsAlternativeURL": "https://drlivedr1hls.akamaized.net/hls/live/2113625-b/drlivedr1/master.m3u8",
+        "hlsWithSubtitlesURL": "https://drlivedr1texthls.akamaized.net/hls/live/2113624/drlivedr1text/master.m3u8",
+        "hlsSynURL": "https://dr1synhls.akamaized.net/hls/live/2040937/dr1syn/master.m3u8",
+        "hlsURLEu": "https://drlivedr1hls.akamaized.net/hls/live/2113625/drlivedr1/master.m3u8",
+        "hlsAlternativeEuURL": "https://drlivedr1hls.akamaized.net/hls/live/2113625-b/drlivedr1/master.m3u8",
+        "hlsWithSubtitlesURLEu": "https://drlivedr1texthls.akamaized.net/hls/live/2113624/drlivedr1text/master.m3u8",
+        "dashURL": "https://drlivedr1dash.akamaized.net/dash/live/2113631/drlivedr1/manifest.mpd",
+        "dashAlternativeURL": "https://drlivedr1dash.akamaized.net/dash/live/2113631-b/drlivedr1/manifest.mpd",
+        "dashWithSubtitlesURL": "https://drlivedr1textdash.akamaized.net/dash/live/2113630/drlivedr1text/manifest.mpd",
+        "dashWithSubtitlesAlternativeURL": "https://drlivedr1textdash.akamaized.net/dash/live/2113630-b/drlivedr1text/manifest.mpd",
+        "dashEuURL": "na",
+        "dashWithSubtitlesEu": "na",
+        "dashAlternativeEuURL": "na"
+       },
+       "customId": "DR1",
+       "genres": [],
+       "id": "20875",
+       "type": "channel",
+       "keywords": [],
+       "shortDescription": "Klik ind og se DR1 Live her på DRTV. Fortsæt live eller start programmet forfra. Find TV Guide og DR's andre livekanaler: DR2, Ramasjang & Nyheder",
+       "sports": [],
+       "subtype": "",
+       "themes": [],
+       "title": "DR1",
+       "vodItemWatchPath": "",
+       "path": "/kanal/dr1_20875"
+      },
+      {
+       "images": {
+        "logo": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20876'&Width=2160&Height=2160&ImageId='2344196'",
+        "custom": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20876'&Width=3200&Height=1800&ImageId='16087274'",
+        "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20876'&Width=3200&Height=1800&ImageId='16087276'",
+        "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20876'&Width=3200&Height=1800&ImageId='16087278'",
+        "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20876'&Width=2160&Height=2160&ImageId='46461911'"
+       },
+       "channelShortCode": "DR2",
+       "offers": [
+        {
+         "deliveryType": "None",
+         "scopes": [
+          "20876"
+         ],
+         "resolution": "Unknown",
+         "availability": "Available",
+         "ownership": "Free",
+         "price": 0
+        }
+       ],
+       "scopes": [
+        "20876"
+       ],
+       "categories": [
+        "dr"
+       ],
+       "channelPath": "",
+       "customFields": {
+        "CHANNEL_GROUPS": "all,danish,largest,drs,news",
+        "channelHexColour": "#00C8FF",
+        "noScheduleTitle_max39char": "Programinformation mangler",
+        "noScheduleText_max145char": "DR2 | Vi har lige nu ikke mulighed for at vise mere information om programmet",
+        "isBrandChannel": "True",
+        "PathIdSegment": "dr2_20876",
+        "ContentUniverses": [
+         "drtv"
+        ],
+        "hlsURL": "https://drlivedr2hls.akamaized.net/hls/live/2113623/drlivedr2/master.m3u8",
+        "hlsAlternativeURL": "https://drlivedr2hls.akamaized.net/hls/live/2113623-b/drlivedr2/master.m3u8",
+        "hlsWithSubtitlesURL": "https://drlivedr2texthls.akamaized.net/hls/live/2113622/drlivedr2text/master.m3u8",
+        "hlsSynURL": "https://dr2synhls.akamaized.net/hls/live/2013734/dr2syn/master.m3u8",
+        "hlsURLEu": "https://drlivedr2hls.akamaized.net/hls/live/2113623/drlivedr2/master.m3u8",
+        "hlsAlternativeEuURL": "https://drlivedr2hls.akamaized.net/hls/live/2113623-b/drlivedr2/master.m3u8",
+        "hlsWithSubtitlesURLEu": "https://drlivedr2texthls.akamaized.net/hls/live/2113622/drlivedr2text/master.m3u8",
+        "dashURL": "https://drlivedr2dash.akamaized.net/dash/live/2113629/drlivedr2/manifest.mpd",
+        "dashAlternativeURL": "https://drlivedr2dash.akamaized.net/dash/live/2113629-b/drlivedr2/manifest.mpd",
+        "dashWithSubtitlesURL": "https://drlivedr2textdash.akamaized.net/dash/live/2113628/drlivedr2text/manifest.mpd",
+        "dashWithSubtitlesAlternativeURL": "https://drlivedr2textdash.akamaized.net/dash/live/2113628-b/drlivedr2text/manifest.mpd",
+        "dashEuURL": "na",
+        "dashWithSubtitlesEu": "na",
+        "dashAlternativeEuURL": "na"
+       },
+       "customId": "DR2",
+       "genres": [],
+       "id": "20876",
+       "type": "channel",
+       "keywords": [],
+       "shortDescription": "Klik ind og se DR2 Live her på DRTV. Fortsæt live eller start programmet forfra. Find TV Guide og DR's andre livekanaler: DR1, Ramasjang & Nyheder",
+       "sports": [],
+       "subtype": "",
+       "themes": [],
+       "title": "DR2",
+       "vodItemWatchPath": "",
+       "path": "/kanal/dr2_20876"
+      },
+      {
+       "images": {
+        "logo": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='192099'&Width=2160&Height=2160&ImageId='16100142'",
+        "custom": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='192099'&Width=1920&Height=1080&ImageId='49667102'",
+        "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='192099'&Width=1920&Height=1080&ImageId='49667055'",
+        "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='192099'&Width=2160&Height=2160&ImageId='16100144'",
+        "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='192099'&Width=1920&Height=1080&ImageId='49667057'"
+       },
+       "channelShortCode": "EVA",
+       "offers": [
+        {
+         "deliveryType": "None",
+         "scopes": [
+          "192099"
+         ],
+         "resolution": "Unknown",
+         "availability": "Available",
+         "ownership": "Free",
+         "price": 0
+        }
+       ],
+       "scopes": [
+        "192099"
+       ],
+       "categories": [
+        "dr"
+       ],
+       "channelPath": "",
+       "customFields": {
+        "CHANNEL_GROUPS": "all,danish,drs,news",
+        "isBrandChannel": "True",
+        "noScheduleTitle_max39char": "Programinformation mangler",
+        "noScheduleText_max145char": "TVA Live | Vi har lige nu ikke mulighed for at vise mere information om programmet",
+        "PathIdSegment": "drtv_192099",
+        "ContentUniverses": [],
+        "hlsURL": "https://drlivedrtvahls.akamaized.net/hls/live/2113613/drlivedrtva/master.m3u8",
+        "hlsAlternativeURL": "https://drlivedrtvahls.akamaized.net/hls/live/2113613-b/drlivedrtva/master.m3u8",
+        "hlsWithSubtitlesURL": "https://drlivedrtvatexthls.akamaized.net/hls/live/2113612/drlivedrtvatext/master.m3u8",
+        "hlsURLEu": "https://drlivedrtvahls.akamaized.net/hls/live/2113613/drlivedrtva/master.m3u8",
+        "hlsAlternativeEuURL": "https://drlivedrtvahls.akamaized.net/hls/live/2113613-b/drlivedrtva/master.m3u8",
+        "hlsWithSubtitlesURLEu": "https://drlivedrtvatexthls.akamaized.net/hls/live/2113612/drlivedrtvatext/master.m3u8",
+        "dashURL": "https://drlivedrtvadash.akamaized.net/dash/live/2113619/drlivedrtva/manifest.mpd",
+        "dashAlternativeURL": "https://drlivedrtvadash.akamaized.net/dash/live/2113619-b/drlivedrtva/manifest.mpd",
+        "dashWithSubtitlesURL": "https://drlivedrtvatextdash.akamaized.net/dash/live/2113618/drlivedrtvatext/manifest.mpd",
+        "dashWithSubtitlesAlternativeURL": "https://drlivedrtvatextdash.akamaized.net/dash/live/2113618-b/drlivedrtvatext/manifest.mpd",
+        "hlsSynURL": "na",
+        "dashEuURL": "na",
+        "dashWithSubtitlesEu": "na",
+        "dashAlternativeEuURL": "na"
+       },
+       "customId": "EVA",
+       "genres": [],
+       "id": "192099",
+       "type": "channel",
+       "keywords": [
+        "eva"
+       ],
+       "shortDescription": "Hold dig opdateret med den seneste TV Avisen her på TVA Live. Start programmet forfra eller fortsæt live. Find også: DR1, DR2 & Ramasjang Live",
+       "contextualTitle": "DRTV",
+       "sports": [],
+       "subtype": "",
+       "themes": [],
+       "title": "TVA Live",
+       "vodItemWatchPath": "",
+       "path": "/kanal/tva-live_192099"
+      },
+      {
+       "images": {
+        "logo": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20892'&Width=2160&Height=2160&ImageId='6679944'",
+        "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20892'&Width=3200&Height=1800&ImageId='16087290'",
+        "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20892'&Width=2160&Height=2160&ImageId='2399380'",
+        "custom": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20892'&Width=3200&Height=1800&ImageId='16087288'",
+        "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='20892'&Width=3200&Height=1800&ImageId='16087292'"
+       },
+       "channelShortCode": "TVR",
+       "offers": [
+        {
+         "deliveryType": "None",
+         "scopes": [
+          "20892"
+         ],
+         "resolution": "Unknown",
+         "availability": "Available",
+         "ownership": "Free",
+         "price": 0
+        }
+       ],
+       "scopes": [
+        "20892"
+       ],
+       "categories": [
+        "dr"
+       ],
+       "channelPath": "",
+       "customFields": {
+        "CHANNEL_GROUPS": "all,danish,largest,drs,children",
+        "channelHexColour": "#1AFFFF",
+        "epg_channel_bg_color": "#FFFFFF",
+        "noScheduleTitle_max39char": "Programinformation mangler",
+        "noScheduleText_max145char": "DR Ramasjang | Vi har lige nu ikke mulighed for at vise mere information om programmet",
+        "isBrandChannel": "True",
+        "PathIdSegment": "dr-ramasjang_20892",
+        "ContentUniverses": [],
+        "hlsURL": "https://drlivedrrhls.akamaized.net/hls/live/2113621/drlivedrr/master.m3u8",
+        "hlsAlternativeURL": "https://drlivedrrhls.akamaized.net/hls/live/2113621-b/drlivedrr/master.m3u8",
+        "hlsWithSubtitlesURL": "https://drlivedrrtexthls.akamaized.net/hls/live/2113620/drlivedrrtext/master.m3u8",
+        "hlsURLEu": "https://drlivedrrhls.akamaized.net/hls/live/2113621/drlivedrr/master.m3u8",
+        "hlsAlternativeEuURL": "https://drlivedrrhls.akamaized.net/hls/live/2113621-b/drlivedrr/master.m3u8",
+        "hlsWithSubtitlesURLEu": "https://drlivedrrtexthls.akamaized.net/hls/live/2113620/drlivedrrtext/master.m3u8",
+        "dashURL": "https://drlivedrrdash.akamaized.net/dash/live/2113627/drlivedrr/manifest.mpd",
+        "dashAlternativeURL": "https://drlivedrrdash.akamaized.net/dash/live/2113627-b/drlivedrr/manifest.mpd",
+        "dashWithSubtitlesURL": "https://drlivedrrtextdash.akamaized.net/dash/live/2113626/drlivedrrtext/manifest.mpd",
+        "dashWithSubtitlesAlternativeURL": "https://drlivedrrtextdash.akamaized.net/dash/live/2113626-b/drlivedrrtext/manifest.mpd",
+        "hlsSynURL": "na",
+        "dashEuURL": "na",
+        "dashWithSubtitlesEu": "na",
+        "dashAlternativeEuURL": "na"
+       },
+       "customId": "TVR",
+       "genres": [],
+       "id": "20892",
+       "type": "channel",
+       "keywords": [],
+       "shortDescription": "Klik ind og se Ramasjang Live her på DRTV. Start programmet forfra eller fortsæt live. Find også DR's andre livekanaler: DR1, DR2 & Nyheder",
+       "sports": [],
+       "subtype": "",
+       "themes": [
+        {
+         "colors": [
+          {
+           "name": "Primary",
+           "opacity": 1,
+           "value": "#00FEFE"
+          }
+         ],
+         "type": "Background"
+        }
+       ],
+       "title": "DR Ramasjang",
+       "vodItemWatchPath": "",
+       "path": "/kanal/dr-ramasjang_20892"
+      }
+     ],
+     "size": 4,
+     "paging": {
+      "total": 1,
+      "page": 1,
+      "size": 24,
+      "options": {
+       "pageSize": 24
+      }
+     },
+     "key": "155156|page_size=24"
+    },
+    "updateTime": 1791755078069
+   }
+  }
+ }
+}
