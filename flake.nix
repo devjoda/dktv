@@ -65,6 +65,9 @@
               environment.SERVICE_NAME = config.services.drtvrss.service_name;
               environment.BASE_URL = config.services.drtvrss.base_url;
               environment.PYTHONPATH = "${servsrc}";
+              # Without this, Python buffers print() when not writing to a terminal,
+              # so log lines would reach the journal late and in batches
+              environment.PYTHONUNBUFFERED = "1";
               environment.RECOMMENDED_SHOWS = let
                 join = d: l:
                   if pkgs.lib.length l == 0
