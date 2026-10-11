@@ -1,0 +1,22 @@
+[project]
+name = "drtvrss"
+version = "0.1.0"
+description = "An alternative frontend for DRTV, with RSS feeds"
+readme = "README.md"
+license = "AGPL-3.0-only"
+# The lowest versions are those in flake.nix, which CI tests with.
+# Except Quart: 0.19 breaks with Flask 3.1, but doesn't say so itself
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.10.10",
+    "certifi>=2024.8.30",
+    "hypercorn>=0.16.0",
+    "pydantic>=2.9.2",
+    "quart>=0.20.0",
+]
+
+[dependency-groups]
+dev = [
+    "pylint>=3.3.1",
+    "pytest>=8.3.3",
+]
