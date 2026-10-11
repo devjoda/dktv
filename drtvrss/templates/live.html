@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block head %}
 <title>{{ channel.title }}</title>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.7.3/dist/hls.min.js" integrity="sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX" crossorigin="anonymous"></script>
+<script src="/static/player.js"></script>
 {% endblock %}
 {% block content %}
 <div class="container-fluid pt-2">
@@ -18,25 +19,6 @@ video {
 }
 </style>
 <script>
-    var video = document.getElementById('video');
-
-    async function start() {
-        const videoSrc = "{{ channel.stream_url }}";
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.ERROR, function (event, data) {
-                console.log(data);
-                if (data.details == Hls.ErrorDetails.MANIFEST_LOAD_ERROR) {
-                    alert("Kunne ikke indlæse videoen. Formentligt befinder du dig udenfor Danmark, og forsøger at se noget der kun er tilgængeligt hjemme.");
-                }
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = videoSrc;
-        }
-    }
-
-    start()
+    attachStream(document.getElementById('video'), {{ channel.stream_url|tojson }});
 </script>
 {% endblock %}

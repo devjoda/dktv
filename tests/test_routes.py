@@ -75,3 +75,18 @@ def test_dr_style_links_redirect(get):
         r = get(path)
         assert r.status_code == 302
         assert r.location == "/rejseholdet_503605/"
+
+
+def test_player_script(get):
+    r = get("/static/player.js")
+    assert r.status_code == 200
+    assert "javascript" in r.content_type
+    assert "async function playVideo(" in r.text
+
+
+def test_players_load_pinned_hls_js_and_player_script(get):
+    for path in ["/program/lise-noergaard_-ikke-kun-en-pige_362031", "/live/DR1"]:
+        text = get(path).text
+        assert "hls.js@latest" not in text
+        assert '<script src="https://cdn.jsdelivr.net/npm/hls.js@1.7.3/' in text
+        assert '<script src="/static/player.js"></script>' in text
