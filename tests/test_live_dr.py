@@ -9,6 +9,7 @@ import asyncio
 import os
 
 import pytest
+from werkzeug.exceptions import NotFound
 
 from drtvrss import drtv, live
 
@@ -53,6 +54,11 @@ def test_program():
 def test_channels():
     channels = run(live.get_channels)
     assert ".m3u8" in channels["DR1"].stream_url
+
+
+def test_missing_item():
+    with pytest.raises(NotFound):
+        run(drtv.get_api, "/items/1")
 
 
 def test_search():

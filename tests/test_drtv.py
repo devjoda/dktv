@@ -3,30 +3,28 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
 import pytest
+from aiohttp import web
+from aiohttp.test_utils import TestServer
+from werkzeug.exceptions import NotFound
 
 from drtvrss import drtv, models as dr
 from drtvrss.show import BASE_URL, Episode
 
 from .conftest import load
 
-SEASON_PATHS = [
-    "/saeson/rejseholdet_503606",
-    "/saeson/rejseholdet_503607",
-    "/saeson/rejseholdet_-saeson-3_503611",
-    "/saeson/rejseholdet_-saeson-4_503612",
-]
+SEASON_IDS = ["503606", "503607", "503611", "503612"]
 
 
 def latest_season(blob=None) -> dr.Season:
-    return dr.SeriesPage.model_validate(blob or load("series.json")).latest_season()
+    return dr.Season.model_validate(blob or load("items_503612.json"))
 
 
 def seasons() -> dict[str, dr.Season]:
     return {
-        path: dr.Page[dr.Season]
-        .model_validate(load(f"season_{path.split('_')[-1]}.json"))
-        .item(path)
-        for path in SEASON_PATHS
+        season.path: season
+        for season in (
+            dr.Season.model_validate(load(f"items_{i}.json")) for i in SEASON_IDS
+        )
     }
 
 
@@ -59,17 +57,15 @@ def test_build_show():
 
 
 def test_build_show_next_episode():
-    blob = load("series.json")
-    latest = list(blob["cache"]["itemDetail"].values())[-1]["item"]
-    latest["show"]["nextEpisode"] = {"availableUTC": "1760000000"}
+    blob = load("items_503612.json")
+    blob["show"]["nextEpisode"] = {"availableUTC": "1760000000"}
     show = drtv.build_show(latest_season(blob), seasons())
     assert show.next_episode == datetime.fromtimestamp(1760000000)
 
 
 def test_build_show_names_seasons_by_year_without_season_number():
-    blob = load("series.json")
-    latest = list(blob["cache"]["itemDetail"].values())[-1]["item"]
-    del latest["show"]["seasons"]["items"][0]["seasonNumber"]
+    blob = load("items_503612.json")
+    del blob["show"]["seasons"]["items"][0]["seasonNumber"]
     show = drtv.build_show(latest_season(blob), seasons())
     assert show.seasons[0].title == "2000"
 
@@ -102,14 +98,32 @@ def test_build_search_result():
 def test_get_show_fetches_all_seasons_and_caches(fake_dr):
     show = asyncio.run(drtv.get_show("rejseholdet_503605"))
     assert len(show.seasons) == 4
+    # The show's wallpaper is the latest season's, like on DR's own site
+    assert show.wallpaper == latest_season().images.wallpaper
     assert sorted(fake_dr) == sorted(
-        ["https://www.dr.dk/drtv/serie/503605"]
-        + ["https://www.dr.dk/drtv" + p for p in SEASON_PATHS]
+        ["/items/503605?expand=all"] + [f"/items/{i}?expand=all" for i in SEASON_IDS]
     )
 
     fake_dr.clear()
     assert asyncio.run(drtv.get_show("rejseholdet_503605")) is show
     assert fake_dr == []
+
+
+def test_get_show_of_something_else_is_not_found(fake_dr):
+    with pytest.raises(NotFound):
+        asyncio.run(drtv.get_show("lise-noergaard_-ikke-kun-en-pige_362031"))
+
+
+def test_get_show_without_seasons(fake_dr, monkeypatch):
+    blob = load("items_503605.json")
+    blob["seasons"]["items"] = []
+
+    async def get_api(path, **params):
+        return blob
+
+    monkeypatch.setattr(drtv, "get_api", get_api)
+    with pytest.raises(ValueError, match="no seasons"):
+        asyncio.run(drtv.get_show("rejseholdet_503605"))
 
 
 def test_get_long_description(fake_dr):
@@ -125,14 +139,13 @@ def test_get_long_description_falls_back_to_short_description(fake_dr):
 
 
 def test_get_long_description_without_description_on_dr(fake_dr, monkeypatch):
-    blob = load("episode.json")
-    for page in blob["cache"]["page"].values():
-        del page["item"]["description"]
+    blob = load("items_540744.json")
+    del blob["description"]
 
-    async def get_jsonblob(url):
+    async def get_api(path, **params):
         return blob
 
-    monkeypatch.setattr(drtv, "get_jsonblob", get_jsonblob)
+    monkeypatch.setattr(drtv, "get_api", get_api)
     ep = Episode("x", short_description="Kort", url="/episode/matador_-foedselsdagen_540744")
     asyncio.run(drtv.get_long_description(ep))
     assert ep.description == "Kort"
@@ -141,7 +154,7 @@ def test_get_long_description_without_description_on_dr(fake_dr, monkeypatch):
 def test_get_show_refetches_when_older_than_max_age(fake_dr):
     show = asyncio.run(drtv.get_show("rejseholdet_503605"))
     assert asyncio.run(drtv.get_show("rejseholdet_503605", max_age=0)) is not show
-    assert fake_dr.count("https://www.dr.dk/drtv/serie/503605") == 2
+    assert fake_dr.count("/items/503605?expand=all") == 2
 
 
 def test_search_is_cached(fake_dr):
@@ -166,4 +179,28 @@ def test_search_cache_forgets_the_oldest_search(fake_dr, monkeypatch):
 
 def test_requests_need_an_http_session():
     with pytest.raises(RuntimeError, match="http_session"):
-        asyncio.run(drtv.get_jsonblob("https://www.dr.dk/drtv/serie/503605"))
+        asyncio.run(drtv.get_api("/items/503605"))
+
+
+def test_get_api(monkeypatch):
+    """Against a stand-in for DR's API, since the other tests replace get_api"""
+    requests = []
+
+    async def handler(request):
+        requests.append((request.path, dict(request.query)))
+        if request.path == "/api/items/1":
+            return web.json_response({"message": "Item '1' not found"}, status=404)
+        return web.json_response({"id": "503605"})
+
+    async def run():
+        app = web.Application()
+        app.router.add_get("/{path:.*}", handler)
+        async with TestServer(app) as server:
+            monkeypatch.setattr(drtv, "API", str(server.make_url("/api")))
+            async with drtv.http_session():
+                assert await drtv.get_api("/items/503605", expand="all") == {"id": "503605"}
+                with pytest.raises(NotFound):
+                    await drtv.get_api("/items/1")
+
+    asyncio.run(run())
+    assert requests[0] == ("/api/items/503605", drtv.API_PARAMS | {"expand": "all"})

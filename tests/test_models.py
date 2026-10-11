@@ -82,40 +82,32 @@ def test_geo_restriction_is_parsed_from_strings():
     assert not dr.CustomFields.model_validate({}).is_geo_restricted
 
 
-def test_series_page():
-    latest = dr.SeriesPage.model_validate(load("series.json")).latest_season()
-    assert latest.show.title == "Rejseholdet"
-    assert latest.show.path == "/serie/rejseholdet_503605"
-    assert [s.season_number for s in latest.show.seasons.items] == [1, 2, 3, 4]
-
-
-def test_series_page_without_a_season_is_an_error():
-    blob = load("series.json")
-    item_detail = blob["cache"]["itemDetail"]
-    for key in list(item_detail)[1:]:
-        del item_detail[key]
-    with pytest.raises(ValueError, match="got show"):
-        dr.SeriesPage.model_validate(blob).latest_season()
+def test_show_item():
+    show = dr.Show.model_validate(load("items_503605.json"))
+    assert show.title == "Rejseholdet"
+    assert show.path == "/serie/rejseholdet_503605"
+    assert [s.id for s in show.seasons.items] == ["503606", "503607", "503611", "503612"]
+    assert [s.season_number for s in show.seasons.items] == [1, 2, 3, 4]
 
 
 def test_missing_required_field_names_its_location():
     """The point of the models: when DR changes their format,
     the error says exactly what changed and where"""
-    blob = load("series.json")
-    latest = list(blob["cache"]["itemDetail"].values())[-1]["item"]
-    del latest["show"]["title"]
+    blob = load("items_503612.json")
+    del blob["show"]["title"]
     with pytest.raises(ValidationError) as e:
-        dr.SeriesPage.model_validate(blob)
+        dr.Season.model_validate(blob)
     [error] = e.value.errors()
     assert error["type"] == "missing"
-    assert error["loc"][-4:] == ("item", "season", "show", "title")
+    assert error["loc"] == ("show", "title")
 
 
-def test_season_page():
-    season = dr.Page[dr.Season].model_validate(load("season_503606.json"))
-    item = season.item("/saeson/rejseholdet_503606")
-    assert item.title == "Rejseholdet"
-    first = item.episodes.items[0]
+def test_season_item():
+    season = dr.Season.model_validate(load("items_503606.json"))
+    assert season.title == "Rejseholdet"
+    assert season.show.title == "Rejseholdet"
+    assert len(season.show.seasons.items) == 4
+    first = season.episodes.items[0]
     assert first.path == "/episode/rejseholdet_503615"
     assert first.display_title == "1. episode"
     assert first.len_minutes == 59
@@ -123,38 +115,28 @@ def test_season_page():
     assert first.images.wallpaper.startswith("https://")
 
 
-def test_episode_page():
-    item = dr.Page[dr.Episode].model_validate(load("episode.json")).item()
+def test_a_show_is_not_a_season():
+    with pytest.raises(ValidationError):
+        dr.Season.model_validate(load("items_503605.json"))
+
+
+def test_episode_item():
+    item = dr.Episode.model_validate(load("items_540744.json"))
     assert item.title == "Matador: Fødselsdagen"
     assert len(item.description) > len(item.short_description)
 
 
-def test_program_page():
-    item = dr.Page[dr.Item].model_validate(load("program.json")).item()
+def test_program_item():
+    item = dr.Item.model_validate(load("items_362031.json"))
     assert item.title == "Lise Nørgaard: Ikke kun en pige"
     assert item.path == "/program/lise-noergaard_-ikke-kun-en-pige_362031"
 
 
-def test_channel_page():
-    channels = dr.ChannelPage.model_validate(load("channels.json")).channels()
-    dr1 = next(c for c in channels if c.channel_short_code == "DR1")
+def test_channel_list():
+    channels = dr.ItemList[dr.Channel].model_validate(load("lists_155156.json"))
+    dr1 = next(c for c in channels.items if c.channel_short_code == "DR1")
     assert dr1.title == "DR1"
     assert ".m3u8" in dr1.custom_fields.hls_url
-
-
-def test_channel_page_skips_other_lists():
-    blob = load("channels.json")
-    blob["cache"]["list"] = {
-        "Bookmarks": {"list": {"items": []}},
-        **blob["cache"]["list"],
-    }
-    channels = dr.ChannelPage.model_validate(blob).channels()
-    assert "DR1" in [c.channel_short_code for c in channels]
-
-
-def test_channel_page_without_channels():
-    blob = {"cache": {"list": {"Bookmarks": {"list": {"items": []}}}}}
-    assert dr.ChannelPage.model_validate(blob).channels() == []
 
 
 def test_search_response():

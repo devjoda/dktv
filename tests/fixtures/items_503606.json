@@ -1,0 +1,1250 @@
+{
+ "images": {
+  "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503606'&Width=1920&Height=1080&ImageId='62325415'",
+  "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503606'&Width=1440&Height=2160&ImageId='62325419'",
+  "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503606'&Width=1920&Height=1080&ImageId='62325423'"
+ },
+ "advisoryText": "",
+ "copyright": "",
+ "credits": [],
+ "customMetadata": [],
+ "distributor": "DRTV",
+ "releaseYear": 2000,
+ "availableEpisodeCount": 9,
+ "seasonNumber": 1,
+ "showId": "503605",
+ "episodeCount": 0,
+ "offers": [
+  {
+   "deliveryType": "StreamOrDownload",
+   "endDate": "2028-03-15T22:59:00Z",
+   "scopes": [
+    "503606"
+   ],
+   "exclusionRules": [],
+   "resolution": "HD-1080",
+   "id": "ID0EFD",
+   "name": "D468078_Season Free HD-1080 Season",
+   "availability": "Available",
+   "ownership": "Free",
+   "price": 0,
+   "startDate": "2026-09-15T04:00:00Z"
+  }
+ ],
+ "trailers": [],
+ "scopes": [
+  "503606"
+ ],
+ "categories": [
+  "fiktionsserie",
+  "krimi",
+  "gensyn",
+  "dr gensyn"
+ ],
+ "channelPath": "",
+ "customFields": {
+  "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+  "BrandingChannelShort": "TVG",
+  "BrandingChannelDisplayName": "DR Gensyn",
+  "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+  "TargetAudience": "Adults",
+  "RatingSegment": "DRTV",
+  "PrimaryContentUniverse": "DRTV",
+  "ClassificationRating": "MRAM-15",
+  "IsGeoRestricted": "False",
+  "PresentationTypeCode": "Show",
+  "IsSeasonDRMPlayoutRequired": "False",
+  "PageTitle": "Rejseholdet: Sæson 1",
+  "ExtraDetails": "Fiktionsserie | SÆSON 1",
+  "PathIdSegment": "rejseholdet_503606",
+  "ContentUniverses": [
+   "drtv"
+  ]
+ },
+ "customId": "urn:dr:ocs:tv:content:season:751989622000",
+ "genres": [
+  "ukendt"
+ ],
+ "id": "503606",
+ "type": "season",
+ "keywords": [],
+ "description": "Dansk krimiserie 2000-2003. Charlotte Fich, Mads Mikkelsen og Lars Brygmann er blandt de mange stærke navne, der medvirker i den Emmy-belønnede dramaserie - baseret på virkelige kriminalsager.",
+ "shortDescription": "Dansk krimiserie 2000-2003. Charlotte Fich, Mads Mikkelsen og Lars Brygmann er blandt de mange stærke navne, der medvirker i den Emmy-belønnede dramaserie - baseret på virkelige kriminalsager.",
+ "contextualTitle": "",
+ "sports": [],
+ "subtype": "",
+ "themes": [],
+ "title": "Rejseholdet",
+ "vodItemWatchPath": "",
+ "classification": {
+  "code": "DR-Voksen",
+  "name": "Voksen"
+ },
+ "path": "/saeson/rejseholdet_503606",
+ "genrePaths": [],
+ "totalUserRatings": 0,
+ "show": {
+  "images": {
+   "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503605'&Width=1920&Height=1080&ImageId='62325408'",
+   "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503605'&Width=1440&Height=2160&ImageId='62325410'",
+   "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503605'&Width=1920&Height=1080&ImageId='62325412'"
+  },
+  "advisoryText": "",
+  "copyright": "",
+  "credits": [],
+  "customMetadata": [],
+  "distributor": "",
+  "availableSeasonCount": 4,
+  "offers": [
+   {
+    "deliveryType": "None",
+    "endDate": "2028-03-15T22:59:00Z",
+    "scopes": [
+     "503605"
+    ],
+    "exclusionRules": [],
+    "resolution": "Unknown",
+    "id": "ID0EVB",
+    "name": "D468078_Show Free  Show",
+    "availability": "Available",
+    "ownership": "Free",
+    "price": 0,
+    "startDate": "2026-09-15T04:00:00Z"
+   }
+  ],
+  "trailers": [],
+  "scopes": [
+   "503605"
+  ],
+  "categories": [
+   "fiktionsserie",
+   "krimi",
+   "gensyn",
+   "dr gensyn",
+   "acc_spoken_subtitles"
+  ],
+  "channelPath": "",
+  "customFields": {
+   "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+   "BrandingChannelShort": "TVG",
+   "BrandingChannelDisplayName": "DR Gensyn",
+   "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+   "TargetAudience": "Adults",
+   "RatingSegment": "DRTV",
+   "PrimaryContentUniverse": "DRTV",
+   "ClassificationRating": "MRAM-15",
+   "PresentationTypeCode": "Show",
+   "IsGeoRestricted": "False",
+   "IsSeriesDRMPlayoutRequired": "False",
+   "PageTitle": "Rejseholdet",
+   "ExtraDetails": "Fiktionsserie | 4 SÆSONER",
+   "TitleExtraDetails": "DR Gensyn | 4 SÆSONER",
+   "ShortVideoUrl": "https://drod22n.akamaized.net/all/clear/none/72/68b7de78bf401e3210c19772/68b7de719d741e22284c2074/stream_fmp4/master_manifest.m3u8",
+   "PathIdSegment": "rejseholdet_503605",
+   "ContentUniverses": [
+    "drtv"
+   ]
+  },
+  "customId": "urn:dr:ocs:tv:content:series:755327011000",
+  "genres": [
+   "ukendt"
+  ],
+  "id": "503605",
+  "type": "show",
+  "keywords": [
+   "editorialptaxtop_serier",
+   "editorialptaxsub_krimi",
+   "mood_nervepirrende",
+   "culturalorigin_dansk"
+  ],
+  "description": "Dansk krimiserie 2000-2003. Charlotte Fich, Mads Mikkelsen og Lars Brygmann er blandt de mange stærke navne, der medvirker i den Emmy-belønnede dramaserie - baseret på virkelige kriminalsager.",
+  "shortDescription": "Dansk krimiserie 2000-2003. Charlotte Fich, Mads Mikkelsen og Lars Brygmann er blandt de mange stærke navne, der medvirker i den Emmy-belønnede dramaserie - baseret på virkelige kriminalsager.",
+  "contextualTitle": "",
+  "sports": [],
+  "subtype": "",
+  "tagline": "Se eller gense den Emmy-belønnede krimiserie",
+  "themes": [],
+  "title": "Rejseholdet",
+  "vodItemWatchPath": "",
+  "path": "/serie/rejseholdet_503605",
+  "genrePaths": [],
+  "totalUserRatings": 0,
+  "seasons": {
+   "id": "503605-seasons",
+   "path": "",
+   "items": [
+    {
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503606'&Width=1920&Height=1080&ImageId='62325415'",
+      "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503606'&Width=1440&Height=2160&ImageId='62325419'",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503606'&Width=1920&Height=1080&ImageId='62325423'"
+     },
+     "releaseYear": 2000,
+     "availableEpisodeCount": 9,
+     "seasonNumber": 1,
+     "showId": "503605",
+     "episodeCount": 0,
+     "offers": [
+      {
+       "deliveryType": "StreamOrDownload",
+       "scopes": [
+        "503606"
+       ],
+       "resolution": "HD-1080",
+       "availability": "Available",
+       "ownership": "Free",
+       "price": 0
+      }
+     ],
+     "scopes": [
+      "503606"
+     ],
+     "categories": [
+      "fiktionsserie",
+      "krimi",
+      "gensyn",
+      "dr gensyn"
+     ],
+     "channelPath": "",
+     "customFields": {
+      "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+      "BrandingChannelShort": "TVG",
+      "BrandingChannelDisplayName": "DR Gensyn",
+      "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+      "TargetAudience": "Adults",
+      "RatingSegment": "DRTV",
+      "PrimaryContentUniverse": "DRTV",
+      "ClassificationRating": "MRAM-15",
+      "IsGeoRestricted": "False",
+      "PresentationTypeCode": "Show",
+      "IsSeasonDRMPlayoutRequired": "False",
+      "PageTitle": "Rejseholdet: Sæson 1",
+      "ExtraDetails": "Fiktionsserie | SÆSON 1",
+      "PathIdSegment": "rejseholdet_503606",
+      "ContentUniverses": [
+       "drtv"
+      ]
+     },
+     "customId": "urn:dr:ocs:tv:content:season:751989622000",
+     "genres": [
+      "ukendt"
+     ],
+     "id": "503606",
+     "type": "season",
+     "keywords": [],
+     "shortDescription": "Dansk krimiserie 2000-2003. Charlotte Fich, Mads Mikkelsen og Lars Brygmann er blandt de mange stærke navne, der medvirker i den Emmy-belønnede dramaserie - baseret på virkelige kriminalsager.",
+     "contextualTitle": "",
+     "sports": [],
+     "subtype": "",
+     "themes": [],
+     "title": "Rejseholdet",
+     "vodItemWatchPath": "",
+     "classification": {
+      "code": "DR-Voksen",
+      "name": "Voksen"
+     },
+     "path": "/saeson/rejseholdet_503606"
+    },
+    {
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503607'&Width=1920&Height=1080&ImageId='62325416'",
+      "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503607'&Width=1440&Height=2160&ImageId='62325420'",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503607'&Width=1920&Height=1080&ImageId='62325424'"
+     },
+     "releaseYear": 2001,
+     "availableEpisodeCount": 7,
+     "seasonNumber": 2,
+     "showId": "503605",
+     "episodeCount": 0,
+     "offers": [
+      {
+       "deliveryType": "StreamOrDownload",
+       "scopes": [
+        "503607"
+       ],
+       "resolution": "HD-1080",
+       "availability": "Available",
+       "ownership": "Free",
+       "price": 0
+      }
+     ],
+     "scopes": [
+      "503607"
+     ],
+     "categories": [
+      "fiktionsserie",
+      "krimi",
+      "gensyn",
+      "dr gensyn",
+      "acc_spoken_subtitles"
+     ],
+     "channelPath": "",
+     "customFields": {
+      "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+      "BrandingChannelShort": "TVG",
+      "BrandingChannelDisplayName": "DR Gensyn",
+      "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+      "TargetAudience": "Adults",
+      "RatingSegment": "DRTV",
+      "PrimaryContentUniverse": "DRTV",
+      "ClassificationRating": "MRAM-15",
+      "IsGeoRestricted": "False",
+      "PresentationTypeCode": "Show",
+      "IsSeasonDRMPlayoutRequired": "False",
+      "PageTitle": "Rejseholdet: Sæson 2",
+      "ExtraDetails": "Fiktionsserie | SÆSON 2",
+      "PathIdSegment": "rejseholdet_503607",
+      "ContentUniverses": [
+       "drtv"
+      ]
+     },
+     "customId": "urn:dr:ocs:tv:content:season:751946290000",
+     "genres": [
+      "ukendt"
+     ],
+     "id": "503607",
+     "type": "season",
+     "keywords": [],
+     "shortDescription": "Dansk krimiserie 2000-2003. Charlotte Fich, Mads Mikkelsen og Lars Brygmann er blandt de mange stærke navne, der medvirker i den Emmy-belønnede dramaserie - baseret på virkelige kriminalsager.",
+     "contextualTitle": "",
+     "sports": [],
+     "subtype": "",
+     "themes": [],
+     "title": "Rejseholdet",
+     "vodItemWatchPath": "",
+     "classification": {
+      "code": "DR-Voksen",
+      "name": "Voksen"
+     },
+     "path": "/saeson/rejseholdet_503607"
+    },
+    {
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503611'&Width=1920&Height=1080&ImageId='62325445'",
+      "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503611'&Width=1440&Height=2160&ImageId='62325449'",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503611'&Width=1920&Height=1080&ImageId='62325451'"
+     },
+     "releaseYear": 2002,
+     "availableEpisodeCount": 14,
+     "seasonNumber": 3,
+     "showId": "503605",
+     "episodeCount": 14,
+     "offers": [
+      {
+       "deliveryType": "StreamOrDownload",
+       "scopes": [
+        "503611"
+       ],
+       "resolution": "HD-1080",
+       "availability": "Available",
+       "ownership": "Free",
+       "price": 0
+      }
+     ],
+     "scopes": [
+      "503611"
+     ],
+     "categories": [
+      "fiktionsserie",
+      "krimi",
+      "gensyn",
+      "dr gensyn",
+      "acc_spoken_subtitles"
+     ],
+     "channelPath": "",
+     "customFields": {
+      "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+      "BrandingChannelShort": "TVG",
+      "BrandingChannelDisplayName": "DR Gensyn",
+      "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+      "TargetAudience": "Adults",
+      "RatingSegment": "DRTV",
+      "PrimaryContentUniverse": "DRTV",
+      "ClassificationRating": "MRAM-15",
+      "IsGeoRestricted": "False",
+      "PresentationTypeCode": "Show",
+      "IsSeasonDRMPlayoutRequired": "False",
+      "PageTitle": "Rejseholdet: Sæson 3",
+      "ExtraDetails": "Fiktionsserie | SÆSON 3",
+      "PathIdSegment": "rejseholdet_-saeson-3_503611",
+      "ContentUniverses": [
+       "drtv"
+      ]
+     },
+     "customId": "urn:dr:ocs:tv:content:season:1396279312000",
+     "genres": [
+      "ukendt"
+     ],
+     "id": "503611",
+     "type": "season",
+     "keywords": [],
+     "shortDescription": "Sæson 3 | Sendt første gang 2001/2002",
+     "contextualTitle": "",
+     "sports": [],
+     "subtype": "",
+     "themes": [],
+     "title": "Rejseholdet: Sæson 3",
+     "vodItemWatchPath": "",
+     "classification": {
+      "code": "DR-Voksen",
+      "name": "Voksen"
+     },
+     "path": "/saeson/rejseholdet_-saeson-3_503611"
+    },
+    {
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503612'&Width=1920&Height=1080&ImageId='62325454'",
+      "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503612'&Width=1440&Height=2160&ImageId='62325456'",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503612'&Width=1920&Height=1080&ImageId='62325458'"
+     },
+     "releaseYear": 2002,
+     "availableEpisodeCount": 2,
+     "seasonNumber": 4,
+     "showId": "503605",
+     "episodeCount": 2,
+     "offers": [
+      {
+       "deliveryType": "StreamOrDownload",
+       "scopes": [
+        "503612"
+       ],
+       "resolution": "HD-1080",
+       "availability": "Available",
+       "ownership": "Free",
+       "price": 0
+      }
+     ],
+     "scopes": [
+      "503612"
+     ],
+     "categories": [
+      "fiktionsserie",
+      "krimi",
+      "gensyn",
+      "dr gensyn",
+      "acc_spoken_subtitles"
+     ],
+     "channelPath": "",
+     "customFields": {
+      "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+      "BrandingChannelShort": "TVG",
+      "BrandingChannelDisplayName": "DR Gensyn",
+      "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+      "TargetAudience": "Adults",
+      "RatingSegment": "DRTV",
+      "PrimaryContentUniverse": "DRTV",
+      "ClassificationRating": "MRAM-15",
+      "IsGeoRestricted": "False",
+      "PresentationTypeCode": "Show",
+      "IsSeasonDRMPlayoutRequired": "False",
+      "PageTitle": "Rejseholdet: Sæson 4",
+      "ExtraDetails": "Fiktionsserie | SÆSON 4",
+      "PathIdSegment": "rejseholdet_-saeson-4_503612",
+      "ContentUniverses": [
+       "drtv"
+      ]
+     },
+     "customId": "urn:dr:ocs:tv:content:season:751949896000",
+     "genres": [
+      "ukendt"
+     ],
+     "id": "503612",
+     "type": "season",
+     "keywords": [],
+     "shortDescription": "Sæson 4",
+     "contextualTitle": "",
+     "sports": [],
+     "subtype": "",
+     "themes": [],
+     "title": "Rejseholdet: Sæson 4",
+     "vodItemWatchPath": "",
+     "classification": {
+      "code": "DR-Voksen",
+      "name": "Voksen"
+     },
+     "path": "/saeson/rejseholdet_-saeson-4_503612"
+    }
+   ],
+   "size": 4,
+   "paging": {
+    "total": 1,
+    "page": 1,
+    "size": 200,
+    "options": {
+     "pageSize": 200
+    }
+   }
+  }
+ },
+ "episodes": {
+  "id": "503606-episodes",
+  "path": "",
+  "items": [
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503615'&Width=1920&Height=1080&ImageId='62325463'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503615'&Width=1920&Height=1080&ImageId='62325473'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503615'&Width=1440&Height=2160&ImageId='62325419'"
+    },
+    "duration": 3516,
+    "releaseYear": 2000,
+    "episodeNumber": 1,
+    "episodeName": "Rejseholdet",
+    "seasonId": "503606",
+    "showId": "503605",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "503615"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "503615",
+     "503606"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "gensyn",
+     "dr gensyn"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+     "AccessServicesOffered": "StandardVideo",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E1",
+     "ContextualTitleExtraDetails": "1. OKT 2000 | 59M",
+     "AvailableFrom": "2000-10-01T18:00:08.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Rejseholdet: Sæson 1 – 1. episode",
+     "ExtraDetails": "SÆSON 1 EPISODE 1 | 59M",
+     "PathIdSegment": "rejseholdet_503615",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00591075220",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "503615",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_krimi",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk krimiserie fra 2000. Rejseholdets fem kriminalfolk bliver uventet kastet ud i opklaringen af en tragisk forbrydelse indenfor egne rækker. Da Rigspolitiets ledelse samtidig bliver tvunget til at foretage omrokeringer i den lille, fasttømrede gruppe, ",
+    "contextualTitle": "1. episode",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Rejseholdet",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/rejseholdet_503615",
+    "watchPath": "/se/rejseholdet_503615"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503640'&Width=1920&Height=1080&ImageId='62325639'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503640'&Width=1920&Height=1080&ImageId='62325641'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503640'&Width=1440&Height=2160&ImageId='62325419'"
+    },
+    "duration": 3336,
+    "releaseYear": 2000,
+    "episodeNumber": 2,
+    "episodeName": "Rejseholdet",
+    "seasonId": "503606",
+    "showId": "503605",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "503640"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "503640",
+     "503606"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "gensyn",
+     "dr gensyn"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+     "AccessServicesOffered": "StandardVideo",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E2",
+     "ContextualTitleExtraDetails": "8. OKT 2000 | 56M",
+     "AvailableFrom": "2000-10-08T18:01:28.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Rejseholdet: Sæson 1 – 2. episode",
+     "ExtraDetails": "SÆSON 1 EPISODE 2 | 56M",
+     "PathIdSegment": "rejseholdet_503640",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00591073010",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "503640",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_krimi",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk krimiserie fra 2000. En mand er blevet likvideret, og Ingrid, IP, Fischer, la Cour og Gaby må tage afsted en tidlig lørdag morgen. Den dræbte er en gammel kending af politiet og havde et udestående med lokale rockere. Men Ingrid tror, at baggrunden ",
+    "contextualTitle": "2. episode",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Rejseholdet",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/rejseholdet_503640",
+    "watchPath": "/se/rejseholdet_503640"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503632'&Width=1920&Height=1080&ImageId='62325542'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503632'&Width=1920&Height=1080&ImageId='62325555'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503632'&Width=1440&Height=2160&ImageId='62325419'"
+    },
+    "duration": 3353,
+    "releaseYear": 2000,
+    "episodeNumber": 3,
+    "episodeName": "Rejseholdet",
+    "seasonId": "503606",
+    "showId": "503605",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "503632"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "503632",
+     "503606"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "gensyn",
+     "dr gensyn"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+     "AccessServicesOffered": "StandardVideo",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E3",
+     "ContextualTitleExtraDetails": "15. OKT 2000 | 56M",
+     "AvailableFrom": "2000-10-15T18:01:56.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Rejseholdet: Sæson 1 – 3. episode",
+     "ExtraDetails": "SÆSON 1 EPISODE 3 | 56M",
+     "PathIdSegment": "rejseholdet_503632",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00591073280",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "503632",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_krimi",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk krimiserie fra 2000. Det lykkes Fischer og la Cour at få fat i rockerlederen Grue, som kører rundt med et oversavet jagtgevær. Ingrid vender tilbage og har en plan, som hverken passer Ulf eller den lokale politimester. Fischer får uventet hjælp, da ",
+    "contextualTitle": "3. episode",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Rejseholdet",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/rejseholdet_503632",
+    "watchPath": "/se/rejseholdet_503632"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503619'&Width=1920&Height=1080&ImageId='62325491'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503619'&Width=1440&Height=2160&ImageId='62325419'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503619'&Width=1920&Height=1080&ImageId='62325494'"
+    },
+    "duration": 3504,
+    "releaseYear": 2000,
+    "episodeNumber": 4,
+    "episodeName": "Rejseholdet",
+    "seasonId": "503606",
+    "showId": "503605",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "503619"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "503619",
+     "503606"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "gensyn",
+     "dr gensyn"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+     "AccessServicesOffered": "StandardVideo",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E4",
+     "ContextualTitleExtraDetails": "22. OKT 2000 | 58M",
+     "AvailableFrom": "2000-10-22T17:59:54.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Rejseholdet: Sæson 1 – 4. episode",
+     "ExtraDetails": "SÆSON 1 EPISODE 4 | 58M",
+     "PathIdSegment": "rejseholdet_503619",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00591074680",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "503619",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_krimi",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk krimiserie fra 2000. Da en ældre dame bliver myrdet, dukker en række foruroligende oplysninger om hendes yngre kvindelige lejer op. Fischers samarbejde med det lokale politi er problematisk på grund af en gammel sag - og konflikten blusser op igen. ",
+    "contextualTitle": "4. episode",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Rejseholdet",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/rejseholdet_503619",
+    "watchPath": "/se/rejseholdet_503619"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503639'&Width=1920&Height=1080&ImageId='62325614'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503639'&Width=1920&Height=1080&ImageId='62325619'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503639'&Width=1440&Height=2160&ImageId='62325419'"
+    },
+    "duration": 3444,
+    "releaseYear": 2000,
+    "episodeNumber": 5,
+    "episodeName": "Rejseholdet",
+    "seasonId": "503606",
+    "showId": "503605",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "503639"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "503639",
+     "503606"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "gensyn",
+     "dr gensyn"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+     "AccessServicesOffered": "StandardVideo",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E5",
+     "ContextualTitleExtraDetails": "29. OKT 2000 | 57M",
+     "AvailableFrom": "2000-10-29T19:00:52.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Rejseholdet: Sæson 1 – 5. episode",
+     "ExtraDetails": "SÆSON 1 EPISODE 5 | 57M",
+     "PathIdSegment": "rejseholdet_503639",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00591074760",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "503639",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_krimi",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk krimiserie fra 2000. Et ungt par får spoleret deres bryllupsdag af et drab, og Rejseholdet bliver tilkaldt. Drabet er mystisk, og retsmedicinerne kommer på virkeligt hårdt arbejde. Mens jalousien vokser hos IP, får Johnny uventet hjælp af Gaby med s",
+    "contextualTitle": "5. episode",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Rejseholdet",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/rejseholdet_503639",
+    "watchPath": "/se/rejseholdet_503639"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503610'&Width=1920&Height=1080&ImageId='62325435'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503610'&Width=1920&Height=1080&ImageId='62325441'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503610'&Width=1440&Height=2160&ImageId='62325419'"
+    },
+    "duration": 3351,
+    "releaseYear": 2000,
+    "episodeNumber": 6,
+    "episodeName": "Rejseholdet",
+    "seasonId": "503606",
+    "showId": "503605",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "503610"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "503610",
+     "503606"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "gensyn",
+     "dr gensyn"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+     "AccessServicesOffered": "StandardVideo",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E6",
+     "ContextualTitleExtraDetails": "5. NOV 2000 | 56M",
+     "AvailableFrom": "2000-11-05T19:02:22.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Rejseholdet: Sæson 1 – 6. episode",
+     "ExtraDetails": "SÆSON 1 EPISODE 6 | 56M",
+     "PathIdSegment": "rejseholdet_503610",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00591074840",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "503610",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_krimi",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk krimiserie fra 2000. Ulla har fejret sin 30-års fødselsdag med en stor fest for familie og venner. På vej hjem fra festen forsvinder hun sporløst, så Rejseholdet bliver tilkaldt. Ingrid har det rædselsfuldt efter Sørens død - hun har muret sig inde ",
+    "contextualTitle": "6. episode",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Rejseholdet",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/rejseholdet_503610",
+    "watchPath": "/se/rejseholdet_503610"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503609'&Width=1920&Height=1080&ImageId='62325430'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503609'&Width=1920&Height=1080&ImageId='62325434'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503609'&Width=1440&Height=2160&ImageId='62325419'"
+    },
+    "duration": 3264,
+    "releaseYear": 2000,
+    "episodeNumber": 7,
+    "episodeName": "Rejseholdet",
+    "seasonId": "503606",
+    "showId": "503605",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "503609"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "503609",
+     "503606"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "gensyn",
+     "dr gensyn"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+     "AccessServicesOffered": "StandardVideo",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E7",
+     "ContextualTitleExtraDetails": "12. NOV 2000 | 54M",
+     "AvailableFrom": "2000-11-12T19:00:48.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Rejseholdet: Sæson 1 – 7. episode",
+     "ExtraDetails": "SÆSON 1 EPISODE 7 | 54M",
+     "PathIdSegment": "rejseholdet_503609",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00591074920",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "503609",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_krimi",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk krimiserie fra 2000. Fischer og la Cour holder ferie i et sommerhus ved Vesterhavet sammen med Fischers familie. Men idyllen brydes, da det lokale politi får en anonym anmeldelse om et mord i nærheden. Hele Rejseholdet må rykke ud, og Fischers kone ",
+    "contextualTitle": "7. episode",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Rejseholdet",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/rejseholdet_503609",
+    "watchPath": "/se/rejseholdet_503609"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503618'&Width=1920&Height=1080&ImageId='62325475'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503618'&Width=1440&Height=2160&ImageId='62325419'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503618'&Width=1920&Height=1080&ImageId='62325487'"
+    },
+    "duration": 3491,
+    "releaseYear": 2000,
+    "episodeNumber": 8,
+    "episodeName": "Rejseholdet",
+    "seasonId": "503606",
+    "showId": "503605",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "503618"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "503618",
+     "503606"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "gensyn",
+     "dr gensyn"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+     "AccessServicesOffered": "StandardVideo",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E8",
+     "ContextualTitleExtraDetails": "19. NOV 2000 | 58M",
+     "AvailableFrom": "2000-11-19T19:00:38.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Rejseholdet: Sæson 1 – 8. episode",
+     "ExtraDetails": "SÆSON 1 EPISODE 8 | 58M",
+     "PathIdSegment": "rejseholdet_503618",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00591075060",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "503618",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_krimi",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk krimiserie fra 2000. En hel egn er opskræmt, da en hætteklædt mand gennem længere tid har forgrebet sig på ældre kvinder. Rejseholdet bliver tilkaldt, og dermed bliver la Cour tvunget til et smerteligt gensyn. IP har det svært med Kirsten og får en ",
+    "contextualTitle": "8. episode",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Rejseholdet",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/rejseholdet_503618",
+    "watchPath": "/se/rejseholdet_503618"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503638'&Width=1920&Height=1080&ImageId='62325606'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503638'&Width=1920&Height=1080&ImageId='62325616'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503638'&Width=1440&Height=2160&ImageId='62325419'"
+    },
+    "duration": 3464,
+    "releaseYear": 2000,
+    "episodeNumber": 9,
+    "episodeName": "Rejseholdet",
+    "seasonId": "503606",
+    "showId": "503605",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "503638"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "503638",
+     "503606"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "gensyn",
+     "dr gensyn"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+     "AccessServicesOffered": "StandardVideo",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E9",
+     "ContextualTitleExtraDetails": "26. NOV 2000 | 58M",
+     "AvailableFrom": "2000-11-26T19:00:50.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Rejseholdet: Sæson 1 – 9. episode",
+     "ExtraDetails": "SÆSON 1 EPISODE 9 | 58M",
+     "PathIdSegment": "rejseholdet_503638",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00591075140",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "503638",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_krimi",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk krimiserie fra 2000. Det lykkes den hætteklædte gerningsmand, som overfalder ældre kvinder, at slå til igen. Men hvordan kan han hele tiden være et skridt foran efterforskningen? Ulf ankommer for at kræve resultater og bliver samtidigt konfronteret ",
+    "contextualTitle": "9. episode",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Rejseholdet",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/rejseholdet_503638",
+    "watchPath": "/se/rejseholdet_503638"
+   }
+  ],
+  "size": 9,
+  "paging": {
+   "total": 1,
+   "page": 1,
+   "size": 200,
+   "options": {
+    "pageSize": 200
+   }
+  }
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "images": {
+  "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540744'&Width=1920&Height=1080&ImageId='71778249'",
+  "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540744'&Width=1920&Height=1080&ImageId='71778253'",
+  "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540744'&Width=1440&Height=2160&ImageId='71778213'"
+ },
+ "advisoryText": "",
+ "copyright": "",
+ "credits": [],
+ "customMetadata": [],
+ "distributor": "DRTV",
+ "duration": 4511,
+ "releaseYear": 1979,
+ "episodeNumber": 7,
+ "episodeName": "Matador: Fødselsdagen",
+ "seasonId": "540737",
+ "showId": "540736",
+ "offers": [
+  {
+   "deliveryType": "StreamOrDownload",
+   "endDate": "2027-03-01T22:59:00Z",
+   "scopes": [
+    "540744"
+   ],
+   "exclusionRules": [],
+   "resolution": "HD-1080",
+   "id": "ID0EFIAC",
+   "name": "D468078_Episode Free HD-1080 Episode_Anonymous",
+   "availability": "Available",
+   "ownership": "Free",
+   "price": 0,
+   "startDate": "2025-09-01T04:00:00Z"
+  }
+ ],
+ "trailers": [],
+ "scopes": [
+  "540744",
+  "540737"
+ ],
+ "categories": [
+  "fiktionsserie",
+  "gensyn",
+  "dr gensyn",
+  "acc_audio_description"
+ ],
+ "channelPath": "",
+ "customFields": {
+  "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+  "AccessServicesOffered": "StandardVideo,AudioDescription",
+  "BrandingChannelShort": "TVG",
+  "BrandingChannelDisplayName": "DR Gensyn",
+  "ProductionCountry": "DANMARK",
+  "DisplayCategory": "Fiktionsserie,Gensyn",
+  "TargetAudience": "Adults",
+  "RatingSegment": "DRTV",
+  "PrimaryContentUniverse": "DRTV",
+  "ClassificationRating": "MRAM-ALL",
+  "IsGeoRestricted": "False",
+  "PlayButtonExtraDetails": "S1:E7 Fødselsdagen",
+  "ContextualTitleExtraDetails": "17. NOV 1979 | 1T 15M",
+  "AvailableFrom": "1979-11-17T13:00:00.0000000Z",
+  "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+  "PresentationTypeCode": "Show",
+  "PageTitle": "Matador: Sæson 1 – Fødselsdagen",
+  "ExtraDetails": "SÆSON 1 EPISODE 7 | 1T 15M",
+  "ShortVideoUrl": "https://drod21c.akamaized.net/all/clear/none/ef/5ddf80be6187a418185a1cef/5ddf801e6187a418185a1ce4/stream_fmp4/master_manifest.m3u8",
+  "PathIdSegment": "matador_-foedselsdagen_540744",
+  "ContentUniverses": [
+   "drtv"
+  ]
+ },
+ "customId": "urn:dr:ocs:tv:content:playable:00505321500",
+ "genres": [
+  "ukendt"
+ ],
+ "id": "540744",
+ "type": "episode",
+ "keywords": [
+  "editorialptaxtop_serier",
+  "editorialptaxsub_drama",
+  "culturalorigin_dansk"
+ ],
+ "description": "Dansk dramaserie fra 1979.\n\"Fødselsdagen - 1933\".\nMens Mads Skjern udvider forretningen under navnet \"Skjerns Magasin\" og åbner Omegnsbanken med broren Kristen som direktør, trænges bankdirektør Varnæs fra alle sider. Hans bror Jørgen er blevet ruineret af både sin skilsmisse og sin dyre elskerinde Gitte Graa og sælger sine aktier og sin bestyrelsespost i Korsbæk Bank til sagfører Viggo Skjold Hansen. Også hjemme går bølgerne højt med forberedelserne til fru Fernando Møhges 100 års fødselsdag.\nMads Skjern: Jørgen Buckhøj.\nOluf Larsen: Buster Larsen.\nKatrine Larsen: Lily Broberg.\nIngeborg: Ghita Nørby.\nKristen Skjern: Jesper Langberg.\nHans Chr.Varnæs: Holger Juul Hansen.\nMaude Varnæs: Malene Schwartz.\nElisabeth Friis: Helle Virkner.\nJørgen Varnæs: Bent Mejding.\nAgnes: Kirsten Olesen.\nLaura: Elin Reimer.\nViggo Skjold Hansen: Axel Strøbye.\nFru Fernando Møhge: Karen Berg.\nMisse Møhge: Karin Nellemose.\nDr. Hansen: Ove Sprogøe.\nManuskript: Lise Nørgaard.\nInstruktion: Erik Balling. Udløber: 1. mar 2027",
+ "shortDescription": "Dansk dramaserie fra 1979.\n\"Fødselsdagen - 1933\".\nMens Mads Skjern udvider forretningen under navnet \"Skjerns Magasin\" og åbner Omegnsbanken med broren Kristen som direktør, trænges bankdirektør Varnæs fra alle sider. Hans bror Jørgen er blevet ruineret a",
+ "contextualTitle": "7. Fødselsdagen",
+ "sports": [],
+ "subtype": "",
+ "tagline": "7. december | Fru Fernando Møhge afholder sin 100 års fødselsdag ",
+ "themes": [],
+ "title": "Matador: Fødselsdagen",
+ "vodItemWatchPath": "",
+ "classification": {
+  "code": "DR-Voksen",
+  "name": "Voksen"
+ },
+ "path": "/episode/matador_-foedselsdagen_540744",
+ "watchPath": "/se/matador_-foedselsdagen_540744",
+ "genrePaths": [],
+ "totalUserRatings": 0
+}

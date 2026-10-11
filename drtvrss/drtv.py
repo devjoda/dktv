@@ -1,11 +1,9 @@
 from collections import namedtuple
 from contextlib import asynccontextmanager
 from datetime import datetime
-from json.decoder import JSONDecodeError
 from time import time
 from typing import Optional
 from zoneinfo import ZoneInfo
-import json
 import ssl
 import uuid
 
@@ -54,21 +52,24 @@ def http() -> ClientSession:
     return session
 
 
-async def get_jsonblob(url: str) -> dict:
-    """Gets the JSON blob from some DRTV page"""
-    print("Fetching DRTV page", url)
-    async with http().get(url, timeout=5) as r:
+API = "https://production-cdn.dr-massive.com/api"
+# The parameters DR's own website sends along
+API_PARAMS = {
+    "device": "web_browser",
+    "ff": "idp,ldp,rpt",
+    "lang": "da",
+    "segments": "drtv,optedout",
+    "sub": "Anonymous",
+}
+
+
+async def get_api(path: str, **params) -> dict:
+    """Gets something from DR's API, like `/items/{id}`"""
+    print("Fetching from DR", path, params)
+    async with http().get(API + path, params=API_PARAMS | params, timeout=5) as r:
         if r.status != 200:
             abort(404)
-        m = await r.text()
-        snippet = "window.__data = "
-        start = m.find(snippet) + len(snippet)
-        end = len(m[start:])
-        try:
-            json.loads(m[start:])
-        except JSONDecodeError as e:
-            end = e.pos
-        return json.loads(m[start : start + end])
+        return await r.json()
 
 
 async def get_show(show: str, max_age: int = 3600) -> Show:
@@ -77,17 +78,22 @@ async def get_show(show: str, max_age: int = 3600) -> Show:
     except ValueError:
         abort(404)
     if showid not in shows or shows[showid].age + max_age < time():
-        url = "https://www.dr.dk/drtv/serie/" + str(showid)
-        series = dr.SeriesPage.model_validate(await get_jsonblob(url))
-        latest = series.latest_season()
+        item = await get_api(f"/items/{showid}", expand="all")
+        if item.get("type") != "show":
+            abort(404)
+        show_item = dr.Show.model_validate(item)
+        if not show_item.seasons.items:
+            raise ValueError(f"Show {showid} has no seasons")
 
-        async def fetch_season(path: str) -> tuple[str, dr.Season]:
-            blob = await get_jsonblob("https://www.dr.dk/drtv" + path)
-            return (path, dr.Page[dr.Season].model_validate(blob).item(path))
+        async def fetch_season(season: dr.SeasonRef) -> tuple[str, dr.Season]:
+            blob = await get_api(f"/items/{season.id}", expand="all")
+            return (season.path, dr.Season.model_validate(blob))
 
-        tasks = [fetch_season(s.path) for s in latest.show.seasons.items]
+        tasks = [fetch_season(s) for s in show_item.seasons.items]
         seasons = dict(await asyncio.gather(*tasks))
 
+        # The latest season carries the show along with it, like DR's own site uses
+        latest = seasons[show_item.seasons.items[-1].path]
         shows[showid] = build_show(latest, seasons)
     return shows[showid]
 
@@ -142,8 +148,8 @@ async def get_long_description(episode: Episode):
     if episode.description != "":
         return
     try:
-        blob = await get_jsonblob("https://dr.dk/drtv/" + episode.url)
-        item = dr.Page[dr.Episode].model_validate(blob).item()
+        blob = await get_api("/items/" + episode.url.split("_")[-1])
+        item = dr.Episode.model_validate(blob)
         episode.description = item.description or episode.short_description
     except Exception as e:
         print("Could not get long description for", episode.url, repr(e))
@@ -179,8 +185,7 @@ async def get_program(prog: str) -> Program:
     except ValueError:
         abort(404)
     if progid not in programs or programs[progid].age + 3600 < time():
-        blob = await get_jsonblob(f"https://www.dr.dk/drtv/program/{str(progid)}")
-        item = dr.Page[dr.Item].model_validate(blob).item()
+        item = dr.Item.model_validate(await get_api(f"/items/{progid}"))
         programs[progid] = Program(
             item.title,
             item.short_description,

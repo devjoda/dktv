@@ -1,9 +1,9 @@
-"""Re-captures the test fixtures from the live DRTV site.
+"""Re-captures the test fixtures from DR's API.
 
 Run from the repository root with `python -m tests.update_fixtures`.
 
-The pages are trimmed down to the parts of `window.__data` we actually read,
-but DR's items are kept whole, so the fixtures stay realistic.
+Each response is saved as it is, named after its path in the API,
+so `/items/503605` is saved as `items_503605.json`.
 When DR changes their format, run this and look at the git diff.
 """
 
@@ -11,14 +11,19 @@ import asyncio
 import json
 from pathlib import Path
 
-from drtvrss.drtv import fetch_search, get_jsonblob, http_session
+from drtvrss.drtv import fetch_search, get_api, http_session
+from drtvrss.live import CHANNEL_LIST
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
-SERIES = "rejseholdet_503605"
-EPISODE = "matador_-foedselsdagen_540744"
-PROGRAM = "lise-noergaard_-ikke-kun-en-pige_362031"
+SHOW = "503605"  # Rejseholdet
+EPISODE = "540744"  # Matador: Fødselsdagen
+PROGRAM = "362031"  # Lise Nørgaard: Ikke kun en pige
 SEARCH = "matador"
+
+
+def fixture_name(path: str) -> str:
+    return path.strip("/").replace("/", "_") + ".json"
 
 
 def save(name: str, blob):
@@ -27,31 +32,20 @@ def save(name: str, blob):
     print("Wrote", path)
 
 
-def trim_page(blob: dict) -> dict:
-    """Keeps only cache.page[...].item"""
-    pages = blob["cache"]["page"]
-    return {"cache": {"page": {k: {"item": v["item"]} for k, v in pages.items()}}}
+async def capture(path: str, **params) -> dict:
+    blob = await get_api(path, **params)
+    save(fixture_name(path), blob)
+    return blob
 
 
 async def main():
     async with http_session():
-        series = await get_jsonblob(f"https://www.dr.dk/drtv/serie/{SERIES}")
-        save("series.json", {"cache": {"itemDetail": series["cache"]["itemDetail"]}})
-
-        latest = list(series["cache"]["itemDetail"].values())[-1]["item"]
-        for season in latest["show"]["seasons"]["items"]:
-            path = season["path"]
-            blob = await get_jsonblob("https://www.dr.dk/drtv" + path)
-            save(f"season_{path.split('_')[-1]}.json", trim_page(blob))
-
-        blob = await get_jsonblob(f"https://dr.dk/drtv/episode/{EPISODE}")
-        save("episode.json", trim_page(blob))
-
-        blob = await get_jsonblob(f"https://www.dr.dk/drtv/program/{PROGRAM}")
-        save("program.json", trim_page(blob))
-
-        blob = await get_jsonblob("https://www.dr.dk/drtv/kanal/dr1_20875")
-        save("channels.json", {"cache": {"list": blob["cache"]["list"]}})
+        show = await capture(f"/items/{SHOW}", expand="all")
+        for season in show["seasons"]["items"]:
+            await capture(f"/items/{season['id']}", expand="all")
+        await capture(f"/items/{EPISODE}")
+        await capture(f"/items/{PROGRAM}")
+        await capture(f"/lists/{CHANNEL_LIST}", page_size=24)
 
         r = await fetch_search(SEARCH)
         save("search.json", {"series": r["series"], "playable": r["playable"]})

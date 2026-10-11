@@ -26,7 +26,7 @@ def test_recommended_shows_are_fetched_at_startup(fake_dr, monkeypatch):
 def test_recommended_shows_are_kept_fresh(fake_dr, monkeypatch):
     monkeypatch.setenv("RECOMMENDED_SHOWS", "rejseholdet_503605")
     monkeypatch.setattr("drtvrss.RECOMMENDED_REFRESH_INTERVAL", 0)
-    series_url = "https://www.dr.dk/drtv/serie/503605"
+    series_url = "/items/503605?expand=all"
     serve_until(lambda: fake_dr.count(series_url) >= 2)
     assert fake_dr.count(series_url) >= 2
 

@@ -26,6 +26,8 @@ def test_shows_are_listed_on_index_once_fetched(get):
 def test_unknown_show(get):
     assert get("/findes-ikke_1/").status_code == 404
     assert get("/ikke-et-tal/").status_code == 404
+    # A program isn't a show
+    assert get("/lise-noergaard_-ikke-kun-en-pige_362031/").status_code == 404
 
 
 def test_episode(get):

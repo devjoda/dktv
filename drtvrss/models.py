@@ -1,8 +1,8 @@
-"""Models describing the parts of DRTV's JSON that we rely on.
+"""Models describing the parts of DR's API that we rely on.
 
 Everything we know about DR's data format lives in this module. When DR
 changes something, validation fails here with an error naming the exact
-field, instead of a KeyError somewhere deep inside the scraping code.
+field, instead of a KeyError somewhere deep inside the code.
 
 Fields we can't do without are required. Cosmetic fields (descriptions,
 dates, lengths, images) are optional, so that DR dropping one of them
@@ -10,17 +10,10 @@ degrades a page instead of breaking it.
 """
 
 from datetime import datetime
-from typing import Annotated, Generic, Literal, Optional, TypeVar, Union
+from typing import Annotated, Generic, Literal, Optional, TypeVar
 from zoneinfo import ZoneInfo
 
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    TypeAdapter,
-    ValidationError,
-    WrapValidator,
-)
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, WrapValidator
 from pydantic.alias_generators import to_camel, to_pascal
 
 COPENHAGEN = ZoneInfo("Europe/Copenhagen")
@@ -124,6 +117,7 @@ class Episode(Item):
 class SeasonRef(DRModel):
     """A season as listed on its show"""
 
+    id: str
     title: str
     path: str
     season_number: Optional[int] = None
@@ -148,49 +142,6 @@ class Season(Item):
     episodes: ItemList[Episode]
 
 
-class PageEntry(DRModel, Generic[T]):
-    item: T
-
-
-class PageCache(DRModel, Generic[T]):
-    page: dict[str, PageEntry[T]]
-
-
-class Page(DRModel, Generic[T]):
-    """The `window.__data` blob of a DRTV page"""
-
-    cache: PageCache[T]
-
-    def item(self, path: Optional[str] = None) -> T:
-        """The page's item. Pages normally hold one, keyed by its path."""
-        if path is None:
-            return next(iter(self.cache.page.values())).item
-        return self.cache.page[path].item
-
-
-class ItemDetailCache(DRModel):
-    item_detail: dict[
-        str, PageEntry[Annotated[Union[Show, Season], Field(discriminator="type")]]
-    ]
-
-
-class SeriesPage(DRModel):
-    """The `window.__data` blob of a /drtv/serie/ page.
-
-    Its itemDetail holds the show itself and the most recent season.
-    We use the season, since it carries the show along with it."""
-
-    cache: ItemDetailCache
-
-    def latest_season(self) -> Season:
-        item = list(self.cache.item_detail.values())[-1].item
-        if not isinstance(item, Season):
-            raise ValueError(
-                f"Expected the last itemDetail to be a season, got {item.type}"
-            )
-        return item
-
-
 class ChannelCustomFields(BaseModel):
     hls_url: str = Field(alias="hlsURL")
 
@@ -199,31 +150,6 @@ class Channel(DRModel):
     title: str
     channel_short_code: str
     custom_fields: ChannelCustomFields
-
-
-class AnyList(DRModel):
-    list: ItemList[dict]
-
-
-class ChannelListCache(DRModel):
-    list: dict[str, AnyList]
-
-
-class ChannelPage(DRModel):
-    """The `window.__data` blob of a /drtv/kanal/ page"""
-
-    cache: ChannelListCache
-
-    def channels(self) -> list[Channel]:
-        """The channels of the first list that has any.
-
-        DR keeps other lists here too, like an empty "Bookmarks" list
-        that sometimes comes before the channels."""
-        for entry in self.cache.list.values():
-            items = [i for i in entry.list.items if "channelShortCode" in i]
-            if items:
-                return TypeAdapter(list[Channel]).validate_python(items)
-        return []
 
 
 class SearchResponse(DRModel):
