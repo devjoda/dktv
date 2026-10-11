@@ -1,10 +1,12 @@
+import asyncio
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
-from flask import abort
+from quart import abort
 
-from drtvrss import app, cache, drtv, live
+from drtvrss import app, drtv, live
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -37,7 +39,7 @@ def fake_dr(monkeypatch):
     Returns the list of URLs requested from DR."""
     requested = []
 
-    async def get_jsonblob(session, url):
+    async def get_jsonblob(url):
         requested.append(url)
         return load(fixture_for_url(url))
 
@@ -50,13 +52,28 @@ def fake_dr(monkeypatch):
     monkeypatch.setattr(drtv, "fetch_search", fetch_search)
     monkeypatch.setattr(live, "live_channels", None)
     monkeypatch.setattr(live, "last_fetch", 0)
+    monkeypatch.delenv("RECOMMENDED_SHOWS", raising=False)
     drtv.shows.clear()
     drtv.programs.clear()
-    with app.app_context():
-        cache.clear()
+    drtv.searches.clear()
     return requested
 
 
 @pytest.fixture
-def client(fake_dr):
-    return app.test_client()
+def get(fake_dr):
+    """Requests a page from the app, going through its startup and shutdown"""
+
+    def get(path: str) -> SimpleNamespace:
+        async def request():
+            async with app.test_app() as test_app:
+                r = await test_app.test_client().get(path)
+                return SimpleNamespace(
+                    status_code=r.status_code,
+                    content_type=r.content_type,
+                    location=r.location,
+                    text=await r.get_data(as_text=True),
+                )
+
+        return asyncio.run(request())
+
+    return get

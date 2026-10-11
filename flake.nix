@@ -12,7 +12,7 @@
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {inherit system;};
-      pythonEnv = pkgs.python3.withPackages (p: with p; [flask flask-caching aiohttp gunicorn pylint certifi pydantic pytest] ++ p.flask.optional-dependencies.async);
+      pythonEnv = pkgs.python3.withPackages (p: with p; [quart hypercorn aiohttp pylint certifi pydantic pytest]);
     in rec {
       devShells.default = pkgs.mkShell {
         buildInputs = [pythonEnv];
@@ -64,6 +64,7 @@
               environment.KLAGE_MAIL = config.services.drtvrss.klagemail;
               environment.SERVICE_NAME = config.services.drtvrss.service_name;
               environment.BASE_URL = config.services.drtvrss.base_url;
+              environment.PYTHONPATH = "${servsrc}";
               environment.RECOMMENDED_SHOWS = let
                 join = d: l:
                   if pkgs.lib.length l == 0
@@ -76,7 +77,7 @@
                 Restart = "always";
               };
 
-              script = "${pythonEnv}/bin/gunicorn -b ${config.services.drtvrss.host} --pythonpath ${servsrc} drtvrss:app";
+              script = "${pythonEnv}/bin/hypercorn -b ${config.services.drtvrss.host} drtvrss:app";
             };
           };
         };

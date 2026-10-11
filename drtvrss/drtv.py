@@ -1,7 +1,9 @@
 from collections import namedtuple
+from contextlib import asynccontextmanager
 from datetime import datetime
 from json.decoder import JSONDecodeError
 from time import time
+from typing import Optional
 from zoneinfo import ZoneInfo
 import json
 import ssl
@@ -12,7 +14,7 @@ import certifi
 from aiohttp import ClientSession, TCPConnector
 from pydantic import TypeAdapter
 
-from flask import abort
+from quart import abort
 
 from . import models as dr
 from .show import Episode, Season, Show, Program
@@ -22,11 +24,40 @@ programs: dict[int, Program] = {}
 
 ssl_context = ssl.create_default_context(cafile=certifi.where())
 
+session: Optional[ClientSession] = None
 
-async def get_jsonblob(session: ClientSession, url: str) -> dict:
+
+def open_session():
+    """Opens the HTTP session that all requests to DR go through"""
+    global session
+    session = ClientSession(connector=TCPConnector(ssl=ssl_context))
+
+
+async def close_session():
+    global session
+    await session.close()
+    session = None
+
+
+@asynccontextmanager
+async def http_session():
+    open_session()
+    try:
+        yield
+    finally:
+        await close_session()
+
+
+def http() -> ClientSession:
+    if session is None:
+        raise RuntimeError("No HTTP session. Use `async with drtv.http_session()`")
+    return session
+
+
+async def get_jsonblob(url: str) -> dict:
     """Gets the JSON blob from some DRTV page"""
     print("Fetching DRTV page", url)
-    async with session.get(url, timeout=5) as r:
+    async with http().get(url, timeout=5) as r:
         if r.status != 200:
             abort(404)
         m = await r.text()
@@ -40,25 +71,24 @@ async def get_jsonblob(session: ClientSession, url: str) -> dict:
         return json.loads(m[start : start + end])
 
 
-async def get_show(show: str) -> Show:
+async def get_show(show: str, max_age: int = 3600) -> Show:
     try:
         showid = int(show.split("_")[-1])
     except ValueError:
         abort(404)
-    if showid not in shows or shows[showid].age + 3600 < time():
-        async with ClientSession(connector=TCPConnector(ssl=ssl_context)) as session:
-            url = "https://www.dr.dk/drtv/serie/" + str(showid)
-            series = dr.SeriesPage.model_validate(await get_jsonblob(session, url))
-            latest = series.latest_season()
+    if showid not in shows or shows[showid].age + max_age < time():
+        url = "https://www.dr.dk/drtv/serie/" + str(showid)
+        series = dr.SeriesPage.model_validate(await get_jsonblob(url))
+        latest = series.latest_season()
 
-            async def fetch_season(path: str) -> tuple[str, dr.Season]:
-                blob = await get_jsonblob(session, "https://www.dr.dk/drtv" + path)
-                return (path, dr.Page[dr.Season].model_validate(blob).item(path))
+        async def fetch_season(path: str) -> tuple[str, dr.Season]:
+            blob = await get_jsonblob("https://www.dr.dk/drtv" + path)
+            return (path, dr.Page[dr.Season].model_validate(blob).item(path))
 
-            tasks = [fetch_season(s.path) for s in latest.show.seasons.items]
-            seasons = dict(await asyncio.gather(*tasks))
+        tasks = [fetch_season(s.path) for s in latest.show.seasons.items]
+        seasons = dict(await asyncio.gather(*tasks))
 
-            shows[showid] = build_show(latest, seasons)
+        shows[showid] = build_show(latest, seasons)
     return shows[showid]
 
 
@@ -111,14 +141,13 @@ def get_shows() -> dict[int, Show]:
 async def get_long_description(episode: Episode):
     if episode.description != "":
         return
-    async with ClientSession(connector=TCPConnector(ssl=ssl_context)) as session:
-        try:
-            blob = await get_jsonblob(session, "https://dr.dk/drtv/" + episode.url)
-            item = dr.Page[dr.Episode].model_validate(blob).item()
-            episode.description = item.description or episode.short_description
-        except Exception as e:
-            print("Could not get long description for", episode.url, repr(e))
-            episode.description = episode.short_description
+    try:
+        blob = await get_jsonblob("https://dr.dk/drtv/" + episode.url)
+        item = dr.Page[dr.Episode].model_validate(blob).item()
+        episode.description = item.description or episode.short_description
+    except Exception as e:
+        print("Could not get long description for", episode.url, repr(e))
+        episode.description = episode.short_description
 
 
 token: str = ""
@@ -128,40 +157,36 @@ token_expiry = datetime.fromisoformat("2025-02-20T03:16:49.1356687Z")
 async def get_token() -> str:
     global token, token_expiry
     if datetime.now(tz=ZoneInfo("UTC")) > token_expiry:
-        async with ClientSession(connector=TCPConnector(ssl=ssl_context)) as session:
-            async with session.post(
-                "https://isl.dr-massive.com/api/authorization/anonymous-sso?device=web_browser&lang=da&supportFallbackToken=true",
-                json={
-                    "deviceId": str(uuid.uuid4()),
-                    "scopes": ["Catalog"],
-                    "optout": True,
-                },
-            ) as r:
-                tokens = TypeAdapter(list[dr.Token]).validate_python(await r.json())
-                # The api issues two tokens. The UserProfile one is used for search
-                profile_token = [t for t in tokens if t.type == "UserProfile"][0]
-                token = profile_token.value
-                token_expiry = profile_token.expiration_date
+        async with http().post(
+            "https://isl.dr-massive.com/api/authorization/anonymous-sso?device=web_browser&lang=da&supportFallbackToken=true",
+            json={
+                "deviceId": str(uuid.uuid4()),
+                "scopes": ["Catalog"],
+                "optout": True,
+            },
+        ) as r:
+            tokens = TypeAdapter(list[dr.Token]).validate_python(await r.json())
+            # The api issues two tokens. The UserProfile one is used for search
+            profile_token = [t for t in tokens if t.type == "UserProfile"][0]
+            token = profile_token.value
+            token_expiry = profile_token.expiration_date
     return token
 
 
 async def get_program(prog: str) -> Program:
-    async with ClientSession(connector=TCPConnector(ssl=ssl_context)) as session:
-        try:
-            progid = int(prog.split("_")[-1])
-        except ValueError:
-            abort(404)
-        if progid not in programs or programs[progid].age + 3600 < time():
-            blob = await get_jsonblob(
-                session, f"https://www.dr.dk/drtv/program/{str(progid)}"
-            )
-            item = dr.Page[dr.Item].model_validate(blob).item()
-            programs[progid] = Program(
-                item.title,
-                item.short_description,
-                url=item.path,
-            )
-        return programs[progid]
+    try:
+        progid = int(prog.split("_")[-1])
+    except ValueError:
+        abort(404)
+    if progid not in programs or programs[progid].age + 3600 < time():
+        blob = await get_jsonblob(f"https://www.dr.dk/drtv/program/{str(progid)}")
+        item = dr.Page[dr.Item].model_validate(blob).item()
+        programs[progid] = Program(
+            item.title,
+            item.short_description,
+            url=item.path,
+        )
+    return programs[progid]
 
 
 SearchResultItem = namedtuple(
@@ -171,21 +196,32 @@ SearchResultItem = namedtuple(
 
 SearchResult = namedtuple("SearchResult", ["series", "movies"])
 
+SEARCH_CACHE_TIME = 15 * 60
+SEARCH_CACHE_SIZE = 500
+searches: dict[str, tuple[float, SearchResult]] = {}
+
 
 async def fetch_search(query: str) -> dict:
-    async with ClientSession(connector=TCPConnector(ssl=ssl_context)) as session:
-        async with session.get(
-            "https://prod95.dr-massive.com/api/search?device=web_browser&ff=idp%2Cldp%2Crpt&group=true&lang=da&segments=drtv%2Coptedout&term="
-            + query,
-            headers={"X-Authorization": f"Bearer {await get_token()}"},
-        ) as r:
-            return await r.json()
+    async with http().get(
+        "https://prod95.dr-massive.com/api/search?device=web_browser&ff=idp%2Cldp%2Crpt&group=true&lang=da&segments=drtv%2Coptedout&term="
+        + query,
+        headers={"X-Authorization": f"Bearer {await get_token()}"},
+    ) as r:
+        return await r.json()
 
 
 async def search(query: str) -> SearchResult:
-    return build_search_result(
+    if query in searches and searches[query][0] + SEARCH_CACHE_TIME > time():
+        return searches[query][1]
+    result = build_search_result(
         dr.SearchResponse.model_validate(await fetch_search(query))
     )
+    searches.pop(query, None)
+    if len(searches) >= SEARCH_CACHE_SIZE:
+        # Searches are kept in the order they were made, so this is the oldest
+        del searches[next(iter(searches))]
+    searches[query] = (time(), result)
+    return result
 
 
 def build_search_result(r: dr.SearchResponse) -> SearchResult:

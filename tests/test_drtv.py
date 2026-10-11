@@ -2,6 +2,8 @@ import asyncio
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
+import pytest
+
 from drtvrss import drtv, models as dr
 from drtvrss.show import BASE_URL, Episode
 
@@ -127,10 +129,41 @@ def test_get_long_description_without_description_on_dr(fake_dr, monkeypatch):
     for page in blob["cache"]["page"].values():
         del page["item"]["description"]
 
-    async def get_jsonblob(session, url):
+    async def get_jsonblob(url):
         return blob
 
     monkeypatch.setattr(drtv, "get_jsonblob", get_jsonblob)
     ep = Episode("x", short_description="Kort", url="/episode/matador_-foedselsdagen_540744")
     asyncio.run(drtv.get_long_description(ep))
     assert ep.description == "Kort"
+
+
+def test_get_show_refetches_when_older_than_max_age(fake_dr):
+    show = asyncio.run(drtv.get_show("rejseholdet_503605"))
+    assert asyncio.run(drtv.get_show("rejseholdet_503605", max_age=0)) is not show
+    assert fake_dr.count("https://www.dr.dk/drtv/serie/503605") == 2
+
+
+def test_search_is_cached(fake_dr):
+    first = asyncio.run(drtv.search("matador"))
+    assert asyncio.run(drtv.search("matador")) is first
+    assert fake_dr == ["search:matador"]
+
+
+def test_search_cache_expires(fake_dr, monkeypatch):
+    monkeypatch.setattr(drtv, "SEARCH_CACHE_TIME", -1)
+    asyncio.run(drtv.search("matador"))
+    asyncio.run(drtv.search("matador"))
+    assert fake_dr == ["search:matador", "search:matador"]
+
+
+def test_search_cache_forgets_the_oldest_search(fake_dr, monkeypatch):
+    monkeypatch.setattr(drtv, "SEARCH_CACHE_SIZE", 2)
+    for query in ["a", "b", "c"]:
+        asyncio.run(drtv.search(query))
+    assert list(drtv.searches) == ["b", "c"]
+
+
+def test_requests_need_an_http_session():
+    with pytest.raises(RuntimeError, match="http_session"):
+        asyncio.run(drtv.get_jsonblob("https://www.dr.dk/drtv/serie/503605"))

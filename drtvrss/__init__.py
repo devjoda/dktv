@@ -1,27 +1,30 @@
+from contextlib import suppress
 from datetime import datetime
 from typing import Optional
+import asyncio
 import os
 
-from flask import (
+from quart import (
     abort,
-    Flask,
+    Quart,
     Response,
     render_template,
     redirect,
     request,
     send_from_directory,
 )
-from flask_caching import Cache
 
+from . import drtv
 from .drtv import get_show, get_shows, search, get_program, get_long_description
 from .live import get_channels
 
-app = Flask(__name__)
-app.config.from_mapping({"CACHE_TYPE": "SimpleCache"})
-cache = Cache(app)
+app = Quart(__name__)
 
 complaints_email = os.getenv("KLAGE_MAIL", None)
 SERVICE_NAME = os.getenv("SERVICE_NAME", "Public Service")
+
+# Shorter than the hour shows are cached for, so visitors never wait for these
+RECOMMENDED_REFRESH_INTERVAL = 30 * 60
 
 
 def birthday() -> Optional[int]:
@@ -33,9 +36,40 @@ def birthday() -> Optional[int]:
     return None
 
 
+async def keep_fresh(recommended_shows: list[str]):
+    """Fetches the recommended shows, and keeps fetching them regularly"""
+    while True:
+        for show in recommended_shows:
+            print("Fetching recommended show", show)
+            try:
+                await get_show(show, max_age=0)
+            except Exception as e:
+                print("Could not fetch recommended show", show, repr(e))
+        await asyncio.sleep(RECOMMENDED_REFRESH_INTERVAL)
+
+
+refresher: Optional[asyncio.Task] = None
+
+
+@app.before_serving
+async def startup():
+    global refresher
+    drtv.open_session()
+    recommended_shows = [s for s in os.getenv("RECOMMENDED_SHOWS", "").split(":") if s]
+    refresher = asyncio.create_task(keep_fresh(recommended_shows))
+
+
+@app.after_serving
+async def shutdown():
+    refresher.cancel()
+    with suppress(asyncio.CancelledError):
+        await refresher
+    await drtv.close_session()
+
+
 @app.route("/")
 async def index():
-    return render_template(
+    return await render_template(
         "index.html",
         shows=list(get_shows().items())[:9],
         complaints_email=complaints_email,
@@ -46,8 +80,8 @@ async def index():
 
 
 @app.route("/favicon.ico")
-def favicon():
-    return send_from_directory(
+async def favicon():
+    return await send_from_directory(
         os.path.join(app.root_path, "templates"),
         "favicon.ico",
         mimetype="image/vnd.microsoft.icon",
@@ -56,7 +90,7 @@ def favicon():
 
 @app.route("/program/<progid>")
 async def view_program(progid):
-    return render_template(
+    return await render_template(
         "video.html",
         e=await get_program(progid),
         SERVICE_NAME=SERVICE_NAME,
@@ -66,7 +100,6 @@ async def view_program(progid):
 
 
 @app.route("/<showid>/<episode>")
-@cache.cached(timeout=15 * 60)
 async def view_episode(showid, episode):
     show = await get_show(showid)
     e = None
@@ -77,7 +110,7 @@ async def view_episode(showid, episode):
     if e is None:
         abort(404)
     await get_long_description(e)
-    return render_template(
+    return await render_template(
         "video.html",
         s=show,
         e=e,
@@ -88,10 +121,9 @@ async def view_episode(showid, episode):
 
 
 @app.route("/<showid>/")
-@cache.cached(timeout=15 * 60)
 async def view_show(showid):
     show = await get_show(showid)
-    return render_template(
+    return await render_template(
         "show.html",
         s=show,
         SERVICE_NAME=SERVICE_NAME,
@@ -107,7 +139,6 @@ async def longlink(showid):
 
 
 @app.route("/<show>.xml")
-@cache.cached(timeout=15 * 60)
 async def get_feed(show):
     return Response(
         (await get_show(show)).to_rss_feed(),
@@ -115,16 +146,11 @@ async def get_feed(show):
     )
 
 
-def make_search_cache_key():
-    return request.args.get("query")
-
-
 @app.route("/search/")
-@cache.cached(timeout=15 * 60, make_cache_key=make_search_cache_key)
 async def search_view():
     query = request.args.get("query")
     results = await search(query)
-    return render_template(
+    return await render_template(
         "search.html",
         results=results,
         query=query,
@@ -138,7 +164,7 @@ async def search_view():
 async def live_channel(channel):
     channels = await get_channels()
     if channel in channels:
-        return render_template(
+        return await render_template(
             "live.html",
             channel=channels[channel],
             SERVICE_NAME=SERVICE_NAME,
@@ -147,15 +173,3 @@ async def live_channel(channel):
         )
     else:
         abort(404)
-
-
-# Taken from SO: https://stackoverflow.com/a/77949082
-@app.before_request
-async def fetch_recommended_shows():
-    app.before_request_funcs[None].remove(fetch_recommended_shows)
-    recommended_shows = os.getenv("RECOMMENDED_SHOWS", "")
-    print(f"Fetching recommended shows {recommended_shows}")
-    for rec_show in recommended_shows.split(":"):
-        if rec_show == "":
-            continue
-        await get_show(rec_show)

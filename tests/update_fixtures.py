@@ -11,9 +11,7 @@ import asyncio
 import json
 from pathlib import Path
 
-from aiohttp import ClientSession, TCPConnector
-
-from drtvrss.drtv import fetch_search, get_jsonblob, ssl_context
+from drtvrss.drtv import fetch_search, get_jsonblob, http_session
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -36,27 +34,27 @@ def trim_page(blob: dict) -> dict:
 
 
 async def main():
-    async with ClientSession(connector=TCPConnector(ssl=ssl_context)) as session:
-        series = await get_jsonblob(session, f"https://www.dr.dk/drtv/serie/{SERIES}")
+    async with http_session():
+        series = await get_jsonblob(f"https://www.dr.dk/drtv/serie/{SERIES}")
         save("series.json", {"cache": {"itemDetail": series["cache"]["itemDetail"]}})
 
         latest = list(series["cache"]["itemDetail"].values())[-1]["item"]
         for season in latest["show"]["seasons"]["items"]:
             path = season["path"]
-            blob = await get_jsonblob(session, "https://www.dr.dk/drtv" + path)
+            blob = await get_jsonblob("https://www.dr.dk/drtv" + path)
             save(f"season_{path.split('_')[-1]}.json", trim_page(blob))
 
-        blob = await get_jsonblob(session, f"https://dr.dk/drtv/episode/{EPISODE}")
+        blob = await get_jsonblob(f"https://dr.dk/drtv/episode/{EPISODE}")
         save("episode.json", trim_page(blob))
 
-        blob = await get_jsonblob(session, f"https://www.dr.dk/drtv/program/{PROGRAM}")
+        blob = await get_jsonblob(f"https://www.dr.dk/drtv/program/{PROGRAM}")
         save("program.json", trim_page(blob))
 
-        blob = await get_jsonblob(session, "https://www.dr.dk/drtv/kanal/dr1_20875")
+        blob = await get_jsonblob("https://www.dr.dk/drtv/kanal/dr1_20875")
         save("channels.json", {"cache": {"list": blob["cache"]["list"]}})
 
-    r = await fetch_search(SEARCH)
-    save("search.json", {"series": r["series"], "playable": r["playable"]})
+        r = await fetch_search(SEARCH)
+        save("search.json", {"series": r["series"], "playable": r["playable"]})
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ An instance is hosted at https://drtv.rend.al
 ## Quick Start
 ```
 $ nix develop
-$ gunicorn drtvrss:app
+$ hypercorn drtvrss:app
 ```
 The project is set up using Nix.
 Running the project without Nix is not supported.
