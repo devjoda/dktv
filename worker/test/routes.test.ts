@@ -255,6 +255,14 @@ describe("a show", () => {
 		expect(r.location).toBe("/rejseholdet_503605/");
 	});
 
+	test("links don't lead to other sites", async () => {
+		for (const path of ["/serie/%2F%2Fexample.com", "/drtv/serie/%2F%2Fexample.com", "/%2F%2Fexample%2Ecom", "/kategorier/%2F%2Fexample.com"]) {
+			const r = await get(path);
+			expect(r.status, path).toBe(404);
+			expect(r.location).toBeNull();
+		}
+	});
+
 	test("DR-style links lead to it", async () => {
 		for (const path of ["/serie/rejseholdet_503605", "/drtv/serie/rejseholdet_503605"]) {
 			const r = await get(path);

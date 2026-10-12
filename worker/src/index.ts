@@ -33,6 +33,7 @@ app.use("*", async (c, next) => {
 		budget: new Budget(),
 		refreshes: REFRESHES_PER_VISIT,
 		incomplete: false,
+		pending: new Map(),
 		waitUntil: promise => c.executionCtx.waitUntil(promise),
 		origin: new URL(c.req.url).origin,
 	});
@@ -103,6 +104,21 @@ function edgeCached(seconds: number): MiddlewareHandler<App> {
 
 const MINUTE = 60;
 
+// Like rejseholdet_503605, or fiktionsserier
+const SLUG = /^[\w-]+$/;
+
+/**
+ * Sends the visitor to the page for a slug from the URL, like /rejseholdet_503605/.
+ * Only for what could be one, since URLs like /serie/%2F%2Fexample.com would otherwise
+ * lead to //example.com/, another site.
+ */
+function redirectTo(c: Context<App>, prefix: string, slug: string, status: 302 | 308) {
+	if (!SLUG.test(slug)) {
+		throw new NotFound(`${slug} isn't anything here`);
+	}
+	return c.redirect(`${prefix}${slug}/`, status);
+}
+
 app.get("/", edgeCached(2 * MINUTE), async c => {
 	const ctx = c.get("ctx");
 	const channels = await getChannels(ctx);
@@ -145,7 +161,7 @@ app.get("/kategorier/:slug/", edgeCached(10 * MINUTE), async c => {
 	return render(c, pages.categoryPage(site(c), {category, page}));
 });
 
-app.get("/kategorier/:slug", c => c.redirect(`/kategorier/${c.req.param("slug")}/`, 308));
+app.get("/kategorier/:slug", c => redirectTo(c, "/kategorier/", c.req.param("slug"), 308));
 
 /** All of a row of DR's, like all films from A to Å */
 app.get("/liste/:id{[0-9]+}/", edgeCached(10 * MINUTE), async c => {
@@ -257,8 +273,8 @@ app.get("/program/:id", edgeCached(10 * MINUTE), async c => {
 	return render(c, pages.videoPage(site(c), {e: program, description: program.description}));
 });
 
-app.get("/serie/:showid", c => c.redirect(`/${c.req.param("showid")}/`, 302));
-app.get("/drtv/serie/:showid", c => c.redirect(`/${c.req.param("showid")}/`, 302));
+app.get("/serie/:showid", c => redirectTo(c, "/", c.req.param("showid"), 302));
+app.get("/drtv/serie/:showid", c => redirectTo(c, "/", c.req.param("showid"), 302));
 
 app.get("/search/", edgeCached(15 * MINUTE), async c => {
 	const query = (c.req.query("query") ?? "").trim();
@@ -378,7 +394,7 @@ app.get("/:showid/:episode", edgeCached(10 * MINUTE), async c => {
 });
 
 // Like /rejseholdet_503605, for /rejseholdet_503605/
-app.get("/:slug{[^/.]+}", c => c.redirect(`/${c.req.param("slug")}/`, 308));
+app.get("/:slug{[^/.]+}", c => redirectTo(c, "/", c.req.param("slug"), 308));
 
 function errorPage(c: Context<App>, title: string, message: string, status: 404 | 500 | 503) {
 	return render(c, pages.errorPage(site(c), {title, message}), status);
