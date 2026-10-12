@@ -1,0 +1,37 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "dktv",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-10-01",
+	"workers_dev": true,
+	// The browser's files, copied from ../drtvrss/static by `npm run build`, and served without the Worker
+	"assets": {
+		"directory": "public"
+	},
+	"build": {
+		"command": "npm run build"
+	},
+	"d1_databases": [
+		{
+			// Viewers' favourites and progress, for those who sync their devices
+			"binding": "SYNC",
+			"database_name": "dktv-sync",
+			"database_id": "91fd29bf-7587-40c3-ba2d-1162d30a482d",
+			"migrations_dir": "migrations"
+		}
+	],
+	"vars": {
+		"SERVICE_NAME": "dktv",
+		// Where the code that runs here can be got
+		"SOURCE_URL": "https://github.com/devjoda/dktv",
+		// Shows for the front page, like "rejseholdet_503605:matador_540736"
+		"RECOMMENDED_SHOWS": ""
+	},
+	// Which deploy is running, so pages kept from before an update aren't served after it
+	"version_metadata": {
+		"binding": "VERSION"
+	},
+	"observability": {
+		"enabled": true
+	}
+}

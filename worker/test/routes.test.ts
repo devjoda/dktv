@@ -1,0 +1,569 @@
+// Renders every page against the fixtures, to catch template breakage
+
+import {createHash} from "node:crypto";
+import {existsSync, readFileSync} from "node:fs";
+import {join} from "node:path";
+import {describe, expect, test} from "vitest";
+import {expireAll} from "../src/cache";
+import {clock} from "../src/time";
+import {between, dr, env, get, load} from "./helpers";
+
+const PUBLIC = join(__dirname, "..", "public");
+
+/** The playlist a show's play button has, from its data-episodes */
+function playlist(text: string) {
+	const attribute = between(text, 'data-episodes="', '"');
+	return JSON.parse(attribute.replaceAll("&quot;", '"').replaceAll("&#39;", "'").replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&"));
+}
+
+const count = (text: string, part: string) => text.split(part).length - 1;
+
+describe("the front page", () => {
+	test("links to the live channels", async () => {
+		const r = await get("/");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain('href="/live/DR1"');
+	});
+
+	test("features DR's programmes", async () => {
+		const r = await get("/");
+		// Like DR's own, which has a dozen or so
+		const slides = count(r.text, 'class="hero-slide"');
+		expect(slides).toBeGreaterThan(3);
+		expect(slides).toBeLessThanOrEqual(12);
+		// Bars instead of the titles a second time, named for screen readers
+		expect(count(r.text, 'class="featured-bar"')).toBe(slides);
+		expect(between(r.text, 'class="featured-bars"', "</div>")).toContain('aria-label="');
+		expect(r.text).toContain('data-preview="https://');
+		// DR's rows, with links to the pages here
+		expect(r.text).toContain('<h2 class="shelf-title" id="row-1">');
+		expect(between(r.text, 'id="featured-1"', 'id="featured-2"')).toContain('<a class="button button-primary" href="/');
+	});
+
+	test("the featured programmes' facts lead somewhere", async () => {
+		const featured = between((await get("/")).text, 'id="featured-1"', 'id="featured-2"');
+		// Its category, and the episode DR mentions
+		expect(featured).toContain('<a class="meta-link" href="/kategorier/');
+		expect(featured).toMatch(/<a class="meta-link" href="\/\d+\/afsnit\/\d+\?saeson=\d+">Episode/);
+		// Plays it, instead of showing the show's page
+		expect(featured).toMatch(/<a class="button button-primary" href="\/\d+\/afsnit\//);
+	});
+
+	test("without DR's page, asks what to look for", async () => {
+		dr.answer = path => (path == "/page" ? new Response("{}", {status: 404}) : undefined);
+		const r = await get("/");
+		expect(r.status).toBe(200);
+		expect(r.text).not.toContain('class="hero-slide"');
+		expect(r.text).toContain("DR's serier, film og direkte TV");
+		expect(r.text).toContain('action="/search/"');
+	});
+
+	test("lists the live channels, and what's on them", async () => {
+		// During "Hammerslag" on DR1, 11.40 to 12.10 UTC in the fixture
+		clock.now = () => Date.UTC(2026, 9, 12, 11, 55);
+		const r = await get("/");
+		expect(r.text).toContain('<h2 class="shelf-title" id="live-title">Direkte TV</h2>');
+		expect(r.text).toContain('<a class="tile-link" href="/live/DR1" style="--channel: #FF001E;">');
+		expect(r.text).toContain('<span class="visually-hidden">DR1: </span>Hammerslag 2022 - Lejlighed i storbyen</h3>');
+		// In Danish time
+		expect(r.text).toContain("Til 14.10, derefter");
+		expect(r.text).toContain('aria-valuenow="50"');
+	});
+
+	test("channels without a schedule", async () => {
+		// Long after the fixture's schedule
+		clock.now = () => Date.UTC(2030, 0, 1);
+		expect((await get("/")).text).toContain('<div class="channel-art">DR1</div>');
+		const r = await get("/live/DR1");
+		expect(r.status).toBe(200);
+		expect(r.text).not.toContain("Programoversigt");
+	});
+
+	test("can continue watching, and list favourites", async () => {
+		const r = await get("/");
+		expect(r.text).toContain('<section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>');
+		expect(r.text).toContain('<section class="shelf" id="favorites" data-favorites="all" aria-labelledby="favorites-title" hidden>');
+		expect(r.text).toContain('<script src="/static/progress.js?v=');
+		expect(r.text).toContain('<script src="/static/favorites.js?v=');
+		expect(r.text).toContain('<script src="/static/ui.js?v=');
+		expect(r.text).toContain('<div id="toast" class="toast-message" role="status" aria-live="polite"></div>');
+	});
+
+	test("lists recommended shows that were fetched already", async () => {
+		env.RECOMMENDED_SHOWS = "findes-ikke_1:rejseholdet_503605";
+		// The first time, they're fetched for later
+		expect((await get("/")).text).not.toContain("Anbefalede serier");
+		const r = await get("/");
+		expect(r.text).toContain("Anbefalede serier");
+		expect(r.text).toContain('href="/rejseholdet_503605/"');
+		expect(r.text).toContain("Width=640&amp;Height=360");
+		// For marking how many of its episodes the viewer has seen
+		expect(r.text).toContain('data-episode-ids="503615 ');
+		expect(r.text).toContain('data-favorite-id="rejseholdet_503605"');
+	});
+
+	test("doesn't list other visitors' shows", async () => {
+		await get("/rejseholdet_503605/");
+		await get("/rejseholdet_503605.xml");
+		const r = await get("/");
+		expect(r.text).not.toContain('href="/rejseholdet_503605/"');
+		expect(r.text).not.toContain("Anbefalede serier");
+	});
+});
+
+describe("every page", () => {
+	test("has sections in the header instead of a name", async () => {
+		const r = await get("/");
+		const nav = between(r.text, '<nav class="site-nav"', "</nav>");
+		for (const title of ["Forside", "Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]) {
+			expect(nav).toContain(`${title}</a>`);
+		}
+		expect(nav).toContain('<a href="/" class="nav-item" aria-current="page">Forside</a>');
+		// Only in the window's title, and in the link to the source
+		expect(count(r.text, "dktv")).toBe(2);
+		expect(r.text).toContain("<title>dktv</title>");
+	});
+
+	test("links to syncing and to the source", async () => {
+		const footer = between((await get("/")).text, '<footer class="site-footer">', "</footer>");
+		expect(footer).toContain('<a href="/sync/">');
+		expect(footer).toContain('<a href="https://github.com/devjoda/dktv">Kildekode</a>');
+		expect(footer).toContain("Ikke tilknyttet DR");
+	});
+
+	test("the source can be elsewhere", async () => {
+		env.SOURCE_URL = "https://example.com/kode";
+		expect((await get("/")).text).toContain('<a href="https://example.com/kode">Kildekode</a>');
+	});
+
+	test("is dark, and doesn't tell DR where it's used from", async () => {
+		for (const path of ["/", "/rejseholdet_503605/", "/search/", "/live/DR1"]) {
+			const text = (await get(path)).text;
+			expect(text).toContain('<html lang="da" data-bs-theme="dark">');
+			expect(text).toContain('<link href="/static/style.css?v=');
+			expect(text).toContain('<meta name="referrer" content="no-referrer">');
+		}
+	});
+
+	test("loads the libraries from here", async () => {
+		for (const path of ["/", "/rejseholdet_503605/", "/program/lise-noergaard_-ikke-kun-en-pige_362031"]) {
+			const text = (await get(path)).text;
+			expect(text).not.toContain("cdn.jsdelivr.net");
+			expect(text).toContain('<link href="/static/vendor/bootstrap-5.3.3.min.css" rel="stylesheet" integrity="sha384-');
+			expect(text).not.toContain("bootstrap.bundle");
+		}
+	});
+
+	test("registers the service worker from the root", async () => {
+		expect((await get("/")).text).toContain('navigator.serviceWorker.register("/sw.js")');
+	});
+
+	test("has a search box with a button", async () => {
+		expect((await get("/")).text).toContain('<button type="submit" class="search-submit" aria-label="Søg">');
+	});
+
+	test("wishes DR a happy birthday on April 1st", async () => {
+		clock.now = () => Date.UTC(2026, 3, 1, 12);
+		expect((await get("/favoritter/")).text).toContain("Tillykke til DR med de 101 år!");
+		clock.now = () => Date.UTC(2026, 3, 2, 12);
+		expect((await get("/favoritter/")).text).not.toContain("Tillykke");
+	});
+});
+
+describe("the browser's files", () => {
+	test("are copied to be served, with the service worker at the root", () => {
+		for (const path of ["static/player.js", "static/ui.js", "static/vendor/bootstrap-5.3.3.min.css", "static/vendor/hls-1.7.3.min.js",
+			"static/vendor/plyr-3.8.4.min.js", "static/vendor/plyr-3.8.4.css", "static/vendor/plyr-3.8.4.svg", "favicon.ico"]) {
+			expect(existsSync(join(PUBLIC, path)), path).toBe(true);
+		}
+		expect(readFileSync(join(PUBLIC, "sw.js"), "utf8")).toContain("ResizeImage");
+		expect(readFileSync(join(PUBLIC, "static", "player.js"), "utf8")).toContain("async function playVideo(");
+	});
+
+	test("are versioned, so browsers get new ones right after an update", async () => {
+		const text = (await get("/")).text;
+		const version = /src="\/static\/ui\.js\?v=(\w+)"/.exec(text)![1];
+		const content = readFileSync(join(PUBLIC, "static", "ui.js"));
+		expect(version).toBe(createHash("sha256").update(content).digest("hex").slice(0, 12));
+		// Which browsers may keep for good, and the service worker, which they should check for often
+		const headers = readFileSync(join(PUBLIC, "_headers"), "utf8");
+		expect(headers).toMatch(/\/static\/\*\n {2}Cache-Control: public, max-age=31536000, immutable/);
+		expect(headers).toMatch(/\/sw\.js\n {2}Cache-Control: no-cache/);
+	});
+});
+
+describe("a show", () => {
+	test("its page", async () => {
+		const r = await get("/rejseholdet_503605/");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain("Rejseholdet");
+		expect(r.text).toContain('href="rejseholdet_503615"');
+		expect(r.text).toContain('<link rel="alternate" type="application/rss+xml" title="Rejseholdet" href="/rejseholdet_503605.xml">');
+		// Only for feed readers to find, until it's a setting
+		expect(r.text).not.toContain("Abonnér med RSS");
+		// Seasons in order
+		const at = (s: string) => r.text.indexOf(s);
+		expect(at("Sæson 1")).toBeLessThan(at("Sæson 2"));
+		expect(at("Sæson 2")).toBeLessThan(at("Sæson 3"));
+		expect(at("Sæson 3")).toBeLessThan(at("Sæson 4"));
+		// Small pictures for the episodes; full HD only on offer for the big one, for screens that need it
+		const episodes = r.text.split('class="seasons"')[1];
+		expect(episodes).not.toContain("Width=1920");
+		expect(episodes).toContain("Width=640");
+		expect(r.text).toContain('1920w" sizes="100vw"');
+		// All but the big picture at the top, which is seen right away
+		expect(count(r.text, 'loading="lazy"')).toBe(count(r.text, "<img") - 1);
+		expect(r.text).toContain("Width=1280");
+		expect(r.text).toContain("1. okt. 2000");
+		expect(r.text).toContain("59 min.");
+		expect(r.text).toContain("4 sæsoner");
+		expect(r.text).toContain("32 afsnit");
+		// Seasons become tabs, with the first selected until ui.js knows where the viewer got to
+		expect(r.text).toContain('<button type="button" class="season-tab" role="tab" id="season-tab-1" aria-controls="season-1" aria-selected="true">Sæson 1</button>');
+		expect(r.text).toContain('<button type="button" class="season-tab" role="tab" id="season-tab-4" aria-controls="season-4" aria-selected="false" tabindex="-1">Sæson 4</button>');
+		// Can be made a favourite
+		expect(r.text).toContain('class="button button-secondary js-favorite" aria-pressed="false" data-favorite-id="rejseholdet_503605" data-kind="show" data-title="Rejseholdet"');
+		// For showing how far the viewer got with each episode, and what to play
+		expect(r.text).toContain('<script src="/static/progress.js?v=');
+		expect(r.text).toContain('data-video-id="503615"');
+		expect(r.text).toContain('class="button button-primary js-play" href="/rejseholdet_503605/rejseholdet_503615"');
+		expect(playlist(r.text)[0]).toEqual({id: "503615", url: "/rejseholdet_503605/rejseholdet_503615", title: "1. episode", season: "Sæson 1"});
+		expect(playlist(r.text)).toHaveLength(32);
+	});
+
+	test("announces the next episode", async () => {
+		const blob = load("items_503612.json");
+		blob.show.nextEpisode = {availableUTC: "1760000000"};
+		dr.answer = path => (path == "/items/503612" ? blob : undefined);
+		// 08:53 UTC, so 10:53 in Denmark
+		expect((await get("/rejseholdet_503605/")).text).toContain("Nyt afsnit 9. okt. kl. 10.53");
+	});
+
+	test("that isn't there", async () => {
+		const r = await get("/findes-ikke_1/");
+		expect(r.status).toBe(404);
+		expect(r.text).toContain("Siden findes ikke");
+		expect(r.text).toContain('action="/search/"');
+		expect((await get("/ikke-et-tal/")).status).toBe(404);
+		// A programme isn't a show
+		expect((await get("/lise-noergaard_-ikke-kun-en-pige_362031/")).status).toBe(404);
+	});
+
+	test("without the slash at the end", async () => {
+		const r = await get("/rejseholdet_503605");
+		expect(r.status).toBe(308);
+		expect(r.location).toBe("/rejseholdet_503605/");
+	});
+
+	test("DR-style links lead to it", async () => {
+		for (const path of ["/serie/rejseholdet_503605", "/drtv/serie/rejseholdet_503605"]) {
+			const r = await get(path);
+			expect(r.status).toBe(302);
+			expect(r.location).toBe("/rejseholdet_503605/");
+		}
+	});
+
+	test("its RSS feed", async () => {
+		const r = await get("/rejseholdet_503605.xml");
+		expect(r.status).toBe(200);
+		expect(r.contentType).toBe("application/rss+xml");
+		expect(r.text).toContain("<channel><title>Rejseholdet</title>");
+		expect(r.text).toContain("<link>http://localhost/rejseholdet_503605/</link>");
+		expect(count(r.text, "<item>")).toBe(32);
+	});
+
+	test("its RSS feed has the long descriptions once known", async () => {
+		dr.answer = path => (path == "/items/503615" ? {id: "503615", description: "Lang beskrivelse"} : undefined);
+		// Until someone opens an episode, the feed makes do with its short description
+		expect((await get("/rejseholdet_503605.xml")).text).not.toContain("Lang beskrivelse");
+		expect((await get("/rejseholdet_503605/rejseholdet_503615")).text).toContain('<p class="description">Lang beskrivelse</p>');
+		expect((await get("/rejseholdet_503605.xml")).text).toContain("<description>Lang beskrivelse</description>");
+	});
+
+	test("plays an episode by its number", async () => {
+		// Rejseholdet's second season
+		const r = await get("/rejseholdet_503605/afsnit/2?saeson=503607");
+		expect(r.status).toBe(302);
+		expect(r.location).toBe("/rejseholdet_503605/rejseholdet_503624");
+		// Without a season, the newest; and numbers past the end, the last one
+		expect((await get("/rejseholdet_503605/afsnit/1")).location).toBe("/rejseholdet_503605/rejseholdet_503616");
+		expect((await get("/rejseholdet_503605/afsnit/99?saeson=503612")).location).toBe("/rejseholdet_503605/rejseholdet_503636");
+	});
+
+	test("a show that can't be built is an error of ours", async () => {
+		const blob = load("items_503605.json");
+		blob.seasons.items = [];
+		dr.answer = path => (path == "/items/503605" ? blob : undefined);
+		const r = await get("/rejseholdet_503605/");
+		expect(r.status).toBe(500);
+		expect(r.text).toContain("Noget gik galt");
+	});
+});
+
+describe("an episode", () => {
+	test("its page", async () => {
+		const r = await get("/rejseholdet_503605/rejseholdet_503615");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain('<a class="eyebrow" href="/rejseholdet_503605/">');
+		expect(r.text).toContain('<h1 class="watch-title">1. episode</h1>');
+		expect(r.text).toContain("<title>Rejseholdet - 1. episode</title>");
+		expect(r.text).toContain('type="application/rss+xml" title="Rejseholdet" href="/rejseholdet_503605.xml"');
+		expect(r.text).toContain("<span>1. okt. 2000</span><span>59 min.</span>");
+		expect(r.text).toContain('poster="https://');
+		expect(r.text).toContain('playVideo(document.getElementById(\'video\'), "503615")');
+		// The first episode has nothing before it
+		expect(r.text).not.toContain("Forrige afsnit");
+		expect(r.text).toContain('<h2 class="side-title">Næste afsnit</h2>');
+		expect(r.text).toContain('<a class="tile-link" href="/rejseholdet_503605/rejseholdet_503640">');
+		expect(r.text).toContain('<article class="tile" data-video-id="503640">');
+		expect(r.text).toContain('data-next-url="/rejseholdet_503605/rejseholdet_503640"');
+		// What it saves about the video, to list it under "Fortsæt med at se"
+		expect(r.text).toContain('data-title="1. episode"');
+		expect(r.text).toContain('data-show="Rejseholdet"');
+		expect(r.text).toContain('data-image="https://');
+		// Which belongs to its show, so isn't a favourite on its own
+		expect(between(r.text, 'class="watch"', 'class="watch-side"')).not.toContain("js-favorite");
+	});
+
+	test("links into the next season", async () => {
+		// The last episode of season 1
+		const r = await get("/rejseholdet_503605/rejseholdet_503638");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain('<h2 class="side-title">Forrige afsnit</h2>');
+		expect(r.text).toContain('<h3 class="tile-title">8. episode</h3>');
+		expect(r.text).toContain('<h3 class="tile-title">Sæson 2, 1. episode</h3>');
+		// There's no fixture for this episode's page, so it falls back to the short description
+		expect(r.text).toContain("Dansk krimiserie fra 2000.");
+	});
+
+	test("that isn't there", async () => {
+		expect((await get("/rejseholdet_503605/findes-ikke_1")).status).toBe(404);
+	});
+});
+
+describe("a programme on its own", () => {
+	test("its page", async () => {
+		const r = await get("/program/lise-noergaard_-ikke-kun-en-pige_362031");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain("Lise Nørgaard: Ikke kun en pige");
+		expect(r.text).toContain("<span>7. jan. 2023</span><span>48 min.</span>");
+		expect(r.text).toContain('poster="https://');
+		expect(r.text).toContain('playVideo(document.getElementById(\'video\'), "362031")');
+		expect(r.text).not.toContain("Næste afsnit");
+		// Films can be favourites from their page
+		expect(r.text).toContain('data-favorite-id="lise-noergaard_-ikke-kun-en-pige_362031" data-kind="film"');
+	});
+
+	test("players use Plyr, and the pinned hls.js", async () => {
+		for (const path of ["/program/lise-noergaard_-ikke-kun-en-pige_362031", "/rejseholdet_503605/rejseholdet_503615", "/live/DR1"]) {
+			const text = (await get(path)).text;
+			expect(text).toContain('<script src="/static/vendor/hls-1.7.3.min.js" integrity="sha384-');
+			expect(text).toContain('<script src="/static/player.js?v=');
+			expect(text).toContain('<script src="/static/vendor/plyr-3.8.4.min.js" integrity="sha384-');
+			expect(text).toContain('<link href="/static/vendor/plyr-3.8.4.css" rel="stylesheet" integrity="sha384-');
+		}
+	});
+});
+
+describe("live", () => {
+	test("the channels", async () => {
+		const r = await get("/live/");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain('<a class="tile-link" href="/live/DR1" style="--channel: #FF001E;">');
+		expect(r.text).toContain('<a href="/live/" class="nav-item" aria-current="page"><span class="live-dot"></span>Direkte</a>');
+	});
+
+	test("a channel", async () => {
+		const r = await get("/live/DR1");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain("https://drlivedr1hls.akamaized.net/");
+		expect(r.text).toContain("setupLive(document.getElementById('video'), ");
+		const switcher = between(r.text, '<nav class="channel-switcher"', "</nav>");
+		expect(switcher).toContain('<a href="/live/DR1" class="nav-item" aria-current="page"><span class="live-dot"></span>DR1</a>');
+		expect(count(switcher, "aria-current")).toBe(1);
+	});
+
+	test("a channel's programmes, with subtitles to choose", async () => {
+		clock.now = () => Date.UTC(2026, 9, 12, 11, 55);
+		const r = await get("/live/DR1");
+		expect(r.text).toContain('<li class="programme is-now" data-start="2026-10-12T11:40:00+00:00" data-end="2026-10-12T12:10:00+00:00">');
+		expect(r.text).toContain('<time class="programme-time" datetime="2026-10-12T11:40:00+00:00">13.40</time>');
+		expect(r.text).toContain("Til 14.10");
+		expect(r.text).toContain('class="button button-secondary js-live-subtitles" aria-pressed="false"');
+		expect(r.text).toContain("drlivedr1texthls");
+	});
+
+	test("a channel that isn't there", async () => {
+		expect((await get("/live/DR9")).status).toBe(404);
+		expect((await get("/live/constructor")).status).toBe(404);
+	});
+});
+
+describe("categories and lists", () => {
+	test("the categories", async () => {
+		const r = await get("/kategorier/");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain('<a class="category" href="/kategorier/fiktionsserier/">');
+		expect(r.text).toContain('<span class="category-title">Dokumentar</span>');
+		// Search does A to Å better
+		expect(r.text).not.toContain("a-aa");
+	});
+
+	test("a category", async () => {
+		const r = await get("/kategorier/fiktionsserier/");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain("<h1>Serier</h1>");
+		expect(r.text).toContain('<a href="/kategorier/fiktionsserier/" class="nav-item" aria-current="page">Serier</a>');
+		expect(r.text).toContain('<h2 class="shelf-title" id="row-1">');
+		expect(r.text).toMatch(/<a class="shelf-more" href="\/liste\/\d+\/\?titel=[^"]+">Se alle/);
+		expect((await get("/kategorier/findes-ikke/")).status).toBe(404);
+		expect((await get("/kategorier/fiktionsserier")).location).toBe("/kategorier/fiktionsserier/");
+	});
+
+	test("all of a list", async () => {
+		dr.answer = (path, params) => {
+			if (path != "/lists/355817") {
+				return undefined;
+			}
+			const page = Number(params.get("page"));
+			return {
+				id: "355817", title: "Film | A - Å", paging: {total: 2},
+				items: [0, 1, 2].map(i => ({id: String(page * 1000 + i), type: "program", title: `Film ${page}-${i}`, path: `/program/film-${page}-${i}_${page * 1000 + i}`})),
+			};
+		};
+		const r = await get("/liste/355817/?titel=A%20-%20%C3%85");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain("<h1>A - Å</h1>");
+		// Both pages
+		expect(count(r.text, 'class="tile"')).toBe(6);
+		expect(r.text).toContain('href="/program/film-2-2_2002"');
+		expect((await get("/liste/355817/")).text).toContain("<h1>Film: A - Å</h1>");
+		expect((await get("/liste/1/")).status).toBe(404);
+	});
+});
+
+describe("favourites", () => {
+	test("their page, shows first and films below", async () => {
+		const r = await get("/favoritter/");
+		expect(r.status).toBe(200);
+		const shows = r.text.indexOf('<section class="results" id="favorite-shows" data-favorites="show"');
+		const films = r.text.indexOf('<section class="results" id="favorite-films" data-favorites="film"');
+		expect(shows).toBeGreaterThan(0);
+		expect(shows).toBeLessThan(films);
+		expect(r.text).toContain('<section class="results" id="continue-watching" aria-labelledby="continue-title" hidden>');
+	});
+
+	test("are described", async () => {
+		const r = await get("/favorites.json?shows=rejseholdet_503605:findes-ikke_1:ikke-et-tal&films=lise-noergaard_-ikke-kun-en-pige_362031:findes-ikke_2");
+		expect(r.status).toBe(200);
+		const favorites = JSON.parse(r.text);
+		// The ones that can't be found are left out, instead of failing it all
+		expect(Object.keys(favorites.shows)).toEqual(["rejseholdet_503605"]);
+		expect(Object.keys(favorites.films)).toEqual(["lise-noergaard_-ikke-kun-en-pige_362031"]);
+		expect(favorites.more).toBeUndefined();
+		const film = favorites.films["lise-noergaard_-ikke-kun-en-pige_362031"];
+		expect(film).toMatchObject({title: "Lise Nørgaard: Ikke kun en pige", url: "/program/lise-noergaard_-ikke-kun-en-pige_362031", minutes: 48});
+		const rejseholdet = favorites.shows["rejseholdet_503605"];
+		expect(rejseholdet).toMatchObject({title: "Rejseholdet", url: "/rejseholdet_503605/", seasons: 4, episodes: 32, new: false});
+		expect(rejseholdet.image).toContain("Width=640");
+		expect(rejseholdet.episode_ids).toHaveLength(32);
+		expect(rejseholdet.episode_ids[0]).toBe("503615");
+	});
+
+	test("none", async () => {
+		const r = await get("/favorites.json");
+		expect(JSON.parse(r.text)).toEqual({shows: {}, films: {}});
+		expect(dr.requested.filter(p => p.startsWith("/items/"))).toEqual([]);
+	});
+
+	test("more than a visit may ask DR about are left for the next", async () => {
+		// Twenty shows, each like Rejseholdet, with its four seasons
+		dr.answer = path => (/^\/items\/9\d\d$/.test(path) ? load("items_503605.json") : undefined);
+		const wanted = Array.from({length: 20}, (_, i) => `show_${900 + i}`);
+		const first = JSON.parse((await get(`/favorites.json?shows=${wanted.join(":")}`)).text);
+		const described = Object.keys(first.shows);
+		expect(described.length).toBeGreaterThan(3);
+		expect(first.more.shows.length).toBeGreaterThan(0);
+		expect([...described, ...first.more.shows].sort()).toEqual(wanted.sort());
+		// Fewer requests to DR than a visit may make
+		expect(dr.requested.length).toBeLessThanOrEqual(46);
+		const second = JSON.parse((await get(`/favorites.json?shows=${first.more.shows.join(":")}`)).text);
+		expect(Object.keys(second.shows).length).toBeGreaterThan(0);
+	});
+
+	test("shows and films can be made favourites from their tiles", async () => {
+		const r = await get("/search/?query=matador");
+		expect(r.text).toContain('aria-label="Favorit: Matador" title="Favorit"');
+		expect(r.text).toContain('data-favorite-id="matador_540736" data-kind="show"');
+		expect(r.text).toContain('data-favorite-id="lise-noergaard_-ikke-kun-en-pige_362031" data-kind="film"');
+	});
+});
+
+describe("search", () => {
+	test("finds series, films and episodes", async () => {
+		const r = await get("/search/?query=matador");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain('href="/matador_540736/"');
+		expect(r.text).toContain('href="/program/lise-noergaard_-ikke-kun-en-pige_362031"');
+		expect(r.text).toContain('href="/557181/matadorerne_-den-foerste-kaempe_557186"');
+		expect(r.text).not.toContain("Ingen resultater");
+		// Labelled by kind
+		expect(r.text).toContain('<span class="tag tag-type">Serie</span>');
+		expect(r.text).toContain('<span class="tag tag-type">Film</span>');
+		expect(r.text).toContain('<span class="tag tag-type">Afsnit</span>');
+		// Films and episodes can be marked as seen, series can't from here
+		expect(r.text).toContain('data-video-id="362031"');
+		expect(r.text).not.toContain('data-video-id="540736"');
+		// What was searched for stays in the header's search box
+		expect(r.text).toContain('placeholder="Søg i DRTV" aria-label="Søg" value="matador"');
+	});
+
+	test("without a query asks for one", async () => {
+		for (const path of ["/search/", "/search/?query=", "/search/?query=++"]) {
+			const r = await get(path);
+			expect(r.status).toBe(200);
+			expect(r.text).toContain("Søg efter serier, film og afsnit");
+		}
+		expect(dr.requested.filter(p => p.startsWith("search:"))).toEqual([]);
+	});
+
+	test("without results", async () => {
+		dr.answer = path => (path == "/search" ? {series: {items: []}, playable: {items: []}} : undefined);
+		const r = await get("/search/?query=xyzzy");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain("Ingen resultater for „xyzzy“");
+	});
+
+	test("is kept for a while", async () => {
+		await get("/search/?query=matador");
+		await get("/search/?query=matador&page=2");
+		expect(dr.requested.filter(p => p.startsWith("search:"))).toEqual(["search:matador"]);
+	});
+});
+
+describe("errors", () => {
+	test("DR being down isn't a missing page", async () => {
+		dr.down = true;
+		// Even the channels can't be fetched, so the front page fails too
+		for (const path of ["/", "/rejseholdet_503605/"]) {
+			const r = await get(path);
+			expect(r.status).toBe(503);
+			expect(r.text).toContain("DR svarer ikke lige nu");
+		}
+	});
+
+	test("what was got before is used while DR is down", async () => {
+		const before = (await get("/rejseholdet_503605/")).text;
+		expireAll();
+		dr.down = true;
+		const r = await get("/rejseholdet_503605/");
+		expect(r.status).toBe(200);
+		expect(r.text).toBe(before);
+	});
+
+	test("a page that isn't anything", async () => {
+		const r = await get("/a/b/c/d");
+		expect(r.status).toBe(404);
+		expect(r.text).toContain("Siden findes ikke");
+	});
+});

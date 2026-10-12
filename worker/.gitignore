@@ -1,0 +1,8 @@
+node_modules/
+# Made by `npm run build`
+public/
+src/static-versions.json
+src/kept-version.json
+.wrangler/
+.dev.vars
+.bench/
