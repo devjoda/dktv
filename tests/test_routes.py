@@ -528,3 +528,35 @@ def test_our_static_files_are_versioned(get, tmp_path, monkeypatch):
     (tmp_path / "ui.js").write_text("// new, and longer")
     assert static_url("ui.js") != old
     assert static_url("ui.js").startswith("/static/ui.js?v=")
+
+
+def test_responses_are_compressed(fake_dr):
+    """For browsers that say they can take it"""
+    import asyncio
+    import gzip as gzip_module
+    from drtvrss import app
+
+    async def request(path, headers):
+        async with app.test_app() as test_app:
+            r = await test_app.test_client().get(path, headers=headers)
+            return r, await r.get_data()
+
+    def get(path, **headers):
+        return asyncio.run(request(path, headers))
+
+    r, body = get("/rejseholdet_503605/", **{"Accept-Encoding": "gzip, deflate, br"})
+    assert r.headers["Content-Encoding"] == "gzip"
+    assert "Accept-Encoding" in r.headers["Vary"]
+    page = gzip_module.decompress(body).decode()
+    assert "<h1 class=\"hero-title\">Rejseholdet</h1>" in page
+    assert len(body) < len(page) / 4
+
+    r, body = get("/rejseholdet_503605/")
+    assert "Content-Encoding" not in r.headers
+    assert b"Rejseholdet" in body
+
+    # Scripts and feeds too, but not what's compressed already, or too small to be worth it
+    assert get("/static/ui.js", **{"Accept-Encoding": "gzip"})[0].headers["Content-Encoding"] == "gzip"
+    assert get("/rejseholdet_503605.xml", **{"Accept-Encoding": "gzip"})[0].headers["Content-Encoding"] == "gzip"
+    assert "Content-Encoding" not in get("/static/vendor/schibsted-grotesk-5.3.0-latin.woff2", **{"Accept-Encoding": "gzip"})[0].headers
+    assert "Content-Encoding" not in get("/favorites.json", **{"Accept-Encoding": "gzip"})[0].headers

@@ -3,6 +3,7 @@ from datetime import datetime
 from functools import lru_cache
 from typing import Optional
 import asyncio
+import gzip
 import hashlib
 import os
 import sqlite3
@@ -70,6 +71,36 @@ def static_url(filename: str) -> str:
     pages with old scripts for a while after every update."""
     path = os.path.join(app.static_folder, filename)
     return f"/static/{filename}?v={file_version(path, os.stat(path).st_mtime_ns)}"
+
+
+# What's worth compressing: text, which pages are mostly the same tags and URLs of, over and over
+COMPRESSIBLE = ("text/", "application/json", "application/rss+xml", "application/javascript", "image/svg+xml")
+MIN_COMPRESSED_SIZE = 1024
+
+
+@app.after_request
+async def compress(response):
+    """Gzips what's sent, which makes the pages about a sixteenth of their size"""
+    if (
+        response.status_code != 200
+        or "gzip" not in request.headers.get("Accept-Encoding", "")
+        or "Content-Encoding" in response.headers
+        # Parts of a file, which would no longer fit together
+        or "Content-Range" in response.headers
+        or not (response.mimetype or "").startswith(COMPRESSIBLE)
+    ):
+        return response
+    data = await response.get_data()
+    if len(data) < MIN_COMPRESSED_SIZE:
+        return response
+    response.set_data(gzip.compress(data, compresslevel=6))
+    response.headers["Content-Encoding"] = "gzip"
+    response.vary.add("Accept-Encoding")
+    # Not the same bytes as uncompressed any more, though the same file
+    etag, weak = response.get_etag()
+    if etag and not weak:
+        response.set_etag(etag, weak=True)
+    return response
 
 
 @app.context_processor
