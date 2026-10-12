@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block head %}
+<title>{{ title }} - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block content %}
+<section class="py-5 container">
+    <div class="col-lg-6 col-md-8 mx-auto text-center">
+        <h1 class="fw-light">{{ title }}</h1>
+        <p class="lead text-body-secondary">{{ message }}</p>
+        {% include "_search_form.html" %}
+        <p><a href="/">Gå til forsiden</a></p>
+    </div>
+</section>
+{% endblock %}

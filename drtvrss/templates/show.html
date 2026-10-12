@@ -1,19 +1,14 @@
 {% extends "base.html" %}
 {% block head %}
 <title>{{ s.title }} - {{ SERVICE_NAME }}</title>
+<link rel="alternate" type="application/rss+xml" title="{{ s.title }}" href="{{ s.feed_url }}">
+<script src="/static/progress.js"></script>
 {% endblock %}
 {% block content %}
 <section class="py-5 text-center container">
     <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
-            <h1 class="fw-light">{{ s.title }}
-                <a href="{{ s.feed_url }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-rss" viewBox="0 0 16 16">
-                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                        <path d="M5.5 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-3-8.5a1 1 0 0 1 1-1c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1-1-1m0 4a1 1 0 0 1 1-1 6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1-1-1"/>
-                    </svg>
-                </a>
-            </h1>
+            <h1 class="fw-light">{{ s.title }}</h1>
             <p class="lead text-body-secondary">
             {{ s.description }}
             </p>
@@ -22,6 +17,16 @@
                 Næste episode: {{ s.next_episode.strftime("%d/%m %H:%M") }}
             </p>
             {% endif %}
+
+            <p>
+                <a href="{{ s.feed_url }}" class="btn btn-outline-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rss align-text-bottom" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                        <path d="M5.5 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-3-8.5a1 1 0 0 1 1-1c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1-1-1m0 4a1 1 0 0 1 1-1 6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1-1-1"/>
+                    </svg>
+                    Abonnér med RSS
+                </a>
+            </p>
 
             {% if s.url %}
             <p class="lead text-body-secondary">
@@ -35,30 +40,35 @@
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
 
-        {% for season in s.seasons %}
+        {# Newest first, since that's usually what you're here for #}
+        {% for season in s.seasons|reverse %}
         {% if s.seasons|length != 1 %}
-            <h1 class="pt-4">{{ season.title }} </h1>
+            <h2 class="pt-4">{{ season.title }}</h2>
         {% endif %}
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for ep in season.episodes %}
             <div class="col">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm" data-video-id="{{ ep.ep_link.split('_')[-1] }}">
                     <a href="{{ ep.ep_link }}">
-                        <img src="{{ ep.wallpaper }}" width="100%" height="225">
+                        <img src="{{ ep.wallpaper|thumbnail }}" width="100%" height="225" loading="lazy">
                     </a>
+                    <div class="episode-progress progress rounded-0" style="height: 4px;" role="progressbar" aria-label="Set indtil videre" aria-valuemin="0" aria-valuemax="100" hidden>
+                        <div class="progress-bar bg-danger"></div>
+                    </div>
 
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h2><a href="{{ ep.ep_link }}">{{ ep.title }}</a></h2>
+                            <h3><a href="{{ ep.ep_link }}">{{ ep.title }}</a></h3>
                             {% if ep.geo_restricted %}
                                 <p title="Kun tilgængelig i Danmark">🇩🇰</p>
                             {% endif %}
                         </div>
                         <p class="card-text">{{ ep.short_description }}</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-body-secondary">{{ ep.pubdate.strftime("%d/%m %Y") }}</small>
+                            <small class="text-body-secondary">{{ ep.pubdate|danish_date }}</small>
+                            <small class="episode-watched text-body-secondary" hidden>✓ Set</small>
                             {% if ep.len_minutes %}
-                                <small class="text-body-secondary" title="{{ ep.len_minutes }} minutter">{{ ep.len_minutes }}M</small>
+                                <small class="text-body-secondary">{{ ep.len_minutes|duration }}</small>
                             {% endif %}
                         </div>
                     </div>
@@ -69,4 +79,8 @@
         {% endfor %}
     </div>
 </div>
+<script>
+    // Also when coming back to the page, which the browser may have kept as it was
+    window.addEventListener("pageshow", showProgress);
+</script>
 {% endblock %}

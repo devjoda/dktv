@@ -64,6 +64,8 @@ class Item(DRModel):
     description: str = ""
     images: Images = Images()
     custom_fields: CustomFields = CustomFields()
+    # Set on episodes, like in search results
+    show_id: Optional[str] = None
 
 
 class ItemList(DRModel, Generic[T]):

@@ -1,13 +1,33 @@
 {% extends "base.html" %}
 {% block head %}
 <title>{% if s %}{{ s.title }} - {% endif %}{{ e.title }}</title>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.7.3/dist/hls.min.js" integrity="sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX" crossorigin="anonymous"></script>
+{% if s %}
+<link rel="alternate" type="application/rss+xml" title="{{ s.title }}" href="{{ s.feed_url }}">
+{% endif %}
+<script src="/static/vendor/hls-1.7.3.min.js" integrity="sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX"></script>
+<script src="/static/progress.js"></script>
 <script src="/static/player.js"></script>
 {% endblock %}
 {% block content %}
 <div class="container-fluid pt-2">
     <h1 class="mx-auto" style="width: 100%;">{% if s %}<a href="/{{ s.url }}/">{{ s.title }}</a> - {% endif %}{{ e.title }}</h1>
-    <video id="video" class="mx-auto" controls></video>
+    <video id="video" class="mx-auto" controls
+        {%- if e.wallpaper %} poster="{{ e.wallpaper }}"{% endif %}
+        {%- if next %} data-next-url="{{ next.url }}" data-next-title="{{ next.title }}"{% endif %}
+        data-title="{{ e.title }}"
+        {%- if s %} data-show="{{ s.title }}"{% endif %}
+        {%- if e.wallpaper %} data-image="{{ e.wallpaper|thumbnail }}"{% endif %}></video>
+    <p class="pt-2 mb-1 text-body-secondary">
+        {%- if e.pubdate %}{{ e.pubdate|danish_date }}{% endif %}
+        {%- if e.pubdate and e.len_minutes %} · {% endif %}
+        {%- if e.len_minutes %}{{ e.len_minutes|duration }}{% endif -%}
+    </p>
+    {% if previous or next %}
+    <nav class="d-flex flex-column flex-sm-row justify-content-between gap-1 gap-sm-3 my-2" aria-label="Afsnit">
+        <div>{% if previous %}<a href="{{ previous.url }}" rel="prev">← Forrige: {{ previous.title }}</a>{% endif %}</div>
+        <div class="text-sm-end">{% if next %}<a href="{{ next.url }}" rel="next">Næste: {{ next.title }} →</a>{% endif %}</div>
+    </nav>
+    {% endif %}
     <p class="pt-2" style="white-space: pre-wrap;">{{ e.description }}</p>
     {% if e.url %}
         <a href="https://www.dr.dk/drtv{{ e.url }}">Se på DRTV</a>
@@ -23,6 +43,6 @@ video {
 }
 </style>
 <script>
-    playVideo(document.getElementById('video'), document.URL.split("_").reverse()[0]);
+    playVideo(document.getElementById('video'), {{ e.url.split("_")[-1]|tojson }});
 </script>
 {% endblock %}

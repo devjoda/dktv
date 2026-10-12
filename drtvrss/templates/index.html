@@ -1,15 +1,33 @@
 {% extends "base.html" %}
+{% block head %}
+{{ super() }}
+<script src="/static/progress.js"></script>
+{% endblock %}
 {% block content %}
+<h1 class="visually-hidden">{{ SERVICE_NAME }}</h1>
+{# Filled in from the viewer's browser #}
+<div id="continue-watching" class="pt-5 bg-body-tertiary" hidden>
+    <div class="container">
+        <h2 class="mb-4">Fortsæt med at se</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"></div>
+    </div>
+</div>
+<script>
+    // Also when coming back to the page, which the browser may have kept as it was
+    window.addEventListener("pageshow", showContinueWatching);
+</script>
+{% if shows %}
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
-
+        <h2 class="mb-4">Anbefalede serier</h2>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {% for i, show in shows %}
+            {% for show in shows %}
                 {% include "_show_card.html" %}
             {% endfor %}
         </div>
     </div>
 </div>
+{% endif %}
 <footer class="text-body-secondary py-5">
     <div class="py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">

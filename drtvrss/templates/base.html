@@ -3,10 +3,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        {# DR doesn't need to know which site its images, streams and links are used from #}
+        <meta name="referrer" content="no-referrer">
         {% block head %}
         <title>{{ SERVICE_NAME }}</title>
         {% endblock %}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="/static/vendor/bootstrap-5.3.3.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH">
     </head>
     <body>
     {% if birthday %}
@@ -14,17 +16,27 @@
     {% endif %}
         <header data-bs-theme="dark">
             <div class="navbar navbar-dark bg-dark shadow-sm">
-                <div class="container">
+                <div class="container gap-2">
                     <a href="/" class="navbar-brand d-flex align-items-center">
                         <strong>{{ SERVICE_NAME }}</strong>
                     </a>
-                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    {% for slug, channel in channels.items() %}
-                     <li><a href="/live/{{ slug }}" class="nav-link px-2 text-white">{{ channel.title }}</a></li>
-                    {% endfor %}
-                    </ul>
-                    <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search" action="/search/">
-                        <input type="search" name="query" class="form-control" placeholder="Søg..." aria-label="Søg" {% if query%} value="{{ query }}" {% endif %}>
+                    {# One row that scrolls sideways on small screens, instead of wrapping #}
+                    <nav class="col-12 col-lg-auto me-lg-auto" style="overflow-x: auto;" aria-label="Direkte kanaler">
+                        <ul class="nav flex-nowrap text-nowrap">
+                        {% for slug, channel in channels.items() %}
+                            {% if slug == current_channel %}
+                            <li><a href="/live/{{ slug }}" class="nav-link px-2 text-white fw-semibold text-decoration-underline link-offset-2" aria-current="page">{{ channel.title }}</a></li>
+                            {% else %}
+                            <li><a href="/live/{{ slug }}" class="nav-link px-2 text-white">{{ channel.title }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </nav>
+                    <form class="col-12 col-lg-auto mb-2 mb-lg-0" role="search" action="/search/">
+                        <div class="input-group">
+                            <input type="search" name="query" class="form-control" placeholder="Søg..." aria-label="Søg" {% if query%} value="{{ query }}" {% endif %}>
+                            <button class="btn btn-outline-light" type="submit">Søg</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -36,6 +48,10 @@
 
         </main>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script>
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("/sw.js").catch(() => {});
+            }
+        </script>
     </body>
 </html>

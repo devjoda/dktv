@@ -8,7 +8,7 @@ from aiohttp.test_utils import TestServer
 from werkzeug.exceptions import NotFound
 
 from drtvrss import drtv, models as dr
-from drtvrss.show import BASE_URL, Episode
+from drtvrss.show import BASE_URL, MEDIA_RSS, Episode, danish_date, duration, thumbnail
 
 from .conftest import load
 
@@ -37,12 +37,13 @@ def test_build_show():
     assert show.wallpaper.startswith("https://")
     assert not show.geo_restricted
     assert show.next_episode is None
-    # Seasons titled like the show are named by their number instead
+    # Seasons titled like the show are named by their number instead,
+    # and the others don't repeat the show's name
     assert [s.title for s in show.seasons] == [
         "Sæson 1",
         "Sæson 2",
-        "Rejseholdet: Sæson 3",
-        "Rejseholdet: Sæson 4",
+        "Sæson 3",
+        "Sæson 4",
     ]
     assert [len(s.episodes) for s in show.seasons] == [9, 7, 14, 2]
 
@@ -75,12 +76,57 @@ def test_rss_feed():
     rss = ET.fromstring(show.to_rss_feed())
     channel = rss.find("channel")
     assert channel.findtext("title") == "Rejseholdet"
+    assert channel.findtext("link") == f"{BASE_URL}/rejseholdet_503605/"
     items = channel.findall("item")
     assert len(items) == 9 + 7 + 14 + 2
     assert items[0].findtext("title") == "1. episode"
     assert items[0].findtext("link") == f"{BASE_URL}/rejseholdet_503605/rejseholdet_503615"
     assert items[0].findtext("guid") == "DRTV:rejseholdet_503615"
     assert items[0].findtext("pubDate") == "Sun, 01 Oct 2000 18:00:08 +0000"
+    # Until someone opens an episode, the feed makes do with its short description
+    assert items[0].findtext("description").startswith("Dansk krimiserie fra 2000")
+    image = items[0].find(f"{{{MEDIA_RSS}}}thumbnail").get("url")
+    assert "Width=640&Height=360" in image
+
+
+def test_rss_feed_prefers_the_long_description():
+    show = drtv.build_show(latest_season(), seasons())
+    show.seasons[0].episodes[0].description = "Lang beskrivelse"
+    items = ET.fromstring(show.to_rss_feed()).findall("channel/item")
+    assert items[0].findtext("description") == "Lang beskrivelse"
+
+
+def test_danish_date():
+    assert danish_date(datetime(2000, 10, 1)) == "1. okt. 2000"
+    assert danish_date(datetime(2023, 5, 17)) == "17. maj 2023"
+    # Shown as it was in Denmark, where it was already the next day
+    assert danish_date(datetime(2000, 12, 31, 23, 30, tzinfo=timezone.utc)) == "1. jan. 2001"
+
+
+def test_duration():
+    assert duration(59) == "59 min."
+    assert duration(60) == "1 t."
+    assert duration(75) == "1 t. 15 min."
+
+
+def test_get_program(fake_dr):
+    program = asyncio.run(drtv.get_program("lise-noergaard_-ikke-kun-en-pige_362031"))
+    assert program.title == "Lise Nørgaard: Ikke kun en pige"
+    assert program.len_minutes == 48
+    assert program.pubdate == datetime(2023, 1, 7, 17, 0, tzinfo=timezone.utc)
+    assert program.wallpaper.startswith("https://")
+
+
+def test_thumbnail():
+    image = "https://example.com/ResizeImage/$value?Format='jpg'&Width=1920&Height=1080&ImageId='1'"
+    assert thumbnail(image) == image.replace("Width=1920&Height=1080", "Width=640&Height=360")
+    # Keeps the image's proportions
+    assert "Width=640&Height=960" in thumbnail(image.replace("Height=1080", "Height=2880"))
+    # Leaves alone what it doesn't know how to resize, or what's small already
+    assert thumbnail("https://example.com/image.jpg") == "https://example.com/image.jpg"
+    small = image.replace("Width=1920&Height=1080", "Width=320&Height=180")
+    assert thumbnail(small) == small
+    assert thumbnail(None) is None
 
 
 def test_build_search_result():
@@ -93,6 +139,19 @@ def test_build_search_result():
     assert len(result.movies) > 0
     assert all("episode" not in m.url for _, m in result.movies)
     assert all(m.url.startswith("/program/") for _, m in result.movies)
+    episodes = dict(result.episodes)
+    assert episodes["557186"].title == "Matadorerne: Den første kæmpe"
+    # Played on their show's page
+    assert episodes["557186"].url == "/557181/matadorerne_-den-foerste-kaempe_557186"
+
+
+def test_build_search_result_episode_without_show():
+    blob = load("search.json")
+    episode = next(i for i in blob["playable"]["items"] if i["id"] == "557186")
+    del episode["showId"]
+    result = drtv.build_search_result(dr.SearchResponse.model_validate(blob))
+    url = dict(result.episodes)["557186"].url
+    assert url == "/program/matadorerne_-den-foerste-kaempe_557186"
 
 
 def test_get_show_fetches_all_seasons_and_caches(fake_dr):
@@ -190,6 +249,8 @@ def test_get_api(monkeypatch):
         requests.append((request.path, dict(request.query)))
         if request.path == "/api/items/1":
             return web.json_response({"message": "Item '1' not found"}, status=404)
+        if request.path == "/api/items/2":
+            return web.json_response({"message": "Oops"}, status=500)
         return web.json_response({"id": "503605"})
 
     async def run():
@@ -201,6 +262,39 @@ def test_get_api(monkeypatch):
                 assert await drtv.get_api("/items/503605", expand="all") == {"id": "503605"}
                 with pytest.raises(NotFound):
                     await drtv.get_api("/items/1")
+                # DR's own trouble isn't a missing page
+                with pytest.raises(drtv.DRUnavailable):
+                    await drtv.get_api("/items/2")
+        # Nor is DR not answering at all
+        async with drtv.http_session():
+            with pytest.raises(drtv.DRUnavailable):
+                await drtv.get_api("/items/503605")
 
     asyncio.run(run())
     assert requests[0] == ("/api/items/503605", drtv.API_PARAMS | {"expand": "all"})
+
+
+def test_fetch_search_encodes_the_query(monkeypatch):
+    """Against a stand-in for DR's search, since the other tests replace fetch_search"""
+    queries = []
+
+    async def handler(request):
+        queries.append(dict(request.query))
+        return web.json_response({})
+
+    async def get_token():
+        return "token"
+
+    async def run():
+        app = web.Application()
+        app.router.add_get("/{path:.*}", handler)
+        async with TestServer(app) as server:
+            monkeypatch.setattr(drtv, "SEARCH_API", str(server.make_url("/api/search")))
+            monkeypatch.setattr(drtv, "get_token", get_token)
+            async with drtv.http_session():
+                for query in ["Matador & co", "Bonderøven #1", "a+b"]:
+                    await drtv.fetch_search(query)
+
+    asyncio.run(run())
+    assert [q["term"] for q in queries] == ["Matador & co", "Bonderøven #1", "a+b"]
+    assert queries[0] == drtv.SEARCH_PARAMS | {"term": "Matador & co"}

@@ -1,10 +1,23 @@
 {% extends "base.html" %}
 {% block head %}
-<title>{{ SERVICE_NAME }} - {{ query }}</title>
+<title>{% if query %}{{ query }} - {% endif %}Søg - {{ SERVICE_NAME }}</title>
 {% endblock %}
 {% block content %}
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
+
+        {% if not query %}
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1>Søg</h1>
+            {% include "_search_form.html" %}
+        </div>
+        {% elif not (results.series or results.movies or results.episodes) %}
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1>Ingen resultater for „{{ query }}“</h1>
+            <p class="lead text-body-secondary">Prøv at stave det anderledes, eller søg efter noget andet.</p>
+            {% include "_search_form.html" %}
+        </div>
+        {% endif %}
 
         {% if results.series|length > 0 %}
         <h1>Serier</h1>
@@ -18,6 +31,14 @@
         <h1>Film</h1>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for i, show in results.movies %}
+                {% include "_show_card.html" %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if results.episodes|length > 0 %}
+        <h1 class="pt-4">Afsnit</h1>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for i, show in results.episodes %}
                 {% include "_show_card.html" %}
             {% endfor %}
         </div>

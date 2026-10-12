@@ -9,7 +9,7 @@ import uuid
 
 import asyncio
 import certifi
-from aiohttp import ClientSession, TCPConnector
+from aiohttp import ClientError, ClientSession, TCPConnector
 from pydantic import TypeAdapter
 
 from quart import abort
@@ -52,6 +52,10 @@ def http() -> ClientSession:
     return session
 
 
+class DRUnavailable(Exception):
+    """DR didn't answer, or answered with an error of its own"""
+
+
 API = "https://production-cdn.dr-massive.com/api"
 # The parameters DR's own website sends along
 API_PARAMS = {
@@ -66,10 +70,16 @@ API_PARAMS = {
 async def get_api(path: str, **params) -> dict:
     """Gets something from DR's API, like `/items/{id}`"""
     print("Fetching from DR", path, params)
-    async with http().get(API + path, params=API_PARAMS | params, timeout=5) as r:
-        if r.status != 200:
-            abort(404)
-        return await r.json()
+    try:
+        async with http().get(API + path, params=API_PARAMS | params, timeout=5) as r:
+            # DR doesn't have it, or doesn't think we asked for anything sensible
+            if 400 <= r.status < 500:
+                abort(404)
+            if r.status != 200:
+                raise DRUnavailable(f"DR responded {r.status} to {path}")
+            return await r.json()
+    except (ClientError, asyncio.TimeoutError) as e:
+        raise DRUnavailable(f"Could not reach DR for {path}: {e!r}") from e
 
 
 async def get_show(show: str, max_age: int = 3600) -> Show:
@@ -121,6 +131,9 @@ def build_show(latest: dr.Season, seasons: dict[str, dr.Season]) -> Show:
                 title = "Sæson " + str(s.season_number)
             elif s.release_year is not None:
                 title = str(s.release_year)
+        else:
+            # Like "Rejseholdet: Sæson 3", where the show's name is just noise
+            title = title.removeprefix(feed.title + ": ")
 
         season = Season(title)
         for ep in seasons[s.path].episodes.items:
@@ -140,8 +153,12 @@ def build_show(latest: dr.Season, seasons: dict[str, dr.Season]) -> Show:
     return feed
 
 
-def get_shows() -> dict[int, Show]:
-    return shows
+def get_cached_show(show: str) -> Optional[Show]:
+    """Returns the show if it has already been fetched, without fetching it"""
+    try:
+        return shows.get(int(show.split("_")[-1]))
+    except ValueError:
+        return None
 
 
 async def get_long_description(episode: Episode):
@@ -171,6 +188,8 @@ async def get_token() -> str:
                 "optout": True,
             },
         ) as r:
+            if r.status != 200:
+                raise DRUnavailable(f"DR responded {r.status} when asked for a token")
             tokens = TypeAdapter(list[dr.Token]).validate_python(await r.json())
             # The api issues two tokens. The UserProfile one is used for search
             profile_token = [t for t in tokens if t.type == "UserProfile"][0]
@@ -185,11 +204,15 @@ async def get_program(prog: str) -> Program:
     except ValueError:
         abort(404)
     if progid not in programs or programs[progid].age + 3600 < time():
-        item = dr.Item.model_validate(await get_api(f"/items/{progid}"))
+        # Programs carry the same date and length as episodes do
+        item = dr.Episode.model_validate(await get_api(f"/items/{progid}"))
         programs[progid] = Program(
-            item.title,
+            item.title or item.id,
             item.short_description,
             url=item.path,
+            pubdate=item.custom_fields.available_from,
+            wallpaper=item.images.wallpaper,
+            len_minutes=item.len_minutes,
         )
     return programs[progid]
 
@@ -199,7 +222,17 @@ SearchResultItem = namedtuple(
 )
 
 
-SearchResult = namedtuple("SearchResult", ["series", "movies"])
+SearchResult = namedtuple("SearchResult", ["series", "movies", "episodes"])
+
+SEARCH_API = "https://prod95.dr-massive.com/api/search"
+# The parameters DR's own website sends along when searching
+SEARCH_PARAMS = {
+    "device": "web_browser",
+    "ff": "idp,ldp,rpt",
+    "group": "true",
+    "lang": "da",
+    "segments": "drtv,optedout",
+}
 
 SEARCH_CACHE_TIME = 15 * 60
 SEARCH_CACHE_SIZE = 500
@@ -207,12 +240,18 @@ searches: dict[str, tuple[float, SearchResult]] = {}
 
 
 async def fetch_search(query: str) -> dict:
-    async with http().get(
-        "https://prod95.dr-massive.com/api/search?device=web_browser&ff=idp%2Cldp%2Crpt&group=true&lang=da&segments=drtv%2Coptedout&term="
-        + query,
-        headers={"X-Authorization": f"Bearer {await get_token()}"},
-    ) as r:
-        return await r.json()
+    try:
+        async with http().get(
+            SEARCH_API,
+            params=SEARCH_PARAMS | {"term": query},
+            headers={"X-Authorization": f"Bearer {await get_token()}"},
+            timeout=5,
+        ) as r:
+            if r.status != 200:
+                raise DRUnavailable(f"DR responded {r.status} to a search")
+            return await r.json()
+    except (ClientError, asyncio.TimeoutError) as e:
+        raise DRUnavailable(f"Could not reach DR to search: {e!r}") from e
 
 
 async def search(query: str) -> SearchResult:
@@ -243,9 +282,17 @@ def build_search_result(r: dr.SearchResponse) -> SearchResult:
         (i.id, result_item(i, "/" + i.path.split("/")[-1] + "/"))
         for i in r.series.items
     ]
-    movies = [
-        (i.id, result_item(i, i.path))
-        for i in r.playable.items
-        if "episode" not in i.path
-    ]
-    return SearchResult(series, movies)
+    movies = []
+    episodes = []
+    for i in r.playable.items:
+        if "episode" not in i.path:
+            movies.append((i.id, result_item(i, i.path)))
+            continue
+        slug = i.path.split("/")[-1]
+        if i.show_id is not None:
+            # The show's page only needs the show's id, not its name
+            url = f"/{i.show_id}/{slug}"
+        else:
+            url = "/program/" + slug
+        episodes.append((i.id, result_item(i, url)))
+    return SearchResult(series, movies, episodes)
