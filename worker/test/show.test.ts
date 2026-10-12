@@ -3,7 +3,7 @@ import {NotFound} from "../src/dr";
 import * as dr from "../src/models";
 import {buildSearchResult, search} from "../src/search";
 import {buildShow, getLongDescription, getProgram, getShow, MAX_SEASONS, rssFeed, thumbnail} from "../src/show";
-import {clock, copenhagen, danishDate, danishDatetime, duration, isNew, isoTime} from "../src/time";
+import {clock, copenhagen, danishDate, danishDatetime, duration, isNew, isoTime, leavingLabel} from "../src/time";
 import {ctx, dr as fakeDR, load} from "./helpers";
 
 const SEASON_IDS = ["503606", "503607", "503611", "503612"];
@@ -81,6 +81,12 @@ describe("a show", () => {
 		expect(first).toMatchObject({title: "1. episode", url: "/episode/rejseholdet_503615", link: "rejseholdet_503615", videoId: "503615", minutes: 59});
 		expect(first.pubdate).toBe(Date.UTC(2000, 9, 1, 18, 0, 8));
 		expect(first.shortDescription.startsWith("Dansk krimiserie fra 2000")).toBe(true);
+	});
+
+	test("when it leaves DR, as its seasons do", () => {
+		const show = buildShow(load("items_503612.json"), seasons());
+		expect(show.expires).toBe(Date.UTC(2028, 2, 15, 22, 59));
+		expect(show.seasons.every(s => s.expires == show.expires && s.episodes.every(e => e.expires == show.expires))).toBe(true);
 	});
 
 	test("its next episode", () => {
@@ -224,6 +230,18 @@ describe("pictures and time", () => {
 		expect(danishDatetime(Date.UTC(2025, 9, 26, 1, 0))).toBe("26. okt. kl. 02.00");
 		expect(copenhagen(Date.UTC(2026, 9, 12, 11, 40))).toMatchObject({hour: 13, minute: 40});
 		expect(isoTime(Date.UTC(2026, 9, 12, 11, 40))).toBe("2026-10-12T11:40:00+00:00");
+	});
+
+	test("when something leaves DR soon", () => {
+		clock.now = () => Date.UTC(2026, 9, 13, 10);
+		expect(leavingLabel(Date.UTC(2026, 9, 13, 21, 59))).toBe("Udløber i dag");
+		// 00.30 the next day, in Denmark
+		expect(leavingLabel(Date.UTC(2026, 9, 13, 22, 30))).toBe("Udløber i morgen");
+		expect(leavingLabel(Date.UTC(2026, 9, 18, 12))).toBe("Udløber om 5 dage");
+		// Not when it's more than a month away, or gone already, or unknown
+		expect(leavingLabel(Date.UTC(2026, 10, 20))).toBeUndefined();
+		expect(leavingLabel(Date.UTC(2026, 9, 12))).toBeUndefined();
+		expect(leavingLabel(undefined)).toBeUndefined();
 	});
 
 	test("lengths", () => {

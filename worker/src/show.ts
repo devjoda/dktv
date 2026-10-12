@@ -17,6 +17,8 @@ export interface Episode {
 	wallpaper?: string;
 	minutes?: number;
 	geoRestricted: boolean;
+	// When it leaves DR, which is when its season does, since DR only says so for seasons
+	expires?: number;
 }
 
 export interface Season {
@@ -24,6 +26,7 @@ export interface Season {
 	// DR's id for the season
 	id: string;
 	episodes: Episode[];
+	expires?: number;
 }
 
 export interface Show {
@@ -34,6 +37,8 @@ export interface Show {
 	wallpaper?: string;
 	geoRestricted: boolean;
 	nextEpisode?: number;
+	// When the series leaves DR
+	expires?: number;
 	seasons: Season[];
 }
 
@@ -46,6 +51,7 @@ export interface Program {
 	wallpaper?: string;
 	minutes?: number;
 	geoRestricted?: boolean;
+	expires?: number;
 }
 
 const SHOW_CACHE_TIME = 60 * 60;
@@ -107,7 +113,7 @@ function resize(url: string, width: number): string {
 		.replace(oldHeight[0], `Height=${height}`);
 }
 
-function episode(blob: Json): Episode {
+function episode(blob: Json, expires?: number): Episode {
 	const url = dr.required(blob, "path");
 	return {
 		title: dr.episodeTitle(blob),
@@ -119,6 +125,7 @@ function episode(blob: Json): Episode {
 		wallpaper: dr.wallpaper(blob),
 		minutes: dr.lengthInMinutes(blob),
 		geoRestricted: dr.geoRestricted(blob),
+		expires: dr.availableUntil(blob) ?? expires,
 	};
 }
 
@@ -137,6 +144,7 @@ export function buildShow(latest: Json, seasons: Map<string, Json>): Show {
 		wallpaper: dr.wallpaper(latest),
 		geoRestricted: dr.geoRestricted(latest),
 		nextEpisode: next !== undefined ? next * 1000 : undefined,
+		expires: dr.availableUntil(show) ?? dr.availableUntil(latest),
 		seasons: [],
 	};
 	for (const ref of dr.items(show, "seasons")) {
@@ -157,12 +165,14 @@ export function buildShow(latest: Json, seasons: Map<string, Json>): Show {
 			// Like "Rejseholdet: Sæson 3", where the show's name is just noise
 			seasonTitle = seasonTitle.slice(title.length + 2);
 		}
+		const expires = dr.availableUntil(season) ?? result.expires;
 		result.seasons.push({
 			title: seasonTitle,
 			id: dr.required(ref, "id"),
+			expires,
 			episodes: dr.items(season, "episodes").flatMap(blob => {
 				try {
-					return [episode(blob)];
+					return [episode(blob, expires)];
 				} catch (e) {
 					console.log("Leaving out an episode of", title, String(e));
 					return [];
@@ -222,6 +232,7 @@ export async function getProgram(ctx: Ctx, slug: string): Promise<Program> {
 			pubdate: dr.availableFrom(item),
 			wallpaper: dr.wallpaper(item),
 			minutes: dr.lengthInMinutes(item),
+			expires: dr.availableUntil(item),
 		};
 	});
 }

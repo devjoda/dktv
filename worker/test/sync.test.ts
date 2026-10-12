@@ -31,6 +31,8 @@ describe("merging", () => {
 		const b = sync.clean({progress: {"1": progress(900, 2000), "2": progress(10, 2000), "3": progress(5, 1)}});
 		const merged = sync.merge(a, b).progress;
 		expect(merged["1"].time).toBe(900);
+		// When it leaves DR goes along
+		expect(sync.clean({progress: {"1": progress(1, 1, {expires: 1830000000000})}}).progress["1"].expires).toBe(1830000000000);
 		expect(merged["2"].time).toBe(50);
 		expect(merged["3"].time).toBe(5);
 	});

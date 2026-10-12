@@ -7,7 +7,7 @@ import {allEpisodes, type Episode, type Program, type Show, thumbnail} from "../
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
 import {layout, LIBRARIES, PLAYER_SCRIPTS, type Site} from "./layout";
-import {cardTile, channelTile, favoriteButton, icon, moreLink, playButton, searchField, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
+import {cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, searchField, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
 
 type Schedules = Record<string, Programme[]>;
 
@@ -67,6 +67,10 @@ ${searchField()}
 ${shelfHead("Fortsæt med at se", "continue-title")}
 <div class="shelf-track js-tiles"></div>
 </section>
+<section class="shelf" id="leaving-soon" aria-labelledby="leaving-title" hidden>
+${shelfHead("Udløber snart", "leaving-title")}
+<div class="shelf-track js-tiles"></div>
+</section>
 <section class="shelf" id="favorites" data-favorites="all" aria-labelledby="favorites-title" hidden>
 ${shelfHead("Mine favoritter", "favorites-title")}
 <p class="shelf-empty js-favorites-empty">
@@ -98,13 +102,15 @@ function feedLink(show: Show): Html {
 	return html`<link rel="alternate" type="application/rss+xml" title="${show.title}" href="/${show.url}.xml">`;
 }
 
-function episodeItem(e: Episode): Html {
+function episodeItem(e: Episode, show: Show): Html {
 	return html`<li><a class="episode" href="${e.link}" data-video-id="${e.videoId}">
 <div class="tile-media"><img src="${thumbnail(e.wallpaper)}" alt="" loading="lazy"><span class="tile-seen js-seen" hidden>Set</span>${
 	e.minutes ? html`<span class="tile-duration">${duration(e.minutes)}</span>` : ""}<span class="tile-play">${icon("play")}</span><div class="tile-progress js-progress" role="progressbar" aria-label="Set indtil videre" aria-valuemin="0" aria-valuemax="100" hidden><span></span></div></div>
 <div><h3 class="episode-title">${e.title}</h3>
 <p class="meta"><span>${danishDate(e.pubdate)}</span>${e.minutes ? html`<span>${duration(e.minutes)}</span>` : ""}${
-	isNew(e.pubdate) ? html`<span class="tag tag-new">Ny</span>` : ""}${e.geoRestricted ? html`<span class="tag tag-geo">Kun i Danmark</span>` : ""}</p>
+	isNew(e.pubdate) ? html`<span class="tag tag-new">Ny</span>` : ""}${
+	// When its season leaves before the rest of the series
+	e.expires != show.expires ? leaving(e.expires, true) : ""}${e.geoRestricted ? html`<span class="tag tag-geo">Kun i Danmark</span>` : ""}</p>
 <p class="episode-desc">${e.shortDescription}</p></div>
 </a></li>
 `;
@@ -138,7 +144,7 @@ ${each(show.seasons, (season, i) => html`<button type="button" class="season-tab
 </div>` : ""}
 ${each(show.seasons, (season, i) => html`<div class="season-panel" id="season-${i + 1}">
 ${show.seasons.length != 1 ? html`<h2 class="season-title">${season.title}</h2>` : ""}
-<ol class="episodes">${each(season.episodes, episodeItem)}</ol>
+<ol class="episodes">${each(season.episodes, e => episodeItem(e, show))}</ol>
 </div>
 `)}
 </section>`);
@@ -161,14 +167,14 @@ ${tile({href: n.url, image: n.wallpaper, title: n.title, minutes: n.minutes, vid
 export function videoPage(site: Site, {show, e, description, previous, next}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour}): Html {
 	const film = show === undefined ? (e as Program) : undefined;
 	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title, head: show ? feedLink(show) : undefined, scripts: PLAYER_SCRIPTS}, html`<div class="stage">
-<video id="video" controls crossorigin="anonymous"${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}></video>
+<video id="video" controls crossorigin="anonymous"${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}></video>
 </div>
 <div class="watch">
 <div>
 ${show ? html`<a class="eyebrow" href="/${show.url}/">${icon("chevron-left")} ${show.title}</a>` : ""}
 <h1 class="watch-title">${e.title}</h1>
 <p class="meta">${e.pubdate ? html`<span>${danishDate(e.pubdate)}</span>` : ""}${e.minutes ? html`<span>${duration(e.minutes)}</span>` : ""}${
-	isNew(e.pubdate) ? html`<span class="tag tag-new">Ny</span>` : ""}${e.geoRestricted ? html`<span class="tag tag-geo">Kun i Danmark</span>` : ""}</p>
+	isNew(e.pubdate) ? html`<span class="tag tag-new">Ny</span>` : ""}${leaving(e.expires)}${e.geoRestricted ? html`<span class="tag tag-geo">Kun i Danmark</span>` : ""}</p>
 <p class="description">${description}</p>
 <div class="actions">
 ${film ? favoriteButton(film.url.split("/").at(-1)!, e.title, e.wallpaper, {kind: "film"}) : ""}

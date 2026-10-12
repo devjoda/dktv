@@ -4,7 +4,7 @@ import {createHash} from "node:crypto";
 import {existsSync, readFileSync} from "node:fs";
 import {join} from "node:path";
 import {describe, expect, test} from "vitest";
-import {expireAll} from "../src/cache";
+import {expireAll, forgetAll} from "../src/cache";
 import {clock} from "../src/time";
 import {between, dr, env, get, load} from "./helpers";
 
@@ -82,6 +82,7 @@ describe("the front page", () => {
 	test("can continue watching, and list favourites", async () => {
 		const r = await get("/");
 		expect(r.text).toContain('<section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>');
+		expect(r.text).toContain('<section class="shelf" id="leaving-soon" aria-labelledby="leaving-title" hidden>');
 		expect(r.text).toContain('<section class="shelf" id="favorites" data-favorites="all" aria-labelledby="favorites-title" hidden>');
 		expect(r.text).toContain('<script src="/static/progress.js?v=');
 		expect(r.text).toContain('<script src="/static/favorites.js?v=');
@@ -231,6 +232,28 @@ describe("a show", () => {
 		expect(playlist(r.text)).toHaveLength(32);
 	});
 
+	test("says when it leaves DR, and when that's soon", async () => {
+		expect((await get("/rejseholdet_503605/")).text).toContain("<span>Kan ses til 15. mar. 2028</span>");
+		forgetAll();
+		clock.now = () => Date.UTC(2028, 2, 1, 12);
+		const r = await get("/rejseholdet_503605/");
+		expect(r.text).toContain('<span class="tag tag-leaving">Udløber om 14 dage</span>');
+		expect(r.text).not.toContain("Kan ses til");
+		// The whole series leaves then, so its episodes needn't each say so
+		expect(count(r.text, "tag-leaving")).toBe(1);
+	});
+
+	test("says when a season leaves before the rest of the series", async () => {
+		const first = load("items_503606.json");
+		first.offers[0].endDate = "2028-02-25T22:59:00Z";
+		dr.answer = path => (path == "/items/503606" ? first : undefined);
+		clock.now = () => Date.UTC(2028, 1, 20, 12);
+		const r = await get("/rejseholdet_503605/");
+		const seasons = r.text.split('class="season-panel"');
+		expect(count(seasons[1], "Udløber om 5 dage")).toBe(9);
+		expect(seasons.slice(2).join("")).not.toContain("tag-leaving");
+	});
+
 	test("announces the next episode", async () => {
 		const blob = load("items_503612.json");
 		blob.show.nextEpisode = {availableUTC: "1760000000"};
@@ -360,6 +383,9 @@ describe("a programme on its own", () => {
 		expect(r.text).not.toContain("Næste afsnit");
 		// Films can be favourites from their page
 		expect(r.text).toContain('data-favorite-id="lise-noergaard_-ikke-kun-en-pige_362031" data-kind="film"');
+		// When it leaves DR, which the player saves along with how far the viewer got
+		expect(r.text).toContain("<span>Kan ses til 6. jan. 2028</span>");
+		expect(r.text).toContain(`data-expires="${Date.UTC(2028, 0, 6, 22, 59)}"`);
 	});
 
 	test("players use Plyr, and the pinned hls.js", async () => {
@@ -470,7 +496,8 @@ describe("favourites", () => {
 		expect(Object.keys(favorites.films)).toEqual(["lise-noergaard_-ikke-kun-en-pige_362031"]);
 		expect(favorites.more).toBeUndefined();
 		const film = favorites.films["lise-noergaard_-ikke-kun-en-pige_362031"];
-		expect(film).toMatchObject({title: "Lise Nørgaard: Ikke kun en pige", url: "/program/lise-noergaard_-ikke-kun-en-pige_362031", minutes: 48});
+		expect(film).toMatchObject({title: "Lise Nørgaard: Ikke kun en pige", url: "/program/lise-noergaard_-ikke-kun-en-pige_362031", minutes: 48, expires: Date.UTC(2028, 0, 6, 22, 59)});
+		expect(favorites.shows["rejseholdet_503605"].expires).toBe(Date.UTC(2028, 2, 15, 22, 59));
 		const rejseholdet = favorites.shows["rejseholdet_503605"];
 		expect(rejseholdet).toMatchObject({title: "Rejseholdet", url: "/rejseholdet_503605/", seasons: 4, episodes: 32, new: false});
 		expect(rejseholdet.image).toContain("Width=640");

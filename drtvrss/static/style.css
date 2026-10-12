@@ -1,6 +1,6 @@
 /* The look of the site.
    The shows' own pictures give it its colour; around them it's quiet: warm white on ink.
-   Red means live or how far the viewer got, and green what they've seen, nothing else.
+   Red means live or how far the viewer got, green what they've seen, and amber what leaves DR soon, nothing else.
    Bootstrap gives the base and the utilities, this file the rest. */
 
 @font-face {
@@ -31,6 +31,7 @@
     --muted: #a19e97;
     --on-air: #ff3b30;
     --seen: #5bd69b;
+    --leaving: #f2b24a;
     --gutter: clamp(16px, 4vw, 64px);
     --media-radius: 6px;
 
@@ -430,6 +431,12 @@ h1, h2, h3 {
 .tag-seen {
     background: rgba(91, 214, 155, .16);
     color: var(--seen);
+}
+
+/* What leaves DR soon */
+.tag-leaving {
+    background: rgba(242, 178, 74, .16);
+    color: var(--leaving);
 }
 
 .tag-geo {

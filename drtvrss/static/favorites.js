@@ -102,7 +102,7 @@ function favoriteTile(favorite, details) {
         image: favorite.image,
         title: favorite.title,
         meta,
-        tags: !film && details && details.new ? [["new", "Nye afsnit"]] : [],
+        tags: [...(!film && details && details.new ? [["new", "Nye afsnit"]] : []), ...leavingTags(details && details.expires)],
         episodeIDs: !film && details ? details.episode_ids : null,
         videoID: film ? favorite.id.split("_").pop() : null,
         action: favoriteToggle(favorite),
@@ -133,7 +133,36 @@ function renderFavorites(details = favoriteDetails) {
         section.hidden = false;
         section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
     }
+    showLeavingSoon(details);
     markProgress();
+}
+
+// Fills in the #leaving-soon row: what the viewer started or made a favourite, which leaves DR
+// within a month, soonest first. Only DR's single programmes say when they leave, not its lists,
+// so it's only what the viewer has.
+function showLeavingSoon(details = favoriteDetails) {
+    const section = document.getElementById("leaving-soon");
+    if (section == null) {
+        return;
+    }
+    const leaving = [];
+    for (const video of startedVideos()) {
+        if (leavingLabel(video.expires)) {
+            leaving.push({expires: video.expires, url: video.url, tile: () => continueWatchingTile(video)});
+        }
+    }
+    for (const favorite of loadFavorites()) {
+        const found = detailsOf(details, favorite);
+        if (found && leavingLabel(found.expires)) {
+            leaving.push({expires: found.expires, url: found.url, tile: () => favoriteTile(favorite, found)});
+        }
+    }
+    leaving.sort((a, b) => a.expires - b.expires);
+    // An episode the viewer started, and its series, are both shown
+    const shown = leaving.filter((item, i) => leaving.findIndex(other => other.url == item.url) == i);
+    section.querySelector(".js-tiles").replaceChildren(...shown.map(item => item.tile()));
+    section.hidden = shown.length == 0;
+    section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
 }
 
 // How many times to ask about the favourites the server didn't have time for

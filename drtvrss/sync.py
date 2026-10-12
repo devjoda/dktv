@@ -121,6 +121,8 @@ def clean(data) -> dict:
                 "show": _text(p.get("show")),
                 "url": _local_url(p.get("url")),
                 "image": _image_url(p.get("image")),
+                # When the video leaves DR
+                "expires": _number(p.get("expires")),
                 "updated": _number(p.get("updated")) or 0,
             }
     return {"favorites": favorites, "removed_favorites": removed, "progress": progress}

@@ -87,3 +87,19 @@ export function parseTime(value: unknown): number | undefined {
 	const at = Date.parse(value.replace(/(\.\d{3})\d+/, "$1"));
 	return Number.isNaN(at) ? undefined : at;
 }
+
+// How long before something leaves DR that it's said to be leaving soon
+const LEAVING_SOON = 30 * DAY;
+
+/** Like "Udløber om 5 dage", if it leaves DR within a month, or undefined */
+export function leavingLabel(at: number | null | undefined): string | undefined {
+	const now = clock.now();
+	if (at == null || at < now || at - now > LEAVING_SOON) {
+		return undefined;
+	}
+	// In whole days, as the calendar in Denmark has them
+	const today = copenhagen(now);
+	const last = copenhagen(at);
+	const days = Math.round((Date.UTC(last.year, last.month, last.day) - Date.UTC(today.year, today.month, today.day)) / DAY);
+	return days <= 0 ? "Udløber i dag" : days == 1 ? "Udløber i morgen" : `Udløber om ${days} dage`;
+}

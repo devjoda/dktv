@@ -42,6 +42,8 @@ export interface Progress {
 	show: string | null;
 	url: string | null;
 	image: string | null;
+	// When the video leaves DR
+	expires: number | null;
 	updated: number;
 }
 
@@ -126,6 +128,7 @@ export function clean(data: unknown): SyncData {
 				show: text(p.show),
 				url: localURL(p.url),
 				image: imageURL(p.image),
+				expires: number(p.expires),
 				updated: number(p.updated) || 0,
 			};
 		}

@@ -264,11 +264,12 @@ app.get("/favorites.json", async c => {
 				episodes: episodes.length,
 				episode_ids: episodes.map(e => e.videoId),
 				new: episodes.length > 0 && isNew(episodes.at(-1)!.pubdate),
+				expires: show.expires ?? null,
 			};
 		}),
 		describeAll(ids("films"), async slug => {
 			const program = await getProgram(ctx, slug);
-			return {title: program.title, url: `/program/${slug}`, image: thumbnail(program.wallpaper) ?? null, minutes: program.minutes ?? null};
+			return {title: program.title, url: `/program/${slug}`, image: thumbnail(program.wallpaper) ?? null, minutes: program.minutes ?? null, expires: program.expires ?? null};
 		}),
 	]);
 	const more = moreShows.length || moreFilms.length ? {more: {shows: moreShows, films: moreFilms}} : {};

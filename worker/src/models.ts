@@ -64,6 +64,12 @@ export function lengthInMinutes(blob: Json): number | undefined {
 	return details ? parseLength(details[1]) : undefined;
 }
 
+/** When it can no longer be seen on DR, which only items fetched on their own say, not lists */
+export function availableUntil(blob: Json): number | undefined {
+	const ends = (Array.isArray(blob?.offers) ? blob.offers : []).map((o: Json) => parseTime(o?.endDate)).filter((at: number | undefined) => at !== undefined);
+	return ends.length ? Math.max(...ends) : undefined;
+}
+
 export function availableFrom(blob: Json): number | undefined {
 	return parseTime(blob?.customFields?.AvailableFrom);
 }

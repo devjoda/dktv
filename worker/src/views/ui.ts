@@ -3,7 +3,7 @@
 import type {Card} from "../discover";
 import {type LiveChannel, percentDone, type Programme, whatsOn} from "../live";
 import {allEpisodes, playlist, type Show, thumbnail} from "../show";
-import {clockTime, duration, isNew} from "../time";
+import {clockTime, danishDate, duration, isNew, leavingLabel} from "../time";
 import {attr, each, html, type Html} from "./html";
 
 const icons = new Map<string, Html>();
@@ -131,11 +131,21 @@ ${icon("play")}
 </a>`;
 }
 
+/** When something leaves DR: a tag when it's soon, and otherwise the date, if DR says */
+export function leaving(at: number | undefined, quiet = false): Html | "" {
+	const label = leavingLabel(at);
+	if (label) {
+		return html`<span class="tag tag-leaving">${label}</span>`;
+	}
+	return at && !quiet ? html`<span>Kan ses til ${danishDate(at)}</span>` : "";
+}
+
 /** The facts about a show, for the line below its title */
 export function showFacts(show: Show): Html {
 	const episodes = allEpisodes(show);
 	return html`<p class="meta">${
 		show.seasons.length > 1 ? html`<span>${show.seasons.length} sæsoner</span>` : ""}<span>${episodes.length} afsnit</span>${
 		episodes.length > 0 && isNew(episodes.at(-1)!.pubdate) ? html`<span class="tag tag-new">Nye afsnit</span>` : ""}${
+		leaving(show.expires)}${
 		show.geoRestricted ? html`<span class="tag tag-geo">Kun i Danmark</span>` : ""}</p>`;
 }

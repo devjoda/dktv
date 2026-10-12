@@ -37,8 +37,29 @@ function storeProgress(videoID, progress) {
     }
 }
 
+// How long before something leaves DR that it's said to be leaving soon, as on the server
+const LEAVING_SOON = 30 * 24 * 60 * 60 * 1000;
+
+// Like "Udløber om 5 dage", if `at` is within a month, or null
+function leavingLabel(at) {
+    const now = Date.now();
+    if (!at || at < now || at - now > LEAVING_SOON) {
+        return null;
+    }
+    // In whole days, as the viewer's calendar has them
+    const midnight = time => new Date(new Date(time).toDateString()).getTime();
+    const days = Math.round((midnight(at) - midnight(now)) / (24 * 60 * 60 * 1000));
+    return days <= 0 ? "Udløber i dag" : days == 1 ? "Udløber i morgen" : `Udløber om ${days} dage`;
+}
+
+// A tag saying something leaves DR soon, for buildTile, or none
+function leavingTags(at) {
+    const label = leavingLabel(at);
+    return label ? [["leaving", label]] : [];
+}
+
 // Saves how far the viewer got with the video, which describes itself with
-// data-title, data-show and data-image, for listing it under "Fortsæt med at se",
+// data-title, data-show, data-image and data-expires, for listing it under "Fortsæt med at se",
 // and syncs it within syncDelay milliseconds
 function saveProgress(videoID, video, syncDelay = SYNC_DELAY) {
     if (!isFinite(video.duration)) {
@@ -55,6 +76,8 @@ function saveProgress(videoID, video, syncDelay = SYNC_DELAY) {
         show: video.dataset.show || null,
         url: location.pathname,
         image: video.dataset.image || null,
+        // When it leaves DR, to say so in time
+        expires: Number(video.dataset.expires) || (previous && previous.expires) || null,
         updated: Date.now(),
     });
     scheduleSync(syncDelay);
@@ -185,8 +208,10 @@ function startedVideos() {
             }
             const videoID = key.slice("progress_".length);
             const progress = loadProgress(videoID);
-            // Older versions didn't save what the video was, so those can't be listed
-            if (progress && progress.time > 0 && progress.duration && progress.url && !progress.dismissed) {
+            // Older versions didn't save what the video was, so those can't be listed, and those
+            // that have left DR can't be watched any more
+            if (progress && progress.time > 0 && progress.duration && progress.url && !progress.dismissed
+                && !(progress.expires && progress.expires < Date.now())) {
                 started.push({videoID, ...progress});
             }
         }
@@ -241,12 +266,16 @@ function continueWatchingTile(video) {
         storeProgress(video.videoID, {...loadProgress(video.videoID), dismissed: true, updated: Date.now()});
         scheduleSync(0);
         showContinueWatching();
+        if (typeof showLeavingSoon == "function") {
+            showLeavingSoon();
+        }
     });
     return buildTile({
         href: video.url,
         image: video.image,
         title,
         meta: [video.show, formatMinutes(left) + " tilbage"].filter(Boolean).join(", "),
+        tags: leavingTags(video.expires),
         percent: percentSeen(video),
         action: remove,
     });
