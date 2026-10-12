@@ -71,15 +71,39 @@ function setupControls(video, live = false) {
     });
 }
 
+// The player around the video: Plyr's, or the page's when there's no Plyr
+function playerOf(video) {
+    return video.closest(".plyr") || video.parentElement;
+}
+
+// A spinner on the picture while the video loads or buffers, instead of a play button the viewer
+// needn't press, since it plays by itself
+function showLoading(video) {
+    const player = playerOf(video);
+    player.append(element("div", {class: "player-loading", "aria-hidden": "true"}));
+    player.classList.add("is-loading");
+    const done = () => stopLoading(video);
+    video.addEventListener("playing", done);
+    video.addEventListener("pause", done);
+    video.addEventListener("error", done);
+    video.addEventListener("waiting", () => !video.paused && player.classList.add("is-loading"));
+}
+
+function stopLoading(video) {
+    playerOf(video).classList.remove("is-loading");
+}
+
 // Plays right away, since the viewer came here to watch. Browsers that won't play sound
 // before the viewer has clicked on the page itself play it without, with a button to turn it on.
 function autoplay(video) {
     video.play().catch(function (error) {
         if (error.name != "NotAllowedError") {
+            stopLoading(video);
             return;
         }
         video.muted = true;
-        video.play().then(() => offerSound(video)).catch(() => {});
+        // When it won't play at all, the play button shows instead of the spinner
+        video.play().then(() => offerSound(video)).catch(() => stopLoading(video));
     });
 }
 
@@ -151,6 +175,7 @@ function offerNext(video) {
 
 // Shows what went wrong right below the video, once
 function showError(video, message) {
+    stopLoading(video);
     if (video.dataset.failed) {
         return;
     }
@@ -228,10 +253,29 @@ function addSubtitles(video, subtitles) {
     }
 }
 
+// The button for a live channel's subtitles, among Plyr's controls, like the one for an episode's.
+// Without Plyr, the page's own one below the title.
+function liveSubtitlesButton(video) {
+    const pageButton = document.querySelector(".js-live-subtitles");
+    const fullscreen = video.closest(".plyr") && video.closest(".plyr").querySelector('.plyr__controls [data-plyr="fullscreen"]');
+    if (pageButton == null || fullscreen == null) {
+        return pageButton;
+    }
+    pageButton.closest(".actions").remove();
+    const button = element("button", {
+        type: "button",
+        class: "plyr__controls__item plyr__control js-live-subtitles",
+        "aria-pressed": "false",
+    }, icon("captions"), element("span", {class: "plyr__tooltip"}, "Undertekster"));
+    fullscreen.before(button);
+    return button;
+}
+
 // Plays a live channel, with or without subtitles, as the viewer last chose
 function setupLive(video, url, subtitlesURL) {
     setupControls(video, true);
-    const button = document.querySelector(".js-live-subtitles");
+    showLoading(video);
+    const button = liveSubtitlesButton(video);
     let withSubtitles = false;
     try {
         withSubtitles = subtitlesURL != null && localStorage.getItem("liveSubtitles") == "true";
@@ -246,6 +290,7 @@ function setupLive(video, url, subtitlesURL) {
         hls = attachStream(video, withSubtitles ? subtitlesURL : url);
         if (button) {
             button.setAttribute("aria-pressed", withSubtitles);
+            button.classList.toggle("plyr__control--pressed", withSubtitles);
         }
         autoplay(video);
     };
@@ -296,6 +341,7 @@ function attachStream(video, src) {
 // Plays a program or an episode, continuing where the viewer left off
 async function playVideo(video, videoID) {
     setupControls(video);
+    showLoading(video);
     let stream;
     try {
         stream = await getStream(videoID);
