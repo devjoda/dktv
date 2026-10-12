@@ -6,6 +6,9 @@ export interface Env {
 	SERVICE_NAME?: string;
 	SOURCE_URL?: string;
 	RECOMMENDED_SHOWS?: string;
+	// For notifications: our public key, uncompressed and base64url, and the private one as a JWK
+	VAPID_PUBLIC_KEY?: string;
+	VAPID_PRIVATE_KEY?: string;
 }
 
 /** DR doesn't have it, or it isn't anything here */

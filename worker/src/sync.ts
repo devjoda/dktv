@@ -9,6 +9,7 @@
 // others sent: for each video, the newest progress wins, and for each show, the
 // newest of being made a favourite or not.
 
+import {updateFollows} from "./alerts";
 import {type Ctx} from "./dr";
 
 // Without I, O, 0 and 1, which are easily mixed up
@@ -203,13 +204,28 @@ export async function sync(ctx: Ctx, code: string, data: unknown): Promise<SyncD
 			.bind(JSON.stringify(merged), seconds(), code, row.version)
 			.run();
 		if (result.meta.changes == 1) {
+			try {
+				await updateFollows(ctx, code, merged.favorites);
+			} catch (e) {
+				// Only for notifications, which the next sync tries again
+				console.log("Could not update which series", code.slice(0, 4), "follows", String(e));
+			}
 			return merged;
 		}
 	}
 	throw new Error(`Could not sync ${code.slice(0, 4)}…, which kept changing`);
 }
 
+/** Everything kept under a code: its favourites and progress, its devices' notifications, and its passkeys */
 export async function remove(ctx: Ctx, code: string): Promise<void> {
+	const db = ctx.env.SYNC;
 	ctx.budget.spend();
-	await ctx.env.SYNC.prepare("DELETE FROM sync WHERE code = ?").bind(code).run();
+	await db.batch([
+		db.prepare("DELETE FROM outbox WHERE endpoint IN (SELECT endpoint FROM push WHERE code = ?)").bind(code),
+		db.prepare("DELETE FROM push WHERE code = ?").bind(code),
+		db.prepare("DELETE FROM follows WHERE code = ?").bind(code),
+		db.prepare("DELETE FROM passkeys WHERE code = ?").bind(code),
+		db.prepare("DELETE FROM challenges WHERE code = ?").bind(code),
+		db.prepare("DELETE FROM sync WHERE code = ?").bind(code),
+	]);
 }

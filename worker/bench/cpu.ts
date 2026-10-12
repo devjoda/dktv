@@ -1,7 +1,7 @@
 // How much CPU each page takes to build, in Node: the first time (as in a new copy of the Worker),
 // again without what's kept (as when DR's data has run out), and with it.
 // Run with `npm run bench`, which asks DR itself.
-import app from "../src/index";
+import {app} from "../src/index";
 import {expireAll, forgetAll} from "../src/cache";
 
 const env = {SERVICE_NAME: "dktv", SOURCE_URL: "https://github.com/devjoda/dktv", RECOMMENDED_SHOWS: ""};

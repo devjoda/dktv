@@ -4,7 +4,7 @@ import {existsSync, readdirSync, readFileSync} from "node:fs";
 import {join} from "node:path";
 import {DatabaseSync} from "node:sqlite";
 import {afterEach, beforeEach, vi} from "vitest";
-import app from "../src/index";
+import {app} from "../src/index";
 import {forgetAll} from "../src/cache";
 import {Budget, type Ctx, forgetToken} from "../src/dr";
 import {clock} from "../src/time";
@@ -41,9 +41,19 @@ function listsInPages(): Map<string, any> {
 
 const json = (blob: unknown, status = 200) => new Response(JSON.stringify(blob), {status, headers: {"Content-Type": "application/json"}});
 
+/** A notification sent to a push service */
+export interface Pushed {
+	endpoint: string;
+	headers: Headers;
+	body: Uint8Array;
+}
+
 export const dr = {
 	// What was asked of DR, like "/items/503605?expand=all", and "search:matador" for searches
 	requested: [] as string[],
+	// Notifications sent, and what push services answer
+	pushed: [] as Pushed[],
+	pushStatus: 201,
 	// Answers in place of the fixtures', as JSON or a whole response, or undefined for the fixture's
 	answer: undefined as ((path: string, params: URLSearchParams) => unknown) | undefined,
 	// DR answering every request with an error of its own
@@ -52,6 +62,10 @@ export const dr = {
 
 async function fakeFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
 	const url = new URL(input instanceof Request ? input.url : String(input));
+	if (url.hostname == "fcm.googleapis.com") {
+		dr.pushed.push({endpoint: url.href, headers: new Headers(init?.headers), body: new Uint8Array(init?.body as ArrayBuffer)});
+		return new Response(null, {status: dr.pushStatus});
+	}
 	if (url.hostname == "isl.dr-massive.com") {
 		return json([
 			{type: "Catalog", value: "catalog", expirationDate: "2099-01-01T00:00:00Z"},
@@ -106,12 +120,30 @@ export function fakeD1(): D1Database {
 				async first() {
 					return db.prepare(sql).get(...args) ?? null;
 				},
+				async all() {
+					return {success: true, results: db.prepare(sql).all(...args)};
+				},
 				async run() {
 					const result = db.prepare(sql).run(...args);
 					return {success: true, meta: {changes: Number(result.changes)}};
 				},
 			};
 			return statement;
+		},
+		// All or nothing, like D1's
+		async batch(statements: {run(): Promise<unknown>}[]) {
+			db.exec("BEGIN");
+			try {
+				const results = [];
+				for (const statement of statements) {
+					results.push(await statement.run());
+				}
+				db.exec("COMMIT");
+				return results;
+			} catch (e) {
+				db.exec("ROLLBACK");
+				throw e;
+			}
 		},
 	} as unknown as D1Database;
 }
@@ -121,6 +153,8 @@ export const env = {
 	SERVICE_NAME: "dktv",
 	SOURCE_URL: "https://github.com/devjoda/dktv",
 	RECOMMENDED_SHOWS: "",
+	VAPID_PUBLIC_KEY: undefined as string | undefined,
+	VAPID_PRIVATE_KEY: undefined as string | undefined,
 };
 
 /** What a visit has, for calling the Worker's parts on their own */
@@ -169,11 +203,15 @@ const realNow = clock.now;
 
 beforeEach(() => {
 	dr.requested = [];
+	dr.pushed = [];
+	dr.pushStatus = 201;
 	dr.answer = undefined;
 	dr.down = false;
 	env.SYNC = fakeD1();
 	env.SOURCE_URL = "https://github.com/devjoda/dktv";
 	env.RECOMMENDED_SHOWS = "";
+	env.VAPID_PUBLIC_KEY = undefined;
+	env.VAPID_PRIVATE_KEY = undefined;
 	clock.now = realNow;
 	forgetAll();
 	forgetToken();

@@ -1,17 +1,22 @@
 // dktv: an unofficial way to watch DR's programmes, as a Cloudflare Worker
 
 import {Hono, type Context, type MiddlewareHandler} from "hono";
+import * as alerts from "./alerts";
+import {vapidKeys} from "./alerts";
 import {peek, REFRESHES_PER_VISIT} from "./cache";
 import {getCategories, getList, getPage} from "./discover";
 import {Budget, type Ctx, DRUnavailable, type Env, NotFound, OverBudget} from "./dr";
 import {getChannels, getSchedules} from "./live";
 import {search} from "./search";
 import {allEpisodes, getLongDescription, getProgram, getShow, itemId, rssFeed, type Show, thumbnail} from "./show";
+import * as passkeys from "./passkeys";
 import * as syncStore from "./sync";
 import {clock, copenhagen, isNew} from "./time";
 import type {Html} from "./views/html";
 import type {Site} from "./views/layout";
 import * as pages from "./views/pages";
+import {Refused} from "./webauthn";
+import {isPushService} from "./webpush";
 
 type App = {Bindings: Env; Variables: {ctx: Ctx}};
 
@@ -24,6 +29,8 @@ const FEATURED = 12;
 const MAX_FAVORITES = 50;
 // Far more than a viewer's favourites and progress take up
 const MAX_SYNC_SIZE = 2 * 1024 * 1024;
+// Far more than a passkey or a subscription to notifications take up
+const MAX_ACCOUNT_REQUEST = 64 * 1024;
 
 const app = new Hono<App>();
 
@@ -339,6 +346,146 @@ app.delete("/sync/:code", async c => {
 	return c.body(null, 204);
 });
 
+/** What this server can do besides syncing, which the browser's scripts ask before offering it */
+app.get("/konto.json", c => c.json({push: vapidKeys(c.env)?.publicKey ?? null, passkeys: true}));
+
+/** A request's JSON body, or undefined if it has none. Only JSON, which other sites can't send without the browser asking first. */
+async function jsonBody(c: Context<App>): Promise<Record<string, unknown> | undefined> {
+	if (!(c.req.header("Content-Type") ?? "").startsWith("application/json") || Number(c.req.header("Content-Length") ?? 0) > MAX_ACCOUNT_REQUEST) {
+		return undefined;
+	}
+	try {
+		const body = await c.req.json();
+		return body && typeof body == "object" && !Array.isArray(body) ? body : undefined;
+	} catch {
+		return undefined;
+	}
+}
+
+const BASE64URL = /^[\w-]{1,1024}$/;
+const UNAVAILABLE = "Serveren kan ikke gemme noget lige nu. Prøv igen senere.";
+const UNKNOWN_CODE = "Koden findes ikke.";
+
+/** The code in a URL, or undefined if it can't be one */
+const codeOf = (c: Context<App>) => syncStore.normalizeCode(c.req.param("code") ?? "");
+
+/** Runs something that keeps or reads viewers' data, answering 503 when the database fails */
+async function stored(c: Context<App>, f: () => Promise<Response>): Promise<Response> {
+	try {
+		return await f();
+	} catch (e) {
+		if (e instanceof Refused) {
+			console.log("A passkey was refused:", String(e));
+			return c.json({error: "Adgangsnøglen kunne ikke bruges. Prøv igen."}, 400);
+		}
+		console.log("Could not use the database", String(e));
+		return c.json({error: UNAVAILABLE}, 503);
+	}
+}
+
+/** Notifies this device about new episodes of the code's favourite series */
+app.post("/push/:code", async c => {
+	const code = codeOf(c);
+	const body = await jsonBody(c);
+	const keys = body?.keys as Record<string, unknown> | undefined;
+	if (code === undefined) {
+		return c.json({error: UNKNOWN_CODE}, 404);
+	}
+	if (typeof body?.endpoint != "string" || !isPushService(body.endpoint) || body.endpoint.length > 1024
+		|| typeof keys?.p256dh != "string" || !BASE64URL.test(keys.p256dh) || typeof keys?.auth != "string" || !BASE64URL.test(keys.auth)) {
+		return c.json({error: "Forventede et abonnement på beskeder."}, 400);
+	}
+	if (!vapidKeys(c.env)) {
+		return c.json({error: "Serveren kan ikke sende beskeder."}, 501);
+	}
+	const subscription = {endpoint: body.endpoint, p256dh: keys.p256dh, auth: keys.auth};
+	return stored(c, async () => {
+		const result = await alerts.subscribe(c.get("ctx"), code, subscription);
+		if (result == "unknown code") {
+			return c.json({error: UNKNOWN_CODE}, 404);
+		}
+		if (result == "too many") {
+			return c.json({error: `Beskeder kan være slået til på højst ${alerts.MAX_DEVICES} enheder.`}, 409);
+		}
+		return c.body(null, 201);
+	});
+});
+
+app.delete("/push/:code", async c => {
+	const code = codeOf(c);
+	const body = await jsonBody(c);
+	if (code === undefined || typeof body?.endpoint != "string") {
+		return c.body(null, 204);
+	}
+	return stored(c, async () => {
+		await alerts.unsubscribe(c.get("ctx"), code, body.endpoint as string);
+		return c.body(null, 204);
+	});
+});
+
+/** Where passkeys are made for: this site */
+function passkeySite(c: Context<App>): passkeys.Site {
+	const url = new URL(c.req.url);
+	return {origin: url.origin, rpId: url.hostname, name: c.env.SERVICE_NAME || "dktv"};
+}
+
+app.post("/passkeys/:code/options", async c => {
+	const code = codeOf(c);
+	if (code === undefined) {
+		return c.json({error: UNKNOWN_CODE}, 404);
+	}
+	return stored(c, async () => {
+		const options = await passkeys.creationOptions(c.get("ctx"), passkeySite(c), code);
+		return options ? c.json(options) : c.json({error: UNKNOWN_CODE}, 404);
+	});
+});
+
+app.post("/passkeys/:code", async c => {
+	const code = codeOf(c);
+	const body = await jsonBody(c);
+	const credential = body?.credential as passkeys.Creation | undefined;
+	if (code === undefined) {
+		return c.json({error: UNKNOWN_CODE}, 404);
+	}
+	if (typeof body?.user != "string" || !BASE64URL.test(body.user) || typeof credential?.id != "string" || !BASE64URL.test(credential.id)
+		|| typeof credential.response?.clientDataJSON != "string" || typeof credential.response?.attestationObject != "string") {
+		return c.json({error: "Forventede en adgangsnøgle."}, 400);
+	}
+	return stored(c, async () => c.json(await passkeys.register(c.get("ctx"), passkeySite(c), code, body.user as string, credential, c.req.header("User-Agent") ?? ""), 201));
+});
+
+app.get("/passkeys/:code", async c => {
+	const code = codeOf(c);
+	if (code === undefined) {
+		return c.json([]);
+	}
+	return stored(c, async () => c.json(await passkeys.list(c.get("ctx"), code)));
+});
+
+app.delete("/passkeys/:code/:id", async c => {
+	const code = codeOf(c);
+	if (code === undefined) {
+		return c.body(null, 204);
+	}
+	return stored(c, async () => {
+		await passkeys.remove(c.get("ctx"), code, c.req.param("id"));
+		return c.body(null, 204);
+	});
+});
+
+app.post("/login/options", async c => stored(c, async () => c.json(await passkeys.requestOptions(c.get("ctx"), passkeySite(c)))));
+
+/** Gives the browser the sync code of the passkey it logged in with */
+app.post("/login", async c => {
+	const body = await jsonBody(c);
+	const credential = body?.credential as passkeys.Assertion | undefined;
+	if (typeof credential?.id != "string" || !BASE64URL.test(credential.id) || typeof credential.response?.clientDataJSON != "string"
+		|| typeof credential.response?.authenticatorData != "string" || typeof credential.response?.signature != "string") {
+		return c.json({error: "Forventede en adgangsnøgle."}, 400);
+	}
+	return stored(c, async () => c.json({code: await passkeys.login(c.get("ctx"), passkeySite(c), credential)}));
+});
+
 app.get("/:feed{[^/]+\\.xml}", async c => {
 	const slug = c.req.param("feed").slice(0, -".xml".length);
 	const show = await getShow(c.get("ctx"), slug);
@@ -418,4 +565,25 @@ app.onError((e, c) => {
 	return errorPage(c, "Noget gik galt", "Der skete en fejl, da siden skulle vises. Prøv igen om lidt.", 500);
 });
 
-export default app;
+export {app};
+
+export default {
+	fetch: app.fetch,
+
+	/** Every minute: checks the followed series for new episodes, and sends notifications */
+	async scheduled(_event: ScheduledController, env: Env, executionCtx: ExecutionContext) {
+		const keys = vapidKeys(env);
+		if (!keys) {
+			return;
+		}
+		await alerts.run({
+			env,
+			budget: new Budget(),
+			refreshes: 0,
+			incomplete: false,
+			pending: new Map(),
+			waitUntil: promise => executionCtx.waitUntil(promise),
+			origin: "https://scheduled.invalid",
+		}, keys);
+	},
+} satisfies ExportedHandler<Env>;
