@@ -193,15 +193,15 @@ describe("notifications", () => {
 		const checked = async () => (await rows("SELECT show FROM shows WHERE season IS NOT NULL")).length;
 		// The first check of a series takes three requests, the next ones one
 		await run(ctx(), keys);
-		expect(await checked()).toBe(3);
-		for (let i = 0; i < 3; i++) {
+		expect(await checked()).toBe(2);
+		for (let i = 0; i < 5; i++) {
 			await run(ctx(), keys);
 		}
 		expect(await checked()).toBe(12);
 		await env.SYNC.prepare("UPDATE shows SET checked = 0").run();
 		dr.requested = [];
 		await run(ctx(), keys);
-		expect(dr.requested).toHaveLength(8);
+		expect(dr.requested).toHaveLength(6);
 	});
 
 	test("a series is checked by one run, though two run at once", async () => {

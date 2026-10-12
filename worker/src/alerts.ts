@@ -15,8 +15,10 @@ import {send, type Subscription, type VapidKeys} from "./webpush";
 // How much a run does, since a run, like a visit, may only use about 10 ms of the processor on
 // the free plan: each request to DR counts 1, and sending a notification, which is encrypted for
 // its device, 2. Checking a series is mostly one request. What a run doesn't do, the next does,
-// a minute later.
-const WORK_PER_RUN = 8;
+// a minute later. With a check every 15 minutes, that's enough for about 90 followed series;
+// with more, each is checked less often. Runs take what they do in hand, so more schedules
+// in wrangler.jsonc would do more at once.
+const WORK_PER_RUN = 6;
 const SEND_WORK = 2;
 // How often each series is checked for new episodes, at most, and for new seasons, in seconds
 const CHECK_EVERY = 15 * 60;

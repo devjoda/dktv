@@ -78,7 +78,6 @@ async function request(ctx: Ctx, url: string, init: RequestInit, what: string): 
 /** Gets something from DR's API, like `/items/{id}` */
 export async function getApi(ctx: Ctx, path: string, params: Params = {}): Promise<Json> {
 	const query = new URLSearchParams({...API_PARAMS, ...stringify(params)});
-	console.log("Fetching from DR", path, JSON.stringify(params));
 	const r = await request(ctx, `${API}${path}?${query}`, {}, path);
 	// DR doesn't have it, or doesn't think we asked for anything sensible
 	if (r.status >= 400 && r.status < 500) {
