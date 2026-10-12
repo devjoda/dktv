@@ -9,6 +9,7 @@
 import {type Ctx, type Env, getApi, type Json} from "./dr";
 import * as dr from "./models";
 import {itemId, thumbnail} from "./show";
+import {inDays} from "./time";
 import {clean, type Favorite} from "./sync";
 import {send, type Subscription, type VapidKeys} from "./webpush";
 
@@ -23,6 +24,8 @@ const SEND_WORK = 2;
 // How often each series is checked for new episodes, at most, and for new seasons, in seconds
 const CHECK_EVERY = 15 * 60;
 const CHECK_SEASONS_EVERY = 6 * 60 * 60;
+// How long before a followed series leaves DR that its followers are told, once, in milliseconds
+const LEAVING_NOTICE = 7 * 24 * 60 * 60 * 1000;
 // How long a notification may wait to be sent, in seconds
 const OUTBOX_FOR = 24 * 60 * 60;
 // Per sync code
@@ -117,12 +120,22 @@ interface Checked {
 	episodes: number | null;
 	title: string | null;
 	seasons_checked: number;
+	// When it leaves DR, and the date its followers were told about, in milliseconds
+	expires: number | null;
+	leaving_notified: number | null;
 }
 
-/** What a check found: how to keep it, and the notification about it, if any */
+/** What a check found: how to keep it, and the notifications about it */
 export interface Found {
 	statements: D1PreparedStatement[];
-	notice?: Notice;
+	notices: Notice[];
+}
+
+/** Puts a notification in the outbox for each device that follows the series */
+function notify(db: D1Database, show: string, notice: Notice, now: number): D1PreparedStatement {
+	return db.prepare(`INSERT INTO outbox (endpoint, p256dh, auth, payload, created)
+		SELECT p.endpoint, p.p256dh, p.auth, ?, ? FROM push p JOIN follows f ON f.code = p.code WHERE f.show = ?`)
+		.bind(JSON.stringify(notice), now, show);
 }
 
 /**
@@ -137,14 +150,29 @@ export async function check(ctx: Ctx, row: Checked): Promise<Found> {
 	try {
 		id = itemId(row.show);
 	} catch {
-		return {statements: [db.prepare("DELETE FROM shows WHERE show = ?").bind(row.show)]};
+		return {statements: [db.prepare("DELETE FROM shows WHERE show = ?").bind(row.show)], notices: []};
 	}
 	const now = seconds();
-	let {season, seasons, title} = row;
+	const found: Found = {statements: [], notices: []};
+	let {season, seasons, title, expires, leaving_notified: leavingNotified} = row;
 	let seasonsChecked = row.seasons_checked;
 	if (season === null || now - seasonsChecked > CHECK_SEASONS_EVERY) {
 		const show = await getApi(ctx, `/items/${id}`);
 		title = dr.text(show?.title) ?? title;
+		expires = dr.availableUntil(show) ?? null;
+		// Leaving DR within a week, which its followers haven't been told yet, unless DR has moved the date by more than a day
+		const told = leavingNotified !== null && expires !== null && Math.abs(expires - leavingNotified) < 24 * 60 * 60 * 1000;
+		if (expires !== null && expires > Date.now() && expires - Date.now() <= LEAVING_NOTICE && !told) {
+			const notice = {
+				title: `${title ?? ""} udløber ${inDays(expires)}`,
+				body: "Se den færdig, før den forsvinder fra DRTV.",
+				url: `/${row.show}/`,
+				image: thumbnail(dr.wallpaper(show)),
+			};
+			found.notices.push(notice);
+			found.statements.push(notify(db, row.show, notice, now));
+			leavingNotified = expires;
+		}
 		const count = dr.integer(show?.availableSeasonCount) ?? null;
 		// A new season, or the first check: which is the newest
 		if (season === null || count !== seasons) {
@@ -157,25 +185,23 @@ export async function check(ctx: Ctx, row: Checked): Promise<Found> {
 	const episodes = dr.integer((await getApi(ctx, `/items/${season}`))?.availableEpisodeCount) ?? 0;
 	const added = row.season === null ? 0 : season != row.season ? episodes : episodes - (row.episodes ?? 0);
 
-	const found: Found = {statements: []};
 	if (added > 0) {
 		const children = await getApi(ctx, `/items/${season}/children`);
 		const newest: Json = Array.isArray(children?.items) ? children.items.at(-1) : undefined;
 		if (newest?.path) {
 			const name = title ?? dr.text(newest.title) ?? "";
-			found.notice = {
+			const notice = {
 				title: added == 1 ? `Nyt afsnit af ${name}` : `${added} nye afsnit af ${name}`,
 				body: dr.episodeTitle(newest),
 				url: `/${row.show}/${dr.required(newest, "path").split("/").at(-1)}`,
 				image: thumbnail(dr.wallpaper(newest)),
 			};
-			found.statements.push(db.prepare(`INSERT INTO outbox (endpoint, p256dh, auth, payload, created)
-				SELECT p.endpoint, p.p256dh, p.auth, ?, ? FROM push p JOIN follows f ON f.code = p.code WHERE f.show = ?`)
-				.bind(JSON.stringify(found.notice), now, row.show));
+			found.notices.push(notice);
+			found.statements.push(notify(db, row.show, notice, now));
 		}
 	}
-	found.statements.push(db.prepare("UPDATE shows SET season = ?, seasons = ?, episodes = ?, title = ?, seasons_checked = ? WHERE show = ?")
-		.bind(season, seasons, episodes, title, seasonsChecked, row.show));
+	found.statements.push(db.prepare("UPDATE shows SET season = ?, seasons = ?, episodes = ?, title = ?, seasons_checked = ?, expires = ?, leaving_notified = ? WHERE show = ?")
+		.bind(season, seasons, episodes, title, seasonsChecked, expires, leavingNotified, row.show));
 	return found;
 }
 
@@ -245,7 +271,7 @@ export async function run(ctx: Ctx, keys: VapidKeys): Promise<void> {
 			SELECT show FROM shows s
 			WHERE checked < ? AND EXISTS (SELECT 1 FROM follows f JOIN push p ON p.code = f.code WHERE f.show = s.show)
 			ORDER BY checked LIMIT ?)
-		RETURNING show, season, seasons, episodes, title, seasons_checked`)
+		RETURNING show, season, seasons, episodes, title, seasons_checked, expires, leaving_notified`)
 		.bind(now, now - CHECK_EVERY, Math.floor(work))
 		.all<Checked>();
 	const statements: D1PreparedStatement[] = [];

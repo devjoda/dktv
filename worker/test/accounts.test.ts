@@ -214,6 +214,44 @@ describe("notifications", () => {
 		expect(dr.requested).toHaveLength(6);
 	});
 
+	test("a series leaving DR within a week is announced, once", async () => {
+		const code = await newCode(["rejseholdet_503605"]);
+		const phone = await browser();
+		await send("POST", `/push/${code}`, phone.subscription);
+		const keys = vapidKeys(env)!;
+		const show = load("items_503605.json");
+		const leaving = (days: number) => {
+			rejseholdet(2);
+			const season = dr.answer!;
+			const endDate = new Date(Date.now() + days * 24 * 3600 * 1000).toISOString();
+			dr.answer = (path, params) => path == "/items/503605" ? {...show, offers: [{...show.offers[0], endDate}]} : season(path, params);
+		};
+		leaving(12);
+		await run(ctx(), keys);
+		expect(dr.pushed).toEqual([]);
+
+		leaving(5);
+		await env.SYNC.prepare("UPDATE shows SET checked = 0, seasons_checked = 0").run();
+		await run(ctx(), keys);
+		expect(dr.pushed).toHaveLength(1);
+		expect(await phone.read(dr.pushed[0].body)).toEqual({
+			title: "Rejseholdet udløber om 5 dage",
+			body: "Se den færdig, før den forsvinder fra DRTV.",
+			url: "/503605/",
+			image: expect.stringContaining("Width=640"),
+		});
+		// Not again, at the next checks, though DR's date moves a little
+		leaving(4.9);
+		await env.SYNC.prepare("UPDATE shows SET checked = 0, seasons_checked = 0").run();
+		await run(ctx(), keys);
+		expect(dr.pushed).toHaveLength(1);
+		// But again if DR gives it a new date, which is soon too
+		leaving(3);
+		await env.SYNC.prepare("UPDATE shows SET checked = 0, seasons_checked = 0").run();
+		await run(ctx(), keys);
+		expect(dr.pushed).toHaveLength(2);
+	});
+
 	test("a series is checked by one run, though two run at once", async () => {
 		const code = await newCode(["rejseholdet_503605"]);
 		await send("POST", `/push/${code}`, (await browser()).subscription);
