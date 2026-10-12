@@ -71,6 +71,32 @@ function setupControls(video, live = false) {
     });
 }
 
+// Plays right away, since the viewer came here to watch. Browsers that won't play sound
+// before the viewer has clicked on the page itself play it without, with a button to turn it on.
+function autoplay(video) {
+    video.play().catch(function (error) {
+        if (error.name != "NotAllowedError") {
+            return;
+        }
+        video.muted = true;
+        video.play().then(() => offerSound(video)).catch(() => {});
+    });
+}
+
+function offerSound(video) {
+    if (document.getElementById("unmute")) {
+        return;
+    }
+    const button = element("button", {id: "unmute", type: "button", class: "unmute"}, icon("sound"), "Slå lyden til");
+    button.addEventListener("click", function () {
+        video.muted = false;
+        button.remove();
+    });
+    // Or with the player's own button
+    video.addEventListener("volumechange", () => !video.muted && button.remove());
+    (video.closest(".plyr") || video.parentElement).append(button);
+}
+
 // Where to show messages about the video: below Plyr's controls, if there are any
 function messageAnchor(video) {
     return video.closest(".plyr") || video;
@@ -221,6 +247,7 @@ function setupLive(video, url, subtitlesURL) {
         if (button) {
             button.setAttribute("aria-pressed", withSubtitles);
         }
+        autoplay(video);
     };
     play();
     if (button) {
@@ -231,11 +258,7 @@ function setupLive(video, url, subtitlesURL) {
             } catch (error) {
                 console.error("Could not remember the choice of subtitles:", error);
             }
-            const playing = !video.paused;
             play();
-            if (playing) {
-                video.play().catch(() => {});
-            }
         });
     }
 }
@@ -296,8 +319,7 @@ async function playVideo(video, videoID) {
         });
         video.addEventListener("pause", () => saveProgress(videoID, video));
         window.addEventListener("pagehide", () => saveProgress(videoID, video));
-        // The browser might want the viewer to press play themselves
-        video.play().catch(() => {});
+        autoplay(video);
     }, {once: true});
     video.addEventListener("ended", function () {
         saveProgress(videoID, video);
