@@ -38,7 +38,7 @@
             };
             service_name = mkOption {
               description = "Service Name";
-              default = "Public Service";
+              default = "dktv";
               type = types.str;
             };
             recommended_shows = mkOption {

@@ -113,9 +113,9 @@ def test_header_has_sections_instead_of_a_name(get):
     for title in ["Forside", "Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]:
         assert f"{title}</a>" in nav
     assert '<a href="/" class="nav-item" aria-current="page">Forside</a>' in nav
-    # Only in the window's title
-    assert r.text.count("Public Service") == 1
-    assert "<title>Public Service</title>" in r.text
+    # Only in the window's title, and in the link to the source
+    assert r.text.count("dktv") == 2
+    assert "<title>dktv</title>" in r.text
 
 
 def test_films_can_be_favourites_from_their_page(get):

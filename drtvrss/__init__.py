@@ -39,7 +39,7 @@ app.add_template_filter(clock)
 app.add_template_global(whats_on)
 app.add_template_test(is_new, "new")
 
-SERVICE_NAME = os.getenv("SERVICE_NAME", "Public Service")
+SERVICE_NAME = os.getenv("SERVICE_NAME", "dktv")
 # Where the code that runs here can be got
 SOURCE_URL = os.getenv("SOURCE_URL", "https://github.com/devjoda/dktv")
 
