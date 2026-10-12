@@ -1,7 +1,7 @@
 // Notifications about new episodes, and passkeys
 
 import {beforeEach, describe, expect, test} from "vitest";
-import {run} from "../src/alerts";
+import {cleanUp, run} from "../src/alerts";
 import {vapidKeys} from "../src/alerts";
 import {derToRaw} from "../src/webauthn";
 import {fromBase64url, publicJwk, toBase64url} from "../src/webpush";
@@ -141,8 +141,8 @@ describe("notifications", () => {
 		await env.SYNC.prepare("UPDATE shows SET checked = 0").run();
 		dr.requested = [];
 		await run(ctx(), keys);
-		// Two small requests to DR to check it, and one for the new episode
-		expect(dr.requested.filter(p => p.includes("503605") || p.includes("503612"))).toEqual(["/items/503605", "/items/503612", "/items/503612/children"]);
+		// One small request to DR to check it, and one for the new episode
+		expect(dr.requested.filter(p => p.includes("503605") || p.includes("503612"))).toEqual(["/items/503612", "/items/503612/children"]);
 		expect(dr.pushed.map(p => p.endpoint).sort()).toEqual([phone.subscription.endpoint, laptop.subscription.endpoint]);
 		const pushed = dr.pushed.find(p => p.endpoint == phone.subscription.endpoint)!;
 		expect(pushed.headers.get("Content-Encoding")).toBe("aes128gcm");
@@ -154,6 +154,45 @@ describe("notifications", () => {
 		expect(notice.image).toContain("Width=640");
 		// Sent, so gone from the outbox
 		expect(await rows("SELECT id FROM outbox")).toEqual([]);
+	});
+
+	test("a new season is noticed, though less often", async () => {
+		const code = await newCode(["rejseholdet_503605"]);
+		const phone = await browser();
+		await send("POST", `/push/${code}`, phone.subscription);
+		const keys = vapidKeys(env)!;
+		rejseholdet(2);
+		await run(ctx(), keys);
+		// DR gets a fifth season, with its first episode
+		const show = load("items_503605.json");
+		const season = load("items_503612.json");
+		dr.answer = path => ({
+			"/items/503605": {...show, availableSeasonCount: 5, seasons: {...show.seasons, items: [...show.seasons.items, {id: "999", title: "Rejseholdet", path: "/saeson/rejseholdet_999", seasonNumber: 5}]}},
+			"/items/503612": {...season, availableEpisodeCount: 2},
+			"/items/999": {id: "999", type: "season", availableEpisodeCount: 1},
+			"/items/999/children": {items: [{id: "1000", type: "episode", title: "Rejseholdet", contextualTitle: "1. episode", path: "/episode/rejseholdet_1000"}]},
+		} as Record<string, unknown>)[path];
+		// Within six hours, only the newest season it knows of is checked
+		await env.SYNC.prepare("UPDATE shows SET checked = 0").run();
+		await run(ctx(), keys);
+		expect(dr.pushed).toEqual([]);
+		await env.SYNC.prepare("UPDATE shows SET checked = 0, seasons_checked = 0").run();
+		await run(ctx(), keys);
+		expect(dr.pushed).toHaveLength(1);
+		expect(await phone.read(dr.pushed[0].body)).toMatchObject({title: "Nyt afsnit af Rejseholdet", body: "1. episode", url: "/rejseholdet_503605/rejseholdet_1000"});
+		expect(await rows("SELECT season, seasons, episodes FROM shows")).toEqual([{season: "999", seasons: 5, episodes: 1}]);
+	});
+
+	test("a series is checked by one run, though two run at once", async () => {
+		const code = await newCode(["rejseholdet_503605"]);
+		await send("POST", `/push/${code}`, (await browser()).subscription);
+		const keys = vapidKeys(env)!;
+		rejseholdet(1);
+		await run(ctx(), keys);
+		await env.SYNC.prepare("UPDATE shows SET checked = 0").run();
+		rejseholdet(2);
+		await Promise.all([run(ctx(), keys), run(ctx(), keys)]);
+		expect(dr.pushed).toHaveLength(1);
 	});
 
 	test("devices that unsubscribed are forgotten", async () => {
@@ -169,6 +208,18 @@ describe("notifications", () => {
 		expect(dr.pushed).toHaveLength(1);
 		expect(await rows("SELECT endpoint FROM push")).toEqual([]);
 		expect(await rows("SELECT id FROM outbox")).toEqual([]);
+	});
+
+	test("what's run out is forgotten", async () => {
+		const code = await newCode(["rejseholdet_503605"]);
+		await env.SYNC.prepare("INSERT INTO outbox (endpoint, payload, created) VALUES ('old', '{}', 0), ('new', '{}', ?)").bind(Date.now() / 1000).run();
+		await env.SYNC.prepare("INSERT INTO challenges (challenge, code, expires) VALUES ('old', NULL, 0)").run();
+		await env.SYNC.prepare("INSERT INTO shows (show) VALUES ('nobody-follows_1')").run();
+		await cleanUp(ctx());
+		expect(await rows("SELECT endpoint FROM outbox")).toEqual([{endpoint: "new"}]);
+		expect(await rows("SELECT * FROM challenges")).toEqual([]);
+		expect(await rows("SELECT show FROM shows")).toEqual([{show: "rejseholdet_503605"}]);
+		expect(code).toBeTruthy();
 	});
 
 	test("deleting the synced data deletes the notifications and passkeys too", async () => {

@@ -95,23 +95,44 @@ export async function encrypt(subscription: Subscription, message: string, fixed
 	return concat(salt, recordSize, new Uint8Array([senderPublic.length]), senderPublic, ciphertext);
 }
 
+// Signed headers, for each push service, which are used again for a while, since signing takes time
+const signed = new Map<string, {authorization: string; until: number}>();
+// How long a signed header is used, of the 12 hours it's valid, in milliseconds
+const SIGNED_FOR = 6 * 60 * 60 * 1000;
+let privateKey: {jwk: JsonWebKey; key: CryptoKey} | undefined;
+
 /** The Authorization header, which tells the push service it's us */
 export async function vapidAuthorization(endpoint: string, keys: VapidKeys, now = Date.now()): Promise<string> {
+	const audience = new URL(endpoint).origin;
+	const found = signed.get(`${keys.publicKey} ${audience}`);
+	if (found && now < found.until) {
+		return found.authorization;
+	}
+	const authorization = await sign(audience, keys, now);
+	signed.set(`${keys.publicKey} ${audience}`, {authorization, until: now + SIGNED_FOR});
+	return authorization;
+}
+
+async function sign(audience: string, keys: VapidKeys, now: number): Promise<string> {
 	const header = toBase64url(encoder.encode(JSON.stringify({typ: "JWT", alg: "ES256"})));
 	const claims = toBase64url(encoder.encode(JSON.stringify({
-		aud: new URL(endpoint).origin,
+		aud: audience,
 		// At most a day, says RFC 8292
 		exp: Math.floor(now / 1000) + 12 * 60 * 60,
 		sub: keys.subject,
 	})));
-	const key = await crypto.subtle.importKey("jwk", keys.privateKey, {name: "ECDSA", namedCurve: "P-256"}, false, ["sign"]);
-	const signature = await crypto.subtle.sign({name: "ECDSA", hash: "SHA-256"}, key, encoder.encode(`${header}.${claims}`));
+	if (privateKey?.jwk !== keys.privateKey) {
+		privateKey = {jwk: keys.privateKey, key: await crypto.subtle.importKey("jwk", keys.privateKey, {name: "ECDSA", namedCurve: "P-256"}, false, ["sign"])};
+	}
+	const signature = await crypto.subtle.sign({name: "ECDSA", hash: "SHA-256"}, privateKey.key, encoder.encode(`${header}.${claims}`));
 	return `vapid t=${header}.${claims}.${toBase64url(signature)}, k=${keys.publicKey}`;
 }
 
 // Push services, which are the only places subscriptions may lead to
 const PUSH_SERVICES = [
 	/^fcm\.googleapis\.com$/,
+	// Google's too, which Chromium uses
+	/^jmt17\.google\.com$/,
 	/^updates\.push\.services\.mozilla\.com$/,
 	/^web\.push\.apple\.com$/,
 	/\.push\.apple\.com$/,

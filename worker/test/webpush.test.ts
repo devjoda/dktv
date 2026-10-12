@@ -50,6 +50,7 @@ describe("Web Push", () => {
 
 	test("only sends to push services", () => {
 		expect(isPushService("https://fcm.googleapis.com/fcm/send/abc")).toBe(true);
+		expect(isPushService("https://jmt17.google.com/fcm/send/abc")).toBe(true);
 		expect(isPushService("https://updates.push.services.mozilla.com/wpush/v2/abc")).toBe(true);
 		expect(isPushService("https://web.push.apple.com/abc")).toBe(true);
 		expect(isPushService("https://wns2-db5p.notify.windows.com/w/?token=abc")).toBe(true);
