@@ -41,7 +41,14 @@ export function vapidKeys(env: Env): VapidKeys | undefined {
 /** Follows the series among a code's favourites, and no others */
 export async function updateFollows(ctx: Ctx, code: string, favorites: Favorite[]): Promise<void> {
 	const db = ctx.env.SYNC;
-	const wanted = new Set(favorites.filter(f => f.kind == "show").map(f => f.id));
+	// By DR's id, since a series can be a favourite as both rejseholdet_503605 and 503605
+	const wanted = new Set(favorites.filter(f => f.kind == "show").flatMap(f => {
+		try {
+			return [itemId(f.id)];
+		} catch {
+			return [];
+		}
+	}));
 	ctx.budget.spend();
 	const found = await db.prepare("SELECT show FROM follows WHERE code = ?").bind(code).all<{show: string}>();
 	const existing = new Set(found.results.map(row => row.show));

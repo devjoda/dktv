@@ -87,13 +87,20 @@ describe("notifications", () => {
 		const code = await newCode(["rejseholdet_503605", "matador_540736"]);
 		const {subscription} = await browser();
 		expect((await send("POST", `/push/${code}`, subscription)).status).toBe(201);
-		expect(await rows("SELECT show FROM follows ORDER BY show")).toEqual([{show: "matador_540736"}, {show: "rejseholdet_503605"}]);
+		// By DR's id
+		expect(await rows("SELECT show FROM follows ORDER BY show")).toEqual([{show: "503605"}, {show: "540736"}]);
 		// Films aren't followed, and syncing keeps the series up to date
 		await post(`/sync/${code}`, {favorites: [{id: "a-film_1", kind: "film", added: 3}], removed_favorites: {matador_540736: 4}});
-		expect(await rows("SELECT show FROM follows")).toEqual([{show: "rejseholdet_503605"}]);
+		expect(await rows("SELECT show FROM follows")).toEqual([{show: "503605"}]);
 		// Unsubscribing
 		expect((await send("DELETE", `/push/${code}`, {endpoint: subscription.endpoint})).status).toBe(204);
 		expect(await rows("SELECT endpoint FROM push")).toEqual([]);
+	});
+
+	test("a series that's a favourite twice is followed once", async () => {
+		const code = await newCode(["kriseoevelse_-hybridangreb-paa-danmark_624782", "624782", "not-a-series"]);
+		await send("POST", `/push/${code}`, (await browser()).subscription);
+		expect(await rows("SELECT show FROM follows")).toEqual([{show: "624782"}]);
 	});
 
 	test("only for push services, codes that exist, and a few devices", async () => {
@@ -131,7 +138,7 @@ describe("notifications", () => {
 		rejseholdet(1);
 		await run(ctx(), keys);
 		expect(dr.pushed).toEqual([]);
-		expect(await rows("SELECT show, season, seasons, episodes FROM shows WHERE show = 'rejseholdet_503605'")).toEqual([{show: "rejseholdet_503605", season: "503612", seasons: 4, episodes: 1}]);
+		expect(await rows("SELECT show, season, seasons, episodes FROM shows WHERE show = '503605'")).toEqual([{show: "503605", season: "503612", seasons: 4, episodes: 1}]);
 
 		// Not checked again for a while
 		rejseholdet(2);
@@ -152,7 +159,7 @@ describe("notifications", () => {
 		expect(pushed.headers.get("TTL")).toBe("86400");
 		expect(pushed.headers.get("Authorization")).toMatch(new RegExp(`^vapid t=[\\w-]+\\.[\\w-]+\\.[\\w-]+, k=${env.VAPID_PUBLIC_KEY}$`));
 		const notice = await phone.read(pushed.body);
-		expect(notice).toMatchObject({title: "Nyt afsnit af Rejseholdet", url: "/rejseholdet_503605/rejseholdet_503636"});
+		expect(notice).toMatchObject({title: "Nyt afsnit af Rejseholdet", url: "/503605/rejseholdet_503636"});
 		expect(notice.body).toBeTruthy();
 		expect(notice.image).toContain("Width=640");
 		// Sent, so gone from the outbox
@@ -182,7 +189,7 @@ describe("notifications", () => {
 		await env.SYNC.prepare("UPDATE shows SET checked = 0, seasons_checked = 0").run();
 		await run(ctx(), keys);
 		expect(dr.pushed).toHaveLength(1);
-		expect(await phone.read(dr.pushed[0].body)).toMatchObject({title: "Nyt afsnit af Rejseholdet", body: "1. episode", url: "/rejseholdet_503605/rejseholdet_1000"});
+		expect(await phone.read(dr.pushed[0].body)).toMatchObject({title: "Nyt afsnit af Rejseholdet", body: "1. episode", url: "/503605/rejseholdet_1000"});
 		expect(await rows("SELECT season, seasons, episodes FROM shows")).toEqual([{season: "999", seasons: 5, episodes: 1}]);
 	});
 
@@ -242,7 +249,7 @@ describe("notifications", () => {
 		await cleanUp(ctx());
 		expect(await rows("SELECT endpoint FROM outbox")).toEqual([{endpoint: "new"}]);
 		expect(await rows("SELECT * FROM challenges")).toEqual([]);
-		expect(await rows("SELECT show FROM shows")).toEqual([{show: "rejseholdet_503605"}]);
+		expect(await rows("SELECT show FROM shows")).toEqual([{show: "503605"}]);
 		expect(code).toBeTruthy();
 	});
 
