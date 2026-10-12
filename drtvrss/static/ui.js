@@ -62,7 +62,7 @@ function selectPlayingSeason() {
     }
 }
 
-// How long a featured programme without a clip shows, in milliseconds
+// How long a featured programme without a clip shows, and a live channel's broadcast, in milliseconds
 const FEATURED_STILL = 8000;
 
 // Not for those who'd rather have less motion, or are saving data
@@ -87,7 +87,8 @@ function loadHls() {
 }
 
 // The featured programmes at the top of the front page. Each plays DR's clip of it without sound,
-// and the next one is shown as soon as it ends; one without a clip shows for a while.
+// and the next one is shown as soon as it ends; a live channel plays for a while, since it doesn't end,
+// and one without a clip shows its picture for as long.
 // The next one's picture and clip are got ready while one plays, so it starts right away.
 const featured = {
     select: null,
@@ -173,7 +174,8 @@ function makeClip(index) {
     }
     video.addEventListener("playing", () => video.classList.add("is-playing"));
     video.addEventListener("timeupdate", function () {
-        if (index == featured.shown && video.duration) {
+        // A live channel's broadcast has no end to count towards, though hls.js gives it a length
+        if (index == featured.shown && !("live" in slide.dataset) && video.duration) {
             setFeaturedBar(100 * video.currentTime / video.duration);
         }
     });
@@ -218,7 +220,8 @@ function startFeatured(index) {
             clip.video.currentTime = 0;
         }
         playShown();
-    } else {
+    }
+    if (clip == null || "live" in featured.slides[index].dataset) {
         featured.left = FEATURED_STILL;
     }
     if (next != index) {
