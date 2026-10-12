@@ -41,7 +41,7 @@ app.add_template_test(is_new, "new")
 
 SERVICE_NAME = os.getenv("SERVICE_NAME", "Public Service")
 # Where the code that runs here can be got
-SOURCE_URL = os.getenv("SOURCE_URL", "https://github.com/devjoda/drtvrss")
+SOURCE_URL = os.getenv("SOURCE_URL", "https://github.com/devjoda/dktv")
 
 # Shorter than the hour shows are cached for, so visitors never wait for these
 RECOMMENDED_REFRESH_INTERVAL = 30 * 60

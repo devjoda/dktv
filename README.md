@@ -1,4 +1,4 @@
-# drtvrss
+# dktv
 
 An unofficial frontend for [DRTV](https://www.dr.dk/drtv), the streaming service of DR, the Danish Broadcasting Corporation.
 

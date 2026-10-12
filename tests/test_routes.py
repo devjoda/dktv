@@ -155,7 +155,7 @@ def test_all_of_a_list(get, fake_dr, monkeypatch):
 def test_footer_links_to_syncing_and_the_source(get):
     footer = get("/").text.split('<footer class="site-footer">')[1].split("</footer>")[0]
     assert '<a href="/sync/">' in footer
-    assert '<a href="https://github.com/devjoda/drtvrss">Kildekode</a>' in footer
+    assert '<a href="https://github.com/devjoda/dktv">Kildekode</a>' in footer
     assert "Ikke tilknyttet DR" in footer
 
 
