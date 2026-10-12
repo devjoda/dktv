@@ -13,10 +13,13 @@
         <link href="/static/vendor/bootstrap-5.3.3.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH">
         <link href="/static/vendor/schibsted-grotesk-5.3.0-latin.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
         <link href="{{ static_url('style.css') }}" rel="stylesheet">
+        <link rel="manifest" href="{{ static_url('manifest.webmanifest') }}">
+        <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
         <script src="{{ static_url('progress.js') }}"></script>
         <script src="{{ static_url('favorites.js') }}"></script>
         <script src="{{ static_url('sync.js') }}"></script>
         <script src="{{ static_url('ui.js') }}"></script>
+        <script src="{{ static_url('account.js') }}"></script>
         {% block scripts %}{% endblock %}
     </head>
     <body class="{% block body_class %}{% endblock %}">
@@ -51,6 +54,7 @@
                     <button type="submit" class="search-submit" aria-label="Søg">{{ icon("search") }}</button>
                 </form>
                 <a class="search-link" href="/search/" aria-label="Søg">{{ icon("search") }}</a>
+                <a class="account-link" href="/sync/" aria-label="Din konto"{% if path.startswith("/sync/") %} aria-current="page"{% endif %}>{{ icon("user") }}</a>
             </div>
         </header>
 
@@ -64,7 +68,7 @@
 
         <footer class="site-footer">
             <p>Uofficiel brugerflade til DRTV. Ikke tilknyttet DR. Udsendelserne kommer direkte fra DR.</p>
-            <a href="/sync/">Synkroniser dine favoritter og fremskridt mellem dine enheder</a>
+            <a href="/sync/">Din konto og synkronisering mellem dine enheder</a>
             <a href="{{ source_url }}">Kildekode</a>
         </footer>
 

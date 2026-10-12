@@ -72,10 +72,13 @@ ${head}
 <link href="${LIBRARIES.bootstrap.href}" rel="stylesheet" integrity="${LIBRARIES.bootstrap.integrity}">
 <link href="/static/vendor/schibsted-grotesk-5.3.0-latin.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
 <link href="${staticURL("style.css")}" rel="stylesheet">
+<link rel="manifest" href="${staticURL("manifest.webmanifest")}">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
 <script src="${staticURL("progress.js")}"></script>
 <script src="${staticURL("favorites.js")}"></script>
 <script src="${staticURL("sync.js")}"></script>
 <script src="${staticURL("ui.js")}"></script>
+<script src="${staticURL("account.js")}"></script>
 ${scripts}
 </head>
 <body class="${bodyClass || ""}">
@@ -95,6 +98,7 @@ ${each(sections(site.path), ([url, name, current]) =>
 <button type="submit" class="search-submit" aria-label="Søg">${icon("search")}</button>
 </form>
 <a class="search-link" href="/search/" aria-label="Søg">${icon("search")}</a>
+<a class="account-link" href="/sync/" aria-label="Din konto"${attr("aria-current", site.path.startsWith("/sync/") && "page")}>${icon("user")}</a>
 </div>
 </header>
 <main id="main">
@@ -103,7 +107,7 @@ ${content}
 <div id="toast" class="toast-message" role="status" aria-live="polite"></div>
 <footer class="site-footer">
 <p>Uofficiel brugerflade til DRTV. Ikke tilknyttet DR. Udsendelserne kommer direkte fra DR.</p>
-<a href="/sync/">Synkroniser dine favoritter og fremskridt mellem dine enheder</a>
+<a href="/sync/">Din konto og synkronisering mellem dine enheder</a>
 <a href="${site.sourceURL}">Kildekode</a>
 </footer>
 <script>

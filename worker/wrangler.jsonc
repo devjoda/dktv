@@ -25,7 +25,14 @@
 		// Where the code that runs here can be got
 		"SOURCE_URL": "https://github.com/devjoda/dktv",
 		// Shows for the front page, like "rejseholdet_503605:matador_540736"
-		"RECOMMENDED_SHOWS": ""
+		"RECOMMENDED_SHOWS": "",
+		// For notifications about new episodes; the private key is the secret VAPID_PRIVATE_KEY.
+		// Browsers subscribe with this one, so changing it means turning notifications on again.
+		"VAPID_PUBLIC_KEY": "BNfgOxwFCdEoFrhqG8t5AhzWaqzWa29w3jCcisROVirBcvE7DJZ6N-yhqrd_rI_--vQPbpoeU4h42A_4aK5rEK4"
+	},
+	// Checks the followed series for new episodes, and sends notifications
+	"triggers": {
+		"crons": ["* * * * *"]
 	},
 	// Which deploy is running, so pages kept from before an update aren't served after it
 	"version_metadata": {

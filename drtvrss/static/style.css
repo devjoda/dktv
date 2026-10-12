@@ -244,6 +244,23 @@ h1, h2, h3 {
     color: #fff;
 }
 
+/* The viewer's account, at the end of the header */
+.account-link {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--paper);
+}
+
+.account-link:hover,
+.account-link[aria-current] {
+    background: rgba(242, 239, 233, .12);
+    color: #fff;
+}
+
 .header-search input,
 .search-field input {
     width: 100%;
@@ -1726,6 +1743,105 @@ video + .up-next {
     margin-top: 20px;
     color: #ff8a80;
     font-weight: 600;
+}
+
+/* What the account does besides syncing: notifications, and passkeys */
+.account-section {
+    max-width: 64ch;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+}
+
+.account-section h2 {
+    margin: 0 0 8px;
+    font-size: var(--text-h3);
+}
+
+.account-section p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.account-section p + p {
+    margin-top: 8px;
+}
+
+.account-section .actions {
+    margin-top: 20px;
+}
+
+.passkey-list {
+    display: grid;
+    gap: 8px;
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.passkey {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 10px 10px 16px;
+    border-radius: 10px;
+    background: var(--raised);
+}
+
+.passkey > .icon {
+    flex: none;
+    width: 22px;
+    height: 22px;
+}
+
+.passkey-text {
+    display: grid;
+    flex: 1;
+    min-width: 0;
+}
+
+.passkey-text .meta {
+    font-size: var(--text-small);
+}
+
+.account-end {
+    margin-top: 48px;
+}
+
+/* Offered once, after making a series a favourite, or on the favourites page */
+.alerts-offer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    max-width: 720px;
+    margin-top: 24px;
+    padding: 20px 24px;
+    border-radius: 12px;
+    background: rgba(27, 28, 33, .92);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .35);
+}
+
+.page-head + .alerts-offer {
+    margin: 16px var(--gutter) 40px;
+}
+
+.alerts-offer-text {
+    flex: 1 1 320px;
+}
+
+.alerts-offer h2 {
+    margin: 0 0 4px;
+    font-size: var(--text-h3);
+}
+
+.alerts-offer p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.alerts-offer .actions {
+    margin-top: 0;
 }
 
 .sync-privacy {

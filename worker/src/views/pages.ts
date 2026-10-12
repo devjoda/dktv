@@ -334,40 +334,63 @@ ${icon("heart")}
 <noscript><p class="wrap">Favoritter kræver JavaScript.</p></noscript>`);
 }
 
-/** Made to work by sync.js */
+/** The viewer's account, which is their sync code. Made to work by sync.js and account.js. */
 export function syncPage(site: Site): Html {
-	return layout(site, {title: "Synkronisering"}, html`<div class="sync-page wrap" id="sync-page">
-<h1>Dine serier på alle dine enheder</h1>
-<p class="sync-intro">Med en kode har du de samme favoritter på din telefon, computer og TV, og du kan fortsætte, hvor du slap.</p>
+	return layout(site, {title: "Din konto"}, html`<div class="sync-page wrap" id="sync-page">
+<h1>Din konto</h1>
+<p class="sync-intro">Med en konto har du de samme favoritter på din telefon, computer og TV, og du kan fortsætte, hvor du slap. Den kræver hverken e-mail eller adgangskode.</p>
 <div class="sync-options js-sync-off" hidden>
 <section class="sync-option" aria-labelledby="sync-new">
-<h2 id="sync-new">Første enhed</h2>
-<p>Opret en kode, og skriv den ind på dine andre enheder.</p>
-<button type="button" class="button button-primary js-sync-create">Opret en kode</button>
+<h2 id="sync-new">Ny konto</h2>
+<p>Du får en kode, som du logger ind med på dine andre enheder.</p>
+<button type="button" class="button button-primary js-sync-create">Opret en konto</button>
+</section>
+<section class="sync-option js-passkey-login" aria-labelledby="sync-passkey" hidden>
+<h2 id="sync-passkey">Har du en adgangsnøgle?</h2>
+<p>Log ind med den adgangsnøgle, du har oprettet på en anden enhed.</p>
+<button type="button" class="button button-secondary js-passkey-login-button">${icon("key")} Log ind med adgangsnøgle</button>
 </section>
 <form class="sync-option js-sync-join" aria-labelledby="sync-join">
-<h2 id="sync-join">Har du allerede en kode?</h2>
+<h2 id="sync-join">Har du en kode?</h2>
 <p>Skriv koden fra din anden enhed.</p>
 <label class="visually-hidden" for="sync-code">Kode</label>
 <input class="code-input" id="sync-code" name="code" placeholder="ABCD-EFGH-JKMN-PQRS" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
-<button type="submit" class="button button-secondary">Forbind</button>
+<button type="submit" class="button button-secondary">Log ind</button>
 </form>
 </div>
-<section class="js-sync-on" aria-labelledby="sync-code-title" hidden>
-<h2 class="sync-label" id="sync-code-title">Denne enhed synkroniserer med koden</h2>
+<div class="js-sync-on" hidden>
+<section aria-labelledby="sync-code-title">
+<h2 class="sync-label" id="sync-code-title">Din kode</h2>
 <p class="sync-code js-sync-code"></p>
 <p class="meta js-sync-status"></p>
 <div class="actions">
 <button type="button" class="button button-secondary js-sync-copy">Kopiér koden</button>
 <button type="button" class="button button-secondary js-sync-now">Synkroniser nu</button>
 </div>
+</section>
+<section class="account-section js-alerts" aria-labelledby="alerts-title" hidden>
+<h2 id="alerts-title">Beskeder om nye afsnit</h2>
+<p class="js-alerts-status">Få en besked på denne enhed, når en af dine favoritserier får et nyt afsnit.</p>
+<p class="js-alerts-home-screen" hidden>På iPhone og iPad skal siden først føjes til hjemmeskærmen: tryk på Del og derefter Føj til hjemmeskærm. Åbn den så derfra, og slå beskeder til her.</p>
 <div class="actions">
-<button type="button" class="button button-quiet js-sync-stop">Stop synkronisering på denne enhed</button>
-<button type="button" class="button button-quiet js-sync-delete">Slet dine data fra serveren</button>
+<button type="button" class="button button-primary js-alerts-toggle" aria-pressed="false">${icon("bell")}<span> Slå beskeder til</span></button>
 </div>
 </section>
+<section class="account-section js-passkeys" aria-labelledby="passkeys-title" hidden>
+<h2 id="passkeys-title">Adgangsnøgler</h2>
+<p>Med en adgangsnøgle logger du ind på dine andre enheder uden koden. Den gemmes på enheden, eller i din adgangskodeadministrator, som iCloud-nøglering eller Google Adgangskodeadministrator.</p>
+<ul class="passkey-list js-passkey-list" hidden></ul>
+<div class="actions">
+<button type="button" class="button button-secondary js-passkey-create">${icon("key")} Opret en adgangsnøgle</button>
+</div>
+</section>
+<div class="actions account-end">
+<button type="button" class="button button-quiet js-sync-stop">Log ud på denne enhed</button>
+<button type="button" class="button button-quiet js-sync-delete">Slet din konto</button>
+</div>
+</div>
 <p class="sync-error js-sync-error" role="alert" hidden></p>
-<p class="sync-privacy">Dine favoritter, og hvor langt du er nået i hvert afsnit, gemmes på serveren under koden. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en kode gemmes de kun i din browser.</p>
-<noscript><p>Synkronisering kræver JavaScript.</p></noscript>
+<p class="sync-privacy">Din konto er koden. Under den gemmes dine favoritter, hvor langt du er nået i hvert afsnit, og hvilke af dine enheder der får beskeder. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en konto gemmes de kun i din browser.</p>
+<noscript><p>Din konto kræver JavaScript.</p></noscript>
 </div>`);
 }

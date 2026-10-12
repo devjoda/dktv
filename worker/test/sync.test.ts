@@ -159,7 +159,7 @@ describe("syncing", () => {
 		const r = await get("/sync/");
 		expect(r.status).toBe(200);
 		expect(r.text).toContain('id="sync-page"');
-		expect(r.text).toContain("Opret en kode");
+		expect(r.text).toContain("Opret en konto");
 		expect((await get("/")).text).toContain('<a href="/sync/">');
 	});
 });

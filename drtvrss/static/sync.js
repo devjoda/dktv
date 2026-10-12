@@ -1,5 +1,5 @@
 // Keeps the viewer's favourites, and how far they got with each video, the same on all their devices,
-// once they've set up a code on /sync/. The server merges what each device sends, see sync.py.
+// once they've set up a code, their account, on /sync/. The server merges what each device sends, see sync.py.
 // Needs progress.js and favorites.js.
 
 // How long to wait for more changes before sending them, in milliseconds
@@ -172,6 +172,7 @@ function setupSyncPage() {
             await syncNow();
             showError(null);
             announce("Enheden synkroniserer nu");
+            page.dispatchEvent(new Event("accountchange"));
         } catch (error) {
             if (error.status == 404) {
                 localStorage.removeItem("syncCode");
@@ -183,9 +184,14 @@ function setupSyncPage() {
         render();
     };
     const stop = function () {
+        // This device's notifications were for the code's favourites
+        if (typeof disableAlerts == "function") {
+            disableAlerts().catch(error => console.error("Could not turn off notifications:", error));
+        }
         localStorage.removeItem("syncCode");
         localStorage.removeItem("syncedAt");
         render();
+        page.dispatchEvent(new Event("accountchange"));
     };
 
     find(".js-sync-create").addEventListener("click", async function () {
@@ -225,10 +231,10 @@ function setupSyncPage() {
     });
     find(".js-sync-stop").addEventListener("click", function () {
         stop();
-        announce("Enheden synkroniserer ikke længere");
+        announce("Du er logget ud på denne enhed");
     });
     find(".js-sync-delete").addEventListener("click", async function () {
-        if (!confirm("Slet dine favoritter og fremskridt fra serveren? Det, der er gemt på denne enhed, bliver her.")) {
+        if (!confirm("Slet din konto? Dine favoritter, fremskridt, beskeder og adgangsnøgler slettes fra serveren. Det, der er gemt på denne enhed, bliver her.")) {
             return;
         }
         try {
@@ -237,10 +243,12 @@ function setupSyncPage() {
                 throw new Error(`Status ${response.status}`);
             }
             stop();
-            announce("Slettet fra serveren");
+            announce("Din konto er slettet");
         } catch (error) {
             showError("Kunne ikke slette. Prøv igen senere.");
         }
     });
+    // When account.js logs in with a passkey
+    page.addEventListener("accountchange", render);
     render();
 }

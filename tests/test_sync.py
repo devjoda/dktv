@@ -118,5 +118,5 @@ def test_sync_page(get):
     r = get("/sync/")
     assert r.status_code == 200
     assert 'id="sync-page"' in r.text
-    assert "Opret en kode" in r.text
+    assert "Opret en konto" in r.text
     assert '<a href="/sync/">' in get("/").text

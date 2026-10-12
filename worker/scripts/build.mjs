@@ -55,7 +55,7 @@ if (existsSync(target)) {
 
 const versions = {};
 for (const name of readdirSync(source)) {
-    if (/\.(js|css)$/.test(name)) {
+    if (/\.(js|css|webmanifest)$/.test(name)) {
         versions[name] = createHash("sha256").update(readFileSync(join(source, name))).digest("hex").slice(0, 12);
     }
 }
