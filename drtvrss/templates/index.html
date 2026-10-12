@@ -1,17 +1,23 @@
 {% extends "base.html" %}
 {% from "_ui.html" import icon, tile, card_tile, channel_tile, shelf_head, search_field, favorite_button %}
 {% block body_class %}{% if featured %}has-hero{% endif %}{% endblock %}
+{% block scripts %}
+{% if featured %}
+{# For the featured programmes' clips, along with the page instead of after it #}
+<link href="/static/vendor/hls-1.7.3.min.js" rel="preload" as="script" integrity="sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX">
+{% endif %}
+{% endblock %}
 {% block content %}
 <h1 class="visually-hidden">Forside</h1>
 
 {% if featured %}
 {# What DR features, one at a time. ui.js plays DR's short clip of each without sound,
-   and moves on to the next 2 seconds after it ends. #}
+   and moves on to the next as soon as it ends. #}
 <section class="hero featured" aria-label="Fremhævet">
     {% for c in featured %}
     <div class="hero-slide" id="featured-{{ loop.index }}"{% if c.preview and not c.live %} data-preview="{{ c.preview }}"{% endif %}{% if not loop.first %} hidden{% endif %}>
         <div class="hero-backdrop">
-            <img src="{{ c.image|thumbnail(1280) }}" alt=""{% if not loop.first %} loading="lazy"{% endif %}>
+            <img src="{{ c.image|thumbnail(1280) }}" alt=""{% if not loop.first %} loading="lazy" fetchpriority="low"{% endif %} decoding="async">
         </div>
         <div class="hero-content">
             <h2 class="hero-title{% if c.title|length > 20 %} is-long{% endif %}">{{ c.title }}</h2>

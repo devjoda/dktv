@@ -570,7 +570,7 @@ h1, h2, h3 {
 
 .hero-slide:not([hidden]) .hero-backdrop,
 .hero-slide:not([hidden]) .hero-content {
-    animation: featured-in .45s ease;
+    animation: featured-in .3s ease;
 }
 
 @keyframes featured-in {
@@ -586,7 +586,7 @@ h1, h2, h3 {
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    transition: opacity .6s ease;
+    transition: opacity .3s ease;
 }
 
 .hero-preview.is-playing {

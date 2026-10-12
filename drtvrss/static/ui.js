@@ -62,10 +62,7 @@ function selectPlayingSeason() {
     }
 }
 
-// How long the picture of a featured programme shows before its clip plays, in milliseconds
-const CLIP_DELAY = 1500;
-// How long after a clip ends before the next programme, and how long one without a clip shows
-const FEATURED_PAUSE = 2000;
+// How long a featured programme without a clip shows, in milliseconds
 const FEATURED_STILL = 8000;
 
 // Not for those who'd rather have less motion, or are saving data
@@ -74,7 +71,6 @@ function motionWanted() {
         && !(navigator.connection && navigator.connection.saveData);
 }
 
-// hls.js only when a clip is about to play, since it's big
 function loadHls() {
     if (typeof Hls != "undefined") {
         return Promise.resolve();
@@ -91,164 +87,191 @@ function loadHls() {
 }
 
 // The featured programmes at the top of the front page. Each plays DR's clip of it without sound,
-// and 2 seconds after it ends, the next one is shown; one without a clip shows for 8 seconds.
-// It holds while the pointer or keyboard is on it, or it can't be seen.
+// and the next one is shown as soon as it ends; one without a clip shows for a while.
+// The next one's picture and clip are got ready while one plays, so it starts right away.
 const featured = {
     select: null,
     slides: [],
     bars: [],
-    clip: null,
-    // Milliseconds left until the next one, while there's no clip playing
+    shown: 0,
+    // By slide: {video, hls}, for the one shown and the next
+    clips: new Map(),
+    // Milliseconds left until the next one, for one without a clip
     left: null,
-    held: false,
     inView: true,
-    delay: null,
+    clipsPossible: false,
 };
 
-function shownFeatured() {
-    return featured.slides.findIndex(slide => !slide.hidden);
-}
-
 function setFeaturedBar(percent) {
-    const bar = featured.bars[shownFeatured()];
+    const bar = featured.bars[featured.shown];
     if (bar) {
         bar.firstElementChild.style.width = Math.min(100, percent) + "%";
     }
 }
 
-function stopClip() {
-    clearTimeout(featured.delay);
-    if (featured.clip != null) {
-        if (featured.clip.hls) {
-            featured.clip.hls.destroy();
-        }
-        featured.clip.video.remove();
-        featured.clip = null;
-    }
-}
-
 function nextFeatured() {
-    const next = (shownFeatured() + 1) % featured.slides.length;
-    featured.select(featured.bars[next]);
+    featured.select(featured.bars[(featured.shown + 1) % featured.slides.length]);
 }
 
-// Shows the next one after a while, unless a clip plays first
-function countDown(milliseconds) {
-    featured.left = milliseconds;
+function dropClip(index) {
+    const clip = featured.clips.get(index);
+    if (clip) {
+        if (clip.hls) {
+            clip.hls.destroy();
+        }
+        clip.video.remove();
+        featured.clips.delete(index);
+    }
 }
 
-async function playClip(slide) {
-    try {
-        await loadHls();
-    } catch (error) {
-        console.info("No clip: hls.js didn't load", error);
-        countDown(FEATURED_STILL);
-        return;
+function failClip(index, reason) {
+    console.info("No clip:", reason);
+    dropClip(index);
+    if (index == featured.shown) {
+        featured.left = FEATURED_STILL;
     }
-    if (slide.hidden || featured.clip != null) {
-        return;
+}
+
+function playShown() {
+    const clip = featured.clips.get(featured.shown);
+    if (clip && featured.inView && !document.hidden) {
+        clip.video.play().catch(error => failClip(featured.shown, error.name + ": " + error.message));
     }
-    const video = element("video", {class: "hero-preview", playsinline: "", "aria-hidden": "true"});
+}
+
+// Starts loading a slide's clip, without playing it
+function makeClip(index) {
+    const slide = featured.slides[index];
+    if (featured.clips.has(index) || !featured.clipsPossible || !slide.dataset.preview) {
+        return featured.clips.get(index) || null;
+    }
+    const video = element("video", {class: "hero-preview", playsinline: "", preload: "auto", "aria-hidden": "true"});
     video.muted = true;
     let hls = null;
-    const fail = function (reason) {
-        console.info("No clip:", reason);
-        stopClip();
-        countDown(FEATURED_STILL);
-    };
     if (Hls.isSupported()) {
-        hls = new Hls({capLevelToPlayerSize: true, maxBufferLength: 15, enableWebVTT: false});
+        hls = new Hls({capLevelToPlayerSize: true, maxBufferLength: 10, startFragPrefetch: true, enableWebVTT: false});
         hls.loadSource(slide.dataset.preview);
         hls.attachMedia(video);
-        hls.on(Hls.Events.ERROR, (event, data) => data.fatal && fail(data.details));
+        hls.on(Hls.Events.ERROR, (event, data) => data.fatal && failClip(index, data.details));
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
         video.src = slide.dataset.preview;
     } else {
-        fail("this browser can't play HLS");
-        return;
+        return null;
     }
-    featured.clip = {video, hls};
-    featured.left = null;
     video.addEventListener("playing", () => video.classList.add("is-playing"));
-    video.addEventListener("timeupdate", () => video.duration && setFeaturedBar(100 * video.currentTime / video.duration));
-    video.addEventListener("ended", function () {
-        setFeaturedBar(100);
-        countDown(FEATURED_PAUSE);
+    video.addEventListener("timeupdate", function () {
+        if (index == featured.shown && video.duration) {
+            setFeaturedBar(100 * video.currentTime / video.duration);
+        }
     });
+    video.addEventListener("ended", () => index == featured.shown && nextFeatured());
     slide.querySelector(".hero-backdrop").append(video);
-    if (!featured.held && featured.inView) {
-        video.play().catch(error => fail(error.name + ": " + error.message));
+    const clip = {video, hls};
+    featured.clips.set(index, clip);
+    return clip;
+}
+
+// Gets a slide's picture now, instead of when it's shown
+function loadPicture(index) {
+    const picture = featured.slides[index].querySelector(".hero-backdrop img");
+    if (picture && picture.loading == "lazy") {
+        picture.loading = "eager";
     }
 }
 
-// Starts showing a featured programme: its clip, or its picture for a while
-function startFeatured(slide) {
-    stopClip();
-    featured.bars.forEach(bar => bar.firstElementChild.style.width = "0%");
+// Shows a featured programme: plays its clip, or shows its picture for a while
+function startFeatured(index) {
+    featured.shown = index;
     featured.left = null;
+    featured.bars.forEach(bar => bar.firstElementChild.style.width = "0%");
+    const next = (index + 1) % featured.slides.length;
+    for (const other of [...featured.clips.keys()]) {
+        if (other != index && other != next) {
+            dropClip(other);
+        }
+    }
+    const nextClip = featured.clips.get(next);
+    if (nextClip && next != index) {
+        nextClip.video.pause();
+        nextClip.video.classList.remove("is-playing");
+    }
+    loadPicture(next);
     if (!motionWanted()) {
         return;
     }
-    if (slide.dataset.preview) {
-        featured.delay = setTimeout(() => playClip(slide), CLIP_DELAY);
+    const clip = makeClip(index);
+    if (clip) {
+        if (clip.video.ended) {
+            clip.video.currentTime = 0;
+        }
+        playShown();
     } else {
-        countDown(FEATURED_STILL);
+        featured.left = FEATURED_STILL;
+    }
+    if (next != index) {
+        makeClip(next);
     }
 }
 
 const FEATURED_TICK = 100;
 
 function tickFeatured() {
-    if (featured.left == null || featured.held || !featured.inView || document.hidden) {
+    if (featured.left == null || !featured.inView || document.hidden) {
         return;
     }
     featured.left -= FEATURED_TICK;
-    if (featured.clip == null) {
-        setFeaturedBar(100 * (1 - featured.left / FEATURED_STILL));
-    }
+    setFeaturedBar(100 * (1 - featured.left / FEATURED_STILL));
     if (featured.left <= 0) {
         featured.left = null;
         nextFeatured();
     }
 }
 
-function holdFeatured(held) {
-    featured.held = held;
-    const video = featured.clip && featured.clip.video;
-    if (video && !video.ended) {
-        if (held || !featured.inView) {
-            video.pause();
-        } else {
-            video.play().catch(() => {});
-        }
-    }
-}
-
-function setupFeatured() {
+async function setupFeatured() {
     const section = document.querySelector(".featured");
     if (section == null || section.dataset.ready) {
         return;
     }
     section.dataset.ready = "true";
     featured.slides = [...section.querySelectorAll(".hero-slide")];
+    if (motionWanted() && featured.slides.some(slide => slide.dataset.preview)) {
+        try {
+            await loadHls();
+            featured.clipsPossible = true;
+        } catch (error) {
+            console.info("No clips: hls.js didn't load", error);
+        }
+    }
     const bars = section.querySelector(".featured-bars");
     if (bars == null) {
-        startFeatured(featured.slides[0]);
+        startFeatured(0);
         return;
     }
     featured.bars = [...bars.querySelectorAll("[role=tab]")];
-    featured.select = setupTabs(bars, bar => startFeatured(document.getElementById(bar.getAttribute("aria-controls"))));
+    featured.select = setupTabs(bars, bar => startFeatured(featured.bars.indexOf(bar)));
     setInterval(tickFeatured, FEATURED_TICK);
+    // The rest of the pictures, once the page has what it needs first, so clicking ahead shows them at once
+    const loadPictures = () => featured.slides.forEach((slide, index) => loadPicture(index));
+    if (document.readyState == "complete") {
+        loadPictures();
+    } else {
+        window.addEventListener("load", loadPictures);
+    }
 
-    // Time to read, and to click
-    section.addEventListener("mouseenter", () => holdFeatured(true));
-    section.addEventListener("mouseleave", () => holdFeatured(section.contains(document.activeElement)));
-    section.addEventListener("focusin", () => holdFeatured(true));
-    section.addEventListener("focusout", event => !section.contains(event.relatedTarget) && holdFeatured(section.matches(":hover")));
+    // Only while it can be seen
+    const pauseOrPlay = function () {
+        const clip = featured.clips.get(featured.shown);
+        if (featured.inView && !document.hidden) {
+            playShown();
+        } else if (clip) {
+            clip.video.pause();
+        }
+    };
     new IntersectionObserver(function ([entry]) {
         featured.inView = entry.isIntersecting;
-        holdFeatured(featured.held);
+        pauseOrPlay();
     }, {threshold: .4}).observe(section);
+    document.addEventListener("visibilitychange", pauseOrPlay);
 }
 
 // Buttons to scroll rows sideways, for those without a touchpad
@@ -306,6 +329,9 @@ function updateHeader() {
 }
 
 window.addEventListener("scroll", updateHeader, {passive: true});
+
+// As soon as the page is read, instead of when all its pictures are loaded too
+document.addEventListener("DOMContentLoaded", setupFeatured);
 
 // Also when coming back to a page, which the browser may have kept as it was
 window.addEventListener("pageshow", function () {
