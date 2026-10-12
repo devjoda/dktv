@@ -11,10 +11,11 @@ An unofficial frontend for [DRTV](https://www.dr.dk/drtv), the streaming service
 - Live TV, with what's on now and later, and subtitles
 - Picks up where you left off, and marks what you've seen
 - Favourite series and films
-- Syncing favourites and progress between your devices, with a code
+- An account without email or password: a code, which syncs favourites and progress between your devices
+- Logging in on your other devices with a passkey, and notifications when a favourite series gets a new episode
 - An RSS feed for each series, at `/<series>.xml`
 
-What you watch and your favourites are kept in your browser, and only on the server if you set up syncing.
+What you watch and your favourites are kept in your browser, and only on the server if you make an account.
 There's no tracking, and the libraries and fonts are served from the site itself.
 
 ## Based on
@@ -32,11 +33,12 @@ $ npm install
 $ npm run dev
 ```
 
-`npm test` runs its tests, and `npm run deploy` puts it on Cloudflare.
+`npm test` runs its tests, and `npm run deploy` puts it on Cloudflare. Notifications need a key pair:
+the public key in `wrangler.jsonc`, and the private one as the secret `VAPID_PRIVATE_KEY`.
 
 It also runs as a Python app, with `uv run hypercorn drtvrss:app`, or with Nix, `nix develop` and then
-`hypercorn drtvrss:app`. Its tests run with `pytest`. Both use the same scripts and styles in the browser,
-from [`drtvrss/static`](drtvrss/static).
+`hypercorn drtvrss:app`, though without passkeys and notifications. Its tests run with `pytest`. Both use
+the same scripts and styles in the browser, from [`drtvrss/static`](drtvrss/static).
 
 ## Licence
 
