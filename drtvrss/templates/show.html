@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, progress_bar, seen_mark, play_button, show_facts, favorite_button %}
+{% from "_ui.html" import icon, progress_bar, seen_mark, play_button, show_facts, favorite_button, wide_picture %}
 {% block head %}
 <title>{{ s.title }} - {{ SERVICE_NAME }}</title>
 <link rel="alternate" type="application/rss+xml" title="{{ s.title }}" href="{{ s.feed_url }}">
@@ -7,7 +7,7 @@
 {% block body_class %}has-hero{% endblock %}
 {% block content %}
 <section class="hero">
-    <div class="hero-backdrop"><img src="{{ s.wallpaper|thumbnail(1280) }}" alt=""></div>
+    <div class="hero-backdrop">{{ wide_picture(s.wallpaper) }}</div>
     <div class="hero-content">
         <h1 class="hero-title{% if s.title|length > 20 %} is-long{% endif %}">{{ s.title }}</h1>
         {{ show_facts(s) }}

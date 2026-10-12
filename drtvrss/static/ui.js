@@ -139,6 +139,15 @@ function playShown() {
     }
 }
 
+// The quality just sharp enough for the hero's width on this screen. hls.js would start with the
+// lowest, not knowing the connection yet, and the clips are over before it would choose better.
+function sharpEnough(levels) {
+    const needed = .85 * document.querySelector(".featured").clientWidth * (window.devicePixelRatio || 1);
+    const byWidth = levels.map((level, index) => ({width: level.width || 0, index})).sort((a, b) => a.width - b.width);
+    const level = byWidth.find(level => level.width >= needed) || byWidth[byWidth.length - 1];
+    return level.index;
+}
+
 // Starts loading a slide's clip, without playing it
 function makeClip(index) {
     const slide = featured.slides[index];
@@ -149,7 +158,11 @@ function makeClip(index) {
     video.muted = true;
     let hls = null;
     if (Hls.isSupported()) {
-        hls = new Hls({capLevelToPlayerSize: true, maxBufferLength: 10, startFragPrefetch: true, enableWebVTT: false});
+        hls = new Hls({maxBufferLength: 10, startFragPrefetch: true, enableWebVTT: false, autoStartLoad: false});
+        hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+            hls.startLevel = sharpEnough(data.levels);
+            hls.startLoad();
+        });
         hls.loadSource(slide.dataset.preview);
         hls.attachMedia(video);
         hls.on(Hls.Events.ERROR, (event, data) => data.fatal && failClip(index, data.details));

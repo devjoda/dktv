@@ -47,6 +47,11 @@ show_id adds a button to make the show a favourite.
 </article>
 {%- endmacro %}
 
+{# A picture across the page, from DR's image service, as sharp as the screen needs #}
+{% macro wide_picture(image, lazy=False) -%}
+<img src="{{ image|thumbnail(1280) }}" srcset="{{ image|thumbnail(1280) }} 1280w, {{ image|thumbnail(1920) }} 1920w" sizes="100vw" alt=""{% if lazy %} loading="lazy" fetchpriority="low"{% endif %} decoding="async">
+{%- endmacro %}
+
 {# One of DR's programmes, from discover.py #}
 {% macro card_tile(c) -%}
 {{ tile(c.url, c.image, c.title, meta=c.category, tags=[("live", "Direkte")] if c.live else [], video_id=c.video_id, show_id=c.show_id) }}

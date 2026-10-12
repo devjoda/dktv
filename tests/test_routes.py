@@ -27,7 +27,10 @@ def test_show(get):
     assert "Abonnér med RSS" not in r.text
     # Seasons in order
     assert r.text.index("Sæson 1") < r.text.index("Sæson 2") < r.text.index("Sæson 3") < r.text.index("Sæson 4")
-    assert "Width=1920" not in r.text
+    # Small pictures for the episodes; full HD only on offer for the big one, for screens that need it
+    episodes = r.text.split('class="seasons"')[1]
+    assert "Width=1920" not in episodes and "Width=640" in episodes
+    assert "1920w\" sizes=\"100vw\"" in r.text
     # All but the big picture at the top, which is seen right away
     assert r.text.count('loading="lazy"') == r.text.count("<img") - 1
     assert "Width=1280" in r.text

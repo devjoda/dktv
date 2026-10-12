@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, tile, card_tile, channel_tile, shelf_head, search_field, favorite_button %}
+{% from "_ui.html" import icon, tile, card_tile, channel_tile, shelf_head, search_field, favorite_button, wide_picture %}
 {% block body_class %}{% if featured %}has-hero{% endif %}{% endblock %}
 {% block scripts %}
 {% if featured %}
@@ -17,7 +17,7 @@
     {% for c in featured %}
     <div class="hero-slide" id="featured-{{ loop.index }}"{% if c.preview and not c.live %} data-preview="{{ c.preview }}"{% endif %}{% if not loop.first %} hidden{% endif %}>
         <div class="hero-backdrop">
-            <img src="{{ c.image|thumbnail(1280) }}" alt=""{% if not loop.first %} loading="lazy" fetchpriority="low"{% endif %} decoding="async">
+            {{ wide_picture(c.image, lazy=not loop.first) }}
         </div>
         <div class="hero-content">
             <h2 class="hero-title{% if c.title|length > 20 %} is-long{% endif %}">{{ c.title }}</h2>
