@@ -1,8 +1,75 @@
 // Plays DR's HLS streams in a <video> element, and remembers how far the viewer got.
 // Needs progress.js, and hls.js except in browsers without Media Source Extensions that play HLS natively.
+// Uses Plyr's controls when it's there, and the browser's own when not.
 
 const NOT_IN_DENMARK = "Kunne ikke indlæse videoen. Formentligt befinder du dig udenfor Danmark, og forsøger at se noget der kun er tilgængeligt hjemme.";
 const COULD_NOT_LOAD = "Kunne ikke indlæse videoen. Prøv igen senere, eller se den på DRTV.";
+
+// Plyr's texts, in Danish
+const PLYR_DANISH = {
+    restart: "Start forfra",
+    rewind: "{seektime} sek. tilbage",
+    play: "Afspil",
+    pause: "Pause",
+    fastForward: "{seektime} sek. frem",
+    seek: "Spol",
+    seekLabel: "{currentTime} af {duration}",
+    played: "Afspillet",
+    buffered: "Indlæst",
+    currentTime: "Tid",
+    duration: "Varighed",
+    volume: "Lydstyrke",
+    mute: "Slå lyden fra",
+    unmute: "Slå lyden til",
+    enableCaptions: "Slå undertekster til",
+    disableCaptions: "Slå undertekster fra",
+    enterFullscreen: "Fuld skærm",
+    exitFullscreen: "Afslut fuld skærm",
+    frameTitle: "Afspiller til {title}",
+    captions: "Undertekster",
+    settings: "Indstillinger",
+    pip: "Billede i billede",
+    menuBack: "Tilbage",
+    speed: "Hastighed",
+    normal: "Normal",
+    quality: "Kvalitet",
+    loop: "Gentag",
+    start: "Start",
+    end: "Slut",
+    all: "Alle",
+    reset: "Nulstil",
+    disabled: "Fra",
+    enabled: "Til",
+};
+
+// Plyr's controls instead of the browser's own: buttons to skip 15 seconds,
+// a speed menu, and keyboard shortcuts (space, and the arrow keys to skip)
+function setupControls(video, live = false) {
+    if (typeof Plyr == "undefined") {
+        return;
+    }
+    new Plyr(video, {
+        controls: live
+            ? ["play-large", "play", "mute", "volume", "pip", "airplay", "fullscreen"]
+            : ["play-large", "rewind", "play", "fast-forward", "progress", "current-time", "duration",
+               "mute", "volume", "settings", "pip", "airplay", "fullscreen"],
+        settings: ["speed"],
+        speed: {selected: 1, options: [0.75, 1, 1.25, 1.5, 2]},
+        seekTime: 15,
+        invertTime: false,
+        keyboard: {focused: true, global: true},
+        tooltips: {controls: true, seek: true},
+        i18n: PLYR_DANISH,
+        // From here, instead of Plyr's CDN
+        iconUrl: "/static/vendor/plyr-3.8.4.svg",
+        blankVideo: "",
+    });
+}
+
+// Where to show messages about the video: below Plyr's controls, if there are any
+function messageAnchor(video) {
+    return video.closest(".plyr") || video;
+}
 
 // Points to the next episode, once this one has ended
 function offerNext(video) {
@@ -17,7 +84,7 @@ function offerNext(video) {
     link.className = "alert-link";
     link.textContent = video.dataset.nextTitle;
     box.append("Næste afsnit: ", link);
-    video.after(box);
+    messageAnchor(video).after(box);
     link.focus();
 }
 
@@ -31,7 +98,7 @@ function showError(video, message) {
     error.className = "alert alert-warning mt-2";
     error.setAttribute("role", "alert");
     error.textContent = message;
-    video.after(error);
+    messageAnchor(video).after(error);
 }
 
 function generateUUID() {
@@ -120,6 +187,7 @@ function attachStream(video, src) {
 
 // Plays a program or an episode, continuing where the viewer left off
 async function playVideo(video, videoID) {
+    setupControls(video);
     let src;
     try {
         src = await getStreamUrl(videoID);

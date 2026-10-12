@@ -29,7 +29,8 @@
         {% for i, item in items %}
         {% set tags = [("type", kind)] + ([("geo", "Kun i DK")] if item.geo_restricted else []) %}
         {{ tile(item.url, item.wallpaper, item.title, tags=tags, description=item.description,
-                video_id=item.url.split("_")[-1] if kind != "Serie" else None) }}
+                video_id=item.url.split("_")[-1] if kind != "Serie" else None,
+                show_id=item.url.strip("/") if kind == "Serie" else None) }}
         {% endfor %}
     </div>
 </section>

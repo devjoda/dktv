@@ -18,12 +18,18 @@
 {% for kind, label in tags %}<span class="tag tag-{{ kind }}">{{ label }}</span>{% endfor %}
 {%- endmacro %}
 
+{# Adds a show to the viewer's favourites, or removes it, with favorites.js #}
+{% macro favorite_button(show_id, title, image, compact=False) -%}
+<button type="button" class="{{ 'tile-action' if compact else 'button button-secondary' }} js-favorite" aria-pressed="false"{% if compact %} aria-label="Favorit: {{ title }}" title="Favorit"{% endif %} data-show-id="{{ show_id }}" data-title="{{ title }}" data-image="{{ image|thumbnail if image else '' }}">{{ icon("heart") }}{% if not compact %} Favorit{% endif %}</button>
+{%- endmacro %}
+
 {#
 A picture with a title, linking to a show or a video.
 video_id marks how far the viewer got with that video,
 and episode_ids how many of a show's episodes they've seen.
+show_id adds a button to make the show a favourite.
 #}
-{% macro tile(href, image, title, meta=None, tags=[], video_id=None, episode_ids=None, minutes=None, description=None) -%}
+{% macro tile(href, image, title, meta=None, tags=[], video_id=None, episode_ids=None, minutes=None, description=None, show_id=None) -%}
 <article class="tile"{% if video_id %} data-video-id="{{ video_id }}"{% endif %}{% if episode_ids %} data-episode-ids="{{ episode_ids|join(' ') }}"{% endif %}>
     <a class="tile-link" href="{{ href }}">
         <div class="tile-media">
@@ -36,7 +42,7 @@ and episode_ids how many of a show's episodes they've seen.
         </div>
         <h3 class="tile-title">{{ title }}</h3>
     </a>
-    <p class="tile-meta"><span class="js-meta">{{ meta or "" }}</span></p>
+    <p class="tile-meta"><span class="js-meta">{{ meta or "" }}</span>{% if show_id %}{{ favorite_button(show_id, title, image, compact=True) }}{% endif %}</p>
     {% if description %}<p class="tile-desc">{{ description }}</p>{% endif %}
 </article>
 {%- endmacro %}

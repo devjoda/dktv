@@ -721,7 +721,7 @@ a:focus-visible .tile-play {
     font-size: .875rem;
 }
 
-.tile-remove {
+.tile-action {
     display: grid;
     place-items: center;
     width: 30px;
@@ -733,9 +733,55 @@ a:focus-visible .tile-play {
     color: var(--muted);
 }
 
-.tile-remove:hover {
+.js-favorite[aria-pressed=true] .icon {
+    fill: var(--accent);
+    stroke: var(--accent);
+}
+
+.tile-action:hover {
     background: var(--surface-raised);
     color: #fff;
+}
+
+.shelf-empty {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 640px;
+    margin: 0 var(--gutter);
+    padding: 18px 20px;
+    border: 1px dashed rgba(255, 255, 255, .2);
+    border-radius: var(--radius);
+    color: var(--muted);
+}
+
+.shelf-empty .icon {
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+}
+
+.toast-message {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    z-index: 2000;
+    max-width: calc(100% - 32px);
+    padding: 12px 20px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--bg);
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+    transform: translate(-50%, 20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s, transform .2s;
+}
+
+.toast-message.is-visible {
+    transform: translate(-50%, 0);
+    opacity: 1;
 }
 
 .channel-art {
@@ -886,6 +932,39 @@ a:focus-visible .tile-play {
     margin: 0 auto;
     background: #000;
     object-fit: contain;
+}
+
+/* Plyr's controls, in the site's colours, and no taller than the video above */
+.stage .plyr {
+    --plyr-color-main: var(--accent);
+    --plyr-video-background: #000;
+    --plyr-font-family: inherit;
+    --plyr-tooltip-background: var(--surface-raised);
+    --plyr-tooltip-color: var(--text);
+    --plyr-menu-background: var(--surface-raised);
+    --plyr-menu-color: var(--text);
+    max-width: calc((100vh - 230px) * 16 / 9);
+    margin: 0 auto;
+}
+
+.stage .plyr video {
+    max-height: none;
+}
+
+@media (max-width: 575px) {
+    /* Room for the time line, where phones have buttons for the volume anyway */
+    .stage .plyr__time--duration,
+    .stage .plyr__controls [data-plyr="pip"],
+    .stage .plyr__controls [data-plyr="airplay"],
+    .stage .plyr__volume input[type=range] {
+        display: none;
+    }
+
+    .stage .plyr__volume {
+        min-width: 0;
+        max-width: none;
+        width: auto;
+    }
 }
 
 .stage .alert {

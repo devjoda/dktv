@@ -22,16 +22,19 @@ def test_show(get):
     assert 'href="/rejseholdet_503605.xml"' in r.text
     assert '<link rel="alternate" type="application/rss+xml" title="Rejseholdet" href="/rejseholdet_503605.xml">' in r.text
     assert "Abonnér med RSS" in r.text
-    # Newest season first
-    assert r.text.index("Sæson 4") < r.text.index("Sæson 3") < r.text.index("Sæson 1")
+    # Seasons in order
+    assert r.text.index("Sæson 1") < r.text.index("Sæson 2") < r.text.index("Sæson 3") < r.text.index("Sæson 4")
     assert "Width=1920" not in r.text
     # All but the big picture at the top, which is seen right away
     assert r.text.count('loading="lazy"') == r.text.count("<img") - 1
     assert "Width=1280" in r.text
     assert "1. okt. 2000" in r.text and "59 min." in r.text
     assert "4 sæsoner" in r.text and "32 afsnit" in r.text
-    # Seasons become tabs, with the newest selected
-    assert '<button type="button" class="season-tab" role="tab" id="season-tab-1" aria-controls="season-1" aria-selected="true">Sæson 4</button>' in r.text
+    # Seasons become tabs, with the first selected until ui.js knows where the viewer got to
+    assert '<button type="button" class="season-tab" role="tab" id="season-tab-1" aria-controls="season-1" aria-selected="true">Sæson 1</button>' in r.text
+    assert '<button type="button" class="season-tab" role="tab" id="season-tab-4" aria-controls="season-4" aria-selected="false" tabindex="-1">Sæson 4</button>' in r.text
+    # Can be made a favourite
+    assert 'class="button button-secondary js-favorite" aria-pressed="false" data-show-id="rejseholdet_503605" data-title="Rejseholdet"' in r.text
     # For showing how far the viewer got with each episode, and what to play
     assert '<script src="/static/progress.js"></script>' in r.text
     assert 'data-video-id="503615"' in r.text
@@ -262,6 +265,55 @@ def test_index_can_continue_watching(get):
     assert '<section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>' in r.text
     assert '<script src="/static/progress.js"></script>' in r.text
     assert '<script src="/static/ui.js"></script>' in r.text
+
+
+def test_index_can_list_favorites(get):
+    r = get("/")
+    assert '<section class="shelf" id="favorites" aria-labelledby="favorites-title" hidden>' in r.text
+    assert '<script src="/static/favorites.js"></script>' in r.text
+    assert '<div id="toast" class="toast-message" role="status" aria-live="polite"></div>' in r.text
+
+
+def test_favorites_are_described(get):
+    r = get("/favorites.json?shows=rejseholdet_503605:findes-ikke_1:ikke-et-tal")
+    assert r.status_code == 200
+    favorites = r.json if hasattr(r, "json") else __import__("json").loads(r.text)
+    # The ones that can't be found are left out, instead of failing it all
+    assert list(favorites) == ["rejseholdet_503605"]
+    rejseholdet = favorites["rejseholdet_503605"]
+    assert rejseholdet["title"] == "Rejseholdet"
+    assert rejseholdet["url"] == "/rejseholdet_503605/"
+    assert "Width=640" in rejseholdet["image"]
+    assert rejseholdet["seasons"] == 4
+    assert rejseholdet["episodes"] == 32 == len(rejseholdet["episode_ids"])
+    assert rejseholdet["episode_ids"][0] == "503615"
+    assert rejseholdet["new"] is False
+
+
+def test_no_favorites(get, fake_dr):
+    r = get("/favorites.json")
+    assert r.status_code == 200
+    assert r.text.strip() == "{}"
+    assert not [r for r in fake_dr if r.startswith("/items/")]
+
+
+def test_shows_can_be_made_favorites_from_their_tiles(get, monkeypatch):
+    r = get("/search/?query=matador")
+    assert 'aria-label="Favorit: Matador" title="Favorit"' in r.text
+    assert 'data-show-id="matador_540736"' in r.text
+    monkeypatch.setenv("RECOMMENDED_SHOWS", "rejseholdet_503605")
+    get("/rejseholdet_503605/")
+    assert 'data-show-id="rejseholdet_503605"' in get("/").text
+
+
+def test_players_use_plyr(get):
+    for path in ["/rejseholdet_503605/rejseholdet_503615", "/live/DR1"]:
+        text = get(path).text
+        assert '<script src="/static/vendor/plyr-3.8.4.min.js" integrity="sha384-' in text
+        assert '<link href="/static/vendor/plyr-3.8.4.css" rel="stylesheet" integrity="sha384-' in text
+    assert "setupControls(document.getElementById('video'), true);" in get("/live/DR1").text
+    for path in ["/static/vendor/plyr-3.8.4.min.js", "/static/vendor/plyr-3.8.4.css", "/static/vendor/plyr-3.8.4.svg"]:
+        assert get(path).status_code == 200
 
 
 def test_index_lists_the_live_channels(get):

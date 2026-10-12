@@ -24,7 +24,7 @@ from .drtv import (
     search,
 )
 from .live import get_channels
-from .show import danish_date, danish_datetime, duration, is_new, thumbnail
+from .show import Show, danish_date, danish_datetime, duration, is_new, thumbnail
 
 app = Quart(__name__)
 app.add_template_filter(thumbnail)
@@ -38,6 +38,9 @@ SERVICE_NAME = os.getenv("SERVICE_NAME", "Public Service")
 
 # Shorter than the hour shows are cached for, so visitors never wait for these
 RECOMMENDED_REFRESH_INTERVAL = 30 * 60
+
+# How many favourite shows the front page asks about at once
+MAX_FAVORITES = 50
 
 
 @app.context_processor
@@ -208,6 +211,38 @@ async def search_view():
         birthday=birthday(),
         channels=await get_channels(),
     )
+
+
+def describe_show(show: Show) -> dict:
+    """What the front page needs to show a favourite show"""
+    episodes = show.episodes
+    return {
+        "title": show.title,
+        "url": f"/{show.url}/",
+        "image": thumbnail(show.wallpaper),
+        "seasons": len(show.seasons),
+        "episodes": len(episodes),
+        "episode_ids": [e.video_id for e in episodes],
+        "new": bool(episodes) and is_new(episodes[-1].pubdate),
+    }
+
+
+@app.route("/favorites.json")
+async def favorites():
+    """Fresh details about the viewer's favourite shows, like "rejseholdet_503605:matador_540736".
+    Which shows those are is kept in the viewer's browser, not here."""
+    ids = [s for s in request.args.get("shows", "").split(":") if s][:MAX_FAVORITES]
+
+    async def describe(show_id: str) -> Optional[dict]:
+        try:
+            return describe_show(await get_show(show_id))
+        except Exception as e:
+            # A show DR no longer has, or DR being down, shouldn't take the others with it
+            print("Could not describe favourite show", show_id, repr(e))
+            return None
+
+    shows = await asyncio.gather(*map(describe, ids))
+    return {show_id: show for show_id, show in zip(ids, shows) if show is not None}
 
 
 @app.route("/live/<channel>")

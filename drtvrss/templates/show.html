@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, progress_bar, seen_mark, play_button, show_tags %}
+{% from "_ui.html" import icon, progress_bar, seen_mark, play_button, show_tags, favorite_button %}
 {% block head %}
 <title>{{ s.title }} - {{ SERVICE_NAME }}</title>
 <link rel="alternate" type="application/rss+xml" title="{{ s.title }}" href="{{ s.feed_url }}">
@@ -19,6 +19,7 @@
         {% endif %}
         <div class="actions">
             {{ play_button(s) }}
+            {{ favorite_button(s.url, s.title, s.wallpaper) }}
             <a href="{{ s.feed_url }}" class="button button-secondary">{{ icon("rss") }} Abonnér med RSS</a>
             {% if s.url %}
             <a href="https://www.dr.dk/drtv/serie/{{ s.url }}" class="button button-quiet">Vis på DRTV {{ icon("external") }}</a>
@@ -27,17 +28,17 @@
     </div>
 </section>
 
-{# Newest first, since that's usually what you're here for #}
+{# In order; ui.js selects the season with the episode the play button would play #}
 <section class="seasons" aria-label="Afsnit">
     {% if s.seasons|length > 1 %}
     {# Made into tabs by ui.js; until then, all seasons are shown #}
     <div class="season-tabs" role="tablist" aria-label="Sæsoner" hidden>
-        {% for season in s.seasons|reverse %}
+        {% for season in s.seasons %}
         <button type="button" class="season-tab" role="tab" id="season-tab-{{ loop.index }}" aria-controls="season-{{ loop.index }}" aria-selected="{{ 'true' if loop.first else 'false' }}"{% if not loop.first %} tabindex="-1"{% endif %}>{{ season.title }}</button>
         {% endfor %}
     </div>
     {% endif %}
-    {% for season in s.seasons|reverse %}
+    {% for season in s.seasons %}
     <div class="season-panel" id="season-{{ loop.index }}">
         {% if s.seasons|length != 1 %}
         <h2 class="season-title">{{ season.title }}</h2>

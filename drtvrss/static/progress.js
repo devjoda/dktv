@@ -193,21 +193,38 @@ function startedVideos() {
     return started.slice(0, CONTINUE_WATCHING_COUNT);
 }
 
-// Like the tiles in _ui.html
-function continueWatchingTile(video) {
-    const title = video.title || "Uden titel";
-    const left = Math.max(1, Math.round((video.duration - video.time) / 60));
+// A tile like those in _ui.html, for a video or a show.
+// percent is how far the viewer got with a video, and episodeIDs a show's episodes, to mark what they've seen.
+function buildTile({href, image, title, meta = "", tags = [], percent = null, episodeIDs = null, action = null}) {
     const bar = element("div", {
-        class: "tile-progress",
+        class: "tile-progress js-progress",
         role: "progressbar",
         "aria-label": "Set indtil videre",
         "aria-valuemin": "0",
         "aria-valuemax": "100",
     }, element("span"));
-    setBar(bar, percentSeen(video));
+    setBar(bar, percent);
+    const seen = element("span", {class: "tile-seen js-seen"}, icon("check"), element("span", {class: "visually-hidden"}, "Set"));
+    seen.hidden = true;
+    return element("article", {class: "tile", ...(episodeIDs ? {"data-episode-ids": episodeIDs.join(" ")} : {})},
+        element("a", {class: "tile-link", href},
+            element("div", {class: "tile-media"},
+                image ? element("img", {src: image, alt: "", loading: "lazy"}) : "",
+                tags.length ? element("div", {class: "tile-badges"},
+                    ...tags.map(([kind, label]) => element("span", {class: "tag tag-" + kind}, label))) : "",
+                seen,
+                element("span", {class: "tile-play"}, icon("play")),
+                bar),
+            element("h3", {class: "tile-title"}, title)),
+        element("p", {class: "tile-meta"}, element("span", {class: "js-meta"}, meta), action || ""));
+}
+
+function continueWatchingTile(video) {
+    const title = video.title || "Uden titel";
+    const left = Math.max(1, Math.round((video.duration - video.time) / 60));
     const remove = element("button", {
         type: "button",
-        class: "tile-remove",
+        class: "tile-action",
         "aria-label": `Fjern ${title} fra Fortsæt med at se`,
         title: "Fjern",
     }, icon("x"));
@@ -216,16 +233,14 @@ function continueWatchingTile(video) {
         storeProgress(video.videoID, {...loadProgress(video.videoID), dismissed: true});
         showContinueWatching();
     });
-    return element("article", {class: "tile"},
-        element("a", {class: "tile-link", href: video.url},
-            element("div", {class: "tile-media"},
-                video.image ? element("img", {src: video.image, alt: "", loading: "lazy"}) : "",
-                element("span", {class: "tile-play"}, icon("play")),
-                bar),
-            element("h3", {class: "tile-title"}, title)),
-        element("p", {class: "tile-meta"},
-            element("span", {}, [video.show, formatMinutes(left) + " tilbage"].filter(Boolean).join(" · ")),
-            remove));
+    return buildTile({
+        href: video.url,
+        image: video.image,
+        title,
+        meta: [video.show, formatMinutes(left) + " tilbage"].filter(Boolean).join(" · "),
+        percent: percentSeen(video),
+        action: remove,
+    });
 }
 
 // Fills in the #continue-watching row, or hides it if there's nothing to continue

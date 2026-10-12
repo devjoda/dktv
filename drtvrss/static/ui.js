@@ -1,6 +1,6 @@
 // Makes the pages a bit nicer to use, where that needs JavaScript:
 // season tabs, buttons for rows that scroll sideways, and showing what the viewer has seen.
-// Needs progress.js.
+// Needs progress.js and favorites.js.
 
 // Turns a show's seasons into tabs, of which one is shown at a time
 function setupSeasonTabs() {
@@ -82,6 +82,8 @@ function setupShelves() {
 window.addEventListener("pageshow", function () {
     markProgress();
     showContinueWatching();
+    showFavorites();
+    updateFavoriteButtons();
     updatePlayButtons();
     setupSeasonTabs();
     selectPlayingSeason();

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, tile, shelf_head, search_field, play_button, show_tags %}
+{% from "_ui.html" import icon, tile, shelf_head, search_field, play_button, show_tags, favorite_button %}
 {% block content %}
 <h1 class="visually-hidden">{{ SERVICE_NAME }}</h1>
 
@@ -16,7 +16,8 @@
         <p class="hero-text">{{ featured.description }}</p>
         <div class="actions">
             {{ play_button(featured) }}
-            <a class="button button-secondary" href="/{{ featured.url }}/">{{ icon("list") }} Alle afsnit</a>
+            {{ favorite_button(featured.url, featured.title, featured.wallpaper) }}
+            <a class="button button-quiet" href="/{{ featured.url }}/">{{ icon("list") }} Alle afsnit</a>
         </div>
     </div>
 </section>
@@ -31,6 +32,16 @@
 {# Filled in by progress.js, from the viewer's browser #}
 <section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>
     {{ shelf_head("Fortsæt med at se", "continue-title") }}
+    <div class="shelf-track"></div>
+</section>
+
+{# Filled in by favorites.js, from the viewer's browser #}
+<section class="shelf" id="favorites" aria-labelledby="favorites-title" hidden>
+    {{ shelf_head("Mine favoritter", "favorites-title") }}
+    <p class="shelf-empty js-favorites-empty">
+        {{ icon("heart") }}
+        <span>Tryk på <strong>Favorit</strong> på en serie, så samles dine serier her. De gemmes kun i din browser.</span>
+    </p>
     <div class="shelf-track"></div>
 </section>
 
@@ -63,7 +74,7 @@
         {% set tags = [("new", "Nye afsnit")] if show.episodes and show.episodes[-1].pubdate is new else [] %}
         {{ tile("/" ~ show.url ~ "/", show.wallpaper, show.title,
                 meta=(show.seasons|length ~ " sæsoner") if show.seasons|length > 1 else (show.episodes|length ~ " afsnit"),
-                tags=tags, episode_ids=show.episodes|map(attribute="video_id")|list) }}
+                tags=tags, episode_ids=show.episodes|map(attribute="video_id")|list, show_id=show.url) }}
         {% endfor %}
     </div>
 </section>

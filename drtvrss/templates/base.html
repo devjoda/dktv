@@ -13,6 +13,7 @@
         <link href="/static/vendor/bootstrap-5.3.3.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH">
         <link href="/static/style.css" rel="stylesheet">
         <script src="/static/progress.js"></script>
+        <script src="/static/favorites.js"></script>
         <script src="/static/ui.js"></script>
         {% block scripts %}{% endblock %}
     </head>
@@ -44,6 +45,9 @@
             {% block content %}
             {% endblock %}
         </main>
+
+        {# Says what a button did, for buttons that only change their look #}
+        <div id="toast" class="toast-message" role="status" aria-live="polite"></div>
 
         <footer class="site-footer">
             <p>
