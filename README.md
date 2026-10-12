@@ -1,50 +1,36 @@
-# Public Service
-Originally written just so I could get an RSS feed for my favourite DRTV shows.
-Feature creep resulted in building an invidious-like frontend.
+# drtvrss
 
-An instance is hosted at https://drtv.rend.al
+An unofficial frontend for [DRTV](https://www.dr.dk/drtv), the streaming service of DR, the Danish Broadcasting Corporation.
 
-## Quick Start
-With Nix:
-```
-$ nix develop
-$ hypercorn drtvrss:app
-```
-Or with [uv](https://docs.astral.sh/uv/):
+> **Not affiliated with DR.** This project isn't made, endorsed or supported by DR. DR and DRTV are DR's trademarks.
+> The programmes, pictures and descriptions are DR's, and come straight from DR's own services; none of them are hosted here.
+
+## What it does
+
+- Series, films and documentaries, with DR's own categories and rows, and search
+- Live TV, with what's on now and later, and subtitles
+- Picks up where you left off, and marks what you've seen
+- Favourite series and films
+- Syncing favourites and progress between your devices, with a code
+- An RSS feed for each series, at `/<series>.xml`
+
+What you watch and your favourites are kept in your browser, and only on the server if you set up syncing.
+There's no tracking, and the libraries and fonts are served from the site itself.
+
+## Based on
+
+This project is based on [drtvrss](https://github.com/RasmusRendal/drtvrss) by Rasmus Rendal,
+which started as a way to get RSS feeds for DRTV's series, and grew into a frontend in the style of Invidious.
+
+## Running it
+
 ```
 $ uv run hypercorn drtvrss:app
 ```
-The footer links to the source code at `$SOURCE_URL`, by default this repository on GitHub.
 
-Viewers can sync their favourites, and how far they got with each video, between their devices with a code.
-That's kept in an SQLite database at `$SYNC_DB`, or `sync.sqlite3` in `$STATE_DIRECTORY` (set by systemd's `StateDirectory=`, which the NixOS module uses), or in the current directory.
+Or with Nix, `nix develop`, and then `hypercorn drtvrss:app`. The tests run with `pytest`.
 
-The project is set up using Nix, and uv.
-Running the project with Nix is not supported.
-Running the project with uv is also not supported.
-What I'm trying to say is, you're on your own buddy.
+## Licence
 
-Contribution guidelines can be found [here](https://www.youtube.com/watch?v=gWexE-YVnOs)
-
-## Hacking instructions
-To start a repl where all the async stuff works, do `python3 -m asyncio`.
-
-Everything we know about DR's JSON format lives in `drtvrss/models.py`.
-
-The dependencies are listed both in `flake.nix` and `pyproject.toml`.
-After changing `pyproject.toml`, run `uv lock`.
-
-## Tests
-```
-$ pytest
-```
-Or `uv run pytest`, with uv.
-The tests run against DR data saved in `tests/fixtures`, so they need no network.
-
-To check whether DR has changed something, run the tests against the real DRTV:
-```
-$ DRTV_LIVE_TESTS=1 pytest tests/test_live_dr.py
-```
-If they fail, refresh the fixtures with `python -m tests.update_fixtures`, and look at the diff.
-
-GitHub Actions runs the tests on every push, both with Nix and with uv, and the tests against DR every morning.
+[AGPL-3.0](LICENSE.md). The libraries and fonts in [`drtvrss/static/vendor`](drtvrss/static/vendor) have their own licences,
+listed in [its README](drtvrss/static/vendor/README.md).

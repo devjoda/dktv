@@ -1772,6 +1772,12 @@ video + .up-next {
     font-size: .9375rem;
 }
 
+.site-footer p {
+    flex-basis: 100%;
+    margin: 0 0 4px;
+    color: var(--muted);
+}
+
 .site-footer a {
     color: var(--paper);
     text-decoration: underline;

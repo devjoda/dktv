@@ -156,7 +156,7 @@ def test_footer_links_to_syncing_and_the_source(get):
     footer = get("/").text.split('<footer class="site-footer">')[1].split("</footer>")[0]
     assert '<a href="/sync/">' in footer
     assert '<a href="https://github.com/devjoda/drtvrss">Kildekode</a>' in footer
-    assert "Invidious" not in footer
+    assert "Ikke tilknyttet DR" in footer
 
 
 def test_the_source_can_be_elsewhere(get, monkeypatch):
