@@ -63,7 +63,7 @@ function selectPlayingSeason() {
 }
 
 // How long the picture of a featured programme shows before its clip plays, in milliseconds
-const CLIP_DELAY = 2500;
+const CLIP_DELAY = 1500;
 
 let clip = null;
 let clipTimer = null;
@@ -128,6 +128,8 @@ async function playClip(slide) {
     }
     const video = element("video", {class: "hero-preview", playsinline: "", "aria-hidden": "true"});
     video.muted = true;
+    // DR's clips are only some seconds long, so they'd be easily missed if they played once
+    video.loop = true;
     let hls = null;
     if (Hls.isSupported()) {
         hls = new Hls({capLevelToPlayerSize: true, maxBufferLength: 15, enableWebVTT: false});
@@ -141,8 +143,6 @@ async function playClip(slide) {
     }
     clip = {video, hls};
     video.addEventListener("playing", () => video.classList.add("is-playing"));
-    // Back to the picture when it's over
-    video.addEventListener("ended", () => video.classList.remove("is-playing"));
     slide.querySelector(".hero-backdrop").append(video);
     video.play().catch(stopClip);
 }
