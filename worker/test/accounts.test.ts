@@ -143,6 +143,9 @@ describe("notifications", () => {
 		await run(ctx(), keys);
 		// One small request to DR to check it, and one for the new episode
 		expect(dr.requested.filter(p => p.includes("503605") || p.includes("503612"))).toEqual(["/items/503612", "/items/503612/children"]);
+		// What a run doesn't have time to send, the next one sends
+		expect(dr.pushed.length).toBeGreaterThan(0);
+		await run(ctx(), keys);
 		expect(dr.pushed.map(p => p.endpoint).sort()).toEqual([phone.subscription.endpoint, laptop.subscription.endpoint]);
 		const pushed = dr.pushed.find(p => p.endpoint == phone.subscription.endpoint)!;
 		expect(pushed.headers.get("Content-Encoding")).toBe("aes128gcm");
