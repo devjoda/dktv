@@ -38,8 +38,9 @@ function storeProgress(videoID, progress) {
 }
 
 // Saves how far the viewer got with the video, which describes itself with
-// data-title, data-show and data-image, for listing it under "Fortsæt med at se"
-function saveProgress(videoID, video) {
+// data-title, data-show and data-image, for listing it under "Fortsæt med at se",
+// and syncs it within syncDelay milliseconds
+function saveProgress(videoID, video, syncDelay = SYNC_DELAY) {
     if (!isFinite(video.duration)) {
         return;
     }
@@ -56,7 +57,7 @@ function saveProgress(videoID, video) {
         image: video.dataset.image || null,
         updated: Date.now(),
     });
-    scheduleSync();
+    scheduleSync(syncDelay);
 }
 
 // Like "59 min." or "1 t. 15 min."

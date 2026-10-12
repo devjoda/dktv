@@ -357,14 +357,23 @@ async function playVideo(video, videoID) {
         }
         // Only now, so the start of the video doesn't overwrite where the viewer got to
         let lastSaved = video.currentTime;
+        const save = function (syncDelay) {
+            lastSaved = video.currentTime;
+            saveProgress(videoID, video, syncDelay);
+        };
+        // While it plays, synced now and then, since it changes all the time
         video.addEventListener("timeupdate", function () {
             if (Math.abs(video.currentTime - lastSaved) >= SAVE_INTERVAL) {
-                lastSaved = video.currentTime;
-                saveProgress(videoID, video);
+                save(PLAYING_SYNC_DELAY);
             }
         });
-        video.addEventListener("pause", () => saveProgress(videoID, video));
-        window.addEventListener("pagehide", () => saveProgress(videoID, video));
+        video.addEventListener("pause", () => save(SYNC_DELAY));
+        // Sent along when the page is left or hidden, if it got further since it was saved
+        beforeLeaving.push(function () {
+            if (video.currentTime != lastSaved) {
+                save(SYNC_DELAY);
+            }
+        });
         autoplay(video);
     }, {once: true});
     video.addEventListener("ended", function () {

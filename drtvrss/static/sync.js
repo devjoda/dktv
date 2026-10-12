@@ -4,8 +4,11 @@
 
 // How long to wait for more changes before sending them, in milliseconds
 const SYNC_DELAY = 20 * 1000;
+// And while a video plays, whose progress changes all the time. Pausing, or leaving the page,
+// sends it sooner. Each sync is a request to the server, which has room for only so many a day.
+const PLAYING_SYNC_DELAY = 5 * 60 * 1000;
 // How often to ask for the other devices' changes when going from page to page, at most
-const SYNC_INTERVAL = 30 * 1000;
+const SYNC_INTERVAL = 2 * 60 * 1000;
 // Like sync.py: without I, O, 0 and 1
 const SYNC_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
@@ -67,7 +70,11 @@ function refreshViewerData() {
 }
 
 let syncTimer = null;
+// When the waiting changes are sent, in milliseconds
+let syncDue = 0;
 let syncing = null;
+// What saves changes still only in memory, like how far a video has got, before they're sent as the page is left
+const beforeLeaving = [];
 
 // Sends this device's data, and keeps what comes back. Throws with .status when the server says no.
 function syncNow() {
@@ -100,12 +107,14 @@ function syncNow() {
     return syncing;
 }
 
-// Sends the changes soon, along with whatever else changes until then
+// Sends the changes within a while, along with whatever else changes until then.
+// Changes that are waiting already go along, sooner if these are wanted sooner.
 function scheduleSync(delay = SYNC_DELAY) {
-    if (syncCode() == null || (syncTimer != null && delay > 0)) {
+    if (syncCode() == null || (syncTimer != null && syncDue <= Date.now() + delay)) {
         return;
     }
     clearTimeout(syncTimer);
+    syncDue = Date.now() + delay;
     syncTimer = setTimeout(function () {
         syncTimer = null;
         syncNow().catch(error => console.error("Could not sync:", error));
@@ -125,8 +134,12 @@ function syncOnVisit() {
     }
 }
 
-// Changes still waiting go along when leaving the page; if they're too big for that, they go on the next visit
-window.addEventListener("pagehide", function () {
+// Changes still waiting go along when leaving the page, or hiding it, which on phones is often the last
+// the page knows of; if they're too big for that, they go on the next visit
+function sendBeforeLeaving() {
+    for (const save of beforeLeaving) {
+        save();
+    }
     const code = syncCode();
     if (syncTimer == null || code == null) {
         return;
@@ -139,6 +152,13 @@ window.addEventListener("pagehide", function () {
         body: JSON.stringify(localData()),
         keepalive: true,
     }).catch(() => {});
+}
+
+window.addEventListener("pagehide", sendBeforeLeaving);
+document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState == "hidden") {
+        sendBeforeLeaving();
+    }
 });
 
 // The /sync/ page, to set up a code, or stop using one
