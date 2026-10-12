@@ -23,7 +23,8 @@ def test_show(get):
     assert 'href="rejseholdet_503615"' in r.text
     assert 'href="/rejseholdet_503605.xml"' in r.text
     assert '<link rel="alternate" type="application/rss+xml" title="Rejseholdet" href="/rejseholdet_503605.xml">' in r.text
-    assert "Abonnér med RSS" in r.text
+    # Only for feed readers to find, until it's a setting
+    assert "Abonnér med RSS" not in r.text
     # Seasons in order
     assert r.text.index("Sæson 1") < r.text.index("Sæson 2") < r.text.index("Sæson 3") < r.text.index("Sæson 4")
     assert "Width=1920" not in r.text
@@ -90,10 +91,11 @@ def test_front_page_without_drs(get, monkeypatch):
 def test_front_page_features_drs_programmes(get):
     r = get("/")
     assert r.text.count('class="hero-slide"') == 3
-    assert r.text.count('class="featured-tab"') == 3
+    # Bars instead of the titles a second time, named for screen readers
+    assert r.text.count('class="featured-bar"') == 3
+    assert 'aria-label="' in r.text.split('class="featured-bars"')[1].split("</div>")[0]
     assert 'data-preview="https://' in r.text
-    # It never moves on by itself, and the clips can be stopped
-    assert '<button type="button" class="featured-clips js-featured-clips" hidden></button>' in r.text
+    assert "featured-clips" not in r.text
     # DR's rows, with links to the pages here
     assert '<h2 class="shelf-title" id="row-1">' in r.text
     featured = r.text.split('id="featured-1"')[1].split('id="featured-2"')[0]

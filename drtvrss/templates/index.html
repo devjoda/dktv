@@ -5,8 +5,8 @@
 <h1 class="visually-hidden">Forside</h1>
 
 {% if featured %}
-{# What DR features, as tabs. ui.js plays DR's short clip of the one shown, without sound,
-   unless the viewer would rather not. It never moves on by itself. #}
+{# What DR features, one at a time. ui.js plays DR's short clip of each without sound,
+   and moves on to the next 2 seconds after it ends. #}
 <section class="hero featured" aria-label="Fremhævet">
     {% for c in featured %}
     <div class="hero-slide" id="featured-{{ loop.index }}"{% if c.preview and not c.live %} data-preview="{{ c.preview }}"{% endif %}{% if not loop.first %} hidden{% endif %}>
@@ -29,13 +29,13 @@
     </div>
     {% endfor %}
     {% if featured|length > 1 %}
+    {# Which one is shown, and how far it's got, as bars that fill up #}
     <div class="featured-controls wrap">
-        <div class="featured-tabs" role="tablist" aria-label="Fremhævet" hidden>
+        <div class="featured-bars" role="tablist" aria-label="Fremhævet" hidden>
             {% for c in featured %}
-            <button type="button" class="featured-tab" role="tab" id="featured-tab-{{ loop.index }}" aria-controls="featured-{{ loop.index }}" aria-selected="{{ 'true' if loop.first else 'false' }}"{% if not loop.first %} tabindex="-1"{% endif %}>{{ c.title }}</button>
+            <button type="button" class="featured-bar" role="tab" id="featured-tab-{{ loop.index }}" aria-controls="featured-{{ loop.index }}" aria-label="{{ c.title }}" aria-selected="{{ 'true' if loop.first else 'false' }}"{% if not loop.first %} tabindex="-1"{% endif %}><span></span></button>
             {% endfor %}
         </div>
-        <button type="button" class="featured-clips js-featured-clips" hidden></button>
     </div>
     {% endif %}
 </section>

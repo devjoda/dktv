@@ -18,7 +18,7 @@
         <div class="actions">
             {{ play_button(s) }}
             {{ favorite_button(s.url, s.title, s.wallpaper) }}
-            <a href="{{ s.feed_url }}" class="button button-secondary">{{ icon("rss") }} Abonnér med RSS</a>
+            {# The feed is still linked in the head, for feed readers to find; a button for it can come back as a setting #}
             {% if s.url %}
             <a href="https://www.dr.dk/drtv/serie/{{ s.url }}" class="button button-quiet">Vis på DRTV {{ icon("external") }}</a>
             {% endif %}

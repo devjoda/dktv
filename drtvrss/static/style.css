@@ -586,85 +586,51 @@ h1, h2, h3 {
 
 .featured-controls {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
     padding-bottom: 32px;
 }
 
-.featured-tabs {
+/* Which featured programme is shown, and how far it's got */
+.featured-bars {
     display: flex;
-    gap: 12px;
-    min-width: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
+    gap: 8px;
 }
 
-.featured-tab {
+.featured-bar {
     position: relative;
-    flex: 0 1 240px;
-    min-width: 120px;
-    padding: 14px 0 2px;
-    overflow: hidden;
+    width: 56px;
+    padding: 12px 0;
     border: 0;
     background: none;
-    color: var(--muted);
-    font-size: .9375rem;
-    font-weight: 650;
-    text-align: left;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
-.featured-tab::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+.featured-bar::before,
+.featured-bar span {
+    display: block;
     height: 3px;
     border-radius: 2px;
-    background: rgba(242, 239, 233, .25);
 }
 
-.featured-tab:hover {
-    color: var(--paper);
+.featured-bar::before {
+    content: "";
+    background: rgba(242, 239, 233, .3);
 }
 
-.featured-tab[aria-selected=true] {
-    color: var(--paper);
-}
-
-.featured-tab[aria-selected=true]::before {
+.featured-bar span {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    width: 0;
     background: var(--paper);
 }
 
-.featured-clips {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    flex: none;
-    padding: 8px 14px;
-    border: 0;
-    border-radius: 999px;
-    background: rgba(242, 239, 233, .12);
-    color: var(--paper);
-    font-size: .875rem;
-    font-weight: 650;
+.featured-bar:hover::before {
+    background: rgba(242, 239, 233, .5);
 }
 
-.featured-clips:hover {
-    background: rgba(242, 239, 233, .22);
-}
-
-@media (max-width: 575px) {
-    .featured-tab {
-        flex-basis: 140px;
-    }
-
-    .featured-clips span {
-        display: none;
+/* Without motion, the one shown is just marked */
+@media (prefers-reduced-motion: reduce) {
+    .featured-bar[aria-selected=true] span {
+        width: 100% !important;
     }
 }
 

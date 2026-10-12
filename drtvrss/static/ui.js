@@ -64,25 +64,12 @@ function selectPlayingSeason() {
 
 // How long the picture of a featured programme shows before its clip plays, in milliseconds
 const CLIP_DELAY = 1500;
+// How long after a clip ends before the next programme, and how long one without a clip shows
+const FEATURED_PAUSE = 2000;
+const FEATURED_STILL = 8000;
 
-let clip = null;
-let clipTimer = null;
-let featuredInView = true;
-
-// Whether to play DR's clips of the featured programmes: not for those who'd rather have less motion,
-// or are saving data, or turned them off
-function clipsWanted() {
-    try {
-        if (localStorage.getItem("featuredClips") == "off") {
-            return false;
-        }
-    } catch (error) {
-        // Without the browser's storage, they play
-    }
-    return clipsPossible();
-}
-
-function clipsPossible() {
+// Not for those who'd rather have less motion, or are saving data
+function motionWanted() {
     return !matchMedia("(prefers-reduced-motion: reduce)").matches
         && !(navigator.connection && navigator.connection.saveData);
 }
@@ -103,110 +90,165 @@ function loadHls() {
     });
 }
 
-function stopClip() {
-    clearTimeout(clipTimer);
-    if (clip != null) {
-        if (clip.hls) {
-            clip.hls.destroy();
-        }
-        clip.video.remove();
-        clip = null;
+// The featured programmes at the top of the front page. Each plays DR's clip of it without sound,
+// and 2 seconds after it ends, the next one is shown; one without a clip shows for 8 seconds.
+// It holds while the pointer or keyboard is on it, or it can't be seen.
+const featured = {
+    select: null,
+    slides: [],
+    bars: [],
+    clip: null,
+    // Milliseconds left until the next one, while there's no clip playing
+    left: null,
+    held: false,
+    inView: true,
+    delay: null,
+};
+
+function shownFeatured() {
+    return featured.slides.findIndex(slide => !slide.hidden);
+}
+
+function setBar(percent) {
+    const bar = featured.bars[shownFeatured()];
+    if (bar) {
+        bar.firstElementChild.style.width = Math.min(100, percent) + "%";
     }
 }
 
-async function playClip(slide) {
-    if (!slide.dataset.preview || !clipsWanted() || !featuredInView || clip != null) {
-        return;
+function stopClip() {
+    clearTimeout(featured.delay);
+    if (featured.clip != null) {
+        if (featured.clip.hls) {
+            featured.clip.hls.destroy();
+        }
+        featured.clip.video.remove();
+        featured.clip = null;
     }
+}
+
+function nextFeatured() {
+    const next = (shownFeatured() + 1) % featured.slides.length;
+    featured.select(featured.bars[next]);
+}
+
+// Shows the next one after a while, unless a clip plays first
+function countDown(milliseconds) {
+    featured.left = milliseconds;
+}
+
+async function playClip(slide) {
     try {
         await loadHls();
     } catch (error) {
+        console.info("No clip: hls.js didn't load", error);
+        countDown(FEATURED_STILL);
         return;
     }
-    if (slide.hidden || clip != null) {
+    if (slide.hidden || featured.clip != null) {
         return;
     }
     const video = element("video", {class: "hero-preview", playsinline: "", "aria-hidden": "true"});
     video.muted = true;
-    // DR's clips are only some seconds long, so they'd be easily missed if they played once
-    video.loop = true;
     let hls = null;
+    const fail = function (reason) {
+        console.info("No clip:", reason);
+        stopClip();
+        countDown(FEATURED_STILL);
+    };
     if (Hls.isSupported()) {
         hls = new Hls({capLevelToPlayerSize: true, maxBufferLength: 15, enableWebVTT: false});
         hls.loadSource(slide.dataset.preview);
         hls.attachMedia(video);
-        hls.on(Hls.Events.ERROR, (event, data) => data.fatal && stopClip());
+        hls.on(Hls.Events.ERROR, (event, data) => data.fatal && fail(data.details));
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
         video.src = slide.dataset.preview;
     } else {
+        fail("this browser can't play HLS");
         return;
     }
-    clip = {video, hls};
+    featured.clip = {video, hls};
+    featured.left = null;
     video.addEventListener("playing", () => video.classList.add("is-playing"));
+    video.addEventListener("timeupdate", () => video.duration && setBar(100 * video.currentTime / video.duration));
+    video.addEventListener("ended", function () {
+        setBar(100);
+        countDown(FEATURED_PAUSE);
+    });
     slide.querySelector(".hero-backdrop").append(video);
-    video.play().catch(stopClip);
+    if (!featured.held && featured.inView) {
+        video.play().catch(error => fail(error.name + ": " + error.message));
+    }
 }
 
-function scheduleClip(slide) {
+// Starts showing a featured programme: its clip, or its picture for a while
+function startFeatured(slide) {
     stopClip();
-    clipTimer = setTimeout(() => playClip(slide), CLIP_DELAY);
+    featured.bars.forEach(bar => bar.firstElementChild.style.width = "0%");
+    featured.left = null;
+    if (!motionWanted()) {
+        return;
+    }
+    if (slide.dataset.preview) {
+        featured.delay = setTimeout(() => playClip(slide), CLIP_DELAY);
+    } else {
+        countDown(FEATURED_STILL);
+    }
 }
 
-// The featured programmes at the top of the front page: tabs, and their clips without sound
+const FEATURED_TICK = 100;
+
+function tickFeatured() {
+    if (featured.left == null || featured.held || !featured.inView || document.hidden) {
+        return;
+    }
+    featured.left -= FEATURED_TICK;
+    if (featured.clip == null) {
+        setBar(100 * (1 - featured.left / FEATURED_STILL));
+    }
+    if (featured.left <= 0) {
+        featured.left = null;
+        nextFeatured();
+    }
+}
+
+function holdFeatured(held) {
+    featured.held = held;
+    const video = featured.clip && featured.clip.video;
+    if (video && !video.ended) {
+        if (held || !featured.inView) {
+            video.pause();
+        } else {
+            video.play().catch(() => {});
+        }
+    }
+}
+
 function setupFeatured() {
     const section = document.querySelector(".featured");
     if (section == null || section.dataset.ready) {
         return;
     }
     section.dataset.ready = "true";
-    const slides = [...section.querySelectorAll(".hero-slide")];
-    const shown = () => slides.find(slide => !slide.hidden);
-    const tablist = section.querySelector(".featured-tabs");
-    if (tablist) {
-        setupTabs(tablist, tab => scheduleClip(document.getElementById(tab.getAttribute("aria-controls"))));
+    featured.slides = [...section.querySelectorAll(".hero-slide")];
+    const bars = section.querySelector(".featured-bars");
+    if (bars == null) {
+        startFeatured(featured.slides[0]);
+        return;
     }
+    featured.bars = [...bars.querySelectorAll("[role=tab]")];
+    featured.select = setupTabs(bars, bar => startFeatured(document.getElementById(bar.getAttribute("aria-controls"))));
+    setInterval(tickFeatured, FEATURED_TICK);
 
-    const button = section.querySelector(".js-featured-clips");
-    if (button && clipsPossible() && slides.some(slide => slide.dataset.preview)) {
-        const label = function () {
-            const on = clipsWanted();
-            button.replaceChildren(icon(on ? "pause" : "play"), element("span", {}, on ? "Stop klip" : "Afspil klip"));
-            button.setAttribute("aria-label", on ? "Stop klip" : "Afspil klip");
-        };
-        button.addEventListener("click", function () {
-            const on = !clipsWanted();
-            try {
-                localStorage.setItem("featuredClips", on ? "on" : "off");
-            } catch (error) {
-                console.error("Could not remember the choice of clips:", error);
-            }
-            label();
-            if (on) {
-                playClip(shown());
-            } else {
-                stopClip();
-            }
-        });
-        label();
-        button.hidden = false;
-    }
-
-    // Only while it can be seen
+    // Time to read, and to click
+    section.addEventListener("mouseenter", () => holdFeatured(true));
+    section.addEventListener("mouseleave", () => holdFeatured(section.contains(document.activeElement)));
+    section.addEventListener("focusin", () => holdFeatured(true));
+    section.addEventListener("focusout", event => !section.contains(event.relatedTarget) && holdFeatured(section.matches(":hover")));
     new IntersectionObserver(function ([entry]) {
-        featuredInView = entry.isIntersecting;
-        if (clip) {
-            if (featuredInView) {
-                clip.video.play().catch(() => {});
-            } else {
-                clip.video.pause();
-            }
-        }
+        featured.inView = entry.isIntersecting;
+        holdFeatured(featured.held);
     }, {threshold: .4}).observe(section);
-    document.addEventListener("visibilitychange", () => clip && document.hidden && clip.video.pause());
-
-    if (!tablist) {
-        scheduleClip(shown());
-    }
 }
 
 // Buttons to scroll rows sideways, for those without a touchpad
