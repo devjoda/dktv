@@ -197,8 +197,8 @@ function startedVideos() {
 }
 
 // A tile like those in _ui.html, for a video or a show.
-// percent is how far the viewer got with a video, and episodeIDs a show's episodes, to mark what they've seen.
-function buildTile({href, image, title, meta = "", tags = [], percent = null, episodeIDs = null, action = null}) {
+// percent is how far the viewer got with a video, and videoID or a show's episodeIDs are for marking what they've seen.
+function buildTile({href, image, title, meta = "", tags = [], percent = null, videoID = null, episodeIDs = null, action = null}) {
     const bar = element("div", {
         class: "tile-progress js-progress",
         role: "progressbar",
@@ -209,7 +209,11 @@ function buildTile({href, image, title, meta = "", tags = [], percent = null, ep
     setBar(bar, percent);
     const seen = element("span", {class: "tile-seen js-seen"}, "Set");
     seen.hidden = true;
-    return element("article", {class: "tile", ...(episodeIDs ? {"data-episode-ids": episodeIDs.join(" ")} : {})},
+    return element("article", {
+        class: "tile",
+        ...(episodeIDs ? {"data-episode-ids": episodeIDs.join(" ")} : {}),
+        ...(videoID ? {"data-video-id": videoID} : {}),
+    },
         element("a", {class: "tile-link", href},
             element("div", {class: "tile-media"},
                 image ? element("img", {src: image, alt: "", loading: "lazy"}) : "",

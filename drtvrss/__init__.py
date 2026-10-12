@@ -157,6 +157,24 @@ async def category(slug):
     )
 
 
+@app.route("/liste/<int:list_id>/")
+async def full_list(list_id):
+    """All of a row of DR's, like all films from A to Å"""
+    found = await discover.get_list(str(list_id))
+    if found is None:
+        abort(404)
+    # The row's own title, which DR's list may not have, like "A - Å" for "Film | A - Å"
+    title = request.args.get("titel") or found.title.replace(" | ", ": ")
+    return await render_template(
+        "list.html",
+        title=title,
+        cards=found.cards,
+        SERVICE_NAME=SERVICE_NAME,
+        birthday=birthday(),
+        channels=await get_channels(),
+    )
+
+
 @app.route("/live/")
 async def live_channels():
     return await render_template(
@@ -316,22 +334,44 @@ def describe_show(show: Show) -> dict:
     }
 
 
+async def describe_film(film_id: str) -> dict:
+    """What the front page needs to show a favourite film"""
+    program = await get_program(film_id)
+    return {
+        "title": program.title,
+        "url": f"/program/{film_id}",
+        "image": thumbnail(program.wallpaper),
+        "minutes": program.len_minutes,
+    }
+
+
 @app.route("/favorites.json")
 async def favorites():
-    """Fresh details about the viewer's favourite shows, like "rejseholdet_503605:matador_540736".
-    Which shows those are is kept in the viewer's browser, not here."""
-    ids = [s for s in request.args.get("shows", "").split(":") if s][:MAX_FAVORITES]
+    """Fresh details about the viewer's favourite shows and films, like
+    ?shows=rejseholdet_503605:matador_540736&films=lise-noergaard_-ikke-kun-en-pige_362031.
+    Which they are is kept in the viewer's browser, not here."""
 
-    async def describe(show_id: str) -> Optional[dict]:
-        try:
-            return describe_show(await get_show(show_id))
-        except Exception as e:
-            # A show DR no longer has, or DR being down, shouldn't take the others with it
-            print("Could not describe favourite show", show_id, repr(e))
-            return None
+    async def describe_all(param: str, describe) -> dict:
+        ids = [i for i in request.args.get(param, "").split(":") if i][:MAX_FAVORITES]
 
-    shows = await asyncio.gather(*map(describe, ids))
-    return {show_id: show for show_id, show in zip(ids, shows) if show is not None}
+        async def one(favorite_id: str) -> Optional[dict]:
+            try:
+                return await describe(favorite_id)
+            except Exception as e:
+                # One DR no longer has, or DR being down, shouldn't take the others with it
+                print("Could not describe favourite", favorite_id, repr(e))
+                return None
+
+        found = await asyncio.gather(*map(one, ids))
+        return {i: details for i, details in zip(ids, found) if details is not None}
+
+    async def describe_show_by_id(show_id: str) -> dict:
+        return describe_show(await get_show(show_id))
+
+    shows, films = await asyncio.gather(
+        describe_all("shows", describe_show_by_id), describe_all("films", describe_film)
+    )
+    return {"shows": shows, "films": films}
 
 
 @app.route("/sync/")

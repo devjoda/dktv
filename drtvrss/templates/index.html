@@ -60,11 +60,11 @@
 </section>
 
 {# Filled in by favorites.js, from the viewer's browser #}
-<section class="shelf" id="favorites" aria-labelledby="favorites-title" hidden>
+<section class="shelf" id="favorites" data-favorites="all" aria-labelledby="favorites-title" hidden>
     {{ shelf_head("Mine favoritter", "favorites-title") }}
     <p class="shelf-empty js-favorites-empty">
         {{ icon("heart") }}
-        <span>Tryk på <strong>Favorit</strong> på en serie, så samles dine serier her. De gemmes i din browser, og du kan <a href="/sync/">synkronisere dem mellem dine enheder</a>.</span>
+        <span>Tryk på <strong>Favorit</strong> på en serie eller film, så samles de her. De gemmes i din browser, og du kan <a href="/sync/">synkronisere dem mellem dine enheder</a>.</span>
     </p>
     <div class="shelf-track js-tiles"></div>
 </section>
@@ -97,7 +97,7 @@
 {% if page %}
 {% for row in page.rows %}
 <section class="shelf" aria-labelledby="row-{{ loop.index }}">
-    {{ shelf_head(row.title, "row-" ~ loop.index) }}
+    {{ shelf_head(row.title, "row-" ~ loop.index, more=("/liste/" ~ row.more ~ "/?titel=" ~ row.title|urlencode) if row.more else None) }}
     <div class="shelf-track">
         {% for c in row.cards %}{{ card_tile(c) }}{% endfor %}
     </div>

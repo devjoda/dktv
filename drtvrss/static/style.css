@@ -763,6 +763,20 @@ h1, h2, h3 {
     font-size: var(--text-h2);
 }
 
+.shelf-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
+    color: var(--muted);
+    font-weight: 650;
+    white-space: nowrap;
+}
+
+.shelf-more:hover {
+    color: var(--paper);
+}
+
 .shelf-nav {
     display: flex;
     gap: 6px;

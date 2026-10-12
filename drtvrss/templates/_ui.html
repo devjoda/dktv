@@ -18,18 +18,18 @@
 {% for kind, label in tags %}<span class="tag tag-{{ kind }}">{{ label }}</span>{% endfor %}
 {%- endmacro %}
 
-{# Adds a show to the viewer's favourites, or removes it, with favorites.js #}
-{% macro favorite_button(show_id, title, image, compact=False) -%}
-<button type="button" class="{{ 'tile-action' if compact else 'button button-secondary' }} js-favorite" aria-pressed="false"{% if compact %} aria-label="Favorit: {{ title }}" title="Favorit"{% endif %} data-show-id="{{ show_id }}" data-title="{{ title }}" data-image="{{ image|thumbnail if image else '' }}">{{ icon("heart") }}{% if not compact %} Favorit{% endif %}</button>
+{# Adds a show or a film to the viewer's favourites, or removes it, with favorites.js #}
+{% macro favorite_button(id, title, image, compact=False, kind="show") -%}
+<button type="button" class="{{ 'tile-action' if compact else 'button button-secondary' }} js-favorite" aria-pressed="false"{% if compact %} aria-label="Favorit: {{ title }}" title="Favorit"{% endif %} data-favorite-id="{{ id }}" data-kind="{{ kind }}" data-title="{{ title }}" data-image="{{ image|thumbnail if image else '' }}">{{ icon("heart") }}{% if not compact %} Favorit{% endif %}</button>
 {%- endmacro %}
 
 {#
 A picture with a title, linking to a show or a video.
 video_id marks how far the viewer got with that video,
 and episode_ids how many of a show's episodes they've seen.
-show_id adds a button to make the show a favourite.
+show_id and film_id add a button to make the show or film a favourite.
 #}
-{% macro tile(href, image, title, meta=None, tags=[], video_id=None, episode_ids=None, minutes=None, description=None, show_id=None) -%}
+{% macro tile(href, image, title, meta=None, tags=[], video_id=None, episode_ids=None, minutes=None, description=None, show_id=None, film_id=None) -%}
 <article class="tile"{% if video_id %} data-video-id="{{ video_id }}"{% endif %}{% if episode_ids %} data-episode-ids="{{ episode_ids|join(' ') }}"{% endif %}>
     <a class="tile-link" href="{{ href }}">
         <div class="tile-media">
@@ -42,7 +42,7 @@ show_id adds a button to make the show a favourite.
         </div>
         <h3 class="tile-title">{{ title }}</h3>
     </a>
-    <p class="tile-meta"><span class="js-meta">{{ meta or "" }}</span>{% if show_id %}{{ favorite_button(show_id, title, image, compact=True) }}{% endif %}</p>
+    <p class="tile-meta"><span class="js-meta">{{ meta or "" }}</span>{% if show_id %}{{ favorite_button(show_id, title, image, compact=True) }}{% elif film_id %}{{ favorite_button(film_id, title, image, compact=True, kind="film") }}{% endif %}</p>
     {% if description %}<p class="tile-desc">{{ description }}</p>{% endif %}
 </article>
 {%- endmacro %}
@@ -54,7 +54,7 @@ show_id adds a button to make the show a favourite.
 
 {# One of DR's programmes, from discover.py #}
 {% macro card_tile(c) -%}
-{{ tile(c.url, c.image, c.title, meta=c.category, tags=[("live", "Direkte")] if c.live else [], video_id=c.video_id, show_id=c.show_id) }}
+{{ tile(c.url, c.image, c.title, meta=c.category, tags=[("live", "Direkte")] if c.live else [], video_id=c.video_id, show_id=c.show_id, film_id=c.film_id) }}
 {%- endmacro %}
 
 {# A live channel, with what's on it now, from live.py #}
@@ -88,10 +88,11 @@ show_id adds a button to make the show a favourite.
 </article>
 {%- endmacro %}
 
-{# A row of tiles that scrolls sideways #}
-{% macro shelf_head(title, id) -%}
+{# A row of tiles that scrolls sideways, with a link to all of it when it's longer #}
+{% macro shelf_head(title, id, more=None) -%}
 <div class="shelf-head">
     <h2 class="shelf-title" id="{{ id }}">{{ title }}</h2>
+    {% if more %}<a class="shelf-more" href="{{ more }}">Se alle <span class="visually-hidden">{{ title }}</span>{{ icon("chevron-right") }}</a>{% endif %}
     <div class="shelf-nav" hidden>
         <button type="button" class="js-shelf-back" aria-label="Tilbage">{{ icon("chevron-left") }}</button>
         <button type="button" class="js-shelf-forward" aria-label="Frem">{{ icon("chevron-right") }}</button>

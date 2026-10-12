@@ -94,6 +94,7 @@ def clean(data) -> dict:
             favorites.append(
                 {
                     "id": f["id"],
+                    "kind": "film" if f.get("kind") == "film" else "show",
                     "title": _text(f.get("title")) or f["id"],
                     "image": _image_url(f.get("image")),
                     "added": _number(f.get("added")) or 0,

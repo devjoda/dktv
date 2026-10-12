@@ -15,6 +15,9 @@ from .live import get_channels
 
 PAGE_CACHE_TIME = 30 * 60
 ROW_SIZE = 24
+# The most DR gives at a time, and the most of a list shown, like all films from A to Å
+LIST_PAGE_SIZE = 100
+MAX_LIST = 1000
 # A row with fewer than this isn't worth a row
 MIN_ROW = 3
 
@@ -44,8 +47,9 @@ class Card:
     preview: Optional[str] = None
     # For marking what the viewer has seen
     video_id: Optional[str] = None
-    # For making a show a favourite
+    # For making a show or a film a favourite
     show_id: Optional[str] = None
+    film_id: Optional[str] = None
     live: bool = False
 
 
@@ -53,6 +57,8 @@ class Card:
 class Row:
     title: str
     cards: list[Card]
+    # DR's list, when it has more than the row shows
+    more: Optional[str] = None
 
 
 @dataclass
@@ -74,6 +80,7 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
     slug = item.path.rstrip("/").split("/")[-1]
     video_id = None
     show_id = None
+    film_id = None
     if item.type == "show":
         url = f"/{slug}/"
         show_id = slug
@@ -87,6 +94,7 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
     elif item.type == "program":
         url = f"/program/{slug}"
         video_id = slug.split("_")[-1]
+        film_id = slug
     elif item.type == "link" and item.path.startswith("/kanal/"):
         channel_id = slug.split("_")[-1]
         if channel_id not in channel_slugs:
@@ -116,6 +124,7 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
         preview=item.custom_fields.short_video_url,
         video_id=video_id,
         show_id=show_id,
+        film_id=film_id,
         live=item.type == "link",
     )
 
@@ -133,12 +142,11 @@ def cards(items: list[dict], channel_slugs: dict[str, str]) -> list[Card]:
     return result
 
 
-async def row_items(entry: dr.PageEntry) -> list[dict]:
-    """A row's items, which DR only sends along with the page for the first few rows"""
+async def row_list(entry: dr.PageEntry) -> dr.PageList:
+    """A row's first items, which DR only sends along with the page for the first few rows"""
     if entry.list.items:
-        return entry.list.items
-    blob = await get_api(f"/lists/{entry.list.id}", page_size=ROW_SIZE)
-    return dr.PageList.model_validate(blob).items
+        return entry.list
+    return dr.PageList.model_validate(await get_api(f"/lists/{entry.list.id}", page_size=ROW_SIZE))
 
 
 def is_row(entry: dr.PageEntry) -> bool:
@@ -182,18 +190,19 @@ async def build_page(path: str, max_rows: int) -> DiscoverPage:
     featured = []
     hero = next((e for e in page.entries if (e.template or "").startswith(("DRH", "H")) and e.list), None)
     if hero is not None:
-        featured = cards(await row_items(hero), channel_slugs)
+        featured = cards((await row_list(hero)).items, channel_slugs)
         for c in featured:
             c.category_url = category_url(c.category, categories)
 
     entries = [e for e in page.entries if is_row(e)][:max_rows]
-    results = await asyncio.gather(*map(row_items, entries), return_exceptions=True)
+    results = await asyncio.gather(*map(row_list, entries), return_exceptions=True)
     rows = []
-    for entry, items in zip(entries, results):
-        if isinstance(items, BaseException):
-            print("Could not get a row of", path, entry.title, repr(items))
+    for entry, found in zip(entries, results):
+        if isinstance(found, BaseException):
+            print("Could not get a row of", path, entry.title, repr(found))
             continue
-        row = Row(entry.title.strip(), cards(items, channel_slugs))
+        more = found.id if found.paging.total > 1 else None
+        row = Row(entry.title.strip(), cards(found.items, channel_slugs), more)
         if len(row.cards) >= MIN_ROW:
             rows.append(row)
     return DiscoverPage(page.title or "", featured, rows)
@@ -219,6 +228,36 @@ async def get_page(path: str, max_rows: int = 10, refresh: bool = False) -> Opti
         return None
     pages[path] = (time(), page)
     return page
+
+
+@dataclass
+class FullList:
+    title: str
+    cards: list[Card]
+
+
+lists: dict[str, tuple[float, FullList]] = {}
+
+
+async def get_list(list_id: str) -> Optional[FullList]:
+    """All of one of DR's lists, which rows only show the start of, or None if DR doesn't have it"""
+    cached = lists.get(list_id)
+    if cached is not None and cached[0] + PAGE_CACHE_TIME > time():
+        return cached[1]
+    try:
+        first = dr.PageList.model_validate(await get_api(f"/lists/{list_id}", page_size=LIST_PAGE_SIZE, page=1))
+        pages = min(first.paging.total, MAX_LIST // LIST_PAGE_SIZE)
+        rest = await asyncio.gather(*(
+            get_api(f"/lists/{list_id}", page_size=LIST_PAGE_SIZE, page=page) for page in range(2, pages + 1)
+        ))
+        items = first.items + [item for blob in rest for item in dr.PageList.model_validate(blob).items]
+        channels = await get_channels()
+        found = FullList(first.title or "", cards(items, {c.id: slug for slug, c in channels.items()}))
+    except Exception as e:
+        print("Could not get DR's list", list_id, repr(e))
+        return cached[1] if cached is not None else None
+    lists[list_id] = (time(), found)
+    return found
 
 
 categories_cache: tuple[float, list[Category]] = (0, [])

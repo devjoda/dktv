@@ -40,7 +40,7 @@ def test_show(get):
     assert '<button type="button" class="season-tab" role="tab" id="season-tab-1" aria-controls="season-1" aria-selected="true">Sæson 1</button>' in r.text
     assert '<button type="button" class="season-tab" role="tab" id="season-tab-4" aria-controls="season-4" aria-selected="false" tabindex="-1">Sæson 4</button>' in r.text
     # Can be made a favourite
-    assert 'class="button button-secondary js-favorite" aria-pressed="false" data-show-id="rejseholdet_503605" data-title="Rejseholdet"' in r.text
+    assert 'class="button button-secondary js-favorite" aria-pressed="false" data-favorite-id="rejseholdet_503605" data-kind="show" data-title="Rejseholdet"' in r.text
     # For showing how far the viewer got with each episode, and what to play
     assert '<script src="/static/progress.js?v=' in r.text
     assert 'data-video-id="503615"' in r.text
@@ -118,6 +118,40 @@ def test_header_has_sections_instead_of_a_name(get):
     assert "<title>Public Service</title>" in r.text
 
 
+def test_films_can_be_favourites_from_their_page(get):
+    r = get("/program/lise-noergaard_-ikke-kun-en-pige_362031")
+    assert 'data-favorite-id="lise-noergaard_-ikke-kun-en-pige_362031" data-kind="film"' in r.text
+    # But not an episode, which belongs to its show
+    assert "js-favorite" not in get("/rejseholdet_503605/rejseholdet_503615").text.split('class="watch"')[1].split("</aside>")[0].split('class="watch-side"')[0]
+
+
+def test_rows_link_to_all_of_them(get):
+    r = get("/kategorier/fiktionsserier/")
+    assert re.search(r'<a class="shelf-more" href="/liste/\d+/\?titel=[^"]+">Se alle', r.text)
+
+
+def test_all_of_a_list(get, fake_dr, monkeypatch):
+    async def get_api(path, /, **params):
+        fake_dr.append(path + str(params.get("page")))
+        if path != "/lists/355817":
+            return await original(path, **params)
+        page = params["page"]
+        return {"id": "355817", "title": "Film | A - Å", "paging": {"total": 2},
+                "items": [{"id": str(page * 1000 + i), "type": "program", "title": f"Film {page}-{i}",
+                           "path": f"/program/film-{page}-{i}_{page * 1000 + i}"} for i in range(3)]}
+
+    from drtvrss import discover
+    original = discover.get_api
+    monkeypatch.setattr(discover, "get_api", get_api)
+    r = get("/liste/355817/?titel=A%20-%20%C3%85")
+    assert r.status_code == 200
+    assert "<h1>A - Å</h1>" in r.text
+    # Both pages
+    assert r.text.count('class="tile"') == 6
+    assert 'href="/program/film-2-2_2002"' in r.text
+    assert get("/liste/355817/").text.count("<h1>Film: A - Å</h1>") == 1
+
+
 def test_footer_only_links_to_syncing(get):
     footer = get("/").text.split('<footer class="site-footer">')[1].split("</footer>")[0]
     assert '<a href="/sync/">' in footer
@@ -172,7 +206,10 @@ def test_live_channels(get):
 def test_favorites_page(get):
     r = get("/favoritter/")
     assert r.status_code == 200
-    assert '<section class="results" id="favorites" aria-labelledby="favorites-title" hidden>' in r.text
+    # Shows first, and films below
+    shows = r.text.index('<section class="results" id="favorite-shows" data-favorites="show"')
+    films = r.text.index('<section class="results" id="favorite-films" data-favorites="film"')
+    assert shows < films
     assert '<section class="results" id="continue-watching" aria-labelledby="continue-title" hidden>' in r.text
 
 
@@ -367,18 +404,23 @@ def test_index_can_continue_watching(get):
 
 def test_index_can_list_favorites(get):
     r = get("/")
-    assert '<section class="shelf" id="favorites" aria-labelledby="favorites-title" hidden>' in r.text
+    assert '<section class="shelf" id="favorites" data-favorites="all" aria-labelledby="favorites-title" hidden>' in r.text
     assert '<script src="/static/favorites.js?v=' in r.text
     assert '<div id="toast" class="toast-message" role="status" aria-live="polite"></div>' in r.text
 
 
 def test_favorites_are_described(get):
-    r = get("/favorites.json?shows=rejseholdet_503605:findes-ikke_1:ikke-et-tal")
+    r = get("/favorites.json?shows=rejseholdet_503605:findes-ikke_1:ikke-et-tal&films=lise-noergaard_-ikke-kun-en-pige_362031:findes-ikke_2")
     assert r.status_code == 200
-    favorites = r.json if hasattr(r, "json") else __import__("json").loads(r.text)
+    favorites = __import__("json").loads(r.text)
     # The ones that can't be found are left out, instead of failing it all
-    assert list(favorites) == ["rejseholdet_503605"]
-    rejseholdet = favorites["rejseholdet_503605"]
+    assert list(favorites["shows"]) == ["rejseholdet_503605"]
+    assert list(favorites["films"]) == ["lise-noergaard_-ikke-kun-en-pige_362031"]
+    film = favorites["films"]["lise-noergaard_-ikke-kun-en-pige_362031"]
+    assert film["title"] == "Lise Nørgaard: Ikke kun en pige"
+    assert film["url"] == "/program/lise-noergaard_-ikke-kun-en-pige_362031"
+    assert film["minutes"] == 48
+    rejseholdet = favorites["shows"]["rejseholdet_503605"]
     assert rejseholdet["title"] == "Rejseholdet"
     assert rejseholdet["url"] == "/rejseholdet_503605/"
     assert "Width=640" in rejseholdet["image"]
@@ -391,17 +433,19 @@ def test_favorites_are_described(get):
 def test_no_favorites(get, fake_dr):
     r = get("/favorites.json")
     assert r.status_code == 200
-    assert r.text.strip() == "{}"
+    assert __import__("json").loads(r.text) == {"shows": {}, "films": {}}
     assert not [r for r in fake_dr if r.startswith("/items/")]
 
 
 def test_shows_can_be_made_favorites_from_their_tiles(get, monkeypatch):
     r = get("/search/?query=matador")
     assert 'aria-label="Favorit: Matador" title="Favorit"' in r.text
-    assert 'data-show-id="matador_540736"' in r.text
+    assert 'data-favorite-id="matador_540736" data-kind="show"' in r.text
+    # Films too
+    assert 'data-favorite-id="lise-noergaard_-ikke-kun-en-pige_362031" data-kind="film"' in r.text
     monkeypatch.setenv("RECOMMENDED_SHOWS", "rejseholdet_503605")
     get("/rejseholdet_503605/")
-    assert 'data-show-id="rejseholdet_503605"' in get("/").text
+    assert 'data-favorite-id="rejseholdet_503605"' in get("/").text
 
 
 def test_players_use_plyr(get):

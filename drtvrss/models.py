@@ -204,11 +204,17 @@ class DiscoverItem(DRModel):
     custom_fields: DiscoverCustomFields = DiscoverCustomFields()
 
 
+class Paging(DRModel):
+    # In pages, not items
+    total: int = 1
+
+
 class PageList(DRModel):
     id: str
     title: Optional[str] = None
     # Each checked on its own, so one odd item doesn't lose the whole row
     items: list[dict] = []
+    paging: Annotated[Paging, Lenient] = Paging()
 
 
 class PageEntry(DRModel):

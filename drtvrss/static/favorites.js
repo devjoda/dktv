@@ -1,8 +1,9 @@
-// The viewer's favourite shows, kept in their browser like how far they got with each video.
-// Buttons with .js-favorite add and remove a show, and the front page lists them.
+// The viewer's favourite shows and films, kept in their browser like how far they got with each video.
+// Buttons with .js-favorite add and remove one, and sections with data-favorites list them.
 // Needs progress.js and sync.js.
 
-// Like [{id: "rejseholdet_503605", title, image, added}], the newest first
+// Like [{id: "rejseholdet_503605", kind: "show", title, image, added}], the newest first.
+// Films have kind "film", and older favourites, from before films could be, no kind.
 function loadFavorites() {
     try {
         const favorites = JSON.parse(localStorage.getItem("favorites"));
@@ -42,9 +43,9 @@ function isFavorite(showID) {
     return loadFavorites().some(favorite => favorite.id == showID);
 }
 
-function setFavorite({id, title, image}, favorite) {
+function setFavorite({id, kind, title, image}, favorite) {
     const others = loadFavorites().filter(f => f.id != id);
-    storeFavorites(favorite ? [{id, title, image, added: Date.now()}, ...others] : others);
+    storeFavorites(favorite ? [{id, kind, title, image, added: Date.now()}, ...others] : others);
     const removed = loadRemovedFavorites();
     if (favorite) {
         delete removed[id];
@@ -69,7 +70,7 @@ function announce(message) {
 
 function updateFavoriteButtons() {
     for (const button of document.querySelectorAll(".js-favorite")) {
-        button.setAttribute("aria-pressed", isFavorite(button.dataset.showId));
+        button.setAttribute("aria-pressed", isFavorite(button.dataset.favoriteId));
     }
 }
 
@@ -80,7 +81,8 @@ function favoriteToggle(favorite) {
         class: "tile-action js-favorite",
         "aria-label": `Favorit: ${favorite.title}`,
         title: "Favorit",
-        "data-show-id": favorite.id,
+        "data-favorite-id": favorite.id,
+        "data-kind": favorite.kind || "show",
         "data-title": favorite.title,
         "data-image": favorite.image || "",
         "aria-pressed": "true",
@@ -88,40 +90,56 @@ function favoriteToggle(favorite) {
 }
 
 function favoriteTile(favorite, details) {
+    const film = favorite.kind == "film";
     let meta = "";
-    if (details) {
+    if (details && film) {
+        meta = details.minutes ? formatMinutes(details.minutes) : "Film";
+    } else if (details) {
         meta = details.seasons > 1 ? `${details.seasons} sæsoner` : `${details.episodes} afsnit`;
     }
     return buildTile({
-        href: `/${favorite.id}/`,
+        href: film ? `/program/${favorite.id}` : `/${favorite.id}/`,
         image: favorite.image,
         title: favorite.title,
         meta,
-        tags: details && details.new ? [["new", "Nye afsnit"]] : [],
-        episodeIDs: details ? details.episode_ids : null,
+        tags: !film && details && details.new ? [["new", "Nye afsnit"]] : [],
+        episodeIDs: !film && details ? details.episode_ids : null,
+        videoID: film ? favorite.id.split("_").pop() : null,
         action: favoriteToggle(favorite),
     });
+}
+
+// What /favorites.json said about a favourite
+function detailsOf(details, favorite) {
+    return ((favorite.kind == "film" ? details.films : details.shows) || {})[favorite.id];
 }
 
 // The details from DR last time, so the row can change without asking again
 let favoriteDetails = {};
 
+// Fills in the sections with data-favorites: "all", or only "show" or "film"
 function renderFavorites(details = favoriteDetails) {
-    const section = document.getElementById("favorites");
     const favorites = loadFavorites();
-    section.querySelector(".js-favorites-empty").hidden = favorites.length > 0;
-    const track = section.querySelector(".js-tiles");
-    track.hidden = favorites.length == 0;
-    track.replaceChildren(...favorites.map(favorite => favoriteTile(favorite, details[favorite.id])));
-    section.hidden = false;
+    for (const section of document.querySelectorAll("[data-favorites]")) {
+        const kind = section.dataset.favorites;
+        const shown = favorites.filter(f => kind == "all" || (f.kind || "show") == kind);
+        const empty = section.querySelector(".js-favorites-empty");
+        if (empty) {
+            empty.hidden = shown.length > 0;
+        }
+        const tiles = section.querySelector(".js-tiles");
+        tiles.hidden = shown.length == 0;
+        tiles.replaceChildren(...shown.map(favorite => favoriteTile(favorite, detailsOf(details, favorite))));
+        section.hidden = false;
+        section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
+    }
     markProgress();
-    section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
 }
 
 // Fills in the #favorites row: right away from what's kept in the browser,
 // and then with fresh details from DR, like new episodes
 async function showFavorites() {
-    if (document.getElementById("favorites") == null) {
+    if (document.querySelector("[data-favorites]") == null) {
         return;
     }
     renderFavorites();
@@ -130,13 +148,17 @@ async function showFavorites() {
         return;
     }
     try {
-        const response = await fetch("/favorites.json?shows=" + encodeURIComponent(favorites.map(f => f.id).join(":")));
+        const ids = kind => encodeURIComponent(favorites.filter(f => (f.kind || "show") == kind).map(f => f.id).join(":"));
+        const response = await fetch(`/favorites.json?shows=${ids("show")}&films=${ids("film")}`);
         if (!response.ok) {
             throw new Error("Status " + response.status);
         }
         const details = favoriteDetails = await response.json();
         // Keeps the titles and pictures up to date, in case DR changes them
-        storeFavorites(loadFavorites().map(f => details[f.id] ? {...f, title: details[f.id].title, image: details[f.id].image} : f));
+        storeFavorites(loadFavorites().map(function (f) {
+            const found = detailsOf(details, f);
+            return found ? {...f, title: found.title, image: found.image} : f;
+        }));
         renderFavorites(details);
     } catch (error) {
         console.error("Could not get details about the favourites:", error);
@@ -148,15 +170,20 @@ document.addEventListener("click", function (event) {
     if (button == null) {
         return;
     }
-    const show = {id: button.dataset.showId, title: button.dataset.title, image: button.dataset.image || null};
-    const favorite = !isFavorite(show.id);
-    setFavorite(show, favorite);
+    const chosen = {
+        id: button.dataset.favoriteId,
+        kind: button.dataset.kind || "show",
+        title: button.dataset.title,
+        image: button.dataset.image || null,
+    };
+    const favorite = !isFavorite(chosen.id);
+    setFavorite(chosen, favorite);
     updateFavoriteButtons();
-    announce(favorite ? `${show.title} er tilføjet til dine favoritter` : `${show.title} er fjernet fra dine favoritter`);
-    // On the front page, removing one from the row takes it away, but adding one elsewhere shouldn't move the page
-    if (!favorite && button.closest("#favorites")) {
+    announce(favorite ? `${chosen.title} er tilføjet til dine favoritter` : `${chosen.title} er fjernet fra dine favoritter`);
+    // Removing one from a list of them takes it away, but adding one elsewhere shouldn't move the page
+    if (!favorite && button.closest("[data-favorites]")) {
         renderFavorites();
-    } else if (document.getElementById("favorites")) {
+    } else if (document.querySelector("[data-favorites]")) {
         showFavorites();
     }
 });

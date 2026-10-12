@@ -48,6 +48,11 @@ def test_newest_of_adding_or_removing_a_favourite_wins():
     assert merged["removed_favorites"] == {}
 
 
+def test_favourite_films_stay_films():
+    cleaned = sync.clean({"favorites": [{"id": "film_1", "kind": "film", "added": 1}, {"id": "show_2", "added": 2}, {"id": "x_3", "kind": "other", "added": 3}]})
+    assert [f["kind"] for f in cleaned["favorites"]] == ["film", "show", "show"]
+
+
 def test_what_devices_send_is_checked():
     cleaned = sync.clean({
         "favorites": [{"id": "../../etc", "title": "x", "added": 1}, {"id": "matador_1", "image": "javascript:alert(1)", "added": 1}],

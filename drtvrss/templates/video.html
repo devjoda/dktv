@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, tile %}
+{% from "_ui.html" import icon, tile, favorite_button %}
 {% block head %}
 <title>{% if s %}{{ s.title }} - {% endif %}{{ e.title }}</title>
 {% if s %}
@@ -34,9 +34,12 @@
             {%- if e.geo_restricted %}<span class="tag tag-geo">Kun i Danmark</span>{% endif -%}
         </p>
         <p class="description">{{ e.description }}</p>
-        {% if e.url %}
-        <a class="button button-secondary" href="https://www.dr.dk/drtv{{ e.url }}">Se på DRTV {{ icon("external") }}</a>
-        {% endif %}
+        <div class="actions">
+            {% if not s and e.url %}{{ favorite_button(e.url.split("/")[-1], e.title, e.wallpaper, kind="film") }}{% endif %}
+            {% if e.url %}
+            <a class="button button-quiet" href="https://www.dr.dk/drtv{{ e.url }}">Se på DRTV {{ icon("external") }}</a>
+            {% endif %}
+        </div>
     </div>
     {% if previous or next %}
     <aside class="watch-side" aria-label="Flere afsnit">

@@ -8,11 +8,19 @@
     <h1>Favoritter</h1>
 </div>
 {# Filled in by favorites.js and progress.js, from the viewer's browser #}
-<section class="results" id="favorites" aria-labelledby="favorites-title" hidden>
-    <h2 class="section-title" id="favorites-title">Mine favoritter</h2>
+<section class="results" id="favorite-shows" data-favorites="show" aria-labelledby="favorite-shows-title" hidden>
+    <h2 class="section-title" id="favorite-shows-title">Serier</h2>
     <p class="shelf-empty js-favorites-empty">
         {{ icon("heart") }}
         <span>Tryk på <strong>Favorit</strong> på en serie, så samles dine serier her. De gemmes i din browser, og du kan <a href="/sync/">synkronisere dem mellem dine enheder</a>.</span>
+    </p>
+    <div class="tile-grid js-tiles"></div>
+</section>
+<section class="results" id="favorite-films" data-favorites="film" aria-labelledby="favorite-films-title" hidden>
+    <h2 class="section-title" id="favorite-films-title">Film</h2>
+    <p class="shelf-empty js-favorites-empty">
+        {{ icon("heart") }}
+        <span>Tryk på <strong>Favorit</strong> på en film, så den er her, når du vil se den.</span>
     </p>
     <div class="tile-grid js-tiles"></div>
 </section>
