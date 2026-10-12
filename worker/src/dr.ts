@@ -42,6 +42,8 @@ export interface Ctx {
 	refreshes: number;
 	// Whether the visit left something out, which its page then isn't kept without
 	incomplete: boolean;
+	// What the visit is getting already, by its key
+	pending: Map<string, Promise<unknown>>;
 	waitUntil(promise: Promise<unknown>): void;
 	// Where the visit came to, like https://dktv.example, for keys in Cloudflare's cache
 	origin: string;

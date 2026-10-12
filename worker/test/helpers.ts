@@ -125,7 +125,7 @@ export const env = {
 
 /** What a visit has, for calling the Worker's parts on their own */
 export function ctx(): Ctx {
-	return {env, budget: new Budget(), refreshes: 2, incomplete: false, waitUntil() {}, origin: "http://localhost"};
+	return {env, budget: new Budget(), refreshes: 2, incomplete: false, pending: new Map(), waitUntil() {}, origin: "http://localhost"};
 }
 
 export interface Got {

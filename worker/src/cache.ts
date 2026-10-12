@@ -92,7 +92,17 @@ export async function cachedIfTime<T>(ctx: Ctx, key: string, maxAge: number, bui
 	return keep(ctx, key, maxAge, build, true);
 }
 
-async function keep<T>(ctx: Ctx, key: string, maxAge: number, build: () => Promise<T>, optional: boolean): Promise<T | undefined> {
+function keep<T>(ctx: Ctx, key: string, maxAge: number, build: () => Promise<T>, optional: boolean): Promise<T | undefined> {
+	// Parts of a page that need the same thing, like each row the live channels, wait for the same request
+	let pending = ctx.pending.get(key) as Promise<T | undefined> | undefined;
+	if (pending === undefined) {
+		pending = keepNow(ctx, key, maxAge, build, optional);
+		ctx.pending.set(key, pending);
+	}
+	return pending;
+}
+
+async function keepNow<T>(ctx: Ctx, key: string, maxAge: number, build: () => Promise<T>, optional: boolean): Promise<T | undefined> {
 	const now = Date.now();
 	let kept = memory.get(key) as Kept<T> | undefined;
 	if (kept === undefined) {

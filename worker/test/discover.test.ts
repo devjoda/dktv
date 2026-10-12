@@ -114,6 +114,14 @@ describe("keeping what's got", () => {
 		expect(await cached(after, "c", 60, async () => "c 2")).toBe("c 2");
 	});
 
+	test("once per visit, however many parts of the page need it", async () => {
+		const visit = ctx();
+		let built = 0;
+		const build = async () => ++built;
+		expect(await Promise.all([cached(visit, "x", 60, build), cached(visit, "x", 60, build)])).toEqual([1, 1]);
+		expect(built).toBe(1);
+	});
+
 	test("with nothing kept, it's got whatever", async () => {
 		const visit = ctx();
 		visit.refreshes = 0;
