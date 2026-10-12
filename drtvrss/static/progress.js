@@ -164,7 +164,7 @@ function updatePlayButtons() {
         button.href = target.episode.url;
         button.querySelector(".js-play-label").textContent = target.label;
         const detail = button.querySelector(".js-play-detail");
-        detail.textContent = [target.episode.season, target.episode.title].filter(Boolean).join(" · ");
+        detail.textContent = [target.episode.season, target.episode.title].filter(Boolean).join(", ");
         detail.hidden = target.label == "Afspil" || target.label == "Se igen fra start";
         button.dataset.targetId = target.episode.id;
     }
@@ -237,7 +237,7 @@ function continueWatchingTile(video) {
         href: video.url,
         image: video.image,
         title,
-        meta: [video.show, formatMinutes(left) + " tilbage"].filter(Boolean).join(" · "),
+        meta: [video.show, formatMinutes(left) + " tilbage"].filter(Boolean).join(", "),
         percent: percentSeen(video),
         action: remove,
     });

@@ -75,7 +75,7 @@ def test_other_visitors_shows_are_not_listed_on_index(get):
     r = get("/")
     assert 'href="/rejseholdet_503605/"' not in r.text
     assert "Anbefalede serier" not in r.text
-    assert "DRTV, uden bøvl" in r.text
+    assert "DR's serier, film og direkte TV" in r.text
 
 
 def test_unknown_show(get):

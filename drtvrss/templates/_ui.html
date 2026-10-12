@@ -74,8 +74,12 @@ show_id adds a button to make the show a favourite.
 </a>
 {%- endmacro %}
 
-{% macro show_tags(show) -%}
-{% if show.seasons|length > 1 %}<span class="tag">{{ show.seasons|length }} sæsoner</span>{% endif %}
-<span class="tag">{{ show.episodes|length }} afsnit</span>
-{% if show.geo_restricted %}<span class="tag tag-geo">Kun i Danmark</span>{% endif %}
+{# The facts about a show, for the line below its title #}
+{% macro show_facts(show) -%}
+<p class="meta">
+    {% if show.seasons|length > 1 %}<span>{{ show.seasons|length }} sæsoner</span>{% endif %}
+    <span>{{ show.episodes|length }} afsnit</span>
+    {% if show.episodes and show.episodes[-1].pubdate is new %}<span class="tag tag-new">Nye afsnit</span>{% endif %}
+    {% if show.geo_restricted %}<span class="tag tag-geo">Kun i Danmark</span>{% endif %}
+</p>
 {%- endmacro %}

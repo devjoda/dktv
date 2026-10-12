@@ -78,8 +78,19 @@ function setupShelves() {
     }
 }
 
+// The header lies on a page's big picture, until the page is scrolled
+function updateHeader() {
+    const header = document.querySelector(".site-header");
+    if (header) {
+        header.classList.toggle("is-scrolled", window.scrollY > 24);
+    }
+}
+
+window.addEventListener("scroll", updateHeader, {passive: true});
+
 // Also when coming back to a page, which the browser may have kept as it was
 window.addEventListener("pageshow", function () {
+    updateHeader();
     markProgress();
     showContinueWatching();
     showFavorites();

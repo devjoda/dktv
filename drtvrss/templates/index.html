@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, tile, shelf_head, search_field, play_button, show_tags, favorite_button %}
+{% from "_ui.html" import icon, tile, shelf_head, search_field, play_button, show_facts, favorite_button %}
+{% block body_class %}{% if shows %}has-hero{% endif %}{% endblock %}
 {% block content %}
 <h1 class="visually-hidden">{{ SERVICE_NAME }}</h1>
 
@@ -8,11 +9,8 @@
 <section class="hero" aria-labelledby="featured-title">
     <div class="hero-backdrop"><img src="{{ featured.wallpaper|thumbnail(1280) }}" alt=""></div>
     <div class="hero-content">
-        <div class="badges">
-            <span class="tag tag-new">Anbefalet</span>
-            {{ show_tags(featured) }}
-        </div>
         <h2 class="hero-title" id="featured-title">{{ featured.title }}</h2>
+        {{ show_facts(featured) }}
         <p class="hero-text">{{ featured.description }}</p>
         <div class="actions">
             {{ play_button(featured) }}
@@ -23,8 +21,8 @@
 </section>
 {% else %}
 <section class="intro wrap">
-    <h2>DRTV, uden bøvl</h2>
-    <p>Se DR's serier, film og direkte TV, og abonnér på dine yndlingsserier med RSS.</p>
+    <h2>DR's serier, film og direkte TV</h2>
+    <p>Fortsæt hvor du slap, saml dine yndlingsserier, og abonnér på dem med RSS.</p>
     {{ search_field() }}
 </section>
 {% endif %}
@@ -50,16 +48,13 @@
     {{ shelf_head("Direkte TV", "live-title") }}
     <div class="shelf-track">
         {% for slug, channel in channels.items() %}
-        <article class="tile">
+        <article class="tile channel-tile">
             <a class="tile-link" href="/live/{{ slug }}">
                 <div class="tile-media">
-                    <div class="channel-art" style="--hue: {{ (350 + loop.index0 * 75) % 360 }};" aria-hidden="true">{{ channel.title }}</div>
-                    <div class="tile-badges"><span class="tag tag-live">Live</span></div>
+                    <h3 class="channel-art" style="--hue: {{ (355 + loop.index0 * 75) % 360 }};">{{ channel.title }}</h3>
                     <span class="tile-play">{{ icon("play") }}</span>
                 </div>
-                <h3 class="tile-title">{{ channel.title }}</h3>
             </a>
-            <p class="tile-meta">Direkte</p>
         </article>
         {% endfor %}
     </div>
