@@ -40,18 +40,34 @@ describe("DR's rows", () => {
 		expect(cards([show, {type: "show"}, other, show], CHANNELS).map(c => c.title)).toEqual(["Mors dreng", "Høst"]);
 	});
 
-	test("DR's front page", async () => {
-		const page = (await getPage(ctx(), "/", 8))!;
-		expect(page.featured.length).toBeGreaterThanOrEqual(3);
+	test("DR's front page, a couple of rows at a time while nothing's kept", async () => {
+		const first = ctx();
+		const start = (await getPage(first, "/", 8))!;
+		expect(first.incomplete).toBe(true);
+		expect(start.featured.length).toBeGreaterThanOrEqual(3);
+		expect(start.rows.length).toBeLessThanOrEqual(2);
+		let visits = 1;
+		let visit = ctx();
+		let page = (await getPage(visit, "/", 8))!;
+		while (visit.incomplete) {
+			visits++;
+			visit = ctx();
+			page = (await getPage(visit, "/", 8))!;
+		}
+		// Two rows at a time, of eight at most
+		expect(visits).toBeGreaterThan(1);
+		expect(visits).toBeLessThanOrEqual(4);
 		expect(page.featured.every(c => c.url.startsWith("/"))).toBe(true);
-		expect(page.rows.length).toBeGreaterThan(0);
+		expect(page.rows.length).toBeGreaterThanOrEqual(start.rows.length);
 		const titles = page.rows.map(row => row.title);
 		expect(titles).not.toContain("Se live tv");
 		expect(titles).not.toContain("Kategorier");
 		expect(page.rows.every(row => row.cards.length >= 3)).toBe(true);
 		// Kept
 		dr.requested = [];
-		expect(await getPage(ctx(), "/", 8)).toEqual(page);
+		const again = ctx();
+		expect(await getPage(again, "/", 8)).toEqual(page);
+		expect(again.incomplete).toBe(false);
 		expect(dr.requested).toEqual([]);
 	});
 

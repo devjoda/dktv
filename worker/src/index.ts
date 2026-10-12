@@ -32,6 +32,7 @@ app.use("*", async (c, next) => {
 		env: c.env,
 		budget: new Budget(),
 		refreshes: REFRESHES_PER_VISIT,
+		incomplete: false,
 		waitUntil: promise => c.executionCtx.waitUntil(promise),
 		origin: new URL(c.req.url).origin,
 	});
@@ -83,6 +84,11 @@ function edgeCached(seconds: number): MiddlewareHandler<App> {
 		}
 		await next();
 		if (c.res.status != 200) {
+			return;
+		}
+		// The next visit gets what this one left out
+		if (ctx.incomplete) {
+			c.res.headers.set("Cache-Control", "no-cache");
 			return;
 		}
 		if (ctx.budget.left > 0) {

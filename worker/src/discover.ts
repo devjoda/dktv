@@ -1,7 +1,7 @@
 // DR's own front page and categories: what DR features at the top, and the rows
 // of programmes below, with links to the pages here instead of DR's.
 
-import {cached} from "./cache";
+import {cached, cachedIfTime} from "./cache";
 import {type Ctx, getApi, type Json, NotFound} from "./dr";
 import {type Channels, getChannels} from "./live";
 import * as dr from "./models";
@@ -230,8 +230,9 @@ interface RowList {
 	pages: number;
 }
 
-async function getRow(ctx: Ctx, listId: string): Promise<RowList> {
-	return cached(ctx, `row:${listId}`, PAGE_CACHE_TIME, async () => {
+/** One of DR's lists, as a row shows it; when optional, only if the visit has time for it */
+async function getRow(ctx: Ctx, listId: string, optional = false): Promise<RowList | undefined> {
+	return (optional ? cachedIfTime : cached)(ctx, `row:${listId}`, PAGE_CACHE_TIME, async () => {
 		let blob: Json;
 		try {
 			blob = await getApi(ctx, `/lists/${listId}`, {page_size: ROW_SIZE});
@@ -269,7 +270,8 @@ export async function getPage(ctx: Ctx, path: string, maxRows = 10): Promise<Dis
 			console.log("Could not get the top of", path, String(e));
 			return undefined;
 		}) : undefined,
-		...wanted.map(row => getRow(ctx, row.list).catch(e => {
+		// The top is needed, but some of the rows can wait for the next visit
+		...wanted.map(row => getRow(ctx, row.list, true).catch(e => {
 			console.log("Could not get a row of", path, row.title, String(e));
 			return undefined;
 		})),

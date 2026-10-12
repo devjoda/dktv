@@ -18,8 +18,9 @@ interface Kept<T> {
 const memory = new Map<string, Kept<unknown>>();
 // Far more than is visited at once; each is at most a show's episodes
 const MAX_IN_MEMORY = 400;
-// How long something is kept past running out, for when DR doesn't answer, in seconds
-const STALE_FOR = 24 * 60 * 60;
+// How long something is kept past running out, for when DR doesn't answer, and for visits
+// to use while they get other things, in seconds
+const STALE_FOR = 7 * 24 * 60 * 60;
 // How soon to ask DR again, when it didn't answer
 const RETRY_AFTER = 60;
 // How many things that ran out a visit gets again, when it has something kept to use instead
@@ -79,6 +80,19 @@ function toEdge(ctx: Ctx, key: string, kept: Kept<unknown>) {
  * was got before is used for a while longer, if anything was.
  */
 export async function cached<T>(ctx: Ctx, key: string, maxAge: number, build: () => Promise<T>): Promise<T> {
+	return (await keep(ctx, key, maxAge, build, false))!;
+}
+
+/**
+ * Like cached, for what a page can do without, like one of many rows: when nothing is kept,
+ * and the visit has got all it may, it's undefined, and the page isn't kept, so the next
+ * visit gets it.
+ */
+export async function cachedIfTime<T>(ctx: Ctx, key: string, maxAge: number, build: () => Promise<T>): Promise<T | undefined> {
+	return keep(ctx, key, maxAge, build, true);
+}
+
+async function keep<T>(ctx: Ctx, key: string, maxAge: number, build: () => Promise<T>, optional: boolean): Promise<T | undefined> {
 	const now = Date.now();
 	let kept = memory.get(key) as Kept<T> | undefined;
 	if (kept === undefined) {
@@ -90,7 +104,11 @@ export async function cached<T>(ctx: Ctx, key: string, maxAge: number, build: ()
 	if (kept !== undefined && (now < kept.until || ctx.refreshes <= 0)) {
 		return kept.value;
 	}
-	if (kept !== undefined) {
+	if (kept === undefined && optional && ctx.refreshes <= 0) {
+		ctx.incomplete = true;
+		return undefined;
+	}
+	if (kept !== undefined || optional) {
 		ctx.refreshes--;
 	}
 	try {

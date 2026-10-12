@@ -37,8 +37,11 @@ export class Budget {
 export interface Ctx {
 	env: Env;
 	budget: Budget;
-	// How many more things that ran out this visit may get again, instead of using what was kept
+	// How many more things that ran out this visit may get again, instead of using what was kept,
+	// or things a page can do without
 	refreshes: number;
+	// Whether the visit left something out, which its page then isn't kept without
+	incomplete: boolean;
 	waitUntil(promise: Promise<unknown>): void;
 	// Where the visit came to, like https://dktv.example, for keys in Cloudflare's cache
 	origin: string;
