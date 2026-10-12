@@ -90,9 +90,11 @@ def test_front_page_without_drs(get, monkeypatch):
 
 def test_front_page_features_drs_programmes(get):
     r = get("/")
-    assert r.text.count('class="hero-slide"') == 3
+    # Like DR's own, which has a dozen or so
+    slides = r.text.count('class="hero-slide"')
+    assert 3 < slides <= 12
     # Bars instead of the titles a second time, named for screen readers
-    assert r.text.count('class="featured-bar"') == 3
+    assert r.text.count('class="featured-bar"') == slides
     assert 'aria-label="' in r.text.split('class="featured-bars"')[1].split("</div>")[0]
     assert 'data-preview="https://' in r.text
     assert "featured-clips" not in r.text

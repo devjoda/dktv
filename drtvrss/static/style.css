@@ -606,12 +606,16 @@ h1, h2, h3 {
 /* Which featured programme is shown, and how far it's got */
 .featured-bars {
     display: flex;
-    gap: 8px;
+    gap: 6px;
+    max-width: min(100%, 640px);
 }
 
+/* Sharing the room, however many there are */
 .featured-bar {
     position: relative;
-    width: 56px;
+    flex: 1 1 0;
+    min-width: 16px;
+    max-width: 56px;
     padding: 12px 0;
     border: 0;
     background: none;
@@ -961,7 +965,8 @@ a:hover .tile-seen,
 .tile-play .icon {
     width: 48px;
     height: 48px;
-    padding: 13px 11px 13px 15px;
+    /* A bit right of the middle, so the triangle looks it: its weight is to the left of its box's middle */
+    padding: 14px 13px 14px 15px;
     border-radius: 50%;
     background: var(--paper);
 }

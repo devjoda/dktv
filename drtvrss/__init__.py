@@ -47,9 +47,9 @@ RECOMMENDED_REFRESH_INTERVAL = 30 * 60
 # How many favourite shows the front page asks about at once
 MAX_FAVORITES = 50
 
-# How many of DR's rows the front page shows, and its featured programmes
+# How many of DR's rows the front page shows, and of its featured programmes, like DR's own
 FRONT_PAGE_ROWS = 8
-FEATURED = 3
+FEATURED = 12
 
 # Far more than a viewer's favourites and progress take up
 MAX_SYNC_SIZE = 2 * 1024 * 1024
