@@ -1,7 +1,9 @@
 from contextlib import suppress
 from datetime import datetime
+from functools import lru_cache
 from typing import Optional
 import asyncio
+import hashlib
 import os
 
 from quart import (
@@ -41,6 +43,21 @@ RECOMMENDED_REFRESH_INTERVAL = 30 * 60
 
 # How many favourite shows the front page asks about at once
 MAX_FAVORITES = 50
+
+
+@lru_cache(maxsize=None)
+def file_version(path: str, modified: int) -> str:
+    with open(path, "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()[:12]
+
+
+@app.template_global()
+def static_url(filename: str) -> str:
+    """The URL of one of our static files, which changes along with the file.
+    Browsers keep static files for 12 hours, so without it, they'd mix new
+    pages with old scripts for a while after every update."""
+    path = os.path.join(app.static_folder, filename)
+    return f"/static/{filename}?v={file_version(path, os.stat(path).st_mtime_ns)}"
 
 
 @app.context_processor

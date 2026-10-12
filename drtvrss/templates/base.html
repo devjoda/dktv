@@ -12,10 +12,10 @@
         {% endblock %}
         <link href="/static/vendor/bootstrap-5.3.3.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH">
         <link href="/static/vendor/schibsted-grotesk-5.3.0-latin.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
-        <link href="/static/style.css" rel="stylesheet">
-        <script src="/static/progress.js"></script>
-        <script src="/static/favorites.js"></script>
-        <script src="/static/ui.js"></script>
+        <link href="{{ static_url('style.css') }}" rel="stylesheet">
+        <script src="{{ static_url('progress.js') }}"></script>
+        <script src="{{ static_url('favorites.js') }}"></script>
+        <script src="{{ static_url('ui.js') }}"></script>
         {% block scripts %}{% endblock %}
     </head>
     <body class="{% block body_class %}{% endblock %}">

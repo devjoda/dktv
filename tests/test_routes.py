@@ -1,5 +1,6 @@
 """Renders every page against the fixtures, to catch template breakage"""
 
+import re
 import xml.etree.ElementTree as ET
 
 from drtvrss import drtv
@@ -36,7 +37,7 @@ def test_show(get):
     # Can be made a favourite
     assert 'class="button button-secondary js-favorite" aria-pressed="false" data-show-id="rejseholdet_503605" data-title="Rejseholdet"' in r.text
     # For showing how far the viewer got with each episode, and what to play
-    assert '<script src="/static/progress.js"></script>' in r.text
+    assert '<script src="/static/progress.js?v=' in r.text
     assert 'data-video-id="503615"' in r.text
     assert 'class="button button-primary js-play" href="/rejseholdet_503605/rejseholdet_503615"' in r.text
     assert '{"id": "503615", "season": "S\\u00e6son 1", "title": "1. episode", "url": "/rejseholdet_503605/rejseholdet_503615"}' in r.text
@@ -236,7 +237,7 @@ def test_players_load_pinned_hls_js_and_player_script(get):
     for path in ["/program/lise-noergaard_-ikke-kun-en-pige_362031", "/live/DR1"]:
         text = get(path).text
         assert '<script src="/static/vendor/hls-1.7.3.min.js" integrity="sha384-' in text
-        assert '<script src="/static/player.js"></script>' in text
+        assert '<script src="/static/player.js?v=' in text
 
 
 def test_libraries_are_served_from_here(get):
@@ -263,14 +264,14 @@ def test_dr_is_not_told_where_it_is_used_from(get):
 def test_index_can_continue_watching(get):
     r = get("/")
     assert '<section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>' in r.text
-    assert '<script src="/static/progress.js"></script>' in r.text
-    assert '<script src="/static/ui.js"></script>' in r.text
+    assert '<script src="/static/progress.js?v=' in r.text
+    assert '<script src="/static/ui.js?v=' in r.text
 
 
 def test_index_can_list_favorites(get):
     r = get("/")
     assert '<section class="shelf" id="favorites" aria-labelledby="favorites-title" hidden>' in r.text
-    assert '<script src="/static/favorites.js"></script>' in r.text
+    assert '<script src="/static/favorites.js?v=' in r.text
     assert '<div id="toast" class="toast-message" role="status" aria-live="polite"></div>' in r.text
 
 
@@ -326,7 +327,7 @@ def test_pages_are_dark(get):
     for path in ["/", "/rejseholdet_503605/", "/search/", "/live/DR1"]:
         text = get(path).text
         assert '<html lang="da" data-bs-theme="dark">' in text
-        assert '<link href="/static/style.css" rel="stylesheet">' in text
+        assert '<link href="/static/style.css?v=' in text
 
 
 def test_search_results_are_labelled_by_kind(get):
@@ -337,3 +338,19 @@ def test_search_results_are_labelled_by_kind(get):
     # Films and episodes can be marked as seen, series can't from here
     assert 'data-video-id="362031"' in r.text
     assert 'data-video-id="540736"' not in r.text
+
+
+def test_our_static_files_are_versioned(get, tmp_path, monkeypatch):
+    """So browsers, which keep them for a while, get the new ones right after an update"""
+    from drtvrss import app, static_url
+
+    text = get("/").text
+    url = re.search(r'src="(/static/ui\.js\?v=\w+)"', text)[1]
+    assert get(url).status_code == 200
+
+    monkeypatch.setattr(app, "static_folder", str(tmp_path))
+    (tmp_path / "ui.js").write_text("// old")
+    old = static_url("ui.js")
+    (tmp_path / "ui.js").write_text("// new, and longer")
+    assert static_url("ui.js") != old
+    assert static_url("ui.js").startswith("/static/ui.js?v=")
