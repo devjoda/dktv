@@ -921,21 +921,21 @@ a:focus-visible .tile-media {
     color: var(--paper);
 }
 
-/* What the viewer has seen is dimmed, and says so */
+/* What the viewer has seen is dimmed, and says so, like the other badges */
 .tile-seen {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 10px;
+    right: 10px;
     z-index: 1;
-    padding: 4px 10px;
+    padding: 2px 8px;
     border-radius: 4px;
-    background: rgba(15, 16, 19, .72);
+    background: rgba(15, 16, 19, .78);
     color: var(--paper);
-    font-size: .8125rem;
-    font-weight: 800;
-    letter-spacing: .12em;
+    font-size: .6875rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: .06em;
     text-transform: uppercase;
-    transform: translate(-50%, -50%);
 }
 
 .is-seen .tile-media img {
@@ -945,12 +945,6 @@ a:focus-visible .tile-media {
 .is-seen a:hover .tile-media img,
 a.is-seen:hover .tile-media img {
     filter: brightness(.7) saturate(.85);
-}
-
-/* The play button takes the seen mark's place on hover */
-a:hover .tile-seen,
-.is-seen a:hover .tile-seen {
-    opacity: 0;
 }
 
 .tile-duration {
@@ -963,7 +957,6 @@ a:hover .tile-seen,
     color: var(--paper);
     font-size: .75rem;
     font-weight: 600;
-    font-variant-numeric: tabular-nums;
 }
 
 .tile-play {
