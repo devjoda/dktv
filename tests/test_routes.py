@@ -64,9 +64,6 @@ def test_recommended_shows_are_listed_on_index(get, monkeypatch):
     assert "Anbefalede serier" in r.text
     assert 'href="/rejseholdet_503605/"' in r.text
     assert "Width=640&amp;Height=360" in r.text
-    # The first one is featured at the top, with a button that plays it
-    assert '<h2 class="hero-title" id="featured-title">Rejseholdet</h2>' in r.text
-    assert 'class="button button-primary js-play"' in r.text
     # For marking how many of its episodes the viewer has seen
     assert 'data-episode-ids="503615 ' in r.text
 
@@ -77,7 +74,73 @@ def test_other_visitors_shows_are_not_listed_on_index(get):
     r = get("/")
     assert 'href="/rejseholdet_503605/"' not in r.text
     assert "Anbefalede serier" not in r.text
+
+
+def test_front_page_without_drs(get, monkeypatch):
+    async def get_page(path, **kwargs):
+        return None
+
+    monkeypatch.setattr("drtvrss.discover.get_page", get_page)
+    r = get("/")
+    assert r.status_code == 200
     assert "DR's serier, film og direkte TV" in r.text
+    assert 'action="/search/"' in r.text
+
+
+def test_front_page_features_drs_programmes(get):
+    r = get("/")
+    assert r.text.count('class="hero-slide"') == 3
+    assert r.text.count('class="featured-tab"') == 3
+    assert 'data-preview="https://' in r.text
+    # It never moves on by itself, and the clips can be stopped
+    assert '<button type="button" class="featured-clips js-featured-clips" hidden></button>' in r.text
+    # DR's rows, with links to the pages here
+    assert '<h2 class="shelf-title" id="row-1">' in r.text
+    featured = r.text.split('id="featured-1"')[1].split('id="featured-2"')[0]
+    assert '<a class="button button-primary" href="/' in featured
+
+
+def test_header_has_sections_instead_of_a_name(get):
+    r = get("/")
+    nav = r.text.split('<nav class="site-nav"')[1].split("</nav>")[0]
+    for title in ["Forside", "Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]:
+        assert f"{title}</a>" in nav
+    assert '<a href="/" class="nav-item" aria-current="page">Forside</a>' in nav
+    # Only in the window's title
+    assert r.text.count("Public Service") == 1
+    assert "<title>Public Service</title>" in r.text
+
+
+def test_categories(get):
+    r = get("/kategorier/")
+    assert r.status_code == 200
+    assert '<a class="category" href="/kategorier/fiktionsserier/">' in r.text
+    assert '<span class="category-title">Dokumentar</span>' in r.text
+    # Search does A to Å better
+    assert "a-aa" not in r.text
+
+
+def test_category(get):
+    r = get("/kategorier/fiktionsserier/")
+    assert r.status_code == 200
+    assert "<h1>Serier</h1>" in r.text
+    assert '<a href="/kategorier/fiktionsserier/" class="nav-item" aria-current="page">Serier</a>' in r.text
+    assert '<h2 class="shelf-title" id="row-1">' in r.text
+    assert get("/kategorier/findes-ikke/").status_code == 404
+
+
+def test_live_channels(get):
+    r = get("/live/")
+    assert r.status_code == 200
+    assert '<a class="tile-link" href="/live/DR1" style="--channel: #FF001E;">' in r.text
+    assert '<a href="/live/" class="nav-item" aria-current="page"><span class="live-dot"></span>Direkte</a>' in r.text
+
+
+def test_favorites_page(get):
+    r = get("/favoritter/")
+    assert r.status_code == 200
+    assert '<section class="results" id="favorites" aria-labelledby="favorites-title" hidden>' in r.text
+    assert '<section class="results" id="continue-watching" aria-labelledby="continue-title" hidden>' in r.text
 
 
 def test_unknown_show(get):
@@ -151,9 +214,9 @@ def test_live_channel(get):
 
 def test_current_live_channel_is_marked(get):
     r = get("/live/DR1")
-    assert '<a href="/live/DR1" class="channel" aria-current="page"><span class="live-dot"></span>DR1</a>' in r.text
-    assert r.text.count('aria-current="page"') == 1
-    assert 'aria-current' not in get("/").text
+    switcher = r.text.split('<nav class="channel-switcher"')[1].split("</nav>")[0]
+    assert '<a href="/live/DR1" class="nav-item" aria-current="page"><span class="live-dot"></span>DR1</a>' in switcher
+    assert switcher.count("aria-current") == 1
 
 
 def test_pages_load_no_unused_scripts(get):

@@ -17,7 +17,7 @@ from quart import (
     send_from_directory,
 )
 
-from . import drtv
+from . import discover, drtv
 from . import sync as sync_store
 from .drtv import (
     DRUnavailable,
@@ -47,6 +47,10 @@ RECOMMENDED_REFRESH_INTERVAL = 30 * 60
 
 # How many favourite shows the front page asks about at once
 MAX_FAVORITES = 50
+
+# How many of DR's rows the front page shows, and its featured programmes
+FRONT_PAGE_ROWS = 8
+FEATURED = 3
 
 # Far more than a viewer's favourites and progress take up
 MAX_SYNC_SIZE = 2 * 1024 * 1024
@@ -82,8 +86,9 @@ def birthday() -> Optional[int]:
 
 
 async def keep_fresh(recommended_shows: list[str]):
-    """Fetches the recommended shows, and keeps fetching them regularly"""
+    """Fetches the recommended shows and DR's front page, and keeps fetching them regularly"""
     while True:
+        await discover.get_page("/", max_rows=FRONT_PAGE_ROWS, refresh=True)
         for show in recommended_shows:
             print("Fetching recommended show", show)
             try:
@@ -115,15 +120,68 @@ async def shutdown():
 
 @app.route("/")
 async def index():
+    page = await discover.get_page("/", max_rows=FRONT_PAGE_ROWS)
     return await render_template(
         "index.html",
         # Only the ones fetched already, so the front page never waits for DR
         shows=[s for s in map(get_cached_show, recommended_shows) if s is not None],
+        page=page,
+        featured=page.featured[:FEATURED] if page else [],
         complaints_email=complaints_email,
         SERVICE_NAME=SERVICE_NAME,
         birthday=birthday(),
         channels=await get_channels(),
         schedules=await get_schedules(),
+    )
+
+
+@app.route("/kategorier/")
+async def categories():
+    return await render_template(
+        "categories.html",
+        categories=await discover.get_categories(),
+        SERVICE_NAME=SERVICE_NAME,
+        birthday=birthday(),
+        channels=await get_channels(),
+    )
+
+
+@app.route("/kategorier/<slug>/")
+async def category(slug):
+    found = next((c for c in await discover.get_categories() if c.url == f"/kategorier/{slug}/"), None)
+    if found is None:
+        abort(404)
+    page = await discover.get_page(f"/kategorier/{slug}", max_rows=12)
+    if page is None:
+        raise drtv.DRUnavailable(f"No page for the category {slug}")
+    return await render_template(
+        "category.html",
+        category=found,
+        page=page,
+        SERVICE_NAME=SERVICE_NAME,
+        birthday=birthday(),
+        channels=await get_channels(),
+    )
+
+
+@app.route("/live/")
+async def live_channels():
+    return await render_template(
+        "live_index.html",
+        SERVICE_NAME=SERVICE_NAME,
+        birthday=birthday(),
+        channels=await get_channels(),
+        schedules=await get_schedules(),
+    )
+
+
+@app.route("/favoritter/")
+async def favorites_page():
+    return await render_template(
+        "favorites.html",
+        SERVICE_NAME=SERVICE_NAME,
+        birthday=birthday(),
+        channels=await get_channels(),
     )
 
 

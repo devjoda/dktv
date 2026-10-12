@@ -1,0 +1,374 @@
+{
+ "id": "376779",
+ "customFields": {
+  "PathIdSegment": "drtv-kategorier-_-forside_376779"
+ },
+ "itemTypes": [
+  "link"
+ ],
+ "description": "",
+ "title": "Kategorier",
+ "shortDescription": "",
+ "tagline": "",
+ "themes": [],
+ "path": "/liste/drtv-kategorier-_-forside_376779",
+ "items": [
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376581'&Width=1024&Height=1024&ImageId='45255054'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376581'&Width=2533&Height=1424&ImageId='45255056'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376581'&Width=2533&Height=1424&ImageId='45255058'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376581'&Width=1900&Height=1425&ImageId='45365520'"
+   },
+   "offers": [],
+   "scopes": [
+    "376581"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-serier_376581"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376581",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Fiktionsserier",
+   "sports": [],
+   "themes": [],
+   "title": "Serier",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/fiktionsserier"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376582'&Width=1024&Height=1024&ImageId='45255060'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376582'&Width=2533&Height=1424&ImageId='45255062'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376582'&Width=2533&Height=1424&ImageId='45255064'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376582'&Width=1900&Height=1425&ImageId='45365522'"
+   },
+   "offers": [],
+   "scopes": [
+    "376582"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-film_376582"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376582",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Film",
+   "sports": [],
+   "themes": [],
+   "title": "Film",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/film"
+  },
+  {
+   "images": {
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376580'&Width=2533&Height=1424&ImageId='45255050'",
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376580'&Width=1024&Height=1024&ImageId='45255048'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376580'&Width=1900&Height=1425&ImageId='45365518'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376580'&Width=2533&Height=1424&ImageId='45255052'"
+   },
+   "offers": [],
+   "scopes": [
+    "376580"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-dokumentar_376580"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376580",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Dokumentar",
+   "sports": [],
+   "themes": [],
+   "title": "Dokumentar",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/dokumentar"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376583'&Width=1024&Height=1024&ImageId='45255066'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376583'&Width=2533&Height=1424&ImageId='45255068'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376583'&Width=2533&Height=1424&ImageId='45255070'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376583'&Width=1900&Height=1425&ImageId='45365524'"
+   },
+   "offers": [],
+   "scopes": [
+    "376583"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-nyheder_376583"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376583",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Nyheder",
+   "sports": [],
+   "themes": [],
+   "title": "Nyheder",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/nyhederogdebat"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376589'&Width=1024&Height=1024&ImageId='45255103'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376589'&Width=2533&Height=1424&ImageId='45255105'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376589'&Width=2533&Height=1424&ImageId='45255107'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376589'&Width=1900&Height=1425&ImageId='45365530'"
+   },
+   "offers": [],
+   "scopes": [
+    "376589"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-krimi_376589"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376589",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Krimi",
+   "sports": [],
+   "themes": [],
+   "title": "Krimi",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/krimi"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376584'&Width=1024&Height=1024&ImageId='45255073'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376584'&Width=2533&Height=1424&ImageId='45255075'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376584'&Width=2533&Height=1424&ImageId='45255077'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376584'&Width=1900&Height=1425&ImageId='45365528'"
+   },
+   "offers": [],
+   "scopes": [
+    "376584"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-livsstil_376584"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376584",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Livsstil",
+   "sports": [],
+   "themes": [],
+   "title": "Livsstil",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/livsstil"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376594'&Width=1024&Height=1024&ImageId='45255135'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376594'&Width=2533&Height=1424&ImageId='45255137'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376594'&Width=2533&Height=1424&ImageId='45255139'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376594'&Width=1900&Height=1425&ImageId='45365542'"
+   },
+   "offers": [],
+   "scopes": [
+    "376594"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-sport_376594"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376594",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Sport",
+   "sports": [],
+   "themes": [],
+   "title": "Sport",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/sport"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376590'&Width=1024&Height=1024&ImageId='45255109'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376590'&Width=2533&Height=1424&ImageId='45255111'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376590'&Width=2533&Height=1424&ImageId='45255113'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376590'&Width=1900&Height=1425&ImageId='45365540'"
+   },
+   "offers": [],
+   "scopes": [
+    "376590"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-historie_376590"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376590",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Historie",
+   "sports": [],
+   "themes": [],
+   "title": "Historie",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/historie"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376585'&Width=1024&Height=1024&ImageId='45255079'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376585'&Width=2533&Height=1424&ImageId='45255081'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376585'&Width=2533&Height=1424&ImageId='45255083'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376585'&Width=1900&Height=1425&ImageId='45365532'"
+   },
+   "offers": [],
+   "scopes": [
+    "376585"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-kultur_376585"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376585",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Kultur",
+   "sports": [],
+   "themes": [],
+   "title": "Kultur",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/kultur"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376587'&Width=1024&Height=1024&ImageId='65742000'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376587'&Width=2533&Height=1424&ImageId='65742021'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376587'&Width=2533&Height=1424&ImageId='65742017'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376587'&Width=1900&Height=1425&ImageId='65742029'"
+   },
+   "offers": [],
+   "scopes": [
+    "376587"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-underholdning-og-satire_376587"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376587",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Underholdning",
+   "sports": [],
+   "themes": [],
+   "title": "Underholdning og satire",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/underholdning"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376588'&Width=1425&Height=1425&ImageId='45255097'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376588'&Width=2533&Height=1424&ImageId='45255099'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376588'&Width=2533&Height=1424&ImageId='45255101'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376588'&Width=1900&Height=1425&ImageId='45365538'"
+   },
+   "offers": [],
+   "scopes": [
+    "376588"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-natur_376588"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376588",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | Natur & Dyr",
+   "sports": [],
+   "themes": [],
+   "title": "Natur",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/natur"
+  },
+  {
+   "images": {
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376593'&Width=1024&Height=1024&ImageId='45255129'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376593'&Width=2533&Height=1424&ImageId='45255131'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376593'&Width=2533&Height=1424&ImageId='45255133'",
+    "block": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='376593'&Width=1900&Height=1425&ImageId='45365544'"
+   },
+   "offers": [],
+   "scopes": [
+    "376593"
+   ],
+   "categories": [],
+   "channelPath": "",
+   "customFields": {
+    "PathIdSegment": "drtv-kategori-_-a-_-aa_376593"
+   },
+   "customId": "",
+   "genres": [],
+   "id": "376593",
+   "type": "link",
+   "keywords": [],
+   "shortDescription": "LinkItem",
+   "contextualTitle": "DRTV Kategori | A - Å",
+   "sports": [],
+   "themes": [],
+   "title": "A - Å",
+   "vodItemWatchPath": "",
+   "path": "/kategorier/a-aa"
+  }
+ ],
+ "size": 12,
+ "paging": {
+  "total": 1,
+  "page": 1,
+  "size": 50,
+  "options": {
+   "pageSize": 50
+  }
+ }
+}

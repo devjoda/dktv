@@ -17,6 +17,11 @@
     <div>
         <div class="badges"><span class="tag tag-live">Direkte</span></div>
         <h1 class="watch-title">{{ channel.title }}</h1>
+        <nav class="channel-switcher" aria-label="Kanaler">
+            {% for slug, other in channels.items() %}
+            <a href="/live/{{ slug }}" class="nav-item"{% if slug == current_channel %} aria-current="page"{% endif %}><span class="live-dot"></span>{{ other.title }}</a>
+            {% endfor %}
+        </nav>
         {% if channel.subtitles_url %}
         <div class="actions">
             <button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false">{{ icon("captions") }} Undertekster</button>

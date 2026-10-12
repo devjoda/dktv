@@ -1,0 +1,4904 @@
+{
+ "id": "257413",
+ "isStatic": false,
+ "isSystemPage": false,
+ "metadata": {
+  "description": "Vi har samlet alle DR's fiktionsserier til dig her. Find både udenlandske og danske serier. Se TV-serier online her",
+  "keywords": []
+ },
+ "key": "",
+ "path": "/kategorier/fiktionsserier",
+ "template": "Category",
+ "themes": [],
+ "title": "TV-serier på DR - Se udenlandske og danske serier ",
+ "entries": [
+  {
+   "customFields": {
+    "imageText": "Serier",
+    "textColor": {
+     "color": "#000000",
+     "opacity": 100
+    },
+    "textHorizontalAlignment": "left",
+    "textVerticalAlignment": "middle",
+    "imageWidth": "fullWidth",
+    "widthPercentage": null,
+    "imageHorizontalAlignment": "center",
+    "link": "",
+    "altText": ""
+   },
+   "type": "ImageEntry",
+   "id": "a94fad4",
+   "template": "H9",
+   "title": "",
+   "images": {
+    "custom": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Page'&EntityId='257413'&Width=2100&Height=210&ImageId='45276174'"
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "backgroundColor": {
+     "color": "",
+     "opacity": 100
+    },
+    "textColor": {
+     "color": "",
+     "opacity": 100
+    },
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "2d1342e",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "TX1",
+   "title": "",
+   "list": {
+    "id": "359688",
+    "customFields": {
+     "PathIdSegment": "text-link-_-fiktionsserier-_-a-_-aa_359688"
+    },
+    "itemTypes": [
+     "link"
+    ],
+    "description": "",
+    "title": "Text link | Fiktionsserier | A - Å",
+    "shortDescription": "",
+    "tagline": "",
+    "themes": [],
+    "path": "/liste/text-link-_-fiktionsserier-_-a-_-aa_359688",
+    "items": [
+     {
+      "offers": [],
+      "scopes": [
+       "359687"
+      ],
+      "categories": [],
+      "channelPath": "",
+      "customFields": {
+       "PathIdSegment": "text-link-_-fiktionsserier-_-a-_-aa_359687"
+      },
+      "customId": "",
+      "genres": [],
+      "id": "359687",
+      "type": "link",
+      "keywords": [],
+      "shortDescription": "LinkItem",
+      "contextualTitle": "Text link | Fiktionsserier | A - Å",
+      "sports": [],
+      "themes": [],
+      "title": "A - Å",
+      "vodItemWatchPath": "",
+      "path": "/kategorier/fiktionsserier_a-aa"
+     },
+     {
+      "offers": [],
+      "scopes": [
+       "387121"
+      ],
+      "categories": [],
+      "channelPath": "",
+      "customFields": {
+       "PathIdSegment": "text-link-_-danske-serier_387121"
+      },
+      "customId": "",
+      "genres": [],
+      "id": "387121",
+      "type": "link",
+      "keywords": [],
+      "shortDescription": "LinkItem",
+      "contextualTitle": "Text link - Danske",
+      "sports": [],
+      "themes": [],
+      "title": "Danske",
+      "vodItemWatchPath": "",
+      "path": "/kategorier/fiktionsserier/dansk"
+     },
+     {
+      "offers": [],
+      "scopes": [
+       "387122"
+      ],
+      "categories": [],
+      "channelPath": "",
+      "customFields": {
+       "PathIdSegment": "text-link-_-krimiserier_387122"
+      },
+      "customId": "",
+      "genres": [],
+      "id": "387122",
+      "type": "link",
+      "keywords": [],
+      "shortDescription": "LinkItem",
+      "contextualTitle": "Text link - Krimiserier",
+      "sports": [],
+      "themes": [],
+      "title": "Krimi",
+      "vodItemWatchPath": "",
+      "path": "/kategorier/krimi/krimiserier"
+     },
+     {
+      "offers": [],
+      "scopes": [
+       "387125"
+      ],
+      "categories": [],
+      "channelPath": "",
+      "customFields": {
+       "PathIdSegment": "text-link-_-dramatiske-serier_387125"
+      },
+      "customId": "",
+      "genres": [],
+      "id": "387125",
+      "type": "link",
+      "keywords": [],
+      "shortDescription": "LinkItem",
+      "contextualTitle": "Text link - Dramatiske serier",
+      "sports": [],
+      "themes": [],
+      "title": "Drama",
+      "vodItemWatchPath": "",
+      "path": "/kategorier/fiktionsserier/dramatiskeserier"
+     },
+     {
+      "offers": [],
+      "scopes": [
+       "387123"
+      ],
+      "categories": [],
+      "channelPath": "",
+      "customFields": {
+       "PathIdSegment": "text-link-_-historiske-serier_387123"
+      },
+      "customId": "",
+      "genres": [],
+      "id": "387123",
+      "type": "link",
+      "keywords": [],
+      "shortDescription": "LinkItem",
+      "contextualTitle": "Text link - Historiske serier",
+      "sports": [],
+      "themes": [],
+      "title": "Historiske",
+      "vodItemWatchPath": "",
+      "path": "/kategorier/fiktionsserier/historiskeserier"
+     },
+     {
+      "offers": [],
+      "scopes": [
+       "387124"
+      ],
+      "categories": [],
+      "channelPath": "",
+      "customFields": {
+       "PathIdSegment": "text-link-_-humoristiske-serier_387124"
+      },
+      "customId": "",
+      "genres": [],
+      "id": "387124",
+      "type": "link",
+      "keywords": [],
+      "shortDescription": "LinkItem",
+      "contextualTitle": "Text link - Humoristiske serier",
+      "sports": [],
+      "themes": [],
+      "title": "Humor",
+      "vodItemWatchPath": "",
+      "path": "/kategorier/fiktionsserier/humoristiskeserier"
+     },
+     {
+      "offers": [],
+      "scopes": [
+       "387126"
+      ],
+      "categories": [],
+      "channelPath": "",
+      "customFields": {
+       "PathIdSegment": "text-link-_-nervepirrende-serier_387126"
+      },
+      "customId": "",
+      "genres": [],
+      "id": "387126",
+      "type": "link",
+      "keywords": [],
+      "shortDescription": "LinkItem",
+      "contextualTitle": "Text link - Nervepirrende serier",
+      "sports": [],
+      "themes": [],
+      "title": "Nervepirrende",
+      "vodItemWatchPath": "",
+      "path": "/kategorier/fiktionsserier/nervepirrendeserier"
+     },
+     {
+      "offers": [],
+      "scopes": [
+       "590204"
+      ],
+      "categories": [],
+      "channelPath": "",
+      "customFields": {
+       "PathIdSegment": "text-link-_-fiktionsserier-_-udenlandske_590204"
+      },
+      "customId": "",
+      "genres": [],
+      "id": "590204",
+      "type": "link",
+      "keywords": [],
+      "shortDescription": "LinkItem",
+      "contextualTitle": "Text link | Fiktionsserier | Udenlandske",
+      "sports": [],
+      "themes": [],
+      "title": "Udenlandske",
+      "vodItemWatchPath": "",
+      "path": "/kategorier/fiktionsserier/udenlandsk"
+     },
+     {
+      "offers": [],
+      "scopes": [
+       "441970"
+      ],
+      "categories": [],
+      "channelPath": "",
+      "customFields": {
+       "PathIdSegment": "text-link-_-fiktionsserier-_-gensyn_441970"
+      },
+      "customId": "",
+      "genres": [],
+      "id": "441970",
+      "type": "link",
+      "keywords": [],
+      "shortDescription": "LinkItem",
+      "contextualTitle": "Text link | Fiktionsserier | A - Å",
+      "sports": [],
+      "themes": [],
+      "title": "Gensyn",
+      "vodItemWatchPath": "",
+      "path": "/gensyn/serier"
+     }
+    ],
+    "size": 9,
+    "paging": {
+     "total": 1,
+     "page": 1,
+     "size": 24,
+     "options": {
+      "pageSize": 24
+     }
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "177aa22",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Krimiserier",
+   "list": {
+    "id": "504464",
+    "customFields": {
+     "PathIdSegment": "serier-_-krimi_504464"
+    },
+    "itemTypes": [
+     "show"
+    ],
+    "description": "",
+    "title": "Serier | Krimi",
+    "shortDescription": "",
+    "tagline": "",
+    "themes": [],
+    "path": "/liste/serier-_-krimi_504464",
+    "items": [
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='628146'&Width=1920&Height=1080&ImageId='82026003'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='628146'&Width=1920&Height=1080&ImageId='82026007'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='628146'&Width=1440&Height=2160&ImageId='82026005'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "628146"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "628146"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "drtv",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DRTV",
+       "BrandingChannelShort": "DRT",
+       "BrandingChannelDisplayName": "DRTV",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-11",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Krimiredaktøren",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DRTV | 2 SÆSONER",
+       "PathIdSegment": "krimiredaktoeren_628146",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:3271688765000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "628146",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_intellektuel/tankevækkende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Redaktøren Susan Ryeland ser frem til endnu en bestseller fra krimiforfatteren Alan Conway. Men da han pludseligt dør og efterlader sig et ufærdigt manuskript, bliver Susan mistænksom. Var det mord?",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Krimiredaktøren",
+      "vodItemWatchPath": "",
+      "path": "/serie/krimiredaktoeren_628146"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603943'&Width=3000&Height=1688&ImageId='81200079'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603943'&Width=3000&Height=1688&ImageId='81200067'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603943'&Width=1440&Height=2160&ImageId='81200069'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "603943"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "603943"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Cooper & Fry",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "cooper-and-fry_603943",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640665546363",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "603943",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_autentisk/realistisk",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Kriminalbetjentene Ben Cooper og Diane Fry efterforsker en serie gådefulde mord i den britiske krimiserie 'Cooper & Fry', der bygger på romaner af Stephen Booth.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Cooper & Fry",
+      "vodItemWatchPath": "",
+      "path": "/serie/cooper-and-fry_603943"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='501406'&Width=3000&Height=1688&ImageId='81287931'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='501406'&Width=3000&Height=1688&ImageId='81287935'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='501406'&Width=1440&Height=2160&ImageId='81287933'"
+      },
+      "availableSeasonCount": 10,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "501406"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "501406"
+      ],
+      "badge": "Alle sæsoner",
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Shetland",
+       "ExtraDetails": "Fiktionsserie | 10 SÆSONER",
+       "TitleExtraDetails": "DR1 | 10 SÆSONER",
+       "ShortVideoUrl": "https://drod24f.akamaized.net/all/clear/none/27/6a0c46bcbe082410a8ce8d27/6a0c46bb93c3750ef452a550/stream_fmp4/master_manifest.m3u8",
+       "PathIdSegment": "shetland_501406",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:1906423920000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "501406",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "De smukke, forblæste Shetlandsøer er scene for krimiserien 'Shetland', der bygger på Ann Cleeves' romaner.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "tagline": "Se de ni første sæsoner af den populære og anmelderroste krimi",
+      "themes": [],
+      "title": "Shetland",
+      "vodItemWatchPath": "",
+      "path": "/serie/shetland_501406"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='601182'&Width=1920&Height=1080&ImageId='82077465'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='601182'&Width=1920&Height=1080&ImageId='82077469'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='601182'&Width=1440&Height=2160&ImageId='82077474'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "601182"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "601182"
+      ],
+      "badge": "Ny sæson",
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Ludwig - Krydsordsdetektiven",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "ludwig-_-krydsordsdetektiven_601182",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6004875043000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "601182",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_sjovt",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Han er skrap til gåder, men kan han opklare mordsager? Komikeren David Mitchell spiller kejtet krydsords-mager, der påtager sig sin tvilling James' identitet som drabsefterforsker, da James forsvinder.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Ludwig - Krydsordsdetektiven",
+      "vodItemWatchPath": "",
+      "path": "/serie/ludwig-_-krydsordsdetektiven_601182"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='609109'&Width=1920&Height=1080&ImageId='79736058'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='609109'&Width=1920&Height=1080&ImageId='79736062'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='609109'&Width=1440&Height=2160&ImageId='79736060'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "609109"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "609109"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Uforglemt",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "uforglemt_609109",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:1661389098000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "609109",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Politifolkene Sunny Khan og Cassie Stuart - fra femte sæson erstattet af Jess James - opklarer gamle drabssager i den stærke britiske krimiserie 'Uforglemt'.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Uforglemt",
+      "vodItemWatchPath": "",
+      "path": "/serie/uforglemt_609109"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='616129'&Width=1920&Height=1080&ImageId='80653919'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='616129'&Width=1920&Height=1080&ImageId='80653924'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='616129'&Width=1440&Height=2160&ImageId='80653921'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "616129"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "616129"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Kriminalinspektør Banks",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "kriminalinspektoer-banks_616129",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:754513016000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "616129",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Den engelske krimiserie 'Kriminalinspektør Banks' bygger på romaner af den populære, prisbelønnede krimiforfatter Peter Robinson.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Kriminalinspektør Banks",
+      "vodItemWatchPath": "",
+      "path": "/serie/kriminalinspektoer-banks_616129"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='523780'&Width=3000&Height=1688&ImageId='80108847'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='523780'&Width=1440&Height=2160&ImageId='80108852'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='523780'&Width=3000&Height=1688&ImageId='80108849'"
+      },
+      "availableSeasonCount": 4,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "523780"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "523780"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Beck",
+       "ExtraDetails": "Fiktionsserie | 4 SÆSONER",
+       "TitleExtraDetails": "DR1 | 4 SÆSONER",
+       "PathIdSegment": "beck_523780",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:758623567000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "523780",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_autentisk/realistisk",
+       "mood_rå",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Peter Haber spiller den sympatiske politimand Martin Beck i serien, der bygger på det verdensberømte forfatterpar Maj Sjöwall og Per Wahlöös romanunivers.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Beck",
+      "vodItemWatchPath": "",
+      "path": "/serie/beck_523780"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='507006'&Width=1920&Height=1080&ImageId='75159497'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='507006'&Width=1440&Height=2160&ImageId='75159499'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='507006'&Width=1920&Height=1080&ImageId='75159501'"
+      },
+      "availableSeasonCount": 16,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "507006"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "507006"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-11",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Kriminalkommissær Barnaby",
+       "ExtraDetails": "Fiktionsserie | 16 SÆSONER",
+       "TitleExtraDetails": "DR1 | 16 SÆSONER",
+       "PathIdSegment": "kriminalkommissaer-barnaby_507006",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:756291104000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "507006",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_feel good/hyggelig",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Idylliske landsbyer - og farverige mord. Kriminalkommissær Barnaby opklarer forbrydelser i det smukke Sydengland.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Kriminalkommissær Barnaby",
+      "vodItemWatchPath": "",
+      "path": "/serie/kriminalkommissaer-barnaby_507006"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='508809'&Width=1920&Height=1080&ImageId='71004783'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='508809'&Width=1440&Height=2160&ImageId='71004787'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='508809'&Width=1920&Height=1080&ImageId='71004800'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "508809"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "508809"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Den, der slap væk",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "den-der-slap-vaek_508809",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6143768179000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "508809",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_følelsesladet",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Politifolkene - og ekskæresterne - Ffion Lloyd og Rick Sheldon opklarer forbrydelser i en lille walisisk by.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Den, der slap væk",
+      "vodItemWatchPath": "",
+      "path": "/serie/den-der-slap-vaek_508809"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='618212'&Width=1920&Height=1080&ImageId='81606812'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='618212'&Width=1440&Height=2160&ImageId='81606814'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='618212'&Width=1920&Height=1080&ImageId='81606816'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "618212"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "618212"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "drtv",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DRTV",
+       "BrandingChannelShort": "DRT",
+       "BrandingChannelDisplayName": "DRTV",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "2 døgn",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DRTV | 2 SÆSONER",
+       "ShortVideoUrl": "https://drod24b.akamaized.net/all/clear/none/97/6aa9287f6194620001f87097/6aa92879d14f160001889852/stream_fmp4/master_manifest.m3u8",
+       "PathIdSegment": "2-doegn_618212",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6641189596801",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "618212",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "mood_rå",
+       "culturalorigin_dansk"
+      ],
+      "shortDescription": "De tvinges ind i den kriminelle underverden. Hvor langt er de parate til gå for at overleve? Dansk ungdomsdramaserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "tagline": "Dansk thriller | Hvor langt vil de gå for at overleve? ",
+      "themes": [],
+      "title": "2 døgn",
+      "vodItemWatchPath": "",
+      "path": "/serie/2-doegn_618212"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='527142'&Width=3000&Height=1688&ImageId='80947553'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='527142'&Width=1440&Height=2160&ImageId='80947571'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='527142'&Width=3000&Height=1688&ImageId='80947589'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "527142"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "527142"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Sans for mord",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "sans-for-mord_527142",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6400040896000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "527142",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_følelsesladet",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Patience har autisme. Hun har svært ved at navigere i sin omverden. Men politiet beder om hendes hjælp, viser den unge kvinde sig at være en fremragende detektiv.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Sans for mord",
+      "vodItemWatchPath": "",
+      "path": "/serie/sans-for-mord_527142"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='563679'&Width=1920&Height=1080&ImageId='81107663'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='563679'&Width=1920&Height=1080&ImageId='81107667'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='563679'&Width=1440&Height=2160&ImageId='81107665'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "563679"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "563679"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Drabsspecialist Ellis",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "drabsspecialist-ellis_563679",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6608212534000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "563679",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Vicekriminalkommissær Ellis er omrejsende efterforsker. I en række nordengelske småbyer opklarer hun drabssager, som det lokale politi ikke kan få hul på. Britisk krimiserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Drabsspecialist Ellis",
+      "vodItemWatchPath": "",
+      "path": "/serie/drabsspecialist-ellis_563679"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='602109'&Width=1920&Height=1080&ImageId='79863369'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='602109'&Width=1920&Height=1080&ImageId='79863387'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='602109'&Width=1440&Height=2160&ImageId='79863373'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "602109"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "602109"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "The Dark",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "the-dark_602109",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640973303082",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "602109",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_mørk/uhyggelig",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "En ung mand findes myrdet på den øde skotske hede. En brutal og grusom sag venter kriminalinspektør Monica Kennedy. Britisk krimiserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "The Dark",
+      "vodItemWatchPath": "",
+      "path": "/serie/the-dark_602109"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='512283'&Width=3000&Height=1688&ImageId='80765248'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='512283'&Width=1440&Height=2160&ImageId='80765243'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='512283'&Width=3000&Height=1688&ImageId='80765250'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "512283"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "512283"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Bergerac",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "bergerac_512283",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6143744216000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "512283",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_autentisk/realistisk",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Nyindspilning af den klassiske britiske krimiserie om politimanden Jim Bergerac, der opklarer forbrydelser på kanaløen Jersey.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Bergerac",
+      "vodItemWatchPath": "",
+      "path": "/serie/bergerac_512283"
+     },
+     {
+      "images": {
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617585'&Width=1440&Height=2160&ImageId='80793625'",
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617585'&Width=1920&Height=1080&ImageId='80793623'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617585'&Width=1920&Height=1080&ImageId='80793627'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "617585"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "617585"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Maria Wern",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "maria-wern_617585",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:754512168000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "617585",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Maria Wern er enlig mor til to og vicekommissær på den svenske ø Gotland. Og så er hun hovedperson i den svenske krimserie 'Maria Wern', der bygger på romaner af Anna Jansson.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Maria Wern",
+      "vodItemWatchPath": "",
+      "path": "/serie/maria-wern_617585"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='345322'&Width=1920&Height=1080&ImageId='61268270'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='345322'&Width=1920&Height=1080&ImageId='61268284'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='345322'&Width=1440&Height=2160&ImageId='61268273'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "345322"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "345322"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Den tynde blå linje",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "den-tynde-blaa-linje_345322",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:2529043999000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "345322",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_autentisk/realistisk",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Deres arbejdsplads er Malmøs gader. Hver dag må de håndtere ekstreme situationer og stærke følelser - og kæmpe for at holde job og privatliv adskilt. Dramaserie om en håndfuld helt almindelige politifolk.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Den tynde blå linje",
+      "vodItemWatchPath": "",
+      "path": "/serie/den-tynde-blaa-linje_345322"
+     },
+     {
+      "images": {
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='559409'&Width=1440&Height=2160&ImageId='75277424'",
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='559409'&Width=1920&Height=1080&ImageId='75277422'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='559409'&Width=1920&Height=1080&ImageId='75277426'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "559409"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "559409"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Nora Sand",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "nora-sand_559409",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:3677322026000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "559409",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_dansk"
+      ],
+      "shortDescription": "Krimiserie baseret på Lone Theils' bestsellerromaner om journalisten Nora Sand.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Nora Sand",
+      "vodItemWatchPath": "",
+      "path": "/serie/nora-sand_559409"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='592750'&Width=3000&Height=1688&ImageId='79020349'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='592750'&Width=3000&Height=1688&ImageId='79020351'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='592750'&Width=2000&Height=3000&ImageId='79161247'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "592750"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "592750"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Gone",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "gone_592750",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640911557364",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "592750",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_mørk/uhyggelig",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Skoleinspektøren Michaels kone forsvinder. Kriminalassistent Annie Cassidy sættes på sagen, der snart tager en dyster drejning. Britisk krimidramaserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Gone",
+      "vodItemWatchPath": "",
+      "path": "/serie/gone_592750"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='513740'&Width=1920&Height=1080&ImageId='73733192'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='513740'&Width=1920&Height=1080&ImageId='73733203'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='513740'&Width=1440&Height=2160&ImageId='73733199'"
+      },
+      "availableSeasonCount": 3,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "513740"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "513740"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Drabschef Wisting",
+       "ExtraDetails": "Fiktionsserie | 3 SÆSONER",
+       "TitleExtraDetails": "DR1 | 3 SÆSONER",
+       "PathIdSegment": "drabschef-wisting_513740",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:4738083179000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "513740",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Efterforskningslederen William Wisting står over for nogle af sin karrieres vanskeligste sager i denne norske krimiserie, der bygger på Jørn Lier Horsts populære romaner.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Drabschef Wisting",
+      "vodItemWatchPath": "",
+      "path": "/serie/drabschef-wisting_513740"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='616450'&Width=1920&Height=1080&ImageId='80685667'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='616450'&Width=1440&Height=2160&ImageId='80685669'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='616450'&Width=1920&Height=1080&ImageId='80685671'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "616450"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "616450"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_audio_description",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "False",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Livvagterne",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "livvagterne_616450",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:888897387000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "616450",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "mood_rå",
+       "culturalorigin_dansk"
+      ],
+      "shortDescription": "De sætter livet på spil i demokratiets tjeneste. Actiondramaserien 'Livvagterne' følger tre unge livvagter på farlig mission. Serien blev hædret med den internationale Emmy-pris for bedste dramaserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Livvagterne",
+      "vodItemWatchPath": "",
+      "path": "/serie/livvagterne_616450"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581577'&Width=3000&Height=1688&ImageId='79708231'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581577'&Width=2000&Height=3000&ImageId='79708233'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581577'&Width=3000&Height=1688&ImageId='79708235'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "581577"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "581577"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Dommer Claire Lewis",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "dommer-claire-lewis_581577",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6608202002000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "581577",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_autentisk/realistisk",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Hun er dommer, og hun er samvittighedsfuld og grundig. Men en beslutning i retten får katastrofale følger. Nu beslutter hun sig for at tage sagen i egen hånd. Walisisk krimidramaserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Dommer Claire Lewis",
+      "vodItemWatchPath": "",
+      "path": "/serie/dommer-claire-lewis_581577"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='590029'&Width=3000&Height=1688&ImageId='77706394'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='590029'&Width=1440&Height=2056&ImageId='77878169'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='590029'&Width=3000&Height=1688&ImageId='77878167'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "590029"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "590029"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Mord i Sogn",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "mord-i-sogn_590029",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640371953826",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "590029",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Ole Vik er chef for en lille norsk politistation. Snart får stationen en ny politielev, der ikke helt er den, hun giver sig ud for at være. Da der sker et drab, må de to efterforske det sammen.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Mord i Sogn",
+      "vodItemWatchPath": "",
+      "path": "/serie/mord-i-sogn_590029"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='527160'&Width=1920&Height=1080&ImageId='74127691'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='527160'&Width=1440&Height=2160&ImageId='74127693'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='527160'&Width=1920&Height=1080&ImageId='74127695'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "527160"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "527160"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Professor T",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "professor-t_527160",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:2784497056000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "527160",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_intellektuel/tankevækkende",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Kriminologen Jasper Tempest er arrogant, ubehøvlet og smækfuld af neuroser, men han er også udstyret med en af de skarpeste hjerner i Cambridge. Og så er han hovedperson i krimiserien 'Professor T'.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Professor T",
+      "vodItemWatchPath": "",
+      "path": "/serie/professor-t_527160"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='546370'&Width=1920&Height=1080&ImageId='73912675'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='546370'&Width=1440&Height=2160&ImageId='73912681'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='546370'&Width=1920&Height=1080&ImageId='73912669'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "546370"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "546370"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Mord efter bogen",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "mord-efter-bogen_546370",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6400030723000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "546370",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_feel good/hyggelig",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Han er boghandler i efterkrigstidens London - og så hjælper han politiet med at opklare drabssager. Britisk krimiserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Mord efter bogen",
+      "vodItemWatchPath": "",
+      "path": "/serie/mord-efter-bogen_546370"
+     }
+    ],
+    "size": 34,
+    "paging": {
+     "total": 2,
+     "page": 1,
+     "size": 24,
+     "next": "/lists/504464?page_size=24&page=2&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": null
+   },
+   "type": "ListEntry",
+   "id": "8ddeb59",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Netop tilføjet",
+   "list": {
+    "id": "175990",
+    "customFields": {
+     "PathIdSegment": "drtv-faste_-nyeste-fiktionsserier_175990"
+    },
+    "itemTypes": [
+     "show",
+     "season"
+    ],
+    "description": "",
+    "title": "Netop tilføjet",
+    "shortDescription": "",
+    "tagline": "",
+    "themes": [
+     {
+      "colors": [
+       {
+        "name": "Primary",
+        "value": "#1d1c1c"
+       }
+      ],
+      "type": "Background"
+     },
+     {
+      "colors": [
+       {
+        "name": "Custom1",
+        "value": "#ffffff"
+       }
+      ],
+      "type": "Custom"
+     }
+    ],
+    "path": "/liste/drtv-faste_-nyeste-fiktionsserier_175990",
+    "items": [
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='623827'&Width=3000&Height=1688&ImageId='81993924'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='623827'&Width=2000&Height=3000&ImageId='81930726'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='623827'&Width=3000&Height=1688&ImageId='81930728'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "623827"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "623827"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "acc_audio_description",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-11",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "False",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Høst",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "hoest_623827",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:4742405844000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "623827",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_drama",
+       "mood_autentisk/realistisk",
+       "culturalorigin_dansk"
+      ],
+      "shortDescription": "Landmanden Gorm afslører gårdens fremtid og peger på en arvtager ingen havde set komme. Det bliver begyndelsen på et opgør mellem hans voksne børn om, hvem der skal føre familiegården videre.\n\nMedvirkende: Katrine Greis-Rosenthal, Elliott Crosset Hove, Si",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Høst",
+      "vodItemWatchPath": "",
+      "path": "/serie/hoest_623827"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='601183'&Width=1920&Height=1080&ImageId='80715855'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='601183'&Width=1920&Height=1080&ImageId='80715879'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='601183'&Width=1440&Height=2160&ImageId='80715859'"
+      },
+      "releaseYear": 2026,
+      "availableEpisodeCount": 6,
+      "seasonNumber": 2,
+      "showId": "601182",
+      "episodeCount": 7,
+      "offers": [
+       {
+        "deliveryType": "StreamOrDownload",
+        "scopes": [
+         "601183"
+        ],
+        "resolution": "HD-1080",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "601183"
+      ],
+      "badge": "Ny sæson",
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "IsGeoRestricted": "True",
+       "PresentationTypeCode": "Ongoing",
+       "IsSeasonDRMPlayoutRequired": "True",
+       "PageTitle": "Ludwig - Krydsordsdetektiven: Sæson 2",
+       "ExtraDetails": "Fiktionsserie | SÆSON 2",
+       "ShortVideoUrl": "https://drod23n.akamaized.net/all/clear/none/66/6ac4b4875c85d400017c1766/6ac4b486f0746700012c3c30/stream_fmp4/master_manifest.m3u8",
+       "PathIdSegment": "ludwig-_-krydsordsdetektiven_601183",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:season:6640973231868",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "601183",
+      "type": "season",
+      "keywords": [],
+      "shortDescription": "Han er skrap til gåder, men kan han opklare mordsager? Komikeren David Mitchell spiller kejtet krydsords-mager, der påtager sig sin tvilling James' identitet som drabsefterforsker, da James forsvinder.",
+      "contextualTitle": "",
+      "sports": [],
+      "tagline": "Den kejtede gådespecialist og efterforsker er tilbage",
+      "themes": [],
+      "title": "Ludwig - Krydsordsdetektiven",
+      "vodItemWatchPath": "",
+      "classification": {
+       "code": "DR-Voksen",
+       "name": "Voksen"
+      },
+      "path": "/saeson/ludwig-_-krydsordsdetektiven_601183"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='620922'&Width=1920&Height=1080&ImageId='81584194'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='620922'&Width=1440&Height=2160&ImageId='81584196'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='620922'&Width=1920&Height=1080&ImageId='81584198'"
+      },
+      "releaseYear": 2026,
+      "availableEpisodeCount": 8,
+      "seasonNumber": 3,
+      "showId": "620921",
+      "episodeCount": 0,
+      "offers": [
+       {
+        "deliveryType": "StreamOrDownload",
+        "scopes": [
+         "620922"
+        ],
+        "resolution": "HD-1080",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "620922"
+      ],
+      "badge": "Ny sæson",
+      "categories": [
+       "fiktionsserie",
+       "humor",
+       "drtv",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Humor,DRTV",
+       "BrandingChannelShort": "DRT",
+       "BrandingChannelDisplayName": "DRTV",
+       "DisplayCategory": "Fiktionsserie,Humor",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-11",
+       "IsGeoRestricted": "True",
+       "PresentationTypeCode": "Ongoing",
+       "IsSeasonDRMPlayoutRequired": "True",
+       "PageTitle": "Colin from Accounts: Sæson 3",
+       "ExtraDetails": "Fiktionsserie | SÆSON 3",
+       "ShortVideoUrl": "https://drod24o.akamaized.net/all/clear/none/09/6abcf43d5c85d400017c0c09/6abcf43dd14f16000188998c/stream_fmp4/master_manifest.m3u8",
+       "PathIdSegment": "colin-from-accounts_620922",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:season:6641113363900",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "620922",
+      "type": "season",
+      "keywords": [],
+      "shortDescription": "Ashley og Gordon er begge mere eller mindre single, da et biluheld og en kvæstet hund bringer dem sammen i den australske komedieserie 'Colin from Accounts'. Tidligere: 'Han, hun og hunden'.",
+      "contextualTitle": "",
+      "sports": [],
+      "tagline": "Tredje og sidste sæson af den kritikerroste komedieserie",
+      "themes": [],
+      "title": "Colin from Accounts",
+      "vodItemWatchPath": "",
+      "classification": {
+       "code": "DR-Voksen",
+       "name": "Voksen"
+      },
+      "path": "/saeson/colin-from-accounts_620922"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='618992'&Width=1920&Height=1080&ImageId='81854204'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='618992'&Width=1440&Height=2160&ImageId='81262202'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='618992'&Width=3000&Height=1688&ImageId='81262204'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "618992"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "618992"
+      ],
+      "categories": [
+       "serie",
+       "drtv"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Serie,DRTV",
+       "BrandingChannelShort": "DRT",
+       "BrandingChannelDisplayName": "DRTV",
+       "DisplayCategory": "Serie",
+       "TargetAudience": "OlderKidsAndAdults",
+       "RatingSegment": "Ultra",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-07",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "False",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Aros Skattens Hemmelighed",
+       "ExtraDetails": "Serie | 1 SÆSON",
+       "TitleExtraDetails": "DRTV | 1 SÆSON",
+       "ShortVideoUrl": "https://drod20f.akamaized.net/all/clear/none/c7/6ab607ecb09a740001eb2fc7/6ab607e9e1b9b20001e4e713/stream_fmp4/master_manifest.m3u8",
+       "PathIdSegment": "aros-skattens-hemmelighed_618992",
+       "ContentUniverses": [
+        "drtv",
+        "ultra"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6255520359000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "618992",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_børn/fiktion",
+       "editorialptaxsub_spænding",
+       "mood_spændingsfyldt",
+       "agetargetgroup_9-11 år",
+       "agetargetgroup_12-14 år",
+       "culturalorigin_dansk"
+      ],
+      "shortDescription": "Aros Skattens Hemmelighed - et mysterie for hele familien.\nDa de to søskende Frida og Bjørn finder en mystisk vikingemønt ved Moesgaard Museum, vækkes sagnet om den forsvundne Aros-skat til live.\nSammen med deres far, Jens, kastes de ud i en hæsblæsende j",
+      "contextualTitle": "",
+      "sports": [],
+      "tagline": "En vikingemønt kaster to søskende ud i en hæsblæsende skattejagt ",
+      "themes": [],
+      "title": "Aros Skattens Hemmelighed",
+      "vodItemWatchPath": "",
+      "path": "/serie/aros-skattens-hemmelighed_618992"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603943'&Width=3000&Height=1688&ImageId='81200079'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603943'&Width=3000&Height=1688&ImageId='81200067'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603943'&Width=1440&Height=2160&ImageId='81200069'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "603943"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "603943"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Cooper & Fry",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "cooper-and-fry_603943",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640665546363",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "603943",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_autentisk/realistisk",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Kriminalbetjentene Ben Cooper og Diane Fry efterforsker en serie gådefulde mord i den britiske krimiserie 'Cooper & Fry', der bygger på romaner af Stephen Booth.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Cooper & Fry",
+      "vodItemWatchPath": "",
+      "path": "/serie/cooper-and-fry_603943"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='618220'&Width=1920&Height=1080&ImageId='81080588'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='618220'&Width=1440&Height=2160&ImageId='81080590'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='618220'&Width=1920&Height=1080&ImageId='81080592'"
+      },
+      "releaseYear": 2022,
+      "availableEpisodeCount": 4,
+      "seasonNumber": 2,
+      "showId": "618212",
+      "episodeCount": 4,
+      "offers": [
+       {
+        "deliveryType": "StreamOrDownload",
+        "scopes": [
+         "618220"
+        ],
+        "resolution": "HD-1080",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "618220"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "drtv"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DRTV",
+       "BrandingChannelShort": "DRT",
+       "BrandingChannelDisplayName": "DRTV",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "IsGeoRestricted": "True",
+       "PresentationTypeCode": "Show",
+       "IsSeasonDRMPlayoutRequired": "True",
+       "PageTitle": "2 døgn: Sæson 2",
+       "ExtraDetails": "Fiktionsserie | SÆSON 2",
+       "PathIdSegment": "2-doegn_618220",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:season:6641189603119",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "618220",
+      "type": "season",
+      "keywords": [],
+      "shortDescription": "De tvinges ind i den kriminelle underverden. Hvor langt er de parate til gå for at overleve? Dansk ungdomsdramaserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "2 døgn",
+      "vodItemWatchPath": "",
+      "classification": {
+       "code": "DR-Voksen",
+       "name": "Voksen"
+      },
+      "path": "/saeson/2-doegn_618220"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='590005'&Width=3000&Height=1688&ImageId='81367341'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='590005'&Width=3000&Height=1688&ImageId='81367343'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='590005'&Width=1440&Height=2160&ImageId='81137845'"
+      },
+      "availableSeasonCount": 3,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "590005"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "590005"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "drtv",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "The Capture",
+       "ExtraDetails": "Fiktionsserie | 3 SÆSONER",
+       "TitleExtraDetails": "DR1 | 3 SÆSONER",
+       "ShortVideoUrl": "https://drod22n.akamaized.net/all/clear/none/34/6a0ee77ebe082410a8ce8e34/6a0ee77e2f7a764b583d1aba/stream_fmp4/master_manifest.m3u8",
+       "PathIdSegment": "the-capture_590005",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640857133190",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "590005",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_action/thriller",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Billeder lyver aldrig. Eller gør de? Det er spørgsmålet for den unge efterforsker Rachel, der kastes ud i en række gådefulde, hårrejsende sager i tech-thrillerserien 'The Capture'.",
+      "contextualTitle": "",
+      "sports": [],
+      "tagline": "Billeder lyver aldrig. Eller gør de? Britisk thrillerserie",
+      "themes": [],
+      "title": "The Capture",
+      "vodItemWatchPath": "",
+      "path": "/serie/the-capture_590005"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='595826'&Width=3000&Height=1688&ImageId='80908680'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='595826'&Width=1679&Height=2519&ImageId='80908684'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='595826'&Width=3000&Height=1688&ImageId='80908702'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "595826"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "595826"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "drtv",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DRTV",
+       "BrandingChannelShort": "DRT",
+       "BrandingChannelDisplayName": "DRTV",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Kabul",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DRTV | 1 SÆSON",
+       "PathIdSegment": "kabul_595826",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6220646126000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "595826",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_drama",
+       "mood_autentisk/realistisk",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "De må flygte over hals og hoved fra deres hjemland. Dramaserie om Kabuls fald til Taleban i august 2021 og det kaos, der fulgte.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Kabul",
+      "vodItemWatchPath": "",
+      "path": "/serie/kabul_595826"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='501406'&Width=3000&Height=1688&ImageId='81287931'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='501406'&Width=3000&Height=1688&ImageId='81287935'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='501406'&Width=1440&Height=2160&ImageId='81287933'"
+      },
+      "availableSeasonCount": 10,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "501406"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "501406"
+      ],
+      "badge": "Alle sæsoner",
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Shetland",
+       "ExtraDetails": "Fiktionsserie | 10 SÆSONER",
+       "TitleExtraDetails": "DR1 | 10 SÆSONER",
+       "ShortVideoUrl": "https://drod24f.akamaized.net/all/clear/none/27/6a0c46bcbe082410a8ce8d27/6a0c46bb93c3750ef452a550/stream_fmp4/master_manifest.m3u8",
+       "PathIdSegment": "shetland_501406",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:1906423920000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "501406",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "De smukke, forblæste Shetlandsøer er scene for krimiserien 'Shetland', der bygger på Ann Cleeves' romaner.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "tagline": "Se de ni første sæsoner af den populære og anmelderroste krimi",
+      "themes": [],
+      "title": "Shetland",
+      "vodItemWatchPath": "",
+      "path": "/serie/shetland_501406"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='563679'&Width=1920&Height=1080&ImageId='81107663'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='563679'&Width=1920&Height=1080&ImageId='81107667'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='563679'&Width=1440&Height=2160&ImageId='81107665'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "563679"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "563679"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Drabsspecialist Ellis",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "drabsspecialist-ellis_563679",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6608212534000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "563679",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Vicekriminalkommissær Ellis er omrejsende efterforsker. I en række nordengelske småbyer opklarer hun drabssager, som det lokale politi ikke kan få hul på. Britisk krimiserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Drabsspecialist Ellis",
+      "vodItemWatchPath": "",
+      "path": "/serie/drabsspecialist-ellis_563679"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='527142'&Width=3000&Height=1688&ImageId='80947553'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='527142'&Width=1440&Height=2160&ImageId='80947571'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='527142'&Width=3000&Height=1688&ImageId='80947589'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "527142"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "527142"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Sans for mord",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "sans-for-mord_527142",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6400040896000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "527142",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_følelsesladet",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Patience har autisme. Hun har svært ved at navigere i sin omverden. Men politiet beder om hendes hjælp, viser den unge kvinde sig at være en fremragende detektiv.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Sans for mord",
+      "vodItemWatchPath": "",
+      "path": "/serie/sans-for-mord_527142"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='512283'&Width=3000&Height=1688&ImageId='80765248'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='512283'&Width=1440&Height=2160&ImageId='80765243'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='512283'&Width=3000&Height=1688&ImageId='80765250'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "512283"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "512283"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Bergerac",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "bergerac_512283",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6143744216000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "512283",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_autentisk/realistisk",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Nyindspilning af den klassiske britiske krimiserie om politimanden Jim Bergerac, der opklarer forbrydelser på kanaløen Jersey.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Bergerac",
+      "vodItemWatchPath": "",
+      "path": "/serie/bergerac_512283"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603238'&Width=2519&Height=1417&ImageId='80499450'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603238'&Width=1479&Height=2219&ImageId='80499452'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603238'&Width=3000&Height=1688&ImageId='80499454'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "603238"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "603238"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Sommeren 1985",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "sommeren-1985_603238",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6619790361000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "603238",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_drama",
+       "mood_eventyrlig/magisk",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Et møde med et gådefuldt væsen vender op og ned på nogle unge drenges liv. Dramaserie baseret på en bog af John Ajvide - forfatteren bag de prisbelønnede film 'Lad den rette komme ind' og 'Grænse'.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Sommeren 1985",
+      "vodItemWatchPath": "",
+      "path": "/serie/sommeren-1985_603238"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581584'&Width=3000&Height=1688&ImageId='79767066'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581584'&Width=2000&Height=3000&ImageId='79767053'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581584'&Width=3000&Height=1688&ImageId='79767059'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "581584"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "581584"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "The Guest",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "the-guest_581584",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640270926442",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "581584",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_action/thriller",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Thrillerserie: Ria bliver hyret af den rige Fran til at gøre rent. De to bliver venner, men snart truer venskabet med at blive en psykologisk katten efter musen-leg. Men hvem er kat, og hvem er mus?",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "The Guest",
+      "vodItemWatchPath": "",
+      "path": "/serie/the-guest_581584"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='602109'&Width=1920&Height=1080&ImageId='79863369'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='602109'&Width=1920&Height=1080&ImageId='79863387'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='602109'&Width=1440&Height=2160&ImageId='79863373'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "602109"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "602109"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "The Dark",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "the-dark_602109",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640973303082",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "602109",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_mørk/uhyggelig",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "En ung mand findes myrdet på den øde skotske hede. En brutal og grusom sag venter kriminalinspektør Monica Kennedy. Britisk krimiserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "The Dark",
+      "vodItemWatchPath": "",
+      "path": "/serie/the-dark_602109"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='589969'&Width=3000&Height=1688&ImageId='78725258'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='589969'&Width=2000&Height=3000&ImageId='78725269'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='589969'&Width=3000&Height=1688&ImageId='78725260'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "589969"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "589969"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Robin Hood",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "robin-hood_589969",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640836433656",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "589969",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_historisk drama",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Nottingham, 1186. En ung bueskytte gør oprør mod de invaderende normanner - og snart tager legenden om Robin Hood sin begyndelse. Dramaserie med Sean Bean og Connie Nielsen.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Robin Hood",
+      "vodItemWatchPath": "",
+      "path": "/serie/robin-hood_589969"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581577'&Width=3000&Height=1688&ImageId='79708231'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581577'&Width=2000&Height=3000&ImageId='79708233'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581577'&Width=3000&Height=1688&ImageId='79708235'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "581577"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "581577"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "krimi",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie,Krimi",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Dommer Claire Lewis",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "dommer-claire-lewis_581577",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6608202002000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "581577",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_krimi",
+       "mood_autentisk/realistisk",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Hun er dommer, og hun er samvittighedsfuld og grundig. Men en beslutning i retten får katastrofale følger. Nu beslutter hun sig for at tage sagen i egen hånd. Walisisk krimidramaserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Dommer Claire Lewis",
+      "vodItemWatchPath": "",
+      "path": "/serie/dommer-claire-lewis_581577"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='595815'&Width=3000&Height=1688&ImageId='79736762'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='595815'&Width=2000&Height=3000&ImageId='79736753'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='595815'&Width=3000&Height=1688&ImageId='79736755'"
+      },
+      "releaseYear": 2025,
+      "availableEpisodeCount": 10,
+      "seasonNumber": 2,
+      "showId": "457135",
+      "episodeCount": 10,
+      "offers": [
+       {
+        "deliveryType": "StreamOrDownload",
+        "scopes": [
+         "595815"
+        ],
+        "resolution": "HD-1080",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "595815"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "drtv",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DRTV",
+       "BrandingChannelShort": "DRT",
+       "BrandingChannelDisplayName": "DRTV",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "IsGeoRestricted": "True",
+       "PresentationTypeCode": "Show",
+       "IsSeasonDRMPlayoutRequired": "False",
+       "PageTitle": "Push: Sæson 2",
+       "ExtraDetails": "Fiktionsserie | SÆSON 2",
+       "PathIdSegment": "push_595815",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:season:6640632917381",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "595815",
+      "type": "season",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_drama",
+       "mood_følelsesladet"
+      ],
+      "shortDescription": "Undtagelsestilstand og lykkelige øjeblikke er dagens orden for jordemødrene Nalan, Anna og Greta. Følg dem i dramaserien 'Push'.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Push",
+      "vodItemWatchPath": "",
+      "classification": {
+       "code": "DR-Voksen",
+       "name": "Voksen"
+      },
+      "path": "/saeson/push_595815"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='589998'&Width=3000&Height=1688&ImageId='78724963'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='589998'&Width=2000&Height=3000&ImageId='78724967'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='589998'&Width=3000&Height=1688&ImageId='78724978'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "589998"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "589998"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Secret Service",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR1 | 1 SÆSON",
+       "PathIdSegment": "secret-service_589998",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:5069611087000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "589998",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_action/thriller",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Agenten Kate opsnapper en sprængfarlig nyhed. Premierministeren vil trække sig - og Rusland har en spion placeret, der kan tage hans plads. Men kan hun stole på sin info? Eller laver russerne numre?",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Secret Service",
+      "vodItemWatchPath": "",
+      "path": "/serie/secret-service_589998"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603900'&Width=1920&Height=1080&ImageId='79246132'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603900'&Width=1440&Height=2160&ImageId='79246136'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='603900'&Width=1920&Height=1080&ImageId='79246134'"
+      },
+      "availableSeasonCount": 6,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "603900"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "603900"
+      ],
+      "badge": "Alle sæsoner",
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Show",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Line of Duty",
+       "ExtraDetails": "Fiktionsserie | 6 SÆSONER",
+       "TitleExtraDetails": "DR1 | 6 SÆSONER",
+       "ShortVideoUrl": "https://drod22m.akamaized.net/all/clear/none/0a/6a4f5a21e25dab273cc3100a/6a4f5a2111724d09481da872/stream_fmp4/master_manifest.m3u8",
+       "PathIdSegment": "line-of-duty_603900",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640667786710",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "603900",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_action/thriller",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Ingen beskrivelse.",
+      "contextualTitle": "",
+      "sports": [],
+      "tagline": "Se eller gense den største britiske krimisucces i 25 år",
+      "themes": [],
+      "title": "Line of Duty",
+      "vodItemWatchPath": "",
+      "path": "/serie/line-of-duty_603900"
+     },
+     {
+      "images": {
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581559'&Width=1440&Height=2160&ImageId='79863053'",
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581559'&Width=3000&Height=1688&ImageId='79309877'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581559'&Width=3000&Height=1688&ImageId='79309864'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "581559"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "581559"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr2",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR2",
+       "BrandingChannelShort": "DR2",
+       "BrandingChannelDisplayName": "DR2",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "The Sentinels",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DR2 | 1 SÆSON",
+       "PathIdSegment": "the-sentinels_581559",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6640594230580",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "581559",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_action/thriller",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Første verdenskrig raser. Frankrig er trængt på slagmarken, men hæren arbejder på et tophemmeligt program, der kan ændre krigens gang. Målet er at skabe en helt ny slags soldat - en supersoldat.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "The Sentinels",
+      "vodItemWatchPath": "",
+      "path": "/serie/the-sentinels_581559"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='492886'&Width=3000&Height=1688&ImageId='79863014'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='492886'&Width=1579&Height=2369&ImageId='79863016'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='492886'&Width=3000&Height=1688&ImageId='79863018'"
+      },
+      "availableSeasonCount": 2,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "492886"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "492886"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "dr1",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DR1",
+       "BrandingChannelShort": "DR1",
+       "BrandingChannelDisplayName": "DR1",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-ALL",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "True",
+       "PageTitle": "Familien Hardacre",
+       "ExtraDetails": "Fiktionsserie | 2 SÆSONER",
+       "TitleExtraDetails": "DR1 | 2 SÆSONER",
+       "PathIdSegment": "familien-hardacre_492886",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:5782272351000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "492886",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_historisk drama",
+       "mood_følelsesladet",
+       "mood_sjovt",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Den fattige arbejderklassefamilie Hardacre bliver pludselig stinkende rige og flytter ind på et stort gods. Kan de vænne sig til livet i de højere samfundslag? Britisk dramaserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "subtype": "",
+      "themes": [],
+      "title": "Familien Hardacre",
+      "vodItemWatchPath": "",
+      "path": "/serie/familien-hardacre_492886"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581569'&Width=1920&Height=1080&ImageId='78884989'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581569'&Width=1920&Height=1080&ImageId='78884993'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='581569'&Width=1440&Height=2160&ImageId='78884991'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "581569"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "581569"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "drtv",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DRTV",
+       "BrandingChannelShort": "DRT",
+       "BrandingChannelDisplayName": "DRTV",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Flugten fra Bolivia",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DRTV | 1 SÆSON",
+       "PathIdSegment": "flugten-fra-bolivia_581569",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:5624145761000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "581569",
+      "type": "show",
+      "keywords": [
+       "editorialptaxtop_serier",
+       "editorialptaxsub_drama",
+       "mood_nervepirrende",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "17-årige Ida og hendes to veninder anholdes i Bolivia, mistænkt for narkosmugling. Fanget i løgne og forræderi må Ida stole på uventet hjælp - og flygte gennem junglen. Norsk dramaserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Flugten fra Bolivia",
+      "vodItemWatchPath": "",
+      "path": "/serie/flugten-fra-bolivia_581569"
+     },
+     {
+      "images": {
+       "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='589981'&Width=3000&Height=1688&ImageId='78857044'",
+       "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='589981'&Width=2000&Height=3000&ImageId='78857054'",
+       "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='589981'&Width=3000&Height=1688&ImageId='78857056'"
+      },
+      "availableSeasonCount": 1,
+      "offers": [
+       {
+        "deliveryType": "None",
+        "scopes": [
+         "589981"
+        ],
+        "resolution": "Unknown",
+        "availability": "Available",
+        "ownership": "Free",
+        "price": 0
+       }
+      ],
+      "scopes": [
+       "589981"
+      ],
+      "categories": [
+       "fiktionsserie",
+       "drtv",
+       "acc_spoken_subtitles"
+      ],
+      "channelPath": "",
+      "customFields": {
+       "OwnedCategory": "Fiktionsserie,DRTV",
+       "BrandingChannelShort": "DRT",
+       "BrandingChannelDisplayName": "DRTV",
+       "DisplayCategory": "Fiktionsserie",
+       "TargetAudience": "Adults",
+       "RatingSegment": "DRTV",
+       "PrimaryContentUniverse": "DRTV",
+       "ClassificationRating": "MRAM-15",
+       "PresentationTypeCode": "Ongoing",
+       "IsGeoRestricted": "True",
+       "IsSeriesDRMPlayoutRequired": "False",
+       "PageTitle": "Hundene",
+       "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+       "TitleExtraDetails": "DRTV | 1 SÆSON",
+       "PathIdSegment": "hundene_589981",
+       "ContentUniverses": [
+        "drtv"
+       ]
+      },
+      "customId": "urn:dr:ocs:tv:content:series:6519109977000",
+      "genres": [
+       "ukendt"
+      ],
+      "id": "589981",
+      "type": "show",
+      "keywords": [
+       "thesaurus_advokatvirksomhed",
+       "editorialptaxtop_serier",
+       "editorialptaxsub_drama",
+       "mood_autentisk/realistisk",
+       "culturalorigin_ikke-dansk"
+      ],
+      "shortDescription": "Tæt på lovens og moralens grænser. Svensk advokatserie.",
+      "contextualTitle": "",
+      "sports": [],
+      "themes": [],
+      "title": "Hundene",
+      "vodItemWatchPath": "",
+      "path": "/serie/hundene_589981"
+     }
+    ],
+    "size": 85,
+    "paging": {
+     "total": 4,
+     "page": 1,
+     "size": 24,
+     "next": "/lists/175990?page_size=24&page=2&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "imageWidth": "contentWidth",
+    "widthPercentage": 100,
+    "imageHorizontalAlignment": "center",
+    "imageVerticalSpacing": "default",
+    "caption": "",
+    "link": "/serie/secret-service_589998",
+    "altText": "Secret Service"
+   },
+   "type": "ImageEntry",
+   "id": "b88052d",
+   "template": "ED1",
+   "title": "",
+   "images": {
+    "hero3x1": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Page'&EntityId='257413'&Width=2400&Height=800&ImageId='81367954'"
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": null
+   },
+   "type": "ListEntry",
+   "id": "8265099",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Beck - ny episode hver onsdag",
+   "list": {
+    "id": "567671",
+    "path": "/liste/567671",
+    "items": [],
+    "size": 14,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/567671?page_size=24&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "sas_siteId": 292591,
+    "sas_pageName": "1258815",
+    "sas_formatId": 77527,
+    "sas_keywordTargeting": "",
+    "sas_master": true
+   },
+   "type": "CustomEntry",
+   "id": "c53c57e",
+   "template": "DRX11",
+   "title": ""
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "e3e3fce",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Danske serier",
+   "list": {
+    "id": "590199",
+    "path": "/liste/590199",
+    "items": [],
+    "size": 22,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/590199?page_size=24&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "2eef05d",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Serier fra P3",
+   "list": {
+    "id": "590200",
+    "path": "/liste/590200",
+    "items": [],
+    "size": 11,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/590200?page_size=24&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "ce4fcd5",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Historiske serier",
+   "list": {
+    "id": "504480",
+    "path": "/liste/504480",
+    "items": [],
+    "size": 14,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/504480?page_size=24&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "sas_siteId": 292591,
+    "sas_pageName": "1258815",
+    "sas_formatId": 92608,
+    "sas_keywordTargeting": "",
+    "sas_master": true
+   },
+   "type": "CustomEntry",
+   "id": "9eed284",
+   "template": "DRX11",
+   "title": ""
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "imageWidth": "contentWidth",
+    "widthPercentage": 100,
+    "imageHorizontalAlignment": "center",
+    "imageVerticalSpacing": "default",
+    "caption": "",
+    "link": "/serie/hundene_589981",
+    "altText": "Hundene"
+   },
+   "type": "ImageEntry",
+   "id": "8e96f9d",
+   "template": "ED1",
+   "title": "",
+   "images": {
+    "hero3x1": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Page'&EntityId='257413'&Width=2400&Height=800&ImageId='80213029'"
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "ec019c1",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Action og thriller",
+   "list": {
+    "id": "590205",
+    "path": "/liste/590205",
+    "items": [],
+    "size": 42,
+    "paging": {
+     "total": 2,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/590205?page_size=24&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "5dc38be",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Humor og skæve karakterer",
+   "list": {
+    "id": "504482",
+    "path": "/liste/504482",
+    "items": [],
+    "size": 22,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/504482?page_size=24&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "imageWidth": "contentWidth",
+    "widthPercentage": 100,
+    "imageHorizontalAlignment": "center",
+    "imageVerticalSpacing": "default",
+    "caption": "",
+    "link": "/serie/gone_592750",
+    "altText": "Gone"
+   },
+   "type": "ImageEntry",
+   "id": "1eadaee",
+   "template": "ED1",
+   "title": "",
+   "images": {
+    "hero3x1": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Page'&EntityId='257413'&Width=2400&Height=800&ImageId='79515447'"
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "2d04f48",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Serier med drama og kærlighed",
+   "list": {
+    "id": "590207",
+    "path": "/liste/590207",
+    "items": [],
+    "size": 59,
+    "paging": {
+     "total": 3,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/590207?page_size=24&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "ee08d3a",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Serier fra Gensyn",
+   "list": {
+    "id": "590201",
+    "path": "/liste/590201",
+    "items": [],
+    "size": 65,
+    "paging": {
+     "total": 3,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/590201?page_size=24&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "textHorizontalAlignment": "left",
+    "textColor": {
+     "color": "",
+     "opacity": 100
+    }
+   },
+   "type": "TextEntry",
+   "id": "65d5950",
+   "template": "ED2",
+   "title": "Alle fiktionsserier på DRTV",
+   "text": "Se hele vores katalog af fiktionsserier"
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "f32333a",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "A",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 5,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Aa",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:a",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "322aba2",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "B",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 9,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ab",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:b",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "c306c3c",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "C",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 5,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ac",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:c",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "177603b",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "D",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 17,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ad",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:d",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "ec25dc9",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "E",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 6,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ae",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:e",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "dc513a2",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "F",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 9,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Af",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:f",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "15f261c",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "G",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 7,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ag",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:g",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "ad823d2",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "H",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 9,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ah",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:h",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "f901312",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "I",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 2,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ai",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:i",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "c361ad2",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "J",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 8,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Aj",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:j",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "a89fc92",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "K",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 11,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ak",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:k",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "3925b0d",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "L",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 7,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Al",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:l",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "84da420",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "M",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 16,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Am",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:m",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "9967f13",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "N",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 5,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3An",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:n",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "243ef20",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "O",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 2,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ao",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:o",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "9b94061",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "P",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 7,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ap",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:p",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "f17bb83",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "R",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 9,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Ar",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:r",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "76b3d61",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "S",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 18,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3As",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:s",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "168b91c",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "T",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 11,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3At",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:t",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "338e0f1",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "U",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 4,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Au",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:u",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "713754e",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "V",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 3,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3Av",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:v",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "39dda57",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "Ø",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 1,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3A%C3%B8",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:ø",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "6cf0f29",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "P1",
+   "title": "0-9",
+   "list": {
+    "id": "355799",
+    "path": "/liste/355799",
+    "items": [],
+    "size": 2,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/355799?page_size=24&page=1&sub=Anonymous&param=TitleGroupKey%3A0-9",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "parameter": "TitleGroupKey:0-9",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "d792153",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "S1",
+   "title": "Flere kategorier",
+   "list": {
+    "id": "277085",
+    "path": "/liste/277085",
+    "items": [],
+    "size": 11,
+    "paging": {
+     "total": 1,
+     "page": 0,
+     "size": 24,
+     "next": "/lists/277085?page_size=24&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 24
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  }
+ ]
+}

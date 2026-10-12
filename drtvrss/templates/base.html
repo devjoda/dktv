@@ -27,12 +27,22 @@
         {% endif %}
         <header class="site-header">
             <div class="wrap header-bar">
-                <a href="/" class="brand">{{ SERVICE_NAME }}</a>
+                {% set path = request.path %}
+                {% set main_categories = ["/kategorier/fiktionsserier/", "/kategorier/film/", "/kategorier/dokumentar/"] %}
+                {% set sections = [
+                    ("/", "Forside", path == "/"),
+                    ("/live/", "Direkte", path.startswith("/live/")),
+                    ("/kategorier/fiktionsserier/", "Serier", path == "/kategorier/fiktionsserier/"),
+                    ("/kategorier/film/", "Film", path == "/kategorier/film/"),
+                    ("/kategorier/dokumentar/", "Dokumentar", path == "/kategorier/dokumentar/"),
+                    ("/kategorier/", "Kategorier", path.startswith("/kategorier/") and path not in main_categories),
+                    ("/favoritter/", "Favoritter", path.startswith("/favoritter/")),
+                ] %}
                 {# One row that scrolls sideways on small screens, instead of wrapping #}
-                <nav class="channels" aria-label="Direkte kanaler">
+                <nav class="site-nav" aria-label="Hovedmenu">
                     <ul>
-                    {% for slug, channel in channels.items() %}
-                        <li><a href="/live/{{ slug }}" class="channel"{% if slug == current_channel %} aria-current="page"{% endif %}><span class="live-dot"></span>{{ channel.title }}</a></li>
+                    {% for url, title, current in sections %}
+                        <li><a href="{{ url }}" class="nav-item"{% if current %} aria-current="page"{% endif %}>{% if url == "/live/" %}<span class="live-dot"></span>{% endif %}{{ title }}</a></li>
                     {% endfor %}
                     </ul>
                 </nav>
@@ -40,6 +50,7 @@
                     <input type="search" name="query" placeholder="Søg i DRTV" aria-label="Søg" value="{{ query or '' }}" enterkeyhint="search">
                     <button type="submit" class="search-submit" aria-label="Søg">{{ icon("search") }}</button>
                 </form>
+                <a class="search-link" href="/search/" aria-label="Søg">{{ icon("search") }}</a>
             </div>
         </header>
 
@@ -53,13 +64,12 @@
 
         <footer class="site-footer">
             <p>
-                {{ SERVICE_NAME }} er en frontend til DRTV, i stil med Invidious eller Nitter.
-                Ingen af videoerne bliver hostet her, og du kan ikke se noget, du ikke ville kunne se på DRTV.
-                Hjemmesiden giver bare en nemmere brugergrænseflade end DR's egen (I min mening).
+                En anden brugerflade til DRTV, i stil med Invidious og Nitter.
+                Videoerne kommer direkte fra DR, og du kan se det samme her som på DRTV.
             </p>
             <p>
                 <a href="/sync/">Synkroniser dine favoritter og fremskridt mellem dine enheder</a>.
-                Kildekoden er at finde på <a href="https://github.com/RasmusRendal/drtvrss">GitHub</a>.
+                Kildekoden er på <a href="https://github.com/RasmusRendal/drtvrss">GitHub</a>.
                 {% if complaints_email %}
                 Klager kan sendes til <a href="mailto:{{ complaints_email }}">{{ complaints_email }}</a>.
                 {% endif %}

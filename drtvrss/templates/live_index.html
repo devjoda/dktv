@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% from "_ui.html" import channel_tile %}
+{% block head %}
+<title>Direkte TV - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block content %}
+<div class="page-head wrap">
+    <h1>Direkte TV</h1>
+</div>
+<div class="tile-grid results">
+    {% for slug, channel in channels.items() %}
+    {{ channel_tile(slug, channel, schedules.get(channel.id, [])) }}
+    {% endfor %}
+</div>
+{% endblock %}

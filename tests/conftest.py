@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 import pytest
 from quart import abort
 
-from drtvrss import app, drtv, live
+from drtvrss import app, discover, drtv, live
 
 from .update_fixtures import fixture_name
 
@@ -24,12 +24,12 @@ def fake_dr(monkeypatch):
     Returns the list of requests made to DR, like "/items/503605?expand=all"."""
     requested = []
 
-    async def get_api(path, **params):
+    async def get_api(path, /, **params):
         requested.append(path + ("?" + urlencode(params) if params else ""))
-        if not (FIXTURES / fixture_name(path)).exists():
+        if not (FIXTURES / fixture_name(path, params)).exists():
             # Same as get_api does when DR responds with anything but 200
             abort(404)
-        return load(fixture_name(path))
+        return load(fixture_name(path, params))
 
     async def fetch_search(query):
         requested.append("search:" + query)
@@ -37,6 +37,9 @@ def fake_dr(monkeypatch):
 
     monkeypatch.setattr(drtv, "get_api", get_api)
     monkeypatch.setattr(live, "get_api", get_api)
+    monkeypatch.setattr(discover, "get_api", get_api)
+    monkeypatch.setattr(discover, "pages", {})
+    monkeypatch.setattr(discover, "categories_cache", (0, []))
     monkeypatch.setattr(drtv, "fetch_search", fetch_search)
     monkeypatch.setattr(live, "live_channels", None)
     monkeypatch.setattr(live, "last_fetch", 0)

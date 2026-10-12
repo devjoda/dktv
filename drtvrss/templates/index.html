@@ -1,23 +1,43 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, tile, shelf_head, search_field, play_button, show_facts, favorite_button %}
-{% block body_class %}{% if shows %}has-hero{% endif %}{% endblock %}
+{% from "_ui.html" import icon, tile, card_tile, channel_tile, shelf_head, search_field, favorite_button %}
+{% block body_class %}{% if featured %}has-hero{% endif %}{% endblock %}
 {% block content %}
-<h1 class="visually-hidden">{{ SERVICE_NAME }}</h1>
+<h1 class="visually-hidden">Forside</h1>
 
-{% if shows %}
-{% set featured = shows[0] %}
-<section class="hero" aria-labelledby="featured-title">
-    <div class="hero-backdrop"><img src="{{ featured.wallpaper|thumbnail(1280) }}" alt=""></div>
-    <div class="hero-content">
-        <h2 class="hero-title" id="featured-title">{{ featured.title }}</h2>
-        {{ show_facts(featured) }}
-        <p class="hero-text">{{ featured.description }}</p>
-        <div class="actions">
-            {{ play_button(featured) }}
-            {{ favorite_button(featured.url, featured.title, featured.wallpaper) }}
-            <a class="button button-quiet" href="/{{ featured.url }}/">{{ icon("list") }} Alle afsnit</a>
+{% if featured %}
+{# What DR features, as tabs. ui.js plays DR's short clip of the one shown, without sound,
+   unless the viewer would rather not. It never moves on by itself. #}
+<section class="hero featured" aria-label="Fremhævet">
+    {% for c in featured %}
+    <div class="hero-slide" id="featured-{{ loop.index }}"{% if c.preview and not c.live %} data-preview="{{ c.preview }}"{% endif %}{% if not loop.first %} hidden{% endif %}>
+        <div class="hero-backdrop">
+            <img src="{{ c.image|thumbnail(1280) }}" alt=""{% if not loop.first %} loading="lazy"{% endif %}>
+        </div>
+        <div class="hero-content">
+            <h2 class="hero-title{% if c.title|length > 20 %} is-long{% endif %}">{{ c.title }}</h2>
+            <p class="meta">
+                {% if c.live %}<span class="tag tag-live">Direkte</span>{% endif %}
+                {% if c.category %}<span>{{ c.category }}</span>{% endif %}
+                {% if c.detail %}<span>{{ c.detail }}</span>{% endif %}
+            </p>
+            {% if c.tagline or c.description %}<p class="hero-text">{{ c.tagline or c.description }}</p>{% endif %}
+            <div class="actions">
+                <a class="button button-primary" href="{{ c.url }}">{{ icon("play") }} {{ "Se direkte" if c.live else "Se nu" }}</a>
+                {% if c.show_id %}{{ favorite_button(c.show_id, c.title, c.image) }}{% endif %}
+            </div>
         </div>
     </div>
+    {% endfor %}
+    {% if featured|length > 1 %}
+    <div class="featured-controls wrap">
+        <div class="featured-tabs" role="tablist" aria-label="Fremhævet" hidden>
+            {% for c in featured %}
+            <button type="button" class="featured-tab" role="tab" id="featured-tab-{{ loop.index }}" aria-controls="featured-{{ loop.index }}" aria-selected="{{ 'true' if loop.first else 'false' }}"{% if not loop.first %} tabindex="-1"{% endif %}>{{ c.title }}</button>
+            {% endfor %}
+        </div>
+        <button type="button" class="featured-clips js-featured-clips" hidden></button>
+    </div>
+    {% endif %}
 </section>
 {% else %}
 <section class="intro wrap">
@@ -30,7 +50,7 @@
 {# Filled in by progress.js, from the viewer's browser #}
 <section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>
     {{ shelf_head("Fortsæt med at se", "continue-title") }}
-    <div class="shelf-track"></div>
+    <div class="shelf-track js-tiles"></div>
 </section>
 
 {# Filled in by favorites.js, from the viewer's browser #}
@@ -40,7 +60,7 @@
         {{ icon("heart") }}
         <span>Tryk på <strong>Favorit</strong> på en serie, så samles dine serier her. De gemmes i din browser, og du kan <a href="/sync/">synkronisere dem mellem dine enheder</a>.</span>
     </p>
-    <div class="shelf-track"></div>
+    <div class="shelf-track js-tiles"></div>
 </section>
 
 {% if channels %}
@@ -48,33 +68,7 @@
     {{ shelf_head("Direkte TV", "live-title") }}
     <div class="shelf-track">
         {% for slug, channel in channels.items() %}
-        {% set on_now, later = whats_on(schedules.get(channel.id, [])) %}
-        <article class="tile channel-tile">
-            <a class="tile-link" href="/live/{{ slug }}"{% if channel.colour %} style="--channel: {{ channel.colour }};"{% endif %}>
-                <div class="tile-media">
-                    {% if on_now and on_now.image %}
-                    <img src="{{ on_now.image|thumbnail }}" alt="" loading="lazy">
-                    <div class="tile-badges"><span class="tag tag-channel">{{ channel.title }}</span></div>
-                    {% else %}
-                    <div class="channel-art">{{ channel.title }}</div>
-                    {% endif %}
-                    <span class="tile-play">{{ icon("play") }}</span>
-                    {% if on_now %}
-                    <div class="tile-progress tile-progress-live" role="progressbar" aria-label="Sendt indtil videre" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ on_now.percent_done() }}"><span style="width: {{ on_now.percent_done() }}%;"></span></div>
-                    {% endif %}
-                </div>
-                <h3 class="tile-title">{% if on_now %}<span class="visually-hidden">{{ channel.title }}: </span>{{ on_now.title }}{% else %}{{ channel.title }}{% endif %}</h3>
-            </a>
-            <p class="tile-meta">
-                {% if on_now %}
-                <span>Til {{ on_now.end|clock }}{% if later %}, derefter {{ later[0].title }}{% endif %}</span>
-                {% elif later %}
-                <span>Fra {{ later[0].start|clock }}: {{ later[0].title }}</span>
-                {% else %}
-                <span>Direkte</span>
-                {% endif %}
-            </p>
-        </article>
+        {{ channel_tile(slug, channel, schedules.get(channel.id, [])) }}
         {% endfor %}
     </div>
 </section>
@@ -92,5 +86,16 @@
         {% endfor %}
     </div>
 </section>
+{% endif %}
+
+{% if page %}
+{% for row in page.rows %}
+<section class="shelf" aria-labelledby="row-{{ loop.index }}">
+    {{ shelf_head(row.title, "row-" ~ loop.index) }}
+    <div class="shelf-track">
+        {% for c in row.cards %}{{ card_tile(c) }}{% endfor %}
+    </div>
+</section>
+{% endfor %}
 {% endif %}
 {% endblock %}

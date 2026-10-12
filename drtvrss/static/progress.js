@@ -252,7 +252,7 @@ function showContinueWatching() {
         return;
     }
     const started = startedVideos();
-    section.querySelector(".shelf-track").replaceChildren(...started.map(continueWatchingTile));
+    section.querySelector(".js-tiles").replaceChildren(...started.map(continueWatchingTile));
     section.hidden = started.length == 0;
     section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
 }

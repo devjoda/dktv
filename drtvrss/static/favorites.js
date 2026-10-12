@@ -110,7 +110,7 @@ function renderFavorites(details = favoriteDetails) {
     const section = document.getElementById("favorites");
     const favorites = loadFavorites();
     section.querySelector(".js-favorites-empty").hidden = favorites.length > 0;
-    const track = section.querySelector(".shelf-track");
+    const track = section.querySelector(".js-tiles");
     track.hidden = favorites.length == 0;
     track.replaceChildren(...favorites.map(favorite => favoriteTile(favorite, details[favorite.id])));
     section.hidden = false;

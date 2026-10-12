@@ -27,6 +27,8 @@ def thumbnail(image_url: Optional[str], width: int = THUMBNAIL_WIDTH) -> Optiona
         return image_url
     height = round(int(old_height[1]) * width / int(old_width[1]))
     image_url = image_url.replace(old_width[0], f"Width={width}")
+    # Some are photos as PNG, which are many times bigger than as JPEG
+    image_url = image_url.replace("Format='png'", "Format='jpg'")
     return image_url.replace(old_height[0], f"Height={height}")
 
 

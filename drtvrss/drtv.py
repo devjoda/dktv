@@ -67,7 +67,7 @@ API_PARAMS = {
 }
 
 
-async def get_api(path: str, **params) -> dict:
+async def get_api(path: str, /, **params) -> dict:
     """Gets something from DR's API, like `/items/{id}`"""
     print("Fetching from DR", path, params)
     try:

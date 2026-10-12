@@ -9,7 +9,7 @@
 <section class="hero">
     <div class="hero-backdrop"><img src="{{ s.wallpaper|thumbnail(1280) }}" alt=""></div>
     <div class="hero-content">
-        <h1 class="hero-title">{{ s.title }}</h1>
+        <h1 class="hero-title{% if s.title|length > 20 %} is-long{% endif %}">{{ s.title }}</h1>
         {{ show_facts(s) }}
         <p class="hero-text">{{ s.description }}</p>
         {% if s.next_episode %}

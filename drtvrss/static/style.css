@@ -147,45 +147,32 @@ h1, h2, h3 {
 }
 
 /* Readable on whatever picture is below */
-.has-hero .site-header:not(.is-scrolled) .channel {
+.has-hero .site-header:not(.is-scrolled) .nav-item {
     color: var(--paper);
     text-shadow: 0 1px 8px rgba(0, 0, 0, .6);
 }
 
 .header-bar {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 8px 32px;
+    gap: 8px 24px;
     min-height: 68px;
     padding-block: 12px;
 }
 
-.brand {
-    color: var(--paper);
-    font-size: 1.25rem;
-    font-weight: 850;
-    letter-spacing: -.03em;
-    white-space: nowrap;
-}
-
-.brand:hover {
-    color: #fff;
-}
-
-.channels {
-    order: 3;
-    flex-basis: 100%;
-    margin-inline: -10px;
+.site-nav {
+    flex: 1;
+    min-width: 0;
+    margin-left: -12px;
     overflow-x: auto;
     scrollbar-width: none;
 }
 
-.channels::-webkit-scrollbar {
+.site-nav::-webkit-scrollbar {
     display: none;
 }
 
-.channels ul {
+.site-nav ul {
     display: flex;
     gap: 2px;
     margin: 0;
@@ -193,26 +180,26 @@ h1, h2, h3 {
     list-style: none;
 }
 
-.channel {
+.nav-item {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 10px;
+    padding: 7px 12px;
     border-radius: 999px;
     color: var(--muted);
     font-size: .9375rem;
-    font-weight: 600;
+    font-weight: 650;
     white-space: nowrap;
     transition: color .15s;
 }
 
-.channel:hover,
-.channel[aria-current] {
+.nav-item:hover,
+.nav-item[aria-current] {
     color: var(--paper);
 }
 
-.channel[aria-current] {
-    background: rgba(242, 239, 233, .1);
+.nav-item[aria-current] {
+    background: rgba(242, 239, 233, .12);
 }
 
 .live-dot {
@@ -236,10 +223,25 @@ h1, h2, h3 {
 
 .header-search {
     position: relative;
-    flex: 1;
+    display: none;
+    flex: 0 1 300px;
     min-width: 0;
-    max-width: 320px;
-    margin-left: auto;
+}
+
+/* Instead of the search box, on small screens */
+.search-link {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--paper);
+}
+
+.search-link:hover {
+    background: rgba(242, 239, 233, .12);
+    color: #fff;
 }
 
 .header-search input,
@@ -285,10 +287,12 @@ h1, h2, h3 {
 }
 
 @media (min-width: 900px) {
-    .channels {
-        order: 0;
-        flex-basis: auto;
-        margin-inline: 0;
+    .header-search {
+        display: block;
+    }
+
+    .search-link {
+        display: none;
     }
 }
 
@@ -478,6 +482,12 @@ h1, h2, h3 {
     text-wrap: balance;
 }
 
+/* Long titles would take up the whole picture */
+.hero-title.is-long {
+    max-width: 18ch;
+    font-size: clamp(2.25rem, 5vw, 4.75rem);
+}
+
 .hero .meta {
     color: var(--paper);
     font-size: var(--text-body);
@@ -514,7 +524,8 @@ h1, h2, h3 {
         min-height: 560px;
     }
 
-    .hero-backdrop img {
+    .hero-backdrop img,
+    .hero-preview {
         height: 64%;
     }
 
@@ -530,6 +541,192 @@ h1, h2, h3 {
     .hero-text {
         font-size: var(--text-body);
     }
+}
+
+/* What DR features at the top of the front page, one at a time, as tabs */
+.featured {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+}
+
+.featured .hero-content {
+    padding-bottom: 28px;
+}
+
+.hero-slide:not([hidden]) .hero-backdrop,
+.hero-slide:not([hidden]) .hero-content {
+    animation: featured-in .45s ease;
+}
+
+@keyframes featured-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* DR's short clip, over the picture once it plays */
+.hero-preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity .6s ease;
+}
+
+.hero-preview.is-playing {
+    opacity: 1;
+}
+
+/* Keeps the text readable over the clip too */
+.hero-backdrop::after {
+    z-index: 1;
+}
+
+.featured-controls {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 32px;
+}
+
+.featured-tabs {
+    display: flex;
+    gap: 12px;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.featured-tab {
+    position: relative;
+    flex: 0 1 240px;
+    min-width: 120px;
+    padding: 14px 0 2px;
+    overflow: hidden;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-size: .9375rem;
+    font-weight: 650;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.featured-tab::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(242, 239, 233, .25);
+}
+
+.featured-tab:hover {
+    color: var(--paper);
+}
+
+.featured-tab[aria-selected=true] {
+    color: var(--paper);
+}
+
+.featured-tab[aria-selected=true]::before {
+    background: var(--paper);
+}
+
+.featured-clips {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .12);
+    color: var(--paper);
+    font-size: .875rem;
+    font-weight: 650;
+}
+
+.featured-clips:hover {
+    background: rgba(242, 239, 233, .22);
+}
+
+@media (max-width: 575px) {
+    .featured-tab {
+        flex-basis: 140px;
+    }
+
+    .featured-clips span {
+        display: none;
+    }
+}
+
+.channel-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin: 4px 0 0 -12px;
+}
+
+/* DR's categories, with their pictures */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+    gap: 14px;
+    margin: 32px 0 0;
+    list-style: none;
+}
+
+.category {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--media-radius);
+    background: var(--raised);
+    color: var(--paper);
+}
+
+.category img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s ease, filter .25s;
+}
+
+.category::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(15, 16, 19, .85) 0%, rgba(15, 16, 19, 0) 60%);
+}
+
+.category:hover {
+    color: #fff;
+}
+
+.category:hover img {
+    transform: scale(1.04);
+    filter: brightness(1.1);
+}
+
+.category-title {
+    position: relative;
+    z-index: 1;
+    padding: 14px 16px;
+    font-size: var(--text-h3);
+    font-weight: 800;
+    letter-spacing: -.02em;
 }
 
 .intro {
@@ -663,6 +860,8 @@ h1, h2, h3 {
 /* Tiles */
 
 .tile {
+    /* So what's inside stays inside a row that scrolls sideways, like text for screen readers only */
+    position: relative;
     min-width: 0;
 }
 

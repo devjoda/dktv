@@ -181,6 +181,49 @@ class ChannelSchedule(DRModel):
     schedules: list[ScheduledBroadcast]
 
 
+class DiscoverCustomFields(BaseModel):
+    model_config = ConfigDict(alias_generator=to_pascal, populate_by_name=True)
+
+    # A short clip, as HLS, which DR plays without sound at the top of its front page
+    short_video_url: Annotated[Optional[str], Lenient] = None
+    # Like "Fiktionsserie" or "Livsstil,Underholdning"
+    display_category: Annotated[Optional[str], Lenient] = None
+
+
+class DiscoverItem(DRModel):
+    """A show, season, episode, programme or link, in one of DR's rows"""
+
+    id: str
+    type: str
+    title: str
+    path: str
+    show_id: Optional[str] = None
+    short_description: str = ""
+    tagline: Annotated[Optional[str], Lenient] = None
+    images: Images = Images()
+    custom_fields: DiscoverCustomFields = DiscoverCustomFields()
+
+
+class PageList(DRModel):
+    id: str
+    title: Optional[str] = None
+    # Each checked on its own, so one odd item doesn't lose the whole row
+    items: list[dict] = []
+
+
+class PageEntry(DRModel):
+    """A part of one of DR's pages, like the featured programmes at the top, or a row"""
+
+    template: Optional[str] = None
+    title: Optional[str] = None
+    list: Annotated[Optional[PageList], Lenient] = None
+
+
+class Page(DRModel):
+    title: Optional[str] = None
+    entries: list[PageEntry] = []
+
+
 class SearchResponse(DRModel):
     """Response from the search API.
 

@@ -47,6 +47,42 @@ show_id adds a button to make the show a favourite.
 </article>
 {%- endmacro %}
 
+{# One of DR's programmes, from discover.py #}
+{% macro card_tile(c) -%}
+{{ tile(c.url, c.image, c.title, meta=c.category, tags=[("live", "Direkte")] if c.live else [], video_id=c.video_id, show_id=c.show_id) }}
+{%- endmacro %}
+
+{# A live channel, with what's on it now, from live.py #}
+{% macro channel_tile(slug, channel, programmes) -%}
+{% set on_now, later = whats_on(programmes) %}
+<article class="tile channel-tile">
+    <a class="tile-link" href="/live/{{ slug }}"{% if channel.colour %} style="--channel: {{ channel.colour }};"{% endif %}>
+        <div class="tile-media">
+            {% if on_now and on_now.image %}
+            <img src="{{ on_now.image|thumbnail }}" alt="" loading="lazy">
+            <div class="tile-badges"><span class="tag tag-channel">{{ channel.title }}</span></div>
+            {% else %}
+            <div class="channel-art">{{ channel.title }}</div>
+            {% endif %}
+            <span class="tile-play">{{ icon("play") }}</span>
+            {% if on_now %}
+            <div class="tile-progress tile-progress-live" role="progressbar" aria-label="Sendt indtil videre" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ on_now.percent_done() }}"><span style="width: {{ on_now.percent_done() }}%;"></span></div>
+            {% endif %}
+        </div>
+        <h3 class="tile-title">{% if on_now %}<span class="visually-hidden">{{ channel.title }}: </span>{{ on_now.title }}{% else %}{{ channel.title }}{% endif %}</h3>
+    </a>
+    <p class="tile-meta">
+        {% if on_now %}
+        <span>Til {{ on_now.end|clock }}{% if later %}, derefter {{ later[0].title }}{% endif %}</span>
+        {% elif later %}
+        <span>Fra {{ later[0].start|clock }}: {{ later[0].title }}</span>
+        {% else %}
+        <span>Direkte</span>
+        {% endif %}
+    </p>
+</article>
+{%- endmacro %}
+
 {# A row of tiles that scrolls sideways #}
 {% macro shelf_head(title, id) -%}
 <div class="shelf-head">
