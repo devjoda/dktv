@@ -1,6 +1,6 @@
 import asyncio
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from aiohttp import web
@@ -61,7 +61,9 @@ def test_build_show_next_episode():
     blob = load("items_503612.json")
     blob["show"]["nextEpisode"] = {"availableUTC": "1760000000"}
     show = drtv.build_show(latest_season(blob), seasons())
-    assert show.next_episode == datetime.fromtimestamp(1760000000)
+    assert show.next_episode == datetime.fromtimestamp(1760000000, tz=timezone.utc)
+    # In Danish time, wherever the server is
+    assert show.next_episode.utcoffset() == timedelta(hours=2)
 
 
 def test_build_show_names_seasons_by_year_without_season_number():

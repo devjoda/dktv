@@ -113,7 +113,9 @@ def build_show(latest: dr.Season, seasons: dict[str, dr.Season]) -> Show:
     and all of the show's seasons keyed by path"""
     next_episode = None
     if latest.show.next_episode is not None:
-        next_episode = datetime.fromtimestamp(latest.show.next_episode.available_utc)
+        next_episode = datetime.fromtimestamp(
+            latest.show.next_episode.available_utc, tz=dr.COPENHAGEN
+        )
 
     feed = Show(
         latest.show.title,

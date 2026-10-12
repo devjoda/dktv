@@ -4,6 +4,8 @@ import xml.etree.ElementTree as ET
 
 from drtvrss import drtv
 
+from .conftest import load
+
 
 def test_index(get):
     r = get("/")
@@ -23,11 +25,31 @@ def test_show(get):
     # Newest season first
     assert r.text.index("Sæson 4") < r.text.index("Sæson 3") < r.text.index("Sæson 1")
     assert "Width=1920" not in r.text
-    assert r.text.count('loading="lazy"') == r.text.count("<img")
+    # All but the big picture at the top, which is seen right away
+    assert r.text.count('loading="lazy"') == r.text.count("<img") - 1
+    assert "Width=1280" in r.text
     assert "1. okt. 2000" in r.text and "59 min." in r.text
-    # For showing how far the viewer got with each episode
+    assert "4 sæsoner" in r.text and "32 afsnit" in r.text
+    # Seasons become tabs, with the newest selected
+    assert '<button type="button" class="season-tab" role="tab" id="season-tab-1" aria-controls="season-1" aria-selected="true">Sæson 4</button>' in r.text
+    # For showing how far the viewer got with each episode, and what to play
     assert '<script src="/static/progress.js"></script>' in r.text
     assert 'data-video-id="503615"' in r.text
+    assert 'class="button button-primary js-play" href="/rejseholdet_503605/rejseholdet_503615"' in r.text
+    assert '{"id": "503615", "season": "S\\u00e6son 1", "title": "1. episode", "url": "/rejseholdet_503605/rejseholdet_503615"}' in r.text
+
+
+def test_show_next_episode_is_announced(get, monkeypatch):
+    blob = load("items_503612.json")
+    blob["show"]["nextEpisode"] = {"availableUTC": "1760000000"}
+    get_api = drtv.get_api
+
+    async def with_next_episode(path, **params):
+        return blob if path == "/items/503612" else await get_api(path, **params)
+
+    monkeypatch.setattr(drtv, "get_api", with_next_episode)
+    # 08:53 UTC, so 10:53 in Denmark
+    assert "Nyt afsnit 9. okt. kl. 10.53" in get("/rejseholdet_503605/").text
 
 
 def test_recommended_shows_are_listed_on_index(get, monkeypatch):
@@ -35,16 +57,22 @@ def test_recommended_shows_are_listed_on_index(get, monkeypatch):
     get("/rejseholdet_503605/")
     r = get("/")
     assert "Anbefalede serier" in r.text
-    assert 'href="rejseholdet_503605"' in r.text
+    assert 'href="/rejseholdet_503605/"' in r.text
     assert "Width=640&amp;Height=360" in r.text
+    # The first one is featured at the top, with a button that plays it
+    assert '<h2 class="hero-title" id="featured-title">Rejseholdet</h2>' in r.text
+    assert 'class="button button-primary js-play"' in r.text
+    # For marking how many of its episodes the viewer has seen
+    assert 'data-episode-ids="503615 ' in r.text
 
 
 def test_other_visitors_shows_are_not_listed_on_index(get):
     get("/rejseholdet_503605/")
     get("/rejseholdet_503605.xml")
     r = get("/")
-    assert 'href="rejseholdet_503605"' not in r.text
+    assert 'href="/rejseholdet_503605/"' not in r.text
     assert "Anbefalede serier" not in r.text
+    assert "DRTV, uden bøvl" in r.text
 
 
 def test_unknown_show(get):
@@ -60,14 +88,17 @@ def test_unknown_show(get):
 def test_episode(get):
     r = get("/rejseholdet_503605/rejseholdet_503615")
     assert r.status_code == 200
-    assert "Rejseholdet</a> - 1. episode" in r.text
+    assert '<a class="eyebrow" href="/rejseholdet_503605/">' in r.text
+    assert '<h1 class="watch-title">1. episode</h1>' in r.text
     assert 'type="application/rss+xml" title="Rejseholdet" href="/rejseholdet_503605.xml"' in r.text
-    assert "1. okt. 2000 · 59 min." in r.text
+    assert "<span>1. okt. 2000</span><span>59 min.</span>" in r.text
     assert 'poster="https://' in r.text
     assert 'playVideo(document.getElementById(\'video\'), "503615")' in r.text
     # The first episode has nothing before it
-    assert "Forrige" not in r.text
-    assert '<a href="/rejseholdet_503605/rejseholdet_503640" rel="next">Næste: 2. episode →</a>' in r.text
+    assert "Forrige afsnit" not in r.text
+    assert '<h2 class="side-title">Næste afsnit</h2>' in r.text
+    assert '<a class="tile-link" href="/rejseholdet_503605/rejseholdet_503640">' in r.text
+    assert '<article class="tile" data-video-id="503640">' in r.text
     assert 'data-next-url="/rejseholdet_503605/rejseholdet_503640"' in r.text
     # What it saves about the video, to list it under "Fortsæt med at se"
     assert 'data-title="1. episode"' in r.text
@@ -79,8 +110,9 @@ def test_episode_links_into_the_next_season(get):
     # The last episode of season 1
     r = get("/rejseholdet_503605/rejseholdet_503638")
     assert r.status_code == 200
-    assert 'rel="prev">← Forrige: 8. episode</a>' in r.text
-    assert 'rel="next">Næste: Sæson 2, 1. episode →</a>' in r.text
+    assert '<h2 class="side-title">Forrige afsnit</h2>' in r.text
+    assert '<h3 class="tile-title">8. episode</h3>' in r.text
+    assert '<h3 class="tile-title">Sæson 2, 1. episode</h3>' in r.text
     # There's no fixture for this episode's page, so it falls back to the short description
     assert "Dansk krimiserie fra 2000." in r.text
 
@@ -100,10 +132,10 @@ def test_program(get):
     r = get("/program/lise-noergaard_-ikke-kun-en-pige_362031")
     assert r.status_code == 200
     assert "Lise Nørgaard: Ikke kun en pige" in r.text
-    assert "7. jan. 2023 · 48 min." in r.text
+    assert "<span>7. jan. 2023</span><span>48 min.</span>" in r.text
     assert 'poster="https://' in r.text
     assert 'playVideo(document.getElementById(\'video\'), "362031")' in r.text
-    assert "Næste" not in r.text
+    assert "Næste afsnit" not in r.text
 
 
 def test_live_channel(get):
@@ -114,7 +146,7 @@ def test_live_channel(get):
 
 def test_current_live_channel_is_marked(get):
     r = get("/live/DR1")
-    assert '<a href="/live/DR1" class="nav-link px-2 text-white fw-semibold text-decoration-underline link-offset-2" aria-current="page">DR1</a>' in r.text
+    assert '<a href="/live/DR1" class="channel" aria-current="page"><span class="live-dot"></span>DR1</a>' in r.text
     assert r.text.count('aria-current="page"') == 1
     assert 'aria-current' not in get("/").text
 
@@ -156,7 +188,8 @@ def test_search_without_results(get, monkeypatch):
 
 
 def test_search_box_has_a_button(get):
-    assert '<button class="btn btn-outline-light" type="submit">Søg</button>' in get("/").text
+    text = get("/").text
+    assert '<button type="submit" class="search-submit" aria-label="Søg">' in text
 
 
 def test_dr_being_down_is_not_a_missing_page(get, monkeypatch):
@@ -226,6 +259,29 @@ def test_dr_is_not_told_where_it_is_used_from(get):
 
 def test_index_can_continue_watching(get):
     r = get("/")
-    assert '<div id="continue-watching" class="pt-5 bg-body-tertiary" hidden>' in r.text
+    assert '<section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>' in r.text
     assert '<script src="/static/progress.js"></script>' in r.text
-    assert 'addEventListener("pageshow", showContinueWatching)' in r.text
+    assert '<script src="/static/ui.js"></script>' in r.text
+
+
+def test_index_lists_the_live_channels(get):
+    r = get("/")
+    assert '<h2 class="shelf-title" id="live-title">Direkte TV</h2>' in r.text
+    assert '<a class="tile-link" href="/live/DR1">' in r.text
+
+
+def test_pages_are_dark(get):
+    for path in ["/", "/rejseholdet_503605/", "/search/", "/live/DR1"]:
+        text = get(path).text
+        assert '<html lang="da" data-bs-theme="dark">' in text
+        assert '<link href="/static/style.css" rel="stylesheet">' in text
+
+
+def test_search_results_are_labelled_by_kind(get):
+    r = get("/search/?query=matador")
+    assert '<span class="tag tag-type">Serie</span>' in r.text
+    assert '<span class="tag tag-type">Film</span>' in r.text
+    assert '<span class="tag tag-type">Afsnit</span>' in r.text
+    # Films and episodes can be marked as seen, series can't from here
+    assert 'data-video-id="362031"' in r.text
+    assert 'data-video-id="540736"' not in r.text

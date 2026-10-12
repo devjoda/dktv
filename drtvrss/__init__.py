@@ -24,18 +24,25 @@ from .drtv import (
     search,
 )
 from .live import get_channels
-from .show import danish_date, duration, thumbnail
+from .show import danish_date, danish_datetime, duration, is_new, thumbnail
 
 app = Quart(__name__)
 app.add_template_filter(thumbnail)
 app.add_template_filter(danish_date)
+app.add_template_filter(danish_datetime)
 app.add_template_filter(duration)
+app.add_template_test(is_new, "new")
 
 complaints_email = os.getenv("KLAGE_MAIL", None)
 SERVICE_NAME = os.getenv("SERVICE_NAME", "Public Service")
 
 # Shorter than the hour shows are cached for, so visitors never wait for these
 RECOMMENDED_REFRESH_INTERVAL = 30 * 60
+
+
+@app.context_processor
+def footer():
+    return {"complaints_email": complaints_email}
 
 
 def birthday() -> Optional[int]:
@@ -143,7 +150,12 @@ async def view_episode(showid, episode):
         title = other.title
         if other_season is not season:
             title = f"{other_season.title}, {title}"
-        return {"url": f"/{show.url}/{other.ep_link}", "title": title}
+        return {
+            "url": f"/{show.url}/{other.ep_link}",
+            "title": title,
+            "wallpaper": other.wallpaper,
+            "len_minutes": other.len_minutes,
+        }
 
     await get_long_description(e)
     return await render_template(

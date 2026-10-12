@@ -1,49 +1,71 @@
 {% extends "base.html" %}
-{% block head %}
-{{ super() }}
-<script src="/static/progress.js"></script>
-{% endblock %}
+{% from "_ui.html" import icon, tile, shelf_head, search_field, play_button, show_tags %}
 {% block content %}
 <h1 class="visually-hidden">{{ SERVICE_NAME }}</h1>
-{# Filled in from the viewer's browser #}
-<div id="continue-watching" class="pt-5 bg-body-tertiary" hidden>
-    <div class="container">
-        <h2 class="mb-4">Fortsæt med at se</h2>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"></div>
-    </div>
-</div>
-<script>
-    // Also when coming back to the page, which the browser may have kept as it was
-    window.addEventListener("pageshow", showContinueWatching);
-</script>
+
 {% if shows %}
-<div class="album py-5 bg-body-tertiary">
-    <div class="container">
-        <h2 class="mb-4">Anbefalede serier</h2>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {% for show in shows %}
-                {% include "_show_card.html" %}
-            {% endfor %}
+{% set featured = shows[0] %}
+<section class="hero" aria-labelledby="featured-title">
+    <div class="hero-backdrop"><img src="{{ featured.wallpaper|thumbnail(1280) }}" alt=""></div>
+    <div class="hero-content">
+        <div class="badges">
+            <span class="tag tag-new">Anbefalet</span>
+            {{ show_tags(featured) }}
+        </div>
+        <h2 class="hero-title" id="featured-title">{{ featured.title }}</h2>
+        <p class="hero-text">{{ featured.description }}</p>
+        <div class="actions">
+            {{ play_button(featured) }}
+            <a class="button button-secondary" href="/{{ featured.url }}/">{{ icon("list") }} Alle afsnit</a>
         </div>
     </div>
-</div>
+</section>
+{% else %}
+<section class="intro wrap">
+    <h2>DRTV, uden bøvl</h2>
+    <p>Se DR's serier, film og direkte TV, og abonnér på dine yndlingsserier med RSS.</p>
+    {{ search_field() }}
+</section>
 {% endif %}
-<footer class="text-body-secondary py-5">
-    <div class="py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
-            <h2 class="fw-light">{{ SERVICE_NAME }}</h2>
-            <p class="text-body-secondary">
-            {{ SERVICE_NAME }} er en frontend til DRTV, i stil med Invidious eller Nitter.</br>
-            Ingen af videoerne bliver hostet på den her hjemmeside og du kan ikke se noget du ikke ville kunne se med DRTV. Hjemmesiden tillader bare en nemmere brugergrænseflade end DR's egen (I min mening).</br>
-            Kildekoden er at finde på <a href='https://github.com/RasmusRendal/drtvrss'>GitHub</a></br>
-            {% if complaints_email %}
-            Klager kan sendes til <a href="mailto:{{ complaints_email }}">{{ complaints_email }}</a>.
-            {% endif %}
-            </p>
-        </div>
+
+{# Filled in by progress.js, from the viewer's browser #}
+<section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>
+    {{ shelf_head("Fortsæt med at se", "continue-title") }}
+    <div class="shelf-track"></div>
+</section>
+
+{% if channels %}
+<section class="shelf" aria-labelledby="live-title">
+    {{ shelf_head("Direkte TV", "live-title") }}
+    <div class="shelf-track">
+        {% for slug, channel in channels.items() %}
+        <article class="tile">
+            <a class="tile-link" href="/live/{{ slug }}">
+                <div class="tile-media">
+                    <div class="channel-art" style="--hue: {{ (350 + loop.index0 * 75) % 360 }};" aria-hidden="true">{{ channel.title }}</div>
+                    <div class="tile-badges"><span class="tag tag-live">Live</span></div>
+                    <span class="tile-play">{{ icon("play") }}</span>
+                </div>
+                <h3 class="tile-title">{{ channel.title }}</h3>
+            </a>
+            <p class="tile-meta">Direkte</p>
+        </article>
+        {% endfor %}
     </div>
+</section>
+{% endif %}
 
-
-</footer>
-
+{% if shows %}
+<section class="shelf" aria-labelledby="recommended-title">
+    {{ shelf_head("Anbefalede serier", "recommended-title") }}
+    <div class="shelf-track">
+        {% for show in shows %}
+        {% set tags = [("new", "Nye afsnit")] if show.episodes and show.episodes[-1].pubdate is new else [] %}
+        {{ tile("/" ~ show.url ~ "/", show.wallpaper, show.title,
+                meta=(show.seasons|length ~ " sæsoner") if show.seasons|length > 1 else (show.episodes|length ~ " afsnit"),
+                tags=tags, episode_ids=show.episodes|map(attribute="video_id")|list) }}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 {% endblock %}

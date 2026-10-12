@@ -1,48 +1,55 @@
 {% extends "base.html" %}
+{% from "_ui.html" import icon, tile %}
 {% block head %}
 <title>{% if s %}{{ s.title }} - {% endif %}{{ e.title }}</title>
 {% if s %}
 <link rel="alternate" type="application/rss+xml" title="{{ s.title }}" href="{{ s.feed_url }}">
 {% endif %}
+{% endblock %}
+{% block scripts %}
 <script src="/static/vendor/hls-1.7.3.min.js" integrity="sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX"></script>
-<script src="/static/progress.js"></script>
 <script src="/static/player.js"></script>
 {% endblock %}
 {% block content %}
-<div class="container-fluid pt-2">
-    <h1 class="mx-auto" style="width: 100%;">{% if s %}<a href="/{{ s.url }}/">{{ s.title }}</a> - {% endif %}{{ e.title }}</h1>
-    <video id="video" class="mx-auto" controls
-        {%- if e.wallpaper %} poster="{{ e.wallpaper }}"{% endif %}
+<div class="stage">
+    <video id="video" controls
+        {%- if e.wallpaper %} poster="{{ e.wallpaper|thumbnail(1280) }}"{% endif %}
         {%- if next %} data-next-url="{{ next.url }}" data-next-title="{{ next.title }}"{% endif %}
         data-title="{{ e.title }}"
         {%- if s %} data-show="{{ s.title }}"{% endif %}
         {%- if e.wallpaper %} data-image="{{ e.wallpaper|thumbnail }}"{% endif %}></video>
-    <p class="pt-2 mb-1 text-body-secondary">
-        {%- if e.pubdate %}{{ e.pubdate|danish_date }}{% endif %}
-        {%- if e.pubdate and e.len_minutes %} · {% endif %}
-        {%- if e.len_minutes %}{{ e.len_minutes|duration }}{% endif -%}
-    </p>
+</div>
+<div class="watch">
+    <div>
+        {% if s %}
+        <a class="eyebrow" href="/{{ s.url }}/">{{ icon("chevron-left") }} {{ s.title }}</a>
+        {% endif %}
+        <h1 class="watch-title">{{ e.title }}</h1>
+        <p class="meta">
+            {%- if e.pubdate %}<span>{{ e.pubdate|danish_date }}</span>{% endif %}
+            {%- if e.len_minutes %}<span>{{ e.len_minutes|duration }}</span>{% endif %}
+            {%- if e.pubdate is new %}<span class="tag tag-new">Ny</span>{% endif %}
+            {%- if e.geo_restricted %}<span class="tag tag-geo">Kun i Danmark</span>{% endif -%}
+        </p>
+        <p class="description">{{ e.description }}</p>
+        {% if e.url %}
+        <a class="button button-secondary" href="https://www.dr.dk/drtv{{ e.url }}">Se på DRTV {{ icon("external") }}</a>
+        {% endif %}
+    </div>
     {% if previous or next %}
-    <nav class="d-flex flex-column flex-sm-row justify-content-between gap-1 gap-sm-3 my-2" aria-label="Afsnit">
-        <div>{% if previous %}<a href="{{ previous.url }}" rel="prev">← Forrige: {{ previous.title }}</a>{% endif %}</div>
-        <div class="text-sm-end">{% if next %}<a href="{{ next.url }}" rel="next">Næste: {{ next.title }} →</a>{% endif %}</div>
-    </nav>
-    {% endif %}
-    <p class="pt-2" style="white-space: pre-wrap;">{{ e.description }}</p>
-    {% if e.url %}
-        <a href="https://www.dr.dk/drtv{{ e.url }}">Se på DRTV</a>
+    <aside class="watch-side" aria-label="Flere afsnit">
+        {% if next %}
+        <h2 class="side-title">Næste afsnit</h2>
+        {{ tile(next.url, next.wallpaper, next.title, minutes=next.len_minutes, video_id=next.url.split("_")[-1]) }}
+        {% endif %}
+        {% if previous %}
+        <h2 class="side-title">Forrige afsnit</h2>
+        {{ tile(previous.url, previous.wallpaper, previous.title, minutes=previous.len_minutes, video_id=previous.url.split("_")[-1]) }}
+        {% endif %}
+    </aside>
     {% endif %}
 </div>
-<style>
-video {
-    width: 100%;
-    max-height: 80vh;
-    object-fit: contain;
-    display: block;
-    background-color: black;
-}
-</style>
 <script>
-    playVideo(document.getElementById('video'), {{ e.url.split("_")[-1]|tojson }});
+    playVideo(document.getElementById('video'), {{ e.video_id|tojson }});
 </script>
 {% endblock %}

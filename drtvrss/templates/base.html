@@ -1,52 +1,63 @@
+{% from "_ui.html" import icon %}
 <!doctype html>
-<html lang="da">
+<html lang="da" data-bs-theme="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         {# DR doesn't need to know which site its images, streams and links are used from #}
         <meta name="referrer" content="no-referrer">
+        <meta name="theme-color" content="#0b0c10">
         {% block head %}
         <title>{{ SERVICE_NAME }}</title>
         {% endblock %}
         <link href="/static/vendor/bootstrap-5.3.3.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH">
+        <link href="/static/style.css" rel="stylesheet">
+        <script src="/static/progress.js"></script>
+        <script src="/static/ui.js"></script>
+        {% block scripts %}{% endblock %}
     </head>
     <body>
-    {% if birthday %}
-        <header style="background-color: #ff000d;text-align: center;">🇩🇰 Tillykke til DR med de {{ birthday }} år! 🇩🇰</header>
-    {% endif %}
-        <header data-bs-theme="dark">
-            <div class="navbar navbar-dark bg-dark shadow-sm">
-                <div class="container gap-2">
-                    <a href="/" class="navbar-brand d-flex align-items-center">
-                        <strong>{{ SERVICE_NAME }}</strong>
-                    </a>
-                    {# One row that scrolls sideways on small screens, instead of wrapping #}
-                    <nav class="col-12 col-lg-auto me-lg-auto" style="overflow-x: auto;" aria-label="Direkte kanaler">
-                        <ul class="nav flex-nowrap text-nowrap">
-                        {% for slug, channel in channels.items() %}
-                            {% if slug == current_channel %}
-                            <li><a href="/live/{{ slug }}" class="nav-link px-2 text-white fw-semibold text-decoration-underline link-offset-2" aria-current="page">{{ channel.title }}</a></li>
-                            {% else %}
-                            <li><a href="/live/{{ slug }}" class="nav-link px-2 text-white">{{ channel.title }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
-                    </nav>
-                    <form class="col-12 col-lg-auto mb-2 mb-lg-0" role="search" action="/search/">
-                        <div class="input-group">
-                            <input type="search" name="query" class="form-control" placeholder="Søg..." aria-label="Søg" {% if query%} value="{{ query }}" {% endif %}>
-                            <button class="btn btn-outline-light" type="submit">Søg</button>
-                        </div>
-                    </form>
-                </div>
+        {% include "_icons.html" %}
+        <a class="skip-link" href="#main">Gå til indholdet</a>
+        {% if birthday %}
+        <div class="birthday">🇩🇰 Tillykke til DR med de {{ birthday }} år! 🇩🇰</div>
+        {% endif %}
+        <header class="site-header">
+            <div class="wrap header-bar">
+                <a href="/" class="brand"><span class="brand-mark">{{ icon("play") }}</span>{{ SERVICE_NAME }}</a>
+                {# One row that scrolls sideways on small screens, instead of wrapping #}
+                <nav class="channels" aria-label="Direkte kanaler">
+                    <ul>
+                    {% for slug, channel in channels.items() %}
+                        <li><a href="/live/{{ slug }}" class="channel"{% if slug == current_channel %} aria-current="page"{% endif %}><span class="live-dot"></span>{{ channel.title }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </nav>
+                <form class="header-search" role="search" action="/search/">
+                    <input type="search" name="query" placeholder="Søg i DRTV" aria-label="Søg" value="{{ query or '' }}" enterkeyhint="search">
+                    <button type="submit" class="search-submit" aria-label="Søg">{{ icon("search") }}</button>
+                </form>
             </div>
         </header>
 
-        <main>
+        <main id="main">
             {% block content %}
             {% endblock %}
-
         </main>
+
+        <footer class="site-footer">
+            <p>
+                {{ SERVICE_NAME }} er en frontend til DRTV, i stil med Invidious eller Nitter.
+                Ingen af videoerne bliver hostet her, og du kan ikke se noget, du ikke ville kunne se på DRTV.
+                Hjemmesiden giver bare en nemmere brugergrænseflade end DR's egen (I min mening).
+            </p>
+            <p>
+                Kildekoden er at finde på <a href="https://github.com/RasmusRendal/drtvrss">GitHub</a>.
+                {% if complaints_email %}
+                Klager kan sendes til <a href="mailto:{{ complaints_email }}">{{ complaints_email }}</a>.
+                {% endif %}
+            </p>
+        </footer>
 
         <script>
             if ("serviceWorker" in navigator) {

@@ -1,49 +1,38 @@
 {% extends "base.html" %}
+{% from "_ui.html" import icon, tile, search_field %}
 {% block head %}
 <title>{% if query %}{{ query }} - {% endif %}Søg - {{ SERVICE_NAME }}</title>
 {% endblock %}
 {% block content %}
-<div class="album py-5 bg-body-tertiary">
-    <div class="container">
-
-        {% if not query %}
-        <div class="col-lg-6 col-md-8 mx-auto">
-            <h1>Søg</h1>
-            {% include "_search_form.html" %}
-        </div>
-        {% elif not (results.series or results.movies or results.episodes) %}
-        <div class="col-lg-6 col-md-8 mx-auto">
-            <h1>Ingen resultater for „{{ query }}“</h1>
-            <p class="lead text-body-secondary">Prøv at stave det anderledes, eller søg efter noget andet.</p>
-            {% include "_search_form.html" %}
-        </div>
-        {% endif %}
-
-        {% if results.series|length > 0 %}
-        <h1>Serier</h1>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {% for i, show in results.series %}
-                {% include "_show_card.html" %}
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% if results.movies|length > 0 %}
-        <h1>Film</h1>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {% for i, show in results.movies %}
-                {% include "_show_card.html" %}
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% if results.episodes|length > 0 %}
-        <h1 class="pt-4">Afsnit</h1>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {% for i, show in results.episodes %}
-                {% include "_show_card.html" %}
-            {% endfor %}
-        </div>
-        {% endif %}
-
-    </div>
+{% if not query %}
+<div class="empty">
+    {{ icon("search") }}
+    <h1>Søg</h1>
+    <p>Find serier, film og afsnit fra DRTV.</p>
+    {{ search_field(autofocus=True) }}
 </div>
+{% elif not (results.series or results.movies or results.episodes) %}
+<div class="empty">
+    {{ icon("search") }}
+    <h1>Ingen resultater for „{{ query }}“</h1>
+    <p>Prøv at stave det anderledes, eller søg efter noget andet.</p>
+    {{ search_field(query) }}
+</div>
+{% else %}
+<div class="page-head wrap">
+    <h1>Resultater for „{{ query }}“</h1>
+</div>
+{% for title, kind, items in [("Serier", "Serie", results.series), ("Film", "Film", results.movies), ("Afsnit", "Afsnit", results.episodes)] if items %}
+<section class="results" aria-labelledby="results-{{ loop.index }}">
+    <h2 class="section-title" id="results-{{ loop.index }}">{{ title }}</h2>
+    <div class="tile-grid">
+        {% for i, item in items %}
+        {% set tags = [("type", kind)] + ([("geo", "Kun i DK")] if item.geo_restricted else []) %}
+        {{ tile(item.url, item.wallpaper, item.title, tags=tags, description=item.description,
+                video_id=item.url.split("_")[-1] if kind != "Serie" else None) }}
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+{% endif %}
 {% endblock %}

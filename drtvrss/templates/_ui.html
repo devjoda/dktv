@@ -1,0 +1,75 @@
+{# The building blocks of the pages #}
+
+{% macro icon(name) -%}
+<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-{{ name }}"></use></svg>
+{%- endmacro %}
+
+{# Shown by progress.js, for videos the viewer started #}
+{% macro progress_bar() -%}
+<div class="tile-progress js-progress" role="progressbar" aria-label="Set indtil videre" aria-valuemin="0" aria-valuemax="100" hidden><span></span></div>
+{%- endmacro %}
+
+{# Shown by progress.js, for what the viewer has seen #}
+{% macro seen_mark() -%}
+<span class="tile-seen js-seen" hidden>{{ icon("check") }}<span class="visually-hidden">Set</span></span>
+{%- endmacro %}
+
+{% macro badges(tags) -%}
+{% for kind, label in tags %}<span class="tag tag-{{ kind }}">{{ label }}</span>{% endfor %}
+{%- endmacro %}
+
+{#
+A picture with a title, linking to a show or a video.
+video_id marks how far the viewer got with that video,
+and episode_ids how many of a show's episodes they've seen.
+#}
+{% macro tile(href, image, title, meta=None, tags=[], video_id=None, episode_ids=None, minutes=None, description=None) -%}
+<article class="tile"{% if video_id %} data-video-id="{{ video_id }}"{% endif %}{% if episode_ids %} data-episode-ids="{{ episode_ids|join(' ') }}"{% endif %}>
+    <a class="tile-link" href="{{ href }}">
+        <div class="tile-media">
+            {% if image %}<img src="{{ image|thumbnail }}" alt="" loading="lazy">{% endif %}
+            {% if tags %}<div class="tile-badges">{{ badges(tags) }}</div>{% endif %}
+            {{ seen_mark() }}
+            {% if minutes %}<span class="tile-duration">{{ minutes|duration }}</span>{% endif %}
+            <span class="tile-play">{{ icon("play") }}</span>
+            {{ progress_bar() }}
+        </div>
+        <h3 class="tile-title">{{ title }}</h3>
+    </a>
+    <p class="tile-meta"><span class="js-meta">{{ meta or "" }}</span></p>
+    {% if description %}<p class="tile-desc">{{ description }}</p>{% endif %}
+</article>
+{%- endmacro %}
+
+{# A row of tiles that scrolls sideways #}
+{% macro shelf_head(title, id) -%}
+<div class="shelf-head">
+    <h2 class="shelf-title" id="{{ id }}">{{ title }}</h2>
+    <div class="shelf-nav" hidden>
+        <button type="button" class="js-shelf-back" aria-label="Tilbage">{{ icon("chevron-left") }}</button>
+        <button type="button" class="js-shelf-forward" aria-label="Frem">{{ icon("chevron-right") }}</button>
+    </div>
+</div>
+{%- endmacro %}
+
+{% macro search_field(query=None, autofocus=False) -%}
+<form class="search-field" role="search" action="/search/">
+    <input type="search" name="query" placeholder="Søg efter serier, film og afsnit" aria-label="Søg" value="{{ query or '' }}" enterkeyhint="search"{% if autofocus %} autofocus{% endif %}>
+    <button type="submit" class="search-submit" aria-label="Søg">{{ icon("search") }}</button>
+</form>
+{%- endmacro %}
+
+{# Plays the episode the viewer is at, which progress.js finds; the first one until then #}
+{% macro play_button(show) -%}
+{% set playlist = show.playlist() %}
+<a class="button button-primary js-play" href="{{ playlist[0].url if playlist else '/' ~ show.url ~ '/' }}" data-episodes='{{ playlist|tojson }}'>
+    {{ icon("play") }}
+    <span class="button-label"><span class="js-play-label">Afspil</span><span class="button-detail js-play-detail" hidden></span></span>
+</a>
+{%- endmacro %}
+
+{% macro show_tags(show) -%}
+{% if show.seasons|length > 1 %}<span class="tag">{{ show.seasons|length }} sæsoner</span>{% endif %}
+<span class="tag">{{ show.episodes|length }} afsnit</span>
+{% if show.geo_restricted %}<span class="tag tag-geo">Kun i Danmark</span>{% endif %}
+{%- endmacro %}

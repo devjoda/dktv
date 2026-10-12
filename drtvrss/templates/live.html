@@ -1,23 +1,23 @@
 {% extends "base.html" %}
+{% from "_ui.html" import icon %}
 {% block head %}
-<title>{{ channel.title }}</title>
+<title>{{ channel.title }} - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block scripts %}
 <script src="/static/vendor/hls-1.7.3.min.js" integrity="sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX"></script>
 <script src="/static/player.js"></script>
 {% endblock %}
 {% block content %}
-<div class="container-fluid pt-2">
-    <h1 class="mx-auto" style="width: 100%;">{{ channel.title }}</h1>
-    <video id="video" class="mx-auto" controls></video>
+<div class="stage">
+    <video id="video" controls></video>
 </div>
-<style>
-video {
-    width: 100%;
-    max-height: 80vh;
-    object-fit: contain;
-    display: block;
-    background-color: black;
-}
-</style>
+<div class="watch">
+    <div>
+        <div class="badges"><span class="tag tag-live">Live</span></div>
+        <h1 class="watch-title">{{ channel.title }}</h1>
+        <p class="meta">Direkte fra DR</p>
+    </div>
+</div>
 <script>
     attachStream(document.getElementById('video'), {{ channel.stream_url|tojson }});
 </script>

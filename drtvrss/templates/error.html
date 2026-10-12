@@ -1,14 +1,14 @@
 {% extends "base.html" %}
+{% from "_ui.html" import icon, search_field %}
 {% block head %}
 <title>{{ title }} - {{ SERVICE_NAME }}</title>
 {% endblock %}
 {% block content %}
-<section class="py-5 container">
-    <div class="col-lg-6 col-md-8 mx-auto text-center">
-        <h1 class="fw-light">{{ title }}</h1>
-        <p class="lead text-body-secondary">{{ message }}</p>
-        {% include "_search_form.html" %}
-        <p><a href="/">Gå til forsiden</a></p>
-    </div>
-</section>
+<div class="empty">
+    {{ icon("alert") }}
+    <h1>{{ title }}</h1>
+    <p>{{ message }}</p>
+    {{ search_field() }}
+    <a class="button button-secondary" href="/">Gå til forsiden</a>
+</div>
 {% endblock %}

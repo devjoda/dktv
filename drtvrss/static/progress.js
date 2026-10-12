@@ -80,34 +80,93 @@ function element(tag, attributes = {}, ...children) {
     return e;
 }
 
+// An icon from the page's _icons.html
+function icon(name) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "icon");
+    svg.setAttribute("aria-hidden", "true");
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#i-" + name);
+    svg.append(use);
+    return svg;
+}
+
 function percentSeen(progress) {
     return Math.round(100 * progress.time / progress.duration);
 }
 
-function progressBar(progress) {
-    const percent = percentSeen(progress);
-    return element("div", {
-        class: "progress rounded-0",
-        style: "height: 4px;",
-        role: "progressbar",
-        "aria-label": "Set indtil videre",
-        "aria-valuemin": "0",
-        "aria-valuemax": "100",
-        "aria-valuenow": percent,
-    }, element("div", {class: "progress-bar bg-danger", style: `width: ${percent}%;`}));
+function setBar(bar, percent) {
+    if (bar == null) {
+        return;
+    }
+    bar.hidden = percent == null;
+    if (!bar.hidden) {
+        bar.setAttribute("aria-valuenow", percent);
+        bar.firstElementChild.style.width = percent + "%";
+    }
 }
 
-// Marks how far the viewer got on each card with a data-video-id
-function showProgress() {
-    for (const card of document.querySelectorAll("[data-video-id]")) {
-        const progress = loadProgress(card.dataset.videoId) || {time: 0};
-        card.querySelector(".episode-watched").hidden = !progress.watched;
-        const bar = card.querySelector(".episode-progress");
-        bar.hidden = !(progress.time > 0 && progress.duration);
-        if (!bar.hidden) {
-            bar.setAttribute("aria-valuenow", percentSeen(progress));
-            bar.firstElementChild.style.width = percentSeen(progress) + "%";
+// Marks what the viewer has seen, and how far they got:
+// videos with a data-video-id, and shows with data-episode-ids
+function markProgress() {
+    for (const video of document.querySelectorAll("[data-video-id]")) {
+        const progress = loadProgress(video.dataset.videoId) || {time: 0};
+        const seen = video.querySelector(".js-seen");
+        if (seen) {
+            seen.hidden = !progress.watched;
         }
+        const started = progress.time > 0 && progress.duration;
+        setBar(video.querySelector(".js-progress"), started ? percentSeen(progress) : null);
+    }
+    for (const show of document.querySelectorAll("[data-episode-ids]")) {
+        const ids = show.dataset.episodeIds.split(" ");
+        const seen = ids.filter(id => (loadProgress(id) || {}).watched).length;
+        const all = seen == ids.length;
+        show.querySelector(".js-seen").hidden = !all;
+        setBar(show.querySelector(".js-progress"), seen > 0 && !all ? Math.round(100 * seen / ids.length) : null);
+        const meta = show.querySelector(".js-meta");
+        meta.dataset.original ??= meta.textContent;
+        meta.textContent = seen == 0 ? meta.dataset.original
+            : all ? "Alle afsnit set"
+            : `${seen} af ${ids.length} afsnit set`;
+    }
+}
+
+// Where the play button for a show should take the viewer:
+// the episode they're watching, or the one after the last they saw
+function playTarget(episodes) {
+    let latest = null;
+    episodes.forEach((episode, index) => {
+        const progress = loadProgress(episode.id);
+        if (progress && progress.updated && (latest == null || progress.updated > latest.progress.updated)) {
+            latest = {index, progress};
+        }
+    });
+    if (latest == null) {
+        return {episode: episodes[0], label: "Afspil"};
+    }
+    if (latest.progress.time > 0) {
+        return {episode: episodes[latest.index], label: "Fortsæt"};
+    }
+    if (latest.index + 1 < episodes.length) {
+        return {episode: episodes[latest.index + 1], label: "Afspil næste"};
+    }
+    return {episode: episodes[0], label: "Se igen fra start"};
+}
+
+function updatePlayButtons() {
+    for (const button of document.querySelectorAll(".js-play")) {
+        const episodes = JSON.parse(button.dataset.episodes);
+        if (episodes.length == 0) {
+            continue;
+        }
+        const target = playTarget(episodes);
+        button.href = target.episode.url;
+        button.querySelector(".js-play-label").textContent = target.label;
+        const detail = button.querySelector(".js-play-detail");
+        detail.textContent = [target.episode.season, target.episode.title].filter(Boolean).join(" · ");
+        detail.hidden = target.label == "Afspil" || target.label == "Se igen fra start";
+        button.dataset.targetId = target.episode.id;
     }
 }
 
@@ -134,34 +193,49 @@ function startedVideos() {
     return started.slice(0, CONTINUE_WATCHING_COUNT);
 }
 
-function continueWatchingCard(video) {
+// Like the tiles in _ui.html
+function continueWatchingTile(video) {
+    const title = video.title || "Uden titel";
     const left = Math.max(1, Math.round((video.duration - video.time) / 60));
-    const remove = element("button", {type: "button", class: "btn btn-link btn-sm p-0"}, "Fjern");
+    const bar = element("div", {
+        class: "tile-progress",
+        role: "progressbar",
+        "aria-label": "Set indtil videre",
+        "aria-valuemin": "0",
+        "aria-valuemax": "100",
+    }, element("span"));
+    setBar(bar, percentSeen(video));
+    const remove = element("button", {
+        type: "button",
+        class: "tile-remove",
+        "aria-label": `Fjern ${title} fra Fortsæt med at se`,
+        title: "Fjern",
+    }, icon("x"));
     remove.addEventListener("click", function () {
         // Until the viewer watches it again
         storeProgress(video.videoID, {...loadProgress(video.videoID), dismissed: true});
         showContinueWatching();
     });
-    const image = video.image
-        ? element("a", {href: video.url, tabindex: "-1", "aria-hidden": "true"},
-            element("img", {src: video.image, width: "100%", height: "225", alt: "", loading: "lazy"}))
-        : "";
-    return element("div", {class: "col"},
-        element("div", {class: "card shadow-sm"},
-            image,
-            progressBar(video),
-            element("div", {class: "card-body"},
-                element("h3", {class: "h5"}, element("a", {href: video.url}, video.title || "Uden titel")),
-                video.show ? element("p", {class: "card-text text-body-secondary"}, video.show) : "",
-                element("div", {class: "d-flex justify-content-between align-items-center"},
-                    element("small", {class: "text-body-secondary"}, formatMinutes(left) + " tilbage"),
-                    remove))));
+    return element("article", {class: "tile"},
+        element("a", {class: "tile-link", href: video.url},
+            element("div", {class: "tile-media"},
+                video.image ? element("img", {src: video.image, alt: "", loading: "lazy"}) : "",
+                element("span", {class: "tile-play"}, icon("play")),
+                bar),
+            element("h3", {class: "tile-title"}, title)),
+        element("p", {class: "tile-meta"},
+            element("span", {}, [video.show, formatMinutes(left) + " tilbage"].filter(Boolean).join(" · ")),
+            remove));
 }
 
-// Fills in the #continue-watching section, or hides it if there's nothing to continue
+// Fills in the #continue-watching row, or hides it if there's nothing to continue
 function showContinueWatching() {
     const section = document.getElementById("continue-watching");
+    if (section == null) {
+        return;
+    }
     const started = startedVideos();
-    section.querySelector(".row").replaceChildren(...started.map(continueWatchingCard));
+    section.querySelector(".shelf-track").replaceChildren(...started.map(continueWatchingTile));
     section.hidden = started.length == 0;
+    section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
 }

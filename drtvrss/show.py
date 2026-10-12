@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import time
 from typing import Optional
 from zoneinfo import ZoneInfo
@@ -16,18 +16,23 @@ ET.register_namespace("media", MEDIA_RSS)
 THUMBNAIL_WIDTH = 640
 
 
-def thumbnail(image_url: Optional[str]) -> Optional[str]:
+def thumbnail(image_url: Optional[str], width: int = THUMBNAIL_WIDTH) -> Optional[str]:
     """Asks DR's image service for a smaller version of an image,
     since DR's image URLs are for full HD"""
     if image_url is None:
         return None
-    width = re.search(r"\bWidth=(\d+)", image_url)
-    height = re.search(r"\bHeight=(\d+)", image_url)
-    if width is None or height is None or int(width[1]) <= THUMBNAIL_WIDTH:
+    old_width = re.search(r"\bWidth=(\d+)", image_url)
+    old_height = re.search(r"\bHeight=(\d+)", image_url)
+    if old_width is None or old_height is None or int(old_width[1]) <= width:
         return image_url
-    new_height = round(int(height[1]) * THUMBNAIL_WIDTH / int(width[1]))
-    image_url = image_url.replace(width[0], f"Width={THUMBNAIL_WIDTH}")
-    return image_url.replace(height[0], f"Height={new_height}")
+    height = round(int(old_height[1]) * width / int(old_width[1]))
+    image_url = image_url.replace(old_width[0], f"Width={width}")
+    return image_url.replace(old_height[0], f"Height={height}")
+
+
+def video_id(url: str) -> str:
+    """DR's id for a video, from its URL, which ends in it"""
+    return url.split("_")[-1]
 
 
 class Episode:
@@ -51,6 +56,7 @@ class Episode:
         self.geo_restricted = geo_restricted
         if url is not None:
             self.ep_link = url.split("/")[-1]
+            self.video_id = video_id(url)
 
 
 class Season:
@@ -85,6 +91,25 @@ class Show:
 
     def add_season(self, season: Season):
         self.seasons.append(season)
+
+    @property
+    def episodes(self) -> list[Episode]:
+        """All the episodes, from the first season's first one"""
+        return [entry for season in self.seasons for entry in season.episodes]
+
+    def playlist(self) -> list[dict]:
+        """The episodes in the order they're watched in, for the play button
+        to find where the viewer got to"""
+        return [
+            {
+                "id": entry.video_id,
+                "url": f"/{self.url}/{entry.ep_link}",
+                "title": entry.title,
+                "season": season.title if len(self.seasons) > 1 else None,
+            }
+            for season in self.seasons
+            for entry in season.episodes
+        ]
 
     def to_rss_feed(self) -> str:
         rss = ET.Element("rss", attrib={"version": "2.0"})
@@ -143,6 +168,7 @@ class Program:
         self.pubdate = pubdate
         self.wallpaper = wallpaper
         self.len_minutes = len_minutes
+        self.video_id = video_id(url) if url is not None else None
         self.age = time()
 
 
@@ -155,6 +181,24 @@ def danish_date(d: datetime) -> str:
     if d.tzinfo is not None:
         d = d.astimezone(COPENHAGEN)
     return f"{d.day}. {MONTHS[d.month - 1]} {d.year}"
+
+
+def danish_datetime(d: datetime) -> str:
+    """Formats a time like 17. okt. kl. 20.00, as it is in Denmark"""
+    if d.tzinfo is not None:
+        d = d.astimezone(COPENHAGEN)
+    return f"{d.day}. {MONTHS[d.month - 1]} kl. {d.hour:02}.{d.minute:02}"
+
+
+NEW_FOR = timedelta(days=14)
+
+
+def is_new(d: Optional[datetime]) -> bool:
+    """Whether something came out within the last two weeks"""
+    if d is None:
+        return False
+    now = datetime.now(tz=COPENHAGEN) if d.tzinfo is not None else datetime.now()
+    return timedelta(0) <= now - d <= NEW_FOR
 
 
 def duration(minutes: int) -> str:
