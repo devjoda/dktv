@@ -1763,6 +1763,9 @@ video + .up-next {
 /* Footer */
 
 .site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
     margin-top: 120px;
     padding: 32px var(--gutter) 48px;
     border-top: 1px solid var(--line);

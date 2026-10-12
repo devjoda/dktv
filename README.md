@@ -14,6 +14,8 @@ Or with [uv](https://docs.astral.sh/uv/):
 ```
 $ uv run hypercorn drtvrss:app
 ```
+The footer links to the source code at `$SOURCE_URL`, by default this repository on GitHub.
+
 Viewers can sync their favourites, and how far they got with each video, between their devices with a code.
 That's kept in an SQLite database at `$SYNC_DB`, or `sync.sqlite3` in `$STATE_DIRECTORY` (set by systemd's `StateDirectory=`, which the NixOS module uses), or in the current directory.
 

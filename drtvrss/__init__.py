@@ -40,6 +40,8 @@ app.add_template_global(whats_on)
 app.add_template_test(is_new, "new")
 
 SERVICE_NAME = os.getenv("SERVICE_NAME", "Public Service")
+# Where the code that runs here can be got
+SOURCE_URL = os.getenv("SOURCE_URL", "https://github.com/devjoda/drtvrss")
 
 # Shorter than the hour shows are cached for, so visitors never wait for these
 RECOMMENDED_REFRESH_INTERVAL = 30 * 60
@@ -68,6 +70,11 @@ def static_url(filename: str) -> str:
     pages with old scripts for a while after every update."""
     path = os.path.join(app.static_folder, filename)
     return f"/static/{filename}?v={file_version(path, os.stat(path).st_mtime_ns)}"
+
+
+@app.context_processor
+def footer():
+    return {"source_url": SOURCE_URL}
 
 
 def birthday() -> Optional[int]:

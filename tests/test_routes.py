@@ -152,10 +152,16 @@ def test_all_of_a_list(get, fake_dr, monkeypatch):
     assert get("/liste/355817/").text.count("<h1>Film: A - Å</h1>") == 1
 
 
-def test_footer_only_links_to_syncing(get):
+def test_footer_links_to_syncing_and_the_source(get):
     footer = get("/").text.split('<footer class="site-footer">')[1].split("</footer>")[0]
     assert '<a href="/sync/">' in footer
-    assert "GitHub" not in footer and "Invidious" not in footer
+    assert '<a href="https://github.com/devjoda/drtvrss">Kildekode</a>' in footer
+    assert "Invidious" not in footer
+
+
+def test_the_source_can_be_elsewhere(get, monkeypatch):
+    monkeypatch.setattr("drtvrss.SOURCE_URL", "https://example.com/kode")
+    assert '<a href="https://example.com/kode">Kildekode</a>' in get("/").text
 
 
 def test_featured_facts_lead_somewhere(get):
