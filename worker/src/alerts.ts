@@ -12,11 +12,12 @@ import {itemId, thumbnail} from "./show";
 import {clean, type Favorite} from "./sync";
 import {send, type Subscription, type VapidKeys} from "./webpush";
 
-// Each a request to a push service, of the 50 a run may make. Few, since a run, like a visit,
-// may only use 10 ms of the processor on the free plan.
-const SENDS_PER_RUN = 8;
-// Mostly one small request to DR each
-const SHOWS_PER_RUN = 6;
+// How much a run does, since a run, like a visit, may only use about 10 ms of the processor on
+// the free plan: each request to DR counts 1, and sending a notification, which is encrypted for
+// its device, 2. Checking a series is mostly one request. What a run doesn't do, the next does,
+// a minute later.
+const WORK_PER_RUN = 8;
+const SEND_WORK = 2;
 // How often each series is checked for new episodes, at most, and for new seasons, in seconds
 const CHECK_EVERY = 15 * 60;
 const CHECK_SEASONS_EVERY = 6 * 60 * 60;
@@ -170,7 +171,7 @@ export async function check(ctx: Ctx, row: Checked): Promise<Found> {
 }
 
 /** Sends what's in the outbox, as much as there's time for, and forgets devices that are gone */
-export async function sendWaiting(ctx: Ctx, keys: VapidKeys, most = SENDS_PER_RUN): Promise<number> {
+export async function sendWaiting(ctx: Ctx, keys: VapidKeys, most = WORK_PER_RUN / SEND_WORK): Promise<number> {
 	const db = ctx.env.SYNC;
 	const room = Math.min(most, ctx.budget.left - 4);
 	if (room <= 0) {
@@ -224,8 +225,11 @@ export async function sendWaiting(ctx: Ctx, keys: VapidKeys, most = SENDS_PER_RU
 /** What the scheduled run does every minute */
 export async function run(ctx: Ctx, keys: VapidKeys): Promise<void> {
 	const db = ctx.env.SYNC;
-	await sendWaiting(ctx, keys);
+	let work = WORK_PER_RUN - SEND_WORK * await sendWaiting(ctx, keys);
 	const now = seconds();
+	if (work < 1) {
+		return;
+	}
 	ctx.budget.spend();
 	// Taken in hand, so another run doesn't check them too
 	const due = await db.prepare(`UPDATE shows SET checked = ? WHERE show IN (
@@ -233,26 +237,31 @@ export async function run(ctx: Ctx, keys: VapidKeys): Promise<void> {
 			WHERE checked < ? AND EXISTS (SELECT 1 FROM follows f JOIN push p ON p.code = f.code WHERE f.show = s.show)
 			ORDER BY checked LIMIT ?)
 		RETURNING show, season, seasons, episodes, title, seasons_checked`)
-		.bind(now, now - CHECK_EVERY, SHOWS_PER_RUN)
+		.bind(now, now - CHECK_EVERY, Math.floor(work))
 		.all<Checked>();
 	const statements: D1PreparedStatement[] = [];
 	for (const row of due.results) {
-		// Room for checking it, and for what's sent after
-		if (ctx.budget.left < 12) {
-			break;
+		// Those not checked now are next in line, on the next run
+		if (work < 1 || ctx.budget.left < 12) {
+			statements.push(db.prepare("UPDATE shows SET checked = 0 WHERE show = ?").bind(row.show));
+			continue;
 		}
+		const left = ctx.budget.left;
 		try {
 			statements.push(...(await check(ctx, row)).statements);
 		} catch (e) {
 			// Checked again in its turn, whether DR doesn't have it any more or didn't answer
 			console.log("Could not check", row.show, "for new episodes", String(e));
 		}
+		work -= left - ctx.budget.left;
 	}
 	if (statements.length) {
 		ctx.budget.spend();
 		await db.batch(statements);
 	}
-	await sendWaiting(ctx, keys);
+	if (work >= SEND_WORK) {
+		await sendWaiting(ctx, keys, Math.floor(work / SEND_WORK));
+	}
 	if (new Date().getUTCMinutes() == 0) {
 		await cleanUp(ctx);
 	}
