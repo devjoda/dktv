@@ -17,12 +17,12 @@
             <h2 class="hero-title{% if c.title|length > 20 %} is-long{% endif %}">{{ c.title }}</h2>
             <p class="meta">
                 {% if c.live %}<span class="tag tag-live">Direkte</span>{% endif %}
-                {% if c.category %}<span>{{ c.category }}</span>{% endif %}
-                {% if c.detail %}<span>{{ c.detail }}</span>{% endif %}
+                {% if c.category_url %}<a class="meta-link" href="{{ c.category_url }}">{{ c.category }}</a>{% elif c.category %}<span>{{ c.category }}</span>{% endif %}
+                {% if c.detail and c.episode_url %}<a class="meta-link" href="{{ c.episode_url }}">{{ c.detail }}</a>{% elif c.detail %}<span>{{ c.detail }}</span>{% endif %}
             </p>
             {% if c.tagline or c.description %}<p class="hero-text">{{ c.tagline or c.description }}</p>{% endif %}
             <div class="actions">
-                <a class="button button-primary" href="{{ c.url }}">{{ icon("play") }} {{ "Se direkte" if c.live else "Se nu" }}</a>
+                <a class="button button-primary" href="{{ c.episode_url or c.url }}">{{ icon("play") }} {{ "Se direkte" if c.live else "Se nu" }}</a>
                 {% if c.show_id %}{{ favorite_button(c.show_id, c.title, c.image) }}{% endif %}
             </div>
         </div>

@@ -113,6 +113,32 @@ def test_header_has_sections_instead_of_a_name(get):
     assert "<title>Public Service</title>" in r.text
 
 
+def test_footer_only_links_to_syncing(get):
+    footer = get("/").text.split('<footer class="site-footer">')[1].split("</footer>")[0]
+    assert '<a href="/sync/">' in footer
+    assert "GitHub" not in footer and "Invidious" not in footer
+
+
+def test_featured_facts_lead_somewhere(get):
+    r = get("/")
+    featured = r.text.split('id="featured-1"')[1].split('id="featured-2"')[0]
+    # Its category, and the episode DR mentions
+    assert '<a class="meta-link" href="/kategorier/' in featured
+    assert re.search(r'<a class="meta-link" href="/\d+/afsnit/\d+\?saeson=\d+">Episode', featured)
+    # Plays it, instead of showing the show's page
+    assert re.search(r'<a class="button button-primary" href="/\d+/afsnit/', featured)
+
+
+def test_playing_an_episode_by_its_number(get):
+    # Rejseholdet's second season
+    r = get("/rejseholdet_503605/afsnit/2?saeson=503607")
+    assert r.status_code == 302
+    assert r.location == "/rejseholdet_503605/rejseholdet_503624"
+    # Without a season, the newest; and numbers past the end, the last one
+    assert get("/rejseholdet_503605/afsnit/1").location == "/rejseholdet_503605/rejseholdet_503616"
+    assert get("/rejseholdet_503605/afsnit/99?saeson=503612").location == "/rejseholdet_503605/rejseholdet_503636"
+
+
 def test_categories(get):
     r = get("/kategorier/")
     assert r.status_code == 200

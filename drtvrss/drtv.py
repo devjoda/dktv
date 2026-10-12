@@ -137,7 +137,7 @@ def build_show(latest: dr.Season, seasons: dict[str, dr.Season]) -> Show:
             # Like "Rejseholdet: Sæson 3", where the show's name is just noise
             title = title.removeprefix(feed.title + ": ")
 
-        season = Season(title)
+        season = Season(title, id=s.id)
         for ep in seasons[s.path].episodes.items:
             season.add_episode(
                 Episode(

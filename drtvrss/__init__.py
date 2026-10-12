@@ -39,7 +39,6 @@ app.add_template_filter(clock)
 app.add_template_global(whats_on)
 app.add_template_test(is_new, "new")
 
-complaints_email = os.getenv("KLAGE_MAIL", None)
 SERVICE_NAME = os.getenv("SERVICE_NAME", "Public Service")
 
 # Shorter than the hour shows are cached for, so visitors never wait for these
@@ -69,11 +68,6 @@ def static_url(filename: str) -> str:
     pages with old scripts for a while after every update."""
     path = os.path.join(app.static_folder, filename)
     return f"/static/{filename}?v={file_version(path, os.stat(path).st_mtime_ns)}"
-
-
-@app.context_processor
-def footer():
-    return {"complaints_email": complaints_email}
 
 
 def birthday() -> Optional[int]:
@@ -127,7 +121,6 @@ async def index():
         shows=[s for s in map(get_cached_show, recommended_shows) if s is not None],
         page=page,
         featured=page.featured[:FEATURED] if page else [],
-        complaints_email=complaints_email,
         SERVICE_NAME=SERVICE_NAME,
         birthday=birthday(),
         channels=await get_channels(),
@@ -254,6 +247,19 @@ async def view_episode(showid, episode):
         birthday=birthday(),
         channels=await get_channels(),
     )
+
+
+@app.route("/<showid>/afsnit/<int:number>")
+async def play_episode_number(showid, number):
+    """Plays a show's episode by its number in a season, like DR's "Episode 1:7" says:
+    in the season with the id ?saeson=, or the newest one"""
+    show = await get_show(showid)
+    season_id = request.args.get("saeson")
+    season = next((s for s in show.seasons if season_id and s.id == season_id), show.seasons[-1])
+    if not season.episodes:
+        return redirect(f"/{show.url}/")
+    episode = season.episodes[min(max(number, 1), len(season.episodes)) - 1]
+    return redirect(f"/{show.url}/{episode.ep_link}")
 
 
 @app.route("/<showid>/")

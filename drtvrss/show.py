@@ -62,8 +62,10 @@ class Episode:
 
 
 class Season:
-    def __init__(self, title: str):
+    def __init__(self, title: str, id: Optional[str] = None):
         self.title = title
+        # DR's id for the season
+        self.id = id
         self.episodes = []
 
     def add_episode(self, episode: Episode):

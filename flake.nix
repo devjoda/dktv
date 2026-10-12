@@ -27,7 +27,7 @@
               type = types.str;
             };
             klagemail = mkOption {
-              description = "Complaints E-mail";
+              description = "Complaints E-mail. No longer shown anywhere, but kept so configurations that set it still work";
               default = null;
               type = types.str;
             };

@@ -109,7 +109,7 @@ function shownFeatured() {
     return featured.slides.findIndex(slide => !slide.hidden);
 }
 
-function setBar(percent) {
+function setFeaturedBar(percent) {
     const bar = featured.bars[shownFeatured()];
     if (bar) {
         bar.firstElementChild.style.width = Math.min(100, percent) + "%";
@@ -170,9 +170,9 @@ async function playClip(slide) {
     featured.clip = {video, hls};
     featured.left = null;
     video.addEventListener("playing", () => video.classList.add("is-playing"));
-    video.addEventListener("timeupdate", () => video.duration && setBar(100 * video.currentTime / video.duration));
+    video.addEventListener("timeupdate", () => video.duration && setFeaturedBar(100 * video.currentTime / video.duration));
     video.addEventListener("ended", function () {
-        setBar(100);
+        setFeaturedBar(100);
         countDown(FEATURED_PAUSE);
     });
     slide.querySelector(".hero-backdrop").append(video);
@@ -204,7 +204,7 @@ function tickFeatured() {
     }
     featured.left -= FEATURED_TICK;
     if (featured.clip == null) {
-        setBar(100 * (1 - featured.left / FEATURED_STILL));
+        setFeaturedBar(100 * (1 - featured.left / FEATURED_STILL));
     }
     if (featured.left <= 0) {
         featured.left = null;

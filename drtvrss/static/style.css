@@ -422,6 +422,20 @@ h1, h2, h3 {
     font-weight: 500;
 }
 
+/* Facts that lead somewhere, like a programme's category */
+.meta-link {
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .14);
+    color: var(--paper);
+    transition: background-color .15s;
+}
+
+.meta-link:hover {
+    background: rgba(242, 239, 233, .26);
+    color: #fff;
+}
+
 /* Facts about something, side by side, the first of them the most important */
 .meta {
     display: flex;
@@ -889,23 +903,36 @@ a:focus-visible .tile-media {
     color: var(--paper);
 }
 
+/* What the viewer has seen is dimmed, and says so */
 .tile-seen {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    display: grid;
-    place-items: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--seen);
-    color: #062514;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(15, 16, 19, .72);
+    color: var(--paper);
+    font-size: .8125rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: translate(-50%, -50%);
 }
 
-.tile-seen .icon {
-    width: 14px;
-    height: 14px;
-    stroke-width: 3.2;
+.is-seen .tile-media img {
+    filter: brightness(.45) saturate(.7);
+}
+
+.is-seen a:hover .tile-media img,
+a.is-seen:hover .tile-media img {
+    filter: brightness(.7) saturate(.85);
+}
+
+/* The play button takes the seen mark's place on hover */
+a:hover .tile-seen,
+.is-seen a:hover .tile-seen {
+    opacity: 0;
 }
 
 .tile-duration {
@@ -1637,18 +1664,10 @@ video + .up-next {
 /* Footer */
 
 .site-footer {
-    display: grid;
-    gap: 8px 48px;
     margin-top: 120px;
-    padding: 40px var(--gutter) 64px;
+    padding: 32px var(--gutter) 48px;
     border-top: 1px solid var(--line);
-    color: var(--muted);
     font-size: .9375rem;
-}
-
-.site-footer p {
-    max-width: 64ch;
-    margin: 0 0 8px;
 }
 
 .site-footer a {

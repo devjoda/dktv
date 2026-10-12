@@ -116,6 +116,7 @@ function markProgress() {
         if (seen) {
             seen.hidden = !progress.watched;
         }
+        video.classList.toggle("is-seen", Boolean(progress.watched));
         const started = progress.time > 0 && progress.duration;
         setBar(video.querySelector(".js-progress"), started ? percentSeen(progress) : null);
     }
@@ -124,6 +125,7 @@ function markProgress() {
         const seen = ids.filter(id => (loadProgress(id) || {}).watched).length;
         const all = seen == ids.length;
         show.querySelector(".js-seen").hidden = !all;
+        show.classList.toggle("is-seen", all);
         setBar(show.querySelector(".js-progress"), seen > 0 && !all ? Math.round(100 * seen / ids.length) : null);
         const meta = show.querySelector(".js-meta");
         meta.dataset.original ??= meta.textContent;
@@ -205,7 +207,7 @@ function buildTile({href, image, title, meta = "", tags = [], percent = null, ep
         "aria-valuemax": "100",
     }, element("span"));
     setBar(bar, percent);
-    const seen = element("span", {class: "tile-seen js-seen"}, icon("check"), element("span", {class: "visually-hidden"}, "Set"));
+    const seen = element("span", {class: "tile-seen js-seen"}, "Set");
     seen.hidden = true;
     return element("article", {class: "tile", ...(episodeIDs ? {"data-episode-ids": episodeIDs.join(" ")} : {})},
         element("a", {class: "tile-link", href},

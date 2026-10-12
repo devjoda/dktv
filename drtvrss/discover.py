@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from time import time
 from typing import Optional
 import asyncio
+import re
 
 from pydantic import ValidationError
 
@@ -36,6 +37,9 @@ class Card:
     category: str = ""
     # Like "Episode 1:7", from the start of DR's tagline
     detail: str = ""
+    # Where the category and the detail lead
+    category_url: Optional[str] = None
+    episode_url: Optional[str] = None
     # DR's short clip of it, to play at the top of the front page
     preview: Optional[str] = None
     # For marking what the viewer has seen
@@ -94,6 +98,12 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
     detail, tagline = "", item.tagline or ""
     if " | " in tagline:
         detail, tagline = tagline.split(" | ", 1)
+    episode_url = None
+    number = re.match(r"Episode (\d+)", detail)
+    if item.type == "season" and number:
+        episode_url = f"/{item.show_id}/afsnit/{number[1]}?saeson={item.id}"
+    elif video_id is not None:
+        episode_url = url
     return Card(
         title=item.title,
         url=url,
@@ -102,6 +112,7 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
         tagline=tagline,
         category=category,
         detail=detail,
+        episode_url=episode_url,
         preview=item.custom_fields.short_video_url,
         video_id=video_id,
         show_id=show_id,
@@ -142,6 +153,24 @@ def is_row(entry: dr.PageEntry) -> bool:
     )
 
 
+def simple(text: str) -> str:
+    """Like "nyhederogdebat" for "Nyheder og debat", to compare names of categories"""
+    text = text.lower().replace("æ", "ae").replace("ø", "oe").replace("å", "aa")
+    return re.sub(r"[^a-z]", "", text)
+
+
+def category_url(name: str, categories: list["Category"]) -> Optional[str]:
+    """The category for one of DR's, like "Fiktionsserie" for the Serier at /kategorier/fiktionsserier/"""
+    if not name:
+        return None
+    wanted = simple(name)
+    for c in categories:
+        slug = simple(c.url.rstrip("/").split("/")[-1])
+        if slug.startswith(wanted) or wanted.startswith(slug):
+            return c.url
+    return None
+
+
 async def build_page(path: str, max_rows: int) -> DiscoverPage:
     page = dr.Page.model_validate(
         await get_api("/page", path=path, list_page_size=ROW_SIZE, max_list_prefetch=3)
@@ -149,10 +178,13 @@ async def build_page(path: str, max_rows: int) -> DiscoverPage:
     channels = await get_channels()
     channel_slugs = {c.id: slug for slug, c in channels.items()}
 
+    categories = await get_categories()
     featured = []
     hero = next((e for e in page.entries if (e.template or "").startswith(("DRH", "H")) and e.list), None)
     if hero is not None:
         featured = cards(await row_items(hero), channel_slugs)
+        for c in featured:
+            c.category_url = category_url(c.category, categories)
 
     entries = [e for e in page.entries if is_row(e)][:max_rows]
     results = await asyncio.gather(*map(row_items, entries), return_exceptions=True)
