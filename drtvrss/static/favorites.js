@@ -136,6 +136,33 @@ function renderFavorites(details = favoriteDetails) {
     markProgress();
 }
 
+// How many times to ask about the favourites the server didn't have time for
+const FAVORITE_ROUNDS = 10;
+
+// Fresh details about the favourite shows and films, from the server. It may only have
+// time for some of them at once, and says which are left, to ask about again.
+async function describeFavorites(shows, films) {
+    const details = {shows: {}, films: {}};
+    for (let round = 0; round < FAVORITE_ROUNDS && (shows.length || films.length); round++) {
+        const ids = list => encodeURIComponent(list.join(":"));
+        const response = await fetch(`/favorites.json?shows=${ids(shows)}&films=${ids(films)}`);
+        if (!response.ok) {
+            throw new Error("Status " + response.status);
+        }
+        const found = await response.json();
+        Object.assign(details.shows, found.shows);
+        Object.assign(details.films, found.films);
+        const more = found.more || {shows: [], films: []};
+        // The same ones again would get the same answer
+        if (more.shows.length + more.films.length >= shows.length + films.length) {
+            break;
+        }
+        shows = more.shows;
+        films = more.films;
+    }
+    return details;
+}
+
 // Fills in the #favorites row: right away from what's kept in the browser,
 // and then with fresh details from DR, like new episodes
 async function showFavorites() {
@@ -148,12 +175,8 @@ async function showFavorites() {
         return;
     }
     try {
-        const ids = kind => encodeURIComponent(favorites.filter(f => (f.kind || "show") == kind).map(f => f.id).join(":"));
-        const response = await fetch(`/favorites.json?shows=${ids("show")}&films=${ids("film")}`);
-        if (!response.ok) {
-            throw new Error("Status " + response.status);
-        }
-        const details = favoriteDetails = await response.json();
+        const ids = kind => favorites.filter(f => (f.kind || "show") == kind).map(f => f.id);
+        const details = favoriteDetails = await describeFavorites(ids("show"), ids("film"));
         // Keeps the titles and pictures up to date, in case DR changes them
         storeFavorites(loadFavorites().map(function (f) {
             const found = detailsOf(details, f);
