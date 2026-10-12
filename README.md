@@ -24,11 +24,19 @@ which started as a way to get RSS feeds for DRTV's series, and grew into a front
 
 ## Running it
 
+It runs as a [Cloudflare Worker](https://developers.cloudflare.com/workers/), in [`worker`](worker):
+
 ```
-$ uv run hypercorn drtvrss:app
+$ cd worker
+$ npm install
+$ npm run dev
 ```
 
-Or with Nix, `nix develop`, and then `hypercorn drtvrss:app`. The tests run with `pytest`.
+`npm test` runs its tests, and `npm run deploy` puts it on Cloudflare.
+
+It also runs as a Python app, with `uv run hypercorn drtvrss:app`, or with Nix, `nix develop` and then
+`hypercorn drtvrss:app`. Its tests run with `pytest`. Both use the same scripts and styles in the browser,
+from [`drtvrss/static`](drtvrss/static).
 
 ## Licence
 

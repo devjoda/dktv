@@ -1,12 +1,12 @@
 {
   "name": "dktv",
   "private": true,
-  "license": "AGPL-3.0-or-later",
+  "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "dev": "wrangler d1 migrations apply dktv-sync --local && wrangler dev",
+    "deploy": "wrangler d1 migrations apply dktv-sync --remote && wrangler deploy",
     "check": "npm run build && tsc --noEmit && tsc --noEmit -p test",
     "test": "npm run build && vitest run",
     "bench": "npm run build && esbuild bench/cpu.ts --bundle --platform=node --format=esm --outfile=.bench/cpu.mjs --log-level=warning && node .bench/cpu.mjs"
