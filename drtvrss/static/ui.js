@@ -1,6 +1,6 @@
 // Makes the pages a bit nicer to use, where that needs JavaScript:
 // season tabs, buttons for rows that scroll sideways, and showing what the viewer has seen.
-// Needs progress.js and favorites.js.
+// Needs progress.js, favorites.js and sync.js.
 
 // Turns a show's seasons into tabs, of which one is shown at a time
 function setupSeasonTabs() {
@@ -78,6 +78,27 @@ function setupShelves() {
     }
 }
 
+// Keeps a live channel's programme list up to date while the stream plays:
+// which programme is on now, how far it's got, and hides the ones that are over
+function updateSchedule() {
+    const now = Date.now();
+    for (const programme of document.querySelectorAll(".programme[data-start]")) {
+        const start = Date.parse(programme.dataset.start);
+        const end = Date.parse(programme.dataset.end);
+        programme.hidden = end <= now;
+        const isNow = start <= now && now < end;
+        programme.classList.toggle("is-now", isNow);
+        if (isNow) {
+            const percent = Math.round(100 * (now - start) / (end - start));
+            const bar = programme.querySelector(".programme-progress");
+            bar.setAttribute("aria-valuenow", percent);
+            bar.firstElementChild.style.width = percent + "%";
+        }
+    }
+}
+
+setInterval(updateSchedule, 30 * 1000);
+
 // The header lies on a page's big picture, until the page is scrolled
 function updateHeader() {
     const header = document.querySelector(".site-header");
@@ -91,6 +112,9 @@ window.addEventListener("scroll", updateHeader, {passive: true});
 // Also when coming back to a page, which the browser may have kept as it was
 window.addEventListener("pageshow", function () {
     updateHeader();
+    updateSchedule();
+    syncOnVisit();
+    setupSyncPage();
     markProgress();
     showContinueWatching();
     showFavorites();

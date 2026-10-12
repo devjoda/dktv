@@ -15,6 +15,7 @@
         <link href="{{ static_url('style.css') }}" rel="stylesheet">
         <script src="{{ static_url('progress.js') }}"></script>
         <script src="{{ static_url('favorites.js') }}"></script>
+        <script src="{{ static_url('sync.js') }}"></script>
         <script src="{{ static_url('ui.js') }}"></script>
         {% block scripts %}{% endblock %}
     </head>
@@ -57,6 +58,7 @@
                 Hjemmesiden giver bare en nemmere brugergrænseflade end DR's egen (I min mening).
             </p>
             <p>
+                <a href="/sync/">Synkroniser dine favoritter og fremskridt mellem dine enheder</a>.
                 Kildekoden er at finde på <a href="https://github.com/RasmusRendal/drtvrss">GitHub</a>.
                 {% if complaints_email %}
                 Klager kan sendes til <a href="mailto:{{ complaints_email }}">{{ complaints_email }}</a>.

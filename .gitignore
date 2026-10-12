@@ -172,3 +172,6 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Where viewers sync their devices, when run without SYNC_DB or STATE_DIRECTORY
+sync.sqlite3

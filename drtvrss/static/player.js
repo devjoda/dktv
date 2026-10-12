@@ -5,6 +5,9 @@
 const NOT_IN_DENMARK = "Kunne ikke indlæse videoen. Formentligt befinder du dig udenfor Danmark, og forsøger at se noget der kun er tilgængeligt hjemme.";
 const COULD_NOT_LOAD = "Kunne ikke indlæse videoen. Prøv igen senere, eller se den på DRTV.";
 
+// How long to wait before playing the next episode, in seconds
+const NEXT_EPISODE_DELAY = 10;
+
 // Plyr's texts, in Danish
 const PLYR_DANISH = {
     restart: "Start forfra",
@@ -52,8 +55,10 @@ function setupControls(video, live = false) {
         controls: live
             ? ["play-large", "play", "mute", "volume", "pip", "airplay", "fullscreen"]
             : ["play-large", "rewind", "play", "fast-forward", "progress", "current-time", "duration",
-               "mute", "volume", "settings", "pip", "airplay", "fullscreen"],
-        settings: ["speed"],
+               "mute", "volume", "captions", "settings", "pip", "airplay", "fullscreen"],
+        settings: ["captions", "speed"],
+        // Off until the viewer turns them on; Plyr remembers that for the next video
+        captions: {active: false, language: "da", update: true},
         speed: {selected: 1, options: [0.75, 1, 1.25, 1.5, 2]},
         seekTime: 15,
         invertTime: false,
@@ -71,21 +76,51 @@ function messageAnchor(video) {
     return video.closest(".plyr") || video;
 }
 
-// Points to the next episode, once this one has ended
+// Plays the next episode after a countdown, once this one has ended, unless the viewer stops it.
+// On the picture, so it's seen in full screen too.
 function offerNext(video) {
     if (!video.dataset.nextUrl || document.getElementById("up-next")) {
         return;
     }
-    const box = document.createElement("div");
-    box.id = "up-next";
-    box.className = "alert alert-info mt-2";
-    const link = document.createElement("a");
-    link.href = video.dataset.nextUrl;
-    link.className = "alert-link";
-    link.textContent = video.dataset.nextTitle;
-    box.append("Næste afsnit: ", link);
-    messageAnchor(video).after(box);
-    link.focus();
+    const url = video.dataset.nextUrl;
+    let left = NEXT_EPISODE_DELAY;
+    const seconds = element("span", {}, String(left));
+    const countdown = element("p", {class: "up-next-countdown", "aria-hidden": "true"}, "Starter om ", seconds, " sek.");
+    const cancel = element("button", {type: "button", class: "button button-secondary"}, "Annullér");
+    const playNow = element("a", {class: "button button-primary", href: url}, icon("play"), "Afspil nu");
+    const box = element("div", {id: "up-next", class: "up-next"},
+        element("p", {class: "up-next-label"}, "Næste afsnit"),
+        element("p", {class: "up-next-title"}, video.dataset.nextTitle),
+        countdown,
+        element("div", {class: "up-next-actions"}, playNow, cancel));
+    const timer = setInterval(function () {
+        left -= 1;
+        seconds.textContent = String(left);
+        if (left <= 0) {
+            clearInterval(timer);
+            location.href = url;
+        }
+    }, 1000);
+    const stop = function () {
+        clearInterval(timer);
+        countdown.remove();
+        cancel.remove();
+    };
+    const dismiss = function () {
+        stop();
+        box.remove();
+    };
+    cancel.addEventListener("click", dismiss);
+    // Going back in the video means the viewer isn't done with it
+    video.addEventListener("play", dismiss, {once: true});
+    const plyr = video.closest(".plyr");
+    if (plyr) {
+        plyr.append(box);
+    } else {
+        video.after(box);
+    }
+    announce(`Næste afsnit, ${video.dataset.nextTitle}, starter om ${NEXT_EPISODE_DELAY} sekunder`);
+    playNow.focus();
 }
 
 // Shows what went wrong right below the video, once
@@ -140,7 +175,8 @@ async function getAnonymousToken() {
     return tokens.find(t => t.type == "UserProfile").value;
 }
 
-async function getStreamUrl(videoID) {
+// The stream DR plays a video from: {url, subtitles: [{link, language, format}]}
+async function getStream(videoID) {
     const token = await getAnonymousToken();
     const response = await fetch("https://production-cdn.dr-massive.com/api/items/" + videoID + "/videos?delivery=stream&device=web_browser&ff=idp%2Cldp%2Crpt&lang=da&resolution=HD-1080&sub=Anonymous", {
         method: 'GET',
@@ -153,14 +189,63 @@ async function getStreamUrl(videoID) {
     }
     const j = await response.json();
 
-    return j.find(e => e["accessService"] == "StandardVideo")["url"];
+    return j.find(e => e["accessService"] == "StandardVideo");
+}
+
+// DR's subtitles, as tracks the viewer can turn on
+function addSubtitles(video, subtitles) {
+    for (const s of subtitles || []) {
+        if (!s.link || !String(s.format).startsWith("text/vtt")) {
+            continue;
+        }
+        video.append(element("track", {kind: "subtitles", srclang: "da", label: "Dansk", src: s.link}));
+    }
+}
+
+// Plays a live channel, with or without subtitles, as the viewer last chose
+function setupLive(video, url, subtitlesURL) {
+    setupControls(video, true);
+    const button = document.querySelector(".js-live-subtitles");
+    let withSubtitles = false;
+    try {
+        withSubtitles = subtitlesURL != null && localStorage.getItem("liveSubtitles") == "true";
+    } catch (error) {
+        // Without the browser's storage, they start off
+    }
+    let hls = null;
+    const play = function () {
+        if (hls) {
+            hls.destroy();
+        }
+        hls = attachStream(video, withSubtitles ? subtitlesURL : url);
+        if (button) {
+            button.setAttribute("aria-pressed", withSubtitles);
+        }
+    };
+    play();
+    if (button) {
+        button.addEventListener("click", function () {
+            withSubtitles = !withSubtitles;
+            try {
+                localStorage.setItem("liveSubtitles", withSubtitles);
+            } catch (error) {
+                console.error("Could not remember the choice of subtitles:", error);
+            }
+            const playing = !video.paused;
+            play();
+            if (playing) {
+                video.play().catch(() => {});
+            }
+        });
+    }
 }
 
 // Starts loading the stream into the video element.
 // Returns the Hls instance, or null if the browser plays HLS natively.
 function attachStream(video, src) {
     if (Hls.isSupported()) {
-        const hls = new Hls();
+        // DR's subtitles come as a track of their own, see addSubtitles(), so not twice from the stream too
+        const hls = new Hls({enableWebVTT: false, enableIMSC1: false, enableCEA708Captions: false});
         hls.loadSource(src);
         hls.attachMedia(video);
         hls.on(Hls.Events.ERROR, function (event, data) {
@@ -188,9 +273,9 @@ function attachStream(video, src) {
 // Plays a program or an episode, continuing where the viewer left off
 async function playVideo(video, videoID) {
     setupControls(video);
-    let src;
+    let stream;
     try {
-        src = await getStreamUrl(videoID);
+        stream = await getStream(videoID);
     } catch (error) {
         console.error("Could not get the stream:", error);
         showError(video, COULD_NOT_LOAD);
@@ -218,5 +303,6 @@ async function playVideo(video, videoID) {
         saveProgress(videoID, video);
         offerNext(video);
     });
-    attachStream(video, src);
+    addSubtitles(video, stream.subtitles);
+    attachStream(video, stream.url);
 }

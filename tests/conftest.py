@@ -40,6 +40,8 @@ def fake_dr(monkeypatch):
     monkeypatch.setattr(drtv, "fetch_search", fetch_search)
     monkeypatch.setattr(live, "live_channels", None)
     monkeypatch.setattr(live, "last_fetch", 0)
+    monkeypatch.setattr(live, "schedules", {})
+    monkeypatch.setattr(live, "schedules_fetched", 0)
     monkeypatch.delenv("RECOMMENDED_SHOWS", raising=False)
     drtv.shows.clear()
     drtv.programs.clear()
@@ -65,3 +67,31 @@ def get(fake_dr):
         return asyncio.run(request())
 
     return get
+
+
+def _request(fake_dr, method):
+    def request(path: str, data=None, content_type="application/json") -> SimpleNamespace:
+        async def run():
+            async with app.test_app() as test_app:
+                client = test_app.test_client()
+                kwargs = {}
+                if data is not None:
+                    body = data if isinstance(data, str) else json.dumps(data)
+                    kwargs = {"data": body, "headers": {"Content-Type": content_type}}
+                r = await getattr(client, method)(path, **kwargs)
+                return SimpleNamespace(status_code=r.status_code, text=await r.get_data(as_text=True))
+
+        return asyncio.run(run())
+
+    return request
+
+
+@pytest.fixture
+def post(fake_dr):
+    """Sends something to the app, like get"""
+    return _request(fake_dr, "post")
+
+
+@pytest.fixture
+def delete(fake_dr):
+    return _request(fake_dr, "delete")

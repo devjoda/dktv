@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Synkronisering - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block content %}
+{# Made to work by sync.js #}
+<div class="sync-page wrap" id="sync-page">
+    <h1>Dine serier på alle dine enheder</h1>
+    <p class="sync-intro">Med en kode har du de samme favoritter på din telefon, computer og TV, og du kan fortsætte, hvor du slap.</p>
+
+    <div class="sync-options js-sync-off" hidden>
+        <section class="sync-option" aria-labelledby="sync-new">
+            <h2 id="sync-new">Første enhed</h2>
+            <p>Opret en kode, og skriv den ind på dine andre enheder.</p>
+            <button type="button" class="button button-primary js-sync-create">Opret en kode</button>
+        </section>
+        <form class="sync-option js-sync-join" aria-labelledby="sync-join">
+            <h2 id="sync-join">Har du allerede en kode?</h2>
+            <p>Skriv koden fra din anden enhed.</p>
+            <label class="visually-hidden" for="sync-code">Kode</label>
+            <input class="code-input" id="sync-code" name="code" placeholder="ABCD-EFGH-JKMN-PQRS" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
+            <button type="submit" class="button button-secondary">Forbind</button>
+        </form>
+    </div>
+
+    <section class="js-sync-on" aria-labelledby="sync-code-title" hidden>
+        <h2 class="sync-label" id="sync-code-title">Denne enhed synkroniserer med koden</h2>
+        <p class="sync-code js-sync-code"></p>
+        <p class="meta js-sync-status"></p>
+        <div class="actions">
+            <button type="button" class="button button-secondary js-sync-copy">Kopiér koden</button>
+            <button type="button" class="button button-secondary js-sync-now">Synkroniser nu</button>
+        </div>
+        <div class="actions">
+            <button type="button" class="button button-quiet js-sync-stop">Stop synkronisering på denne enhed</button>
+            <button type="button" class="button button-quiet js-sync-delete">Slet dine data fra serveren</button>
+        </div>
+    </section>
+
+    <p class="sync-error js-sync-error" role="alert" hidden></p>
+
+    <p class="sync-privacy">Dine favoritter, og hvor langt du er nået i hvert afsnit, gemmes på serveren under koden. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en kode gemmes de kun i din browser.</p>
+    <noscript><p>Synkronisering kræver JavaScript.</p></noscript>
+</div>
+{% endblock %}

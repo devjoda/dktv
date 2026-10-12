@@ -14,7 +14,7 @@
 {% endblock %}
 {% block content %}
 <div class="stage">
-    <video id="video" controls
+    <video id="video" controls crossorigin="anonymous"
         {%- if e.wallpaper %} poster="{{ e.wallpaper|thumbnail(1280) }}"{% endif %}
         {%- if next %} data-next-url="{{ next.url }}" data-next-title="{{ next.title }}"{% endif %}
         data-title="{{ e.title }}"

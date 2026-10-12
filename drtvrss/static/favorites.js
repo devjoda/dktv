@@ -1,6 +1,6 @@
 // The viewer's favourite shows, kept in their browser like how far they got with each video.
 // Buttons with .js-favorite add and remove a show, and the front page lists them.
-// Needs progress.js.
+// Needs progress.js and sync.js.
 
 // Like [{id: "rejseholdet_503605", title, image, added}], the newest first
 function loadFavorites() {
@@ -20,6 +20,24 @@ function storeFavorites(favorites) {
     }
 }
 
+// When each show stopped being a favourite, so that reaches the viewer's other devices too
+function loadRemovedFavorites() {
+    try {
+        const removed = JSON.parse(localStorage.getItem("favoritesRemoved"));
+        return removed && typeof removed == "object" && !Array.isArray(removed) ? removed : {};
+    } catch (error) {
+        return {};
+    }
+}
+
+function storeRemovedFavorites(removed) {
+    try {
+        localStorage.setItem("favoritesRemoved", JSON.stringify(removed));
+    } catch (error) {
+        console.error("Could not save removed favourites:", error);
+    }
+}
+
 function isFavorite(showID) {
     return loadFavorites().some(favorite => favorite.id == showID);
 }
@@ -27,6 +45,14 @@ function isFavorite(showID) {
 function setFavorite({id, title, image}, favorite) {
     const others = loadFavorites().filter(f => f.id != id);
     storeFavorites(favorite ? [{id, title, image, added: Date.now()}, ...others] : others);
+    const removed = loadRemovedFavorites();
+    if (favorite) {
+        delete removed[id];
+    } else {
+        removed[id] = Date.now();
+    }
+    storeRemovedFavorites(removed);
+    scheduleSync(0);
 }
 
 // Says so to screen readers too, since the button only changes its look

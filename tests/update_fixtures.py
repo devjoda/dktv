@@ -9,10 +9,11 @@ When DR changes their format, run this and look at the git diff.
 
 import asyncio
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 from drtvrss.drtv import fetch_search, get_api, http_session
-from drtvrss.live import CHANNEL_LIST
+from drtvrss.live import CHANNEL_LIST, SCHEDULE_HOURS
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -38,6 +39,17 @@ async def capture(path: str, **params) -> dict:
     return blob
 
 
+async def capture_schedules(channels: dict):
+    now = datetime.now(timezone.utc)
+    await capture(
+        "/schedules",
+        date=now.strftime("%Y-%m-%d"),
+        hour=now.hour,
+        channels=",".join(c["id"] for c in channels["items"]),
+        duration=SCHEDULE_HOURS,
+    )
+
+
 async def main():
     async with http_session():
         show = await capture(f"/items/{SHOW}", expand="all")
@@ -45,7 +57,8 @@ async def main():
             await capture(f"/items/{season['id']}", expand="all")
         await capture(f"/items/{EPISODE}")
         await capture(f"/items/{PROGRAM}")
-        await capture(f"/lists/{CHANNEL_LIST}", page_size=24)
+        channels = await capture(f"/lists/{CHANNEL_LIST}", page_size=24)
+        await capture_schedules(channels)
 
         r = await fetch_search(SEARCH)
         save("search.json", {"series": r["series"], "playable": r["playable"]})

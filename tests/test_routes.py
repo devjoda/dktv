@@ -2,6 +2,7 @@
 
 import re
 import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
 
 from drtvrss import drtv
 
@@ -312,7 +313,7 @@ def test_players_use_plyr(get):
         text = get(path).text
         assert '<script src="/static/vendor/plyr-3.8.4.min.js" integrity="sha384-' in text
         assert '<link href="/static/vendor/plyr-3.8.4.css" rel="stylesheet" integrity="sha384-' in text
-    assert "setupControls(document.getElementById('video'), true);" in get("/live/DR1").text
+    assert "setupLive(document.getElementById('video'), " in get("/live/DR1").text
     for path in ["/static/vendor/plyr-3.8.4.min.js", "/static/vendor/plyr-3.8.4.css", "/static/vendor/plyr-3.8.4.svg"]:
         assert get(path).status_code == 200
 
@@ -320,7 +321,34 @@ def test_players_use_plyr(get):
 def test_index_lists_the_live_channels(get):
     r = get("/")
     assert '<h2 class="shelf-title" id="live-title">Direkte TV</h2>' in r.text
-    assert '<a class="tile-link" href="/live/DR1">' in r.text
+    assert '<a class="tile-link" href="/live/DR1" style="--channel: #FF001E;">' in r.text
+
+
+def test_channels_show_whats_on(get, monkeypatch):
+    # During "Hammerslag" on DR1, 11.40 to 12.10 UTC in the fixture
+    monkeypatch.setattr("drtvrss.live.now", lambda: datetime(2026, 10, 12, 11, 55, tzinfo=timezone.utc))
+    r = get("/")
+    assert '<span class="visually-hidden">DR1: </span>Hammerslag 2022 - Lejlighed i storbyen</h3>' in r.text
+    # In Danish time
+    assert "Til 14.10, derefter" in r.text
+    assert 'aria-valuenow="50"' in r.text
+
+    r = get("/live/DR1")
+    assert '<li class="programme is-now" data-start="2026-10-12T11:40:00+00:00" data-end="2026-10-12T12:10:00+00:00">' in r.text
+    assert '<time class="programme-time" datetime="2026-10-12T11:40:00+00:00">13.40</time>' in r.text
+    assert "Til 14.10" in r.text
+    # With a choice of subtitles
+    assert 'class="button button-secondary js-live-subtitles" aria-pressed="false"' in r.text
+    assert "drlivedr1texthls" in r.text
+
+
+def test_channels_without_a_schedule(get, monkeypatch):
+    # Long after the fixture's schedule
+    monkeypatch.setattr("drtvrss.live.now", lambda: datetime(2030, 1, 1, tzinfo=timezone.utc))
+    assert '<div class="channel-art">DR1</div>' in get("/").text
+    r = get("/live/DR1")
+    assert r.status_code == 200
+    assert "Programoversigt" not in r.text
 
 
 def test_pages_are_dark(get):

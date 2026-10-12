@@ -78,6 +78,8 @@
               serviceConfig = {
                 DynamicUser = true;
                 Restart = "always";
+                # For the codes viewers sync their devices with, see drtvrss/sync.py
+                StateDirectory = "drtvrss";
               };
 
               script = "${pythonEnv}/bin/hypercorn -b ${config.services.drtvrss.host} drtvrss:app";

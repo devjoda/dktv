@@ -11,17 +11,42 @@
 {% endblock %}
 {% block content %}
 <div class="stage">
-    <video id="video" controls></video>
+    <video id="video" controls crossorigin="anonymous"></video>
 </div>
 <div class="watch">
     <div>
         <div class="badges"><span class="tag tag-live">Direkte</span></div>
         <h1 class="watch-title">{{ channel.title }}</h1>
-        <p class="meta">Direkte fra DR</p>
+        {% if channel.subtitles_url %}
+        <div class="actions">
+            <button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false">{{ icon("captions") }} Undertekster</button>
+        </div>
+        {% endif %}
     </div>
+    {% set on_now, later = whats_on(programmes) %}
+    {% if on_now or later %}
+    {# ui.js keeps it up to date while the page is open, without reloading the stream #}
+    <section class="schedule" aria-labelledby="schedule-title">
+        <h2 class="side-title" id="schedule-title">Programoversigt</h2>
+        <ol class="programmes">
+            {% for p in ([on_now] if on_now else []) + later[:8] %}
+            <li class="programme{% if p is sameas on_now %} is-now{% endif %}" data-start="{{ p.start.isoformat() }}" data-end="{{ p.end.isoformat() }}">
+                <time class="programme-time" datetime="{{ p.start.isoformat() }}">{{ p.start|clock }}</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">{{ p.title }}</h3>
+                    <div class="programme-now">
+                        <div class="programme-progress" role="progressbar" aria-label="Sendt indtil videre" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ p.percent_done() }}"><span style="width: {{ p.percent_done() }}%;"></span></div>
+                        <p class="programme-ends">Til {{ p.end|clock }}</p>
+                        {% if p.description %}<p class="programme-desc">{{ p.description }}</p>{% endif %}
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+    </section>
+    {% endif %}
 </div>
 <script>
-    setupControls(document.getElementById('video'), true);
-    attachStream(document.getElementById('video'), {{ channel.stream_url|tojson }});
+    setupLive(document.getElementById('video'), {{ channel.stream_url|tojson }}, {{ channel.subtitles_url|tojson }});
 </script>
 {% endblock %}

@@ -56,6 +56,7 @@ function saveProgress(videoID, video) {
         image: video.dataset.image || null,
         updated: Date.now(),
     });
+    scheduleSync();
 }
 
 // Like "59 min." or "1 t. 15 min."
@@ -230,7 +231,8 @@ function continueWatchingTile(video) {
     }, icon("x"));
     remove.addEventListener("click", function () {
         // Until the viewer watches it again
-        storeProgress(video.videoID, {...loadProgress(video.videoID), dismissed: true});
+        storeProgress(video.videoID, {...loadProgress(video.videoID), dismissed: true, updated: Date.now()});
+        scheduleSync(0);
         showContinueWatching();
     });
     return buildTile({

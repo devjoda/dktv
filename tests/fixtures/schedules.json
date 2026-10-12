@@ -1,0 +1,2938 @@
+[
+ {
+  "schedules": [
+   {
+    "id": "7e73280",
+    "channelId": "20875",
+    "startDate": "2026-10-12T11:40:00Z",
+    "endDate": "2026-10-12T12:10:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T13:40:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:10:00+02:00",
+    "item": {
+     "id": "323920",
+     "watchPath": "/se/hammerslag_-lejlighed-i-storbyen_323920",
+     "path": "/episode/hammerslag_-lejlighed-i-storbyen_323920",
+     "title": "Hammerslag 2022 - Lejlighed i storbyen",
+     "description": "Byliv og lækre lejligheder er på programmet, når Hammerslag besøger Odense. Tina Müller inviterer indenfor i to lejligheder, der begge ligger midt i byen. Christian Torp og Mira Lie Nielsen kæmper mod Lars Lyng og Kristine Virén, når prisen skal gættes på en smuk stuelejlighed med egen terrasse lige ud til Odense Å. Bagefter skal eksperterne helt op på kvisten, hvor der venter en hyggelig taglejlighed med parkudsigt.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721059'&EntityType='LinearSchedule'&EntityId='7e732808-d8b5-4fad-a0c1-95004217b8b8'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721066'&EntityType='LinearSchedule'&EntityId='7e732808-d8b5-4fad-a0c1-95004217b8b8'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2022,
+     "episodeNumber": 11,
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T11:40:00Z",
+     "prdNumber": "00952216110",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "thesaurus_ejendomshandel",
+      "thesaurus_lejligheder",
+      "controlled_boligpriser",
+      "editorialptaxtop_tv-program",
+      "editorialptaxsub_hus/have",
+      "editorialptaxsub_underholdning",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "323920"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T11:40:00Z",
+      "PrdNumber": "00952216110",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Byliv og lækre lejligheder er på programmet, når Hammerslag besøger Odense. Tina Müller inviterer indenfor i to lejligheder, der begge ligger midt i byen. Christian Torp og Mira Lie Nielsen kæmper mod Lars Lyng og Kristine Virén, når prisen skal gættes på en smuk stuelejlighed med egen terrasse lige ud til Odense Å. Bagefter skal eksperterne helt op på kvisten, hvor der venter en hyggelig taglejlighed med parkudsigt."
+    },
+    "live": false
+   },
+   {
+    "id": "9d39401",
+    "channelId": "20875",
+    "startDate": "2026-10-12T12:10:00Z",
+    "endDate": "2026-10-12T12:40:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:10:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:40:00+02:00",
+    "item": {
+     "id": "160326",
+     "watchPath": "/se/kender-du-typen_-med-grill-paa-badevaerelset_160326",
+     "path": "/episode/kender-du-typen_-med-grill-paa-badevaerelset_160326",
+     "title": "Kender Du Typen? 2020 - med grill på badeværelset",
+     "description": "Hvem er det, der har 250 rejsedage om året? Og som, når vedkommende er hjemme, masserer sin seng, elsker at gøre rent og spiller så højt, at hele huset ryster? Det skal livsstilseksperterne Anne Glad Wagner og Flemming Møldrup regne ud, når Kender Du Typen? besøger en lejlighed med egen elevator i centrum af København. \nVært: Mads Steffensen",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721076'&EntityType='LinearSchedule'&EntityId='9d394010-1313-42aa-a879-ab93f4e4b787'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721084'&EntityType='LinearSchedule'&EntityId='9d394010-1313-42aa-a879-ab93f4e4b787'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2020,
+     "episodeNumber": 4,
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T12:10:00Z",
+     "prdNumber": "00952036040",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_tv-program",
+      "editorialptaxsub_livsstil",
+      "editorialptaxsub_underholdning",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "160326"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T12:10:00Z",
+      "PrdNumber": "00952036040",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Hvem er det, der har 250 rejsedage om året? Og som, når vedkommende er hjemme, masserer sin seng, elsker at gøre rent og spiller så højt, at hele huset ryster? Det skal livsstilseksperterne Anne Glad Wagner og Flemming Møldrup regne ud, når Kender Du Typen? besøger en lejlighed med egen elevator i centrum af København. \nVært: Mads Steffensen"
+    },
+    "live": false
+   },
+   {
+    "id": "0c8eb97",
+    "channelId": "20875",
+    "startDate": "2026-10-12T12:40:00Z",
+    "endDate": "2026-10-12T14:15:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:40:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T16:15:00+02:00",
+    "item": {
+     "id": "627187",
+     "watchPath": "/se/kriminalkommissaer-barnaby_-bristen_627187",
+     "path": "/episode/kriminalkommissaer-barnaby_-bristen_627187",
+     "title": "Kriminalkommissær Barnaby XII: Bristen (4)",
+     "description": "Engelsk krimiserie fra 2009.\n(Midsomer Murders)\n\"Bristen\".\nMidsomers sportsvognsentusiaster og medlemmerne af den lokale cykelklub er ikke de bedste venner. Cyklisterne mener, at bilisterne kører hensynsløst. Måske er det derfor, at en ukendt gerningsmand er begyndt at overhælde områdets sportsvogne med lim og maling? Mens Barnaby leder efter den skyldige, bliver en cyklist dræbt af en flugtbilist. Skyldes det den verserende strid? Eller er der et helt andet motiv for forbrydelsen?\nBarnaby: John Nettles.\nJones: Jason Hughes.\nJoyce: Jane Wymark.\nInstruktion: Richard Holthouse.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721091'&EntityType='LinearSchedule'&EntityId='0c8eb97a-4e7e-486d-957a-6782103739e8'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721098'&EntityType='LinearSchedule'&EntityId='0c8eb97a-4e7e-486d-957a-6782103739e8'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 12,
+     "episodeNumber": 4,
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T12:40:00Z",
+     "prdNumber": "00020771460",
+     "classificationRating": "MRAM-11",
+     "keywords": [
+      "editorialptaxtop_serier",
+      "editorialptaxsub_krimi",
+      "culturalorigin_ikke-dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627187"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T12:40:00Z",
+      "PrdNumber": "00020771460",
+      "ClassificationRating": "MRAM-11"
+     },
+     "shortDescription": "Engelsk krimiserie fra 2009.\n(Midsomer Murders)\n\"Bristen\".\nMidsomers sportsvognsentusiaster og medlemmerne af den lokale cykelklub er ikke de bedste venner. Cyklisterne mener, at bilisterne kører hensynsløst. Måske er det derfor, at en ukendt gerningsmand er begyndt at overhælde områdets sportsvogne med lim og maling? Mens Barnaby leder efter den skyldige, bliver en cyklist dræbt af en flugtbilist. Skyldes det den verserende strid? Eller er der et helt andet motiv for forbrydelsen?\nBarnaby: John Nettles.\nJones: Jason Hughes.\nJoyce: Jane Wymark.\nInstruktion: Richard Holthouse."
+    },
+    "live": false
+   },
+   {
+    "id": "9776763",
+    "channelId": "20875",
+    "startDate": "2026-10-12T14:15:00Z",
+    "endDate": "2026-10-12T15:15:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T16:15:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:15:00+02:00",
+    "item": {
+     "id": "625633",
+     "title": "Jordemoderen XIV (8:10)",
+     "description": "Engelsk dramaserie fra 2025.\n(Call the Midwife)\nJoyce havner i en svær situation, da en mor rammes af post-natale komplikationer. Samtidig strejker skraldemændene, og det fører til et sygdomsudbrud.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721106'&EntityType='LinearSchedule'&EntityId='97767635-1b44-49d5-ab91-9b0270566d18'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721116'&EntityType='LinearSchedule'&EntityId='97767635-1b44-49d5-ab91-9b0270566d18'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 14,
+     "episodeNumber": 8,
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T14:15:00Z",
+     "prdNumber": "00022461940",
+     "classificationRating": "MRAM-11",
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T14:15:00Z",
+      "PrdNumber": "00022461940",
+      "ClassificationRating": "MRAM-11"
+     },
+     "shortDescription": "Engelsk dramaserie fra 2025.\n(Call the Midwife)\nJoyce havner i en svær situation, da en mor rammes af post-natale komplikationer. Samtidig strejker skraldemændene, og det fører til et sygdomsudbrud."
+    },
+    "live": false
+   },
+   {
+    "id": "e1939f6d-447b-4b7d-a996-32a83aa94687",
+    "channelId": "20875",
+    "startDate": "2026-10-12T15:15:00Z",
+    "endDate": "2026-10-12T15:30:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:15:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:30:00+02:00",
+    "item": {
+     "id": "627209",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721128'&EntityType='LinearSchedule'&EntityId='e1939f6d-447b-4b7d-a996-32a83aa94687'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721135'&EntityType='LinearSchedule'&EntityId='e1939f6d-447b-4b7d-a996-32a83aa94687'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T15:15:00Z",
+     "prdNumber": "00122667760",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T15:15:00Z",
+      "PrdNumber": "00122667760",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": true
+   },
+   {
+    "id": "f235d40",
+    "channelId": "20875",
+    "startDate": "2026-10-12T15:30:00Z",
+    "endDate": "2026-10-12T16:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:30:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:00:00+02:00",
+    "item": {
+     "id": "627197",
+     "title": "Deadline",
+     "description": "Udfordrende og overraskende perspektiver på dagens og tidens væsentligste historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721146'&EntityType='LinearSchedule'&EntityId='f235d40c-44bb-4935-8d1b-1fbb066f787b'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721151'&EntityType='LinearSchedule'&EntityId='f235d40c-44bb-4935-8d1b-1fbb066f787b'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "episodeNumber": 156,
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T15:30:00Z",
+     "prdNumber": "00102681560",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T15:30:00Z",
+      "PrdNumber": "00102681560",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "Udfordrende og overraskende perspektiver på dagens og tidens væsentligste historier."
+    },
+    "live": false
+   },
+   {
+    "id": "c87169e",
+    "channelId": "20875",
+    "startDate": "2026-10-12T16:00:00Z",
+    "endDate": "2026-10-12T16:30:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:30:00+02:00",
+    "item": {
+     "id": "626944",
+     "watchPath": "/se/verdenssituationen-med-clement_-hvad-vil-trump-og-putin_626944",
+     "path": "/episode/verdenssituationen-med-clement_-hvad-vil-trump-og-putin_626944",
+     "title": "Verdenssituationen med Clement: Hvad vil Trump og Putin?",
+     "description": "Præsident Trump vil købe olie af Putin og opfordrer Ukraine til at udskifte Zelenskyj. Hvad gør Europa nu?",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721159'&EntityType='LinearSchedule'&EntityId='c87169ec-af42-4ec3-a5ca-0a9d781c3a5f'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721162'&EntityType='LinearSchedule'&EntityId='c87169ec-af42-4ec3-a5ca-0a9d781c3a5f'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 4,
+     "episodeNumber": 6,
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T16:00:00Z",
+     "prdNumber": "00102673360",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "person_donald trump",
+      "person_vladimir putin",
+      "thesaurus_handelsaftaler",
+      "thesaurus_internationalt samarbejde",
+      "thesaurus_rusland",
+      "thesaurus_sanktioner",
+      "thesaurus_sikkerhedspolitik",
+      "thesaurus_udenrigspolitik",
+      "thesaurus_usa",
+      "controlled_dieselolie",
+      "controlled_forsvarsalliancer",
+      "controlled_højrepopulisme",
+      "controlled_sikkerhedsgarantier",
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_aktualitet/samfundsforhold",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "626944"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T16:00:00Z",
+      "PrdNumber": "00102673360",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "Præsident Trump vil købe olie af Putin og opfordrer Ukraine til at udskifte Zelenskyj. Hvad gør Europa nu?"
+    },
+    "live": false
+   },
+   {
+    "id": "0860c644-29d7-48bd-bbf8-2bd2cde71741",
+    "channelId": "20875",
+    "startDate": "2026-10-12T16:30:00Z",
+    "endDate": "2026-10-12T16:50:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:30:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:50:00+02:00",
+    "item": {
+     "id": "627200",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721167'&EntityType='LinearSchedule'&EntityId='0860c644-29d7-48bd-bbf8-2bd2cde71741'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721172'&EntityType='LinearSchedule'&EntityId='0860c644-29d7-48bd-bbf8-2bd2cde71741'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T16:30:00Z",
+     "prdNumber": "00122621850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T16:30:00Z",
+      "PrdNumber": "00122621850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": true
+   },
+   {
+    "id": "8e350898-7fa3-4d24-960c-bdf7b784f0bd",
+    "channelId": "20875",
+    "startDate": "2026-10-12T16:50:00Z",
+    "endDate": "2026-10-12T17:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:50:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T19:00:00+02:00",
+    "item": {
+     "id": "627214",
+     "title": "Vores Vejr",
+     "description": "DR's vejrudsendelse, der i løbet af ugen gør dig klogere på vejret, der var, og hvad der venter os.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721178'&EntityType='LinearSchedule'&EntityId='8e350898-7fa3-4d24-960c-bdf7b784f0bd'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721184'&EntityType='LinearSchedule'&EntityId='8e350898-7fa3-4d24-960c-bdf7b784f0bd'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T16:50:00Z",
+     "prdNumber": "00122672070",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T16:50:00Z",
+      "PrdNumber": "00122672070",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "DR's vejrudsendelse, der i løbet af ugen gør dig klogere på vejret, der var, og hvad der venter os."
+    },
+    "live": true
+   },
+   {
+    "id": "ce228318-5dab-4abc-ade8-47f02253e864",
+    "channelId": "20875",
+    "startDate": "2026-10-12T17:00:00Z",
+    "endDate": "2026-10-12T18:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T19:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T20:00:00+02:00",
+    "item": {
+     "id": "627207",
+     "title": "Aftenshowet",
+     "description": "DR1s journalistiske talkshow direkte fra Rådhuspladsen i København.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721194'&EntityType='LinearSchedule'&EntityId='ce228318-5dab-4abc-ade8-47f02253e864'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721201'&EntityType='LinearSchedule'&EntityId='ce228318-5dab-4abc-ade8-47f02253e864'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "episodeNumber": 151,
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T17:00:00Z",
+     "prdNumber": "00922604510",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T17:00:00Z",
+      "PrdNumber": "00922604510",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "DR1s journalistiske talkshow direkte fra Rådhuspladsen i København."
+    },
+    "live": true
+   },
+   {
+    "id": "6bfa514",
+    "channelId": "20875",
+    "startDate": "2026-10-12T18:00:00Z",
+    "endDate": "2026-10-12T18:30:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T20:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T20:30:00+02:00",
+    "item": {
+     "id": "622104",
+     "watchPath": "/se/frank-and-kastaniegaarden_-laekre-spaer-og-havelaage-med-svung_622104",
+     "path": "/episode/frank-and-kastaniegaarden_-laekre-spaer-og-havelaage-med-svung_622104",
+     "title": "Frank & Kastaniegaarden - Lækre spær og havelåge med svung",
+     "description": "Der er gang i småbyggerierne i Kastaniegaardens køkkenhave, og Frank er detaljernes mand, når det griber ham. Så den overdækkede redskabsvæg, han vil give sine haveredskaber, bliver lavet med sirligt udskårne spærender og andre lækre detaljer. Selv havelågen får en nøje gennemtænkt bueform. Drivhuset kan se frem til nyt bunddække. For i stedet for at ende som stråtag, må nogle af Franks tagrør se sig omdannet til strøelse omkring tomatplanterne. Den forvandling sørger rå muskelkraft og Kastaniegaardens gamle hakkelsesmaskine for.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81750976'&EntityType='LinearSchedule'&EntityId='6bfa5144-6c08-486e-9452-0b15c304190c'&Width=3000&Height=1688",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81750978'&EntityType='LinearSchedule'&EntityId='6bfa5144-6c08-486e-9452-0b15c304190c'&Width=3000&Height=1688"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "episodeNumber": 13,
+     "broadcastChannel": "DR1",
+     "broadcastChannelStart": "2026-10-12T18:00:00Z",
+     "prdNumber": "00952630130",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "thesaurus_gør-det-selv",
+      "thesaurus_grøntsagsdyrkning",
+      "thesaurus_snedkerhåndværk",
+      "controlled_tagrør",
+      "controlled_tomater",
+      "editorialptaxtop_tv-program",
+      "editorialptaxsub_hus/have",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "622104"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR1",
+      "BroadcastChannelStart": "2026-10-12T18:00:00Z",
+      "PrdNumber": "00952630130",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Der er gang i småbyggerierne i Kastaniegaardens køkkenhave, og Frank er detaljernes mand, når det griber ham. Så den overdækkede redskabsvæg, han vil give sine haveredskaber, bliver lavet med sirligt udskårne spærender og andre lækre detaljer. Selv havelågen får en nøje gennemtænkt bueform. Drivhuset kan se frem til nyt bunddække. For i stedet for at ende som stråtag, må nogle af Franks tagrør se sig omdannet til strøelse omkring tomatplanterne. Den forvandling sørger rå muskelkraft og Kastaniegaardens gamle hakkelsesmaskine for."
+    },
+    "live": false
+   }
+  ],
+  "channelId": "20875",
+  "startDate": "2026-10-12T12:00:00Z",
+  "endDate": "2026-10-12T18:00:00Z"
+ },
+ {
+  "schedules": [
+   {
+    "id": "2ac363db-2d4e-4e72-afe0-a5e738641630",
+    "channelId": "20876",
+    "startDate": "2026-10-12T10:00:00Z",
+    "endDate": "2026-10-12T15:15:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T12:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:15:00+02:00",
+    "item": {
+     "id": "",
+     "title": "Seneste nyt fra TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177505'&EntityType='LinearSchedule'&EntityId='2ac363db-2d4e-4e72-afe0-a5e738641630'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177507'&EntityType='LinearSchedule'&EntityId='2ac363db-2d4e-4e72-afe0-a5e738641630'&Width=1920&Height=1080"
+     },
+     "type": "",
+     "broadcastChannel": "DR2",
+     "broadcastChannelStart": "2026-10-12T10:00:00Z",
+     "prdNumber": "00122635860",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DR2",
+      "BroadcastChannelStart": "2026-10-12T10:00:00Z",
+      "PrdNumber": "00122635860",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "87e8dda",
+    "channelId": "20876",
+    "startDate": "2026-10-12T15:15:00Z",
+    "endDate": "2026-10-12T15:45:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:15:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:45:00+02:00",
+    "item": {
+     "id": "71477",
+     "watchPath": "/se/ludere-lommetyve-og-lirekassemaend_-rababerdrenge-mod-panserbasser-1880_1900_71477",
+     "path": "/episode/ludere-lommetyve-og-lirekassemaend_-rababerdrenge-mod-panserbasser-1880_1900_71477",
+     "title": "Ludere, lommetyve og lirekassemænd (3:6)",
+     "description": "Dansk historieserie fra 2015\n- Rababerdrenge mod panserbasser, 1880-1900\nDanmark har ikke altid været et lille lykkeligt rigt land. Og vores velfærd kom ikke af sig selv og skal ikke tages for givet.\nI denne serie giver Liv Thomsen stemme til Underdanmark, den anden halvdel, dem der levede i skyggen, langt fra de bonede gulve og pæne borgerhjem. Denne gang handler det om Christian Christensen, der voksede i det såkaldte rabarberland på Nørrebro i København i slutningen af 1800 tallet. Han var én af titusinde indvandrere i hovedstaden, der levede under uhørt uhumske forhold og som fra helt lille måtte hjælpe med at forsørge en hastigt voksende familie.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81720913'&EntityType='LinearSchedule'&EntityId='87e8dda0-00fb-4010-916b-1b3cdfa3a3c7'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81720917'&EntityType='LinearSchedule'&EntityId='87e8dda0-00fb-4010-916b-1b3cdfa3a3c7'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 3,
+     "broadcastChannel": "DR2",
+     "broadcastChannelStart": "2026-10-12T15:15:00Z",
+     "prdNumber": "00921515030",
+     "classificationRating": "MRAM-11",
+     "keywords": [
+      "editorialptaxtop_tv-program",
+      "editorialptaxsub_historie",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "71477"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR2",
+      "BroadcastChannelStart": "2026-10-12T15:15:00Z",
+      "PrdNumber": "00921515030",
+      "ClassificationRating": "MRAM-11"
+     },
+     "shortDescription": "Dansk historieserie fra 2015\n- Rababerdrenge mod panserbasser, 1880-1900\nDanmark har ikke altid været et lille lykkeligt rigt land. Og vores velfærd kom ikke af sig selv og skal ikke tages for givet.\nI denne serie giver Liv Thomsen stemme til Underdanmark, den anden halvdel, dem der levede i skyggen, langt fra de bonede gulve og pæne borgerhjem. Denne gang handler det om Christian Christensen, der voksede i det såkaldte rabarberland på Nørrebro i København i slutningen af 1800 tallet. Han var én af titusinde indvandrere i hovedstaden, der levede under uhørt uhumske forhold og som fra helt lille måtte hjælpe med at forsørge en hastigt voksende familie."
+    },
+    "live": false
+   },
+   {
+    "id": "dacb8e4",
+    "channelId": "20876",
+    "startDate": "2026-10-12T15:45:00Z",
+    "endDate": "2026-10-12T16:15:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:45:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:15:00+02:00",
+    "item": {
+     "id": "71475",
+     "watchPath": "/se/ludere-lommetyve-og-lirekassemaend_-danmarks-slavinder-1900_1930_71475",
+     "path": "/episode/ludere-lommetyve-og-lirekassemaend_-danmarks-slavinder-1900_1930_71475",
+     "title": "Ludere, lommetyve og lirekassemænd (4:6)",
+     "description": "Dansk historieserie fra 2015\n- Danmarks slavinder, 1900 - 1930\nDanmark har ikke altid været et lille lykkeligt rigt land. Og vores velfærd kom ikke af sig selv og skal ikke tages for givet.\nI denne serie giver Liv Thomsen stemme til Underdanmark, den anden halvdel, dem der levede i skyggen, langt fra de bonede gulve og pæne borgerhjem. Denne gang handler det om Marie Christensen, der var én af mange tjenestepiger omkring år 1900. Pigerne blev behandlet som slavinder, knoklede det meste af døgnet og boede på bittesmå værelser. I den sparsomme fritid kom nogle af pigerne i ulykke eller tyede til prostitution, og omverdens dom var hård.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81720924'&EntityType='LinearSchedule'&EntityId='dacb8e4a-bd8c-405f-a8cf-b8ad356d359d'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81720928'&EntityType='LinearSchedule'&EntityId='dacb8e4a-bd8c-405f-a8cf-b8ad356d359d'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 4,
+     "broadcastChannel": "DR2",
+     "broadcastChannelStart": "2026-10-12T15:45:00Z",
+     "prdNumber": "00921515040",
+     "classificationRating": "MRAM-11",
+     "keywords": [
+      "editorialptaxtop_tv-program",
+      "editorialptaxsub_historie",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "71475"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR2",
+      "BroadcastChannelStart": "2026-10-12T15:45:00Z",
+      "PrdNumber": "00921515040",
+      "ClassificationRating": "MRAM-11"
+     },
+     "shortDescription": "Dansk historieserie fra 2015\n- Danmarks slavinder, 1900 - 1930\nDanmark har ikke altid været et lille lykkeligt rigt land. Og vores velfærd kom ikke af sig selv og skal ikke tages for givet.\nI denne serie giver Liv Thomsen stemme til Underdanmark, den anden halvdel, dem der levede i skyggen, langt fra de bonede gulve og pæne borgerhjem. Denne gang handler det om Marie Christensen, der var én af mange tjenestepiger omkring år 1900. Pigerne blev behandlet som slavinder, knoklede det meste af døgnet og boede på bittesmå værelser. I den sparsomme fritid kom nogle af pigerne i ulykke eller tyede til prostitution, og omverdens dom var hård."
+    },
+    "live": false
+   },
+   {
+    "id": "c74dae5",
+    "channelId": "20876",
+    "startDate": "2026-10-12T16:15:00Z",
+    "endDate": "2026-10-12T17:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:15:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T19:00:00+02:00",
+    "item": {
+     "id": "623792",
+     "watchPath": "/se/paa-rejse-med-griff-_-sydstaterne_-chattanooga-og-nashville_623792",
+     "path": "/episode/paa-rejse-med-griff-_-sydstaterne_-chattanooga-og-nashville_623792",
+     "title": "På rejse med Griff - Sydstaterne (3:6)",
+     "description": "Australsk dokumentarserie fra 2025.\n(Griff's Great American South)\nTennessee - så amerikansk, som det kan blive! Skuespiller Griff Rhys Jones besøger Chattanooga ved Tennessee-floden, hvor utallige dæmninger, vandkraft og store vandreservoirer har givet delstaten tidlig adgang til atomkraft. Herfra rejser han videre til countrymusikkens hovedstad Nashville - også kendt for sin formidable grillmad, hårdtslående whiskey og den ikoniske Dolly Parton.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81720936'&EntityType='LinearSchedule'&EntityId='c74dae5a-93a1-4501-ac58-c90c02a00dc9'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81720942'&EntityType='LinearSchedule'&EntityId='c74dae5a-93a1-4501-ac58-c90c02a00dc9'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 3,
+     "broadcastChannel": "DR2",
+     "broadcastChannelStart": "2026-10-12T16:15:00Z",
+     "prdNumber": "00022511820",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "location_tennessee",
+      "thesaurus_kulturhistorie",
+      "thesaurus_kulturmønstre",
+      "thesaurus_rejsebeskrivelser",
+      "thesaurus_usa",
+      "controlled_sydstaterne",
+      "editorialptaxtop_tv-program",
+      "editorialptaxsub_rejser",
+      "culturalorigin_ikke-dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "623792"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR2",
+      "BroadcastChannelStart": "2026-10-12T16:15:00Z",
+      "PrdNumber": "00022511820",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Australsk dokumentarserie fra 2025.\n(Griff's Great American South)\nTennessee - så amerikansk, som det kan blive! Skuespiller Griff Rhys Jones besøger Chattanooga ved Tennessee-floden, hvor utallige dæmninger, vandkraft og store vandreservoirer har givet delstaten tidlig adgang til atomkraft. Herfra rejser han videre til countrymusikkens hovedstad Nashville - også kendt for sin formidable grillmad, hårdtslående whiskey og den ikoniske Dolly Parton."
+    },
+    "live": false
+   },
+   {
+    "id": "5070454",
+    "channelId": "20876",
+    "startDate": "2026-10-12T17:00:00Z",
+    "endDate": "2026-10-12T19:20:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T19:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T21:20:00+02:00",
+    "item": {
+     "id": "622910",
+     "watchPath": "/se/de-andres-liv_622910",
+     "path": "/program/de-andres-liv_622910",
+     "title": "Filmperler: De andres liv",
+     "description": "Tysk Oscar-belønnet thrillerdrama fra 2006.\n(Das Leben der Anderen)\nØstberlin, 1984. Fem år før murens fald holder DDR's regering befolkningen i et jerngreb med kontrol og overvågning. Den partiloyale Stasi-agent Wiesler håber at fremme sin karriere, da han får til opgave at overvåge den frittænkende forfatter Dreyman og dennes kæreste. Overvågningen viser ham imidlertid et hidtil ukendt liv, som han får sværere og sværere ved at modstå. Men systemet lader sig ikke stoppe, og et meget farligt spil tager form.\n'De andres liv' er en af de senere års mest roste og prisbelønnede film. Det gribende Stasi-drama modtog bl.a. en Oscar for bedste udenlandske film, en Bodil, en Robert og tre European Film Awards.\nMedvirkende: Ulrich Mühe, Martina Gedeck, Sebastian Koch m.fl.\nInstruktion: Florian Henckel von Donnersmarck.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81993899'&EntityType='LinearSchedule'&EntityId='5070454c-fee0-448d-a0c0-800959501c62'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81993901'&EntityType='LinearSchedule'&EntityId='5070454c-fee0-448d-a0c0-800959501c62'&Width=1920&Height=1080"
+     },
+     "type": "program",
+     "broadcastChannel": "DR2",
+     "broadcastChannelStart": "2026-10-12T17:00:00Z",
+     "prdNumber": "00020830560",
+     "classificationRating": "MRAM-11",
+     "keywords": [
+      "organization_stasi",
+      "editorialptaxtop_film",
+      "editorialptaxsub_historisk drama",
+      "mood_autentisk/realistisk",
+      "mood_intellektuel/tankevækkende",
+      "mood_mørk/uhyggelig",
+      "culturalorigin_ikke-dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "622910"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR2",
+      "BroadcastChannelStart": "2026-10-12T17:00:00Z",
+      "PrdNumber": "00020830560",
+      "ClassificationRating": "MRAM-11"
+     },
+     "shortDescription": "Tysk Oscar-belønnet thrillerdrama fra 2006.\n(Das Leben der Anderen)\nØstberlin, 1984. Fem år før murens fald holder DDR's regering befolkningen i et jerngreb med kontrol og overvågning. Den partiloyale Stasi-agent Wiesler håber at fremme sin karriere, da han får til opgave at overvåge den frittænkende forfatter Dreyman og dennes kæreste. Overvågningen viser ham imidlertid et hidtil ukendt liv, som han får sværere og sværere ved at modstå. Men systemet lader sig ikke stoppe, og et meget farligt spil tager form.\n'De andres liv' er en af de senere års mest roste og prisbelønnede film. Det gribende Stasi-drama modtog bl.a. en Oscar for bedste udenlandske film, en Bodil, en Robert og tre European Film Awards.\nMedvirkende: Ulrich Mühe, Martina Gedeck, Sebastian Koch m.fl.\nInstruktion: Florian Henckel von Donnersmarck."
+    },
+    "live": false
+   }
+  ],
+  "channelId": "20876",
+  "startDate": "2026-10-12T12:00:00Z",
+  "endDate": "2026-10-12T18:00:00Z"
+ },
+ {
+  "schedules": [
+   {
+    "id": "546b52d",
+    "channelId": "192099",
+    "startDate": "2026-10-12T11:50:00Z",
+    "endDate": "2026-10-12T12:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T13:50:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:00:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177424'&EntityType='LinearSchedule'&EntityId='546b52db-6669-412b-8048-f069c6d6ebea'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177426'&EntityType='LinearSchedule'&EntityId='546b52db-6669-412b-8048-f069c6d6ebea'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T11:50:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T11:50:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "094ecc8",
+    "channelId": "192099",
+    "startDate": "2026-10-12T12:05:00Z",
+    "endDate": "2026-10-12T12:15:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:05:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:15:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177428'&EntityType='LinearSchedule'&EntityId='094ecc8e-8758-467c-aa4d-25dc167ebc46'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177430'&EntityType='LinearSchedule'&EntityId='094ecc8e-8758-467c-aa4d-25dc167ebc46'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T12:05:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T12:05:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "c70373c",
+    "channelId": "192099",
+    "startDate": "2026-10-12T12:20:00Z",
+    "endDate": "2026-10-12T12:30:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:20:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:30:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177432'&EntityType='LinearSchedule'&EntityId='c70373ce-fe26-4b65-b3e8-864da5559b60'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177434'&EntityType='LinearSchedule'&EntityId='c70373ce-fe26-4b65-b3e8-864da5559b60'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T12:20:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T12:20:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "efbfd13",
+    "channelId": "192099",
+    "startDate": "2026-10-12T12:35:00Z",
+    "endDate": "2026-10-12T12:45:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:35:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:45:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177436'&EntityType='LinearSchedule'&EntityId='efbfd131-36c3-4edd-a342-d1f9550780e4'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177438'&EntityType='LinearSchedule'&EntityId='efbfd131-36c3-4edd-a342-d1f9550780e4'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T12:35:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T12:35:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "738fc65",
+    "channelId": "192099",
+    "startDate": "2026-10-12T12:45:00Z",
+    "endDate": "2026-10-12T13:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:45:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:00:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177440'&EntityType='LinearSchedule'&EntityId='738fc658-d62f-45b5-81ee-ee8086e7e14b'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177442'&EntityType='LinearSchedule'&EntityId='738fc658-d62f-45b5-81ee-ee8086e7e14b'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T12:45:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T12:45:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "309f865",
+    "channelId": "192099",
+    "startDate": "2026-10-12T13:00:00Z",
+    "endDate": "2026-10-12T13:10:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:10:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177444'&EntityType='LinearSchedule'&EntityId='309f865c-099a-48f2-8e79-643fe9b7db6a'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177446'&EntityType='LinearSchedule'&EntityId='309f865c-099a-48f2-8e79-643fe9b7db6a'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T13:00:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T13:00:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "38203ee",
+    "channelId": "192099",
+    "startDate": "2026-10-12T13:15:00Z",
+    "endDate": "2026-10-12T13:25:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:15:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:25:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177448'&EntityType='LinearSchedule'&EntityId='38203eea-8c15-4833-8c38-a224261b8427'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177450'&EntityType='LinearSchedule'&EntityId='38203eea-8c15-4833-8c38-a224261b8427'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T13:15:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T13:15:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "c4d4022",
+    "channelId": "192099",
+    "startDate": "2026-10-12T13:30:00Z",
+    "endDate": "2026-10-12T13:40:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:30:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:40:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177452'&EntityType='LinearSchedule'&EntityId='c4d40225-dbc4-4801-9d21-3a8ae4ae300c'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177454'&EntityType='LinearSchedule'&EntityId='c4d40225-dbc4-4801-9d21-3a8ae4ae300c'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T13:30:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T13:30:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "27cdcbb",
+    "channelId": "192099",
+    "startDate": "2026-10-12T13:45:00Z",
+    "endDate": "2026-10-12T13:55:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:45:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:55:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177456'&EntityType='LinearSchedule'&EntityId='27cdcbb2-257d-42d7-a29b-66f7fce9b2e1'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177458'&EntityType='LinearSchedule'&EntityId='27cdcbb2-257d-42d7-a29b-66f7fce9b2e1'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T13:45:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T13:45:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "9e56a52",
+    "channelId": "192099",
+    "startDate": "2026-10-12T14:00:00Z",
+    "endDate": "2026-10-12T14:10:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T16:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T16:10:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177460'&EntityType='LinearSchedule'&EntityId='9e56a529-cdc5-46f4-af47-3a8b8ae6a1f2'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177462'&EntityType='LinearSchedule'&EntityId='9e56a529-cdc5-46f4-af47-3a8b8ae6a1f2'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T14:00:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T14:00:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "b96865e",
+    "channelId": "192099",
+    "startDate": "2026-10-12T14:10:00Z",
+    "endDate": "2026-10-12T14:20:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T16:10:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T16:20:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177464'&EntityType='LinearSchedule'&EntityId='b96865e2-3470-4535-bf3d-d6d3cb5202f1'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177466'&EntityType='LinearSchedule'&EntityId='b96865e2-3470-4535-bf3d-d6d3cb5202f1'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T14:10:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T14:10:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "d75bdbe",
+    "channelId": "192099",
+    "startDate": "2026-10-12T14:25:00Z",
+    "endDate": "2026-10-12T14:35:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T16:25:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T16:35:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177468'&EntityType='LinearSchedule'&EntityId='d75bdbef-d35c-4d9e-8d7d-abc22502232f'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177470'&EntityType='LinearSchedule'&EntityId='d75bdbef-d35c-4d9e-8d7d-abc22502232f'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T14:25:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T14:25:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "e409851",
+    "channelId": "192099",
+    "startDate": "2026-10-12T14:40:00Z",
+    "endDate": "2026-10-12T14:50:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T16:40:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T16:50:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177472'&EntityType='LinearSchedule'&EntityId='e4098516-a3de-41dd-8166-f85f1db337d6'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177474'&EntityType='LinearSchedule'&EntityId='e4098516-a3de-41dd-8166-f85f1db337d6'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T14:40:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T14:40:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "177283b",
+    "channelId": "192099",
+    "startDate": "2026-10-12T14:55:00Z",
+    "endDate": "2026-10-12T15:05:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T16:55:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:05:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177476'&EntityType='LinearSchedule'&EntityId='177283b9-18ce-4c8c-8c9c-40a313af58ea'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177478'&EntityType='LinearSchedule'&EntityId='177283b9-18ce-4c8c-8c9c-40a313af58ea'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T14:55:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T14:55:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "b7bab8c",
+    "channelId": "192099",
+    "startDate": "2026-10-12T15:10:00Z",
+    "endDate": "2026-10-12T15:16:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:10:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:16:00+02:00",
+    "item": {
+     "id": "627204",
+     "watchPath": "/se/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "path": "/episode/tva_-trump-melder-om-energi_vaabenhvile_627204",
+     "title": "TVA",
+     "description": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177480'&EntityType='LinearSchedule'&EntityId='b7bab8c1-f8b9-4d0f-91fb-c6ec296592a4'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82177482'&EntityType='LinearSchedule'&EntityId='b7bab8c1-f8b9-4d0f-91fb-c6ec296592a4'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T15:10:00Z",
+     "prdNumber": "00122613850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "keywords": [
+      "editorialptaxtop_nyheder",
+      "editorialptaxsub_nyheder",
+      "culturalorigin_dansk"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "627204"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T15:10:00Z",
+      "PrdNumber": "00122613850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "USA's præsident Donald Trump hævder, at der er indgået en våbenhvile på energiområdet mellem Rusland og Ukraine, men hverken Ukraine eller Rusland har bekræftet, at det skulle være tilfældet.\n\nTV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "62a520f0-5cc6-4f7f-8aa6-367c4a40d2dc",
+    "channelId": "192099",
+    "startDate": "2026-10-12T15:16:00Z",
+    "endDate": "2026-10-12T15:25:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:16:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:25:00+02:00",
+    "item": {
+     "id": "627209",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160748'&EntityType='LinearSchedule'&EntityId='62a520f0-5cc6-4f7f-8aa6-367c4a40d2dc'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160750'&EntityType='LinearSchedule'&EntityId='62a520f0-5cc6-4f7f-8aa6-367c4a40d2dc'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T15:16:00Z",
+     "prdNumber": "00122667760",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T15:16:00Z",
+      "PrdNumber": "00122667760",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": true
+   },
+   {
+    "id": "c826eb4",
+    "channelId": "192099",
+    "startDate": "2026-10-12T15:25:00Z",
+    "endDate": "2026-10-12T15:40:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:25:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:40:00+02:00",
+    "item": {
+     "id": "627209",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160752'&EntityType='LinearSchedule'&EntityId='c826eb40-c4a8-4468-a0ac-21f2e31da066'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160754'&EntityType='LinearSchedule'&EntityId='c826eb40-c4a8-4468-a0ac-21f2e31da066'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T15:25:00Z",
+     "prdNumber": "00122667760",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T15:25:00Z",
+      "PrdNumber": "00122667760",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "7bd81fa",
+    "channelId": "192099",
+    "startDate": "2026-10-12T15:40:00Z",
+    "endDate": "2026-10-12T15:55:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:40:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:55:00+02:00",
+    "item": {
+     "id": "627209",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160756'&EntityType='LinearSchedule'&EntityId='7bd81fa8-6269-4a88-afb9-bfa84e42dddb'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160758'&EntityType='LinearSchedule'&EntityId='7bd81fa8-6269-4a88-afb9-bfa84e42dddb'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T15:40:00Z",
+     "prdNumber": "00122667760",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T15:40:00Z",
+      "PrdNumber": "00122667760",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "00f8c80",
+    "channelId": "192099",
+    "startDate": "2026-10-12T15:55:00Z",
+    "endDate": "2026-10-12T16:10:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:55:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:10:00+02:00",
+    "item": {
+     "id": "627209",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160760'&EntityType='LinearSchedule'&EntityId='00f8c802-0e9b-4301-ae3f-3dac0868b570'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160762'&EntityType='LinearSchedule'&EntityId='00f8c802-0e9b-4301-ae3f-3dac0868b570'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T15:55:00Z",
+     "prdNumber": "00122667760",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T15:55:00Z",
+      "PrdNumber": "00122667760",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "637fc2e",
+    "channelId": "192099",
+    "startDate": "2026-10-12T16:10:00Z",
+    "endDate": "2026-10-12T16:30:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:10:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:30:00+02:00",
+    "item": {
+     "id": "627209",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160764'&EntityType='LinearSchedule'&EntityId='637fc2ec-0870-4530-8f58-09591febcb14'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160766'&EntityType='LinearSchedule'&EntityId='637fc2ec-0870-4530-8f58-09591febcb14'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T16:10:00Z",
+     "prdNumber": "00122667760",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T16:10:00Z",
+      "PrdNumber": "00122667760",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "f2e1e5cf-d5ba-40af-90f4-b5806ebe480e",
+    "channelId": "192099",
+    "startDate": "2026-10-12T16:30:00Z",
+    "endDate": "2026-10-12T16:50:05Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:30:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:50:05+02:00",
+    "item": {
+     "id": "627200",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721566'&EntityType='LinearSchedule'&EntityId='f2e1e5cf-d5ba-40af-90f4-b5806ebe480e'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721569'&EntityType='LinearSchedule'&EntityId='f2e1e5cf-d5ba-40af-90f4-b5806ebe480e'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T16:30:00Z",
+     "prdNumber": "00122621850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T16:30:00Z",
+      "PrdNumber": "00122621850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": true
+   },
+   {
+    "id": "3c972e5",
+    "channelId": "192099",
+    "startDate": "2026-10-12T16:50:00Z",
+    "endDate": "2026-10-12T17:15:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:50:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T19:15:00+02:00",
+    "item": {
+     "id": "627200",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160768'&EntityType='LinearSchedule'&EntityId='3c972e51-1a3f-4e99-ac6d-974532fa03cc'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160770'&EntityType='LinearSchedule'&EntityId='3c972e51-1a3f-4e99-ac6d-974532fa03cc'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T16:50:00Z",
+     "prdNumber": "00122621850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T16:50:00Z",
+      "PrdNumber": "00122621850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "b9ed0bd",
+    "channelId": "192099",
+    "startDate": "2026-10-12T17:15:00Z",
+    "endDate": "2026-10-12T17:40:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T19:15:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T19:40:00+02:00",
+    "item": {
+     "id": "627200",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160772'&EntityType='LinearSchedule'&EntityId='b9ed0bd4-6ef8-41e1-80b3-e94186eb8425'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160774'&EntityType='LinearSchedule'&EntityId='b9ed0bd4-6ef8-41e1-80b3-e94186eb8425'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T17:15:00Z",
+     "prdNumber": "00122621850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T17:15:00Z",
+      "PrdNumber": "00122621850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   },
+   {
+    "id": "e142686",
+    "channelId": "192099",
+    "startDate": "2026-10-12T17:40:00Z",
+    "endDate": "2026-10-12T18:05:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T19:40:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T20:05:00+02:00",
+    "item": {
+     "id": "627200",
+     "title": "TVA",
+     "description": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160776'&EntityType='LinearSchedule'&EntityId='e1426863-8e1a-4d72-aeaf-e163e8479e1d'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82160778'&EntityType='LinearSchedule'&EntityId='e1426863-8e1a-4d72-aeaf-e163e8479e1d'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2026,
+     "broadcastChannel": "DRTV",
+     "broadcastChannelStart": "2026-10-12T17:40:00Z",
+     "prdNumber": "00122621850",
+     "classificationRating": "MRAM-NOT-RATED",
+     "customFields": {
+      "BroadcastChannel": "DRTV",
+      "BroadcastChannelStart": "2026-10-12T17:40:00Z",
+      "PrdNumber": "00122621850",
+      "ClassificationRating": "MRAM-NOT-RATED"
+     },
+     "shortDescription": "TV Avisen (TVA) giver dig overblik over dagens vigtigste nyheder fra Danmark og verden omkring os. Få indblik og perspektiv på de største begivenheder og historier."
+    },
+    "live": false
+   }
+  ],
+  "channelId": "192099",
+  "startDate": "2026-10-12T12:00:00Z",
+  "endDate": "2026-10-12T18:00:00Z"
+ },
+ {
+  "schedules": [
+   {
+    "id": "05ff238",
+    "channelId": "20892",
+    "startDate": "2026-10-12T11:35:00Z",
+    "endDate": "2026-10-12T12:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T13:35:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:00:00+02:00",
+    "item": {
+     "id": "229733",
+     "watchPath": "/se/lucky-luke_-slaget_229733",
+     "path": "/episode/lucky-luke_-slaget_229733",
+     "title": "Lucky Luke - Slaget (23)",
+     "description": "Slaget.\nTegnefilm.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994339'&EntityType='LinearSchedule'&EntityId='05ff2388-3fd2-4e98-b1ac-11bdf68ac5be'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994341'&EntityType='LinearSchedule'&EntityId='05ff2388-3fd2-4e98-b1ac-11bdf68ac5be'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 23,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T11:35:00Z",
+     "prdNumber": "00853917190",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_spænding",
+      "agetargetgroup_4-5 år",
+      "agetargetgroup_6-8 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "229733"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T11:35:00Z",
+      "PrdNumber": "00853917190",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Slaget.\nTegnefilm."
+    },
+    "live": false
+   },
+   {
+    "id": "3d73358",
+    "channelId": "20892",
+    "startDate": "2026-10-12T12:00:00Z",
+    "endDate": "2026-10-12T12:05:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:05:00+02:00",
+    "item": {
+     "id": "543315",
+     "watchPath": "/se/aeblerup_-nydags_dag_543315",
+     "path": "/episode/aeblerup_-nydags_dag_543315",
+     "title": "Æblerup (20:20) Nydags-dag",
+     "description": "Trafalgar og Pulver holder den bedste nytårsaften sammen med sjove Onkel Knud. Dagen efter keder de sig og ærgrer sig over, at der er et helt år, før det bliver nytårsaften igen. Så får Onkel Knud en god idé - de kan jo bare fejre nydags-dag!",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994343'&EntityType='LinearSchedule'&EntityId='3d733581-5078-4dd7-86ac-97056cafe565'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994345'&EntityType='LinearSchedule'&EntityId='3d733581-5078-4dd7-86ac-97056cafe565'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2,
+     "episodeNumber": 20,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T12:00:00Z",
+     "prdNumber": "00922425200",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_humor",
+      "agetargetgroup_4-5 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "543315"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T12:00:00Z",
+      "PrdNumber": "00922425200",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Trafalgar og Pulver holder den bedste nytårsaften sammen med sjove Onkel Knud. Dagen efter keder de sig og ærgrer sig over, at der er et helt år, før det bliver nytårsaften igen. Så får Onkel Knud en god idé - de kan jo bare fejre nydags-dag!"
+    },
+    "live": false
+   },
+   {
+    "id": "b780494",
+    "channelId": "20892",
+    "startDate": "2026-10-12T12:05:00Z",
+    "endDate": "2026-10-12T12:10:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:05:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:10:00+02:00",
+    "item": {
+     "id": "425102",
+     "watchPath": "/se/aeblerup_-autografjaegerne_425102",
+     "path": "/episode/aeblerup_-autografjaegerne_425102",
+     "title": "Æblerup",
+     "description": "En popstjerne er blevet set i Æblerup. Alle vil have hendes autograf. Undtagen Trafalgar og Pulver, som vil have autografer fra totalt ukendte mennesker. Men det er meget svært at finde et totalt ukendt menneske.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994347'&EntityType='LinearSchedule'&EntityId='b7804948-c72d-4d70-ac10-f4e6ce0a1d52'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994349'&EntityType='LinearSchedule'&EntityId='b7804948-c72d-4d70-ac10-f4e6ce0a1d52'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 1,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T12:05:00Z",
+     "prdNumber": "00922302010",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_humor",
+      "agetargetgroup_4-5 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "425102"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T12:05:00Z",
+      "PrdNumber": "00922302010",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "En popstjerne er blevet set i Æblerup. Alle vil have hendes autograf. Undtagen Trafalgar og Pulver, som vil have autografer fra totalt ukendte mennesker. Men det er meget svært at finde et totalt ukendt menneske."
+    },
+    "live": false
+   },
+   {
+    "id": "9eb0f1c",
+    "channelId": "20892",
+    "startDate": "2026-10-12T12:10:00Z",
+    "endDate": "2026-10-12T12:30:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:10:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:30:00+02:00",
+    "item": {
+     "id": "571708",
+     "watchPath": "/se/dragerytterne_-skrillen-i-skudlinjen-_-del-1_571708",
+     "path": "/episode/dragerytterne_-skrillen-i-skudlinjen-_-del-1_571708",
+     "title": "Dragerytterne: Skrillen i skudlinjen - del 1 (30)",
+     "description": "Da dragerytterne finder en frossen skrill, en af de lyndrager, som bersærkerne er så vilde med, forsøger de hurtigt at få den væk fra Bersærkø.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721439'&EntityType='LinearSchedule'&EntityId='9eb0f1ca-fd5d-46fd-8233-c16a3cb29a42'&Width=4199&Height=2362",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721447'&EntityType='LinearSchedule'&EntityId='9eb0f1ca-fd5d-46fd-8233-c16a3cb29a42'&Width=4199&Height=2362"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 30,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T12:10:00Z",
+     "prdNumber": "00851309880",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_spænding",
+      "editorialptaxsub_animation",
+      "agetargetgroup_6-8 år",
+      "agetargetgroup_9-11 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "571708"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T12:10:00Z",
+      "PrdNumber": "00851309880",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Da dragerytterne finder en frossen skrill, en af de lyndrager, som bersærkerne er så vilde med, forsøger de hurtigt at få den væk fra Bersærkø."
+    },
+    "live": false
+   },
+   {
+    "id": "c8b7b10",
+    "channelId": "20892",
+    "startDate": "2026-10-12T12:30:00Z",
+    "endDate": "2026-10-12T12:45:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:30:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:45:00+02:00",
+    "item": {
+     "id": "392022",
+     "watchPath": "/se/mesterlige-monsterboern_-safari-jack_392022",
+     "path": "/episode/mesterlige-monsterboern_-safari-jack_392022",
+     "title": "Mesterlige monsterbørn",
+     "description": "Arthur udfordrer sine børnebørn til at rehabilitere den ondeste plastikdukke, der nogensinde har eksisteret.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721459'&EntityType='LinearSchedule'&EntityId='c8b7b100-d138-4b84-a756-369bfe62dbc8'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721464'&EntityType='LinearSchedule'&EntityId='c8b7b100-d138-4b84-a756-369bfe62dbc8'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 44,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T12:30:00Z",
+     "prdNumber": "00922200600",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_spænding",
+      "editorialptaxsub_magi",
+      "agetargetgroup_6-8 år",
+      "agetargetgroup_9-11 år",
+      "agetargetgroup_familie"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "392022"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T12:30:00Z",
+      "PrdNumber": "00922200600",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Arthur udfordrer sine børnebørn til at rehabilitere den ondeste plastikdukke, der nogensinde har eksisteret."
+    },
+    "live": false
+   },
+   {
+    "id": "43e0bc5",
+    "channelId": "20892",
+    "startDate": "2026-10-12T12:45:00Z",
+    "endDate": "2026-10-12T12:55:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:45:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T14:55:00+02:00",
+    "item": {
+     "id": "546383",
+     "watchPath": "/se/de-tre-musketerer_-den-stjaalne-krone_546383",
+     "path": "/episode/de-tre-musketerer_-den-stjaalne-krone_546383",
+     "title": "De tre musketerer",
+     "description": ".",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994351'&EntityType='LinearSchedule'&EntityId='43e0bc57-582f-479c-8750-dc0a28369e21'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994353'&EntityType='LinearSchedule'&EntityId='43e0bc57-582f-479c-8750-dc0a28369e21'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 4,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T12:45:00Z",
+     "prdNumber": "00852203460",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_fiktion",
+      "agetargetgroup_4-5 år",
+      "agetargetgroup_6-8 år",
+      "agetargetgroup_9-11 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "546383"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T12:45:00Z",
+      "PrdNumber": "00852203460",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "."
+    },
+    "live": false
+   },
+   {
+    "id": "d9f44dd",
+    "channelId": "20892",
+    "startDate": "2026-10-12T12:55:00Z",
+    "endDate": "2026-10-12T13:20:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T14:55:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:20:00+02:00",
+    "item": {
+     "id": "515239",
+     "watchPath": "/se/peter-pedal_-en-hat-fuld-af-abekattestreger_515239",
+     "path": "/episode/peter-pedal_-en-hat-fuld-af-abekattestreger_515239",
+     "title": "Peter Pedal",
+     "description": "Der sker altid noget, hvis man er lidt fræk... og det er den nysgerrige abe Peter Pedal. Bygget over Margret og H. A. Reys klassiske børnebøger.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721484'&EntityType='LinearSchedule'&EntityId='d9f44dd8-e2c0-4183-99a4-f7a783f17540'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721488'&EntityType='LinearSchedule'&EntityId='d9f44dd8-e2c0-4183-99a4-f7a783f17540'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2,
+     "episodeNumber": 11,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T12:55:00Z",
+     "prdNumber": "00850801850",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_venskab",
+      "editorialptaxsub_hverdag",
+      "agetargetgroup_4-5 år",
+      "agetargetgroup_6-8 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "515239"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T12:55:00Z",
+      "PrdNumber": "00850801850",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Der sker altid noget, hvis man er lidt fræk... og det er den nysgerrige abe Peter Pedal. Bygget over Margret og H. A. Reys klassiske børnebøger."
+    },
+    "live": false
+   },
+   {
+    "id": "15fc2d6",
+    "channelId": "20892",
+    "startDate": "2026-10-12T13:20:00Z",
+    "endDate": "2026-10-12T13:30:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:20:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:30:00+02:00",
+    "item": {
+     "id": "627202",
+     "title": "Gurli Gris VII (19)",
+     "description": "Tegnefilm med dansk tale",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81750992'&EntityType='LinearSchedule'&EntityId='15fc2d6c-e3eb-494e-9139-4c6ae902ed26'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81750994'&EntityType='LinearSchedule'&EntityId='15fc2d6c-e3eb-494e-9139-4c6ae902ed26'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 7,
+     "episodeNumber": 19,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T13:20:00Z",
+     "prdNumber": "00851808820",
+     "classificationRating": "MRAM-ALL",
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T13:20:00Z",
+      "PrdNumber": "00851808820",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Tegnefilm med dansk tale"
+    },
+    "live": false
+   },
+   {
+    "id": "6d9d497",
+    "channelId": "20892",
+    "startDate": "2026-10-12T13:35:00Z",
+    "endDate": "2026-10-12T13:35:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:35:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:35:00+02:00",
+    "item": {
+     "id": "627208",
+     "title": "Gurli Gris VII (20)",
+     "description": "Tegnefilm med dansk tale",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81750996'&EntityType='LinearSchedule'&EntityId='6d9d4976-fdb6-4cd4-87e8-31a00640c956'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81750998'&EntityType='LinearSchedule'&EntityId='6d9d4976-fdb6-4cd4-87e8-31a00640c956'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 7,
+     "episodeNumber": 20,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T13:35:00Z",
+     "prdNumber": "00851808830",
+     "classificationRating": "MRAM-ALL",
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T13:35:00Z",
+      "PrdNumber": "00851808830",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Tegnefilm med dansk tale"
+    },
+    "live": false
+   },
+   {
+    "id": "90257e4",
+    "channelId": "20892",
+    "startDate": "2026-10-12T13:36:00Z",
+    "endDate": "2026-10-12T13:36:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:36:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:36:00+02:00",
+    "item": {
+     "id": "392723",
+     "watchPath": "/se/simon_-mareridt-forsvind_392723",
+     "path": "/episode/simon_-mareridt-forsvind_392723",
+     "title": "Simon III",
+     "description": ".",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721530'&EntityType='LinearSchedule'&EntityId='90257e45-38c9-4dd4-8378-2391c0a6d35a'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721536'&EntityType='LinearSchedule'&EntityId='90257e45-38c9-4dd4-8378-2391c0a6d35a'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 3,
+     "episodeNumber": 5,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T13:36:00Z",
+     "prdNumber": "00851912450",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_venskab",
+      "editorialptaxsub_hverdag",
+      "agetargetgroup_2-3 år",
+      "agetargetgroup_4-5 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "392723"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T13:36:00Z",
+      "PrdNumber": "00851912450",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "."
+    },
+    "live": false
+   },
+   {
+    "id": "3ef9315",
+    "channelId": "20892",
+    "startDate": "2026-10-12T13:36:00Z",
+    "endDate": "2026-10-12T13:40:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:36:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:40:00+02:00",
+    "item": {
+     "id": "542034",
+     "watchPath": "/se/simon-superkanin_-professor-ulvs-nysefnug_542034",
+     "path": "/episode/simon-superkanin_-professor-ulvs-nysefnug_542034",
+     "title": "Simon Superkanin II",
+     "description": "Simon har altid drømt om at kunne alt det, de store superhelte kan - nu har han chancen i helt nye episoder, hvor Simon ikke bare er kanin - men Superkanin! Fransk tegnefilmserie.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721547'&EntityType='LinearSchedule'&EntityId='3ef93157-b161-43e6-8cce-7947fa70ebf7'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721549'&EntityType='LinearSchedule'&EntityId='3ef93157-b161-43e6-8cce-7947fa70ebf7'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2,
+     "episodeNumber": 21,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T13:36:00Z",
+     "prdNumber": "00852308610",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_venskab",
+      "editorialptaxsub_spænding",
+      "agetargetgroup_4-5 år",
+      "agetargetgroup_6-8 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "542034"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T13:36:00Z",
+      "PrdNumber": "00852308610",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Simon har altid drømt om at kunne alt det, de store superhelte kan - nu har han chancen i helt nye episoder, hvor Simon ikke bare er kanin - men Superkanin! Fransk tegnefilmserie."
+    },
+    "live": false
+   },
+   {
+    "id": "01777fb",
+    "channelId": "20892",
+    "startDate": "2026-10-12T13:40:00Z",
+    "endDate": "2026-10-12T13:50:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:40:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T15:50:00+02:00",
+    "item": {
+     "id": "603573",
+     "watchPath": "/se/batbiler_-ulti_bats-kamp-del-1_603573",
+     "path": "/episode/batbiler_-ulti_bats-kamp-del-1_603573",
+     "title": "Batbiler II",
+     "description": "Klar til eventyr - med sømmet i bund! Batman, Robin og Batgirls køretøjer bliver levende, og Gotham City får et helt nyt hold af helte, der kæmper for retfærdighed og fanger forbrydere. Amerikansk animeret superhelteserie med figurer fra DCs univers.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721556'&EntityType='LinearSchedule'&EntityId='01777fba-3669-4c6a-b522-7b4e57643944'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721560'&EntityType='LinearSchedule'&EntityId='01777fba-3669-4c6a-b522-7b4e57643944'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2,
+     "episodeNumber": 28,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T13:40:00Z",
+     "prdNumber": "00852602050",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_maskiner",
+      "editorialptaxsub_spænding",
+      "agetargetgroup_4-5 år",
+      "agetargetgroup_6-8 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "603573"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T13:40:00Z",
+      "PrdNumber": "00852602050",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Klar til eventyr - med sømmet i bund! Batman, Robin og Batgirls køretøjer bliver levende, og Gotham City får et helt nyt hold af helte, der kæmper for retfærdighed og fanger forbrydere. Amerikansk animeret superhelteserie med figurer fra DCs univers."
+    },
+    "live": false
+   },
+   {
+    "id": "e3a907c",
+    "channelId": "20892",
+    "startDate": "2026-10-12T13:50:00Z",
+    "endDate": "2026-10-12T14:15:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T15:50:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T16:15:00+02:00",
+    "item": {
+     "id": "624755",
+     "watchPath": "/se/hotel-transylvania_-naesepilleren-kommer_624755",
+     "path": "/episode/hotel-transylvania_-naesepilleren-kommer_624755",
+     "title": "Hotel Transylvania",
+     "description": "Næsepilleren kommer + Borte borte, skrig skrig",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82049092'&EntityType='LinearSchedule'&EntityId='e3a907c2-a6bd-4a88-87a3-7b446926a48f'&Width=3000&Height=1688",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='82049094'&EntityType='LinearSchedule'&EntityId='e3a907c2-a6bd-4a88-87a3-7b446926a48f'&Width=3000&Height=1688"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 1,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T13:50:00Z",
+     "prdNumber": "00852606260",
+     "classificationRating": "MRAM-07",
+     "keywords": [
+      "editorialptaxtop_børn/fiktion",
+      "editorialptaxsub_animation",
+      "agetargetgroup_6-8 år",
+      "agetargetgroup_9-11 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "624755"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T13:50:00Z",
+      "PrdNumber": "00852606260",
+      "ClassificationRating": "MRAM-07"
+     },
+     "shortDescription": "Næsepilleren kommer + Borte borte, skrig skrig"
+    },
+    "live": false
+   },
+   {
+    "id": "ac52197",
+    "channelId": "20892",
+    "startDate": "2026-10-12T14:15:00Z",
+    "endDate": "2026-10-12T14:35:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T16:15:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T16:35:00+02:00",
+    "item": {
+     "id": "627201",
+     "title": "Rubble & Co",
+     "description": "Fikser et spøgelseshus + Bygger et flagermus-hus",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721580'&EntityType='LinearSchedule'&EntityId='ac52197f-23b0-4da4-ba1c-4ad40081491e'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721583'&EntityType='LinearSchedule'&EntityId='ac52197f-23b0-4da4-ba1c-4ad40081491e'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 16,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T14:15:00Z",
+     "prdNumber": "00852307960",
+     "classificationRating": "MRAM-ALL",
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T14:15:00Z",
+      "PrdNumber": "00852307960",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Fikser et spøgelseshus + Bygger et flagermus-hus"
+    },
+    "live": false
+   },
+   {
+    "id": "9f25ce3",
+    "channelId": "20892",
+    "startDate": "2026-10-12T14:35:00Z",
+    "endDate": "2026-10-12T15:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T16:35:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:00:00+02:00",
+    "item": {
+     "id": "606953",
+     "watchPath": "/se/pokemon-_-sol-og-maane_-haard-traening-og-opmaerksomhed_606953",
+     "path": "/episode/pokemon-_-sol-og-maane_-haard-traening-og-opmaerksomhed_606953",
+     "title": "Pokémon - Sol og måne",
+     "description": "Nye udfordringer for Ash og hans søgen efter at blive Pokémon-mester! \nAsh og Pikachu udforsker den solrige Alola region, hvor de opdager spændende nye Pokemon og mennesker. Men fjenderne fra Team Rocket har også taget turen til Alola, så der bliver kamp til stregen!\nJapansk tegnefilmserie med dansk tale.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81835934'&EntityType='LinearSchedule'&EntityId='9f25ce39-9f42-443b-8ed8-b91f90391fa7'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81835937'&EntityType='LinearSchedule'&EntityId='9f25ce39-9f42-443b-8ed8-b91f90391fa7'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 21,
+     "episodeNumber": 21,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T14:35:00Z",
+     "prdNumber": "00852604680",
+     "classificationRating": "MRAM-07",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_magi",
+      "editorialptaxsub_humor",
+      "agetargetgroup_4-5 år",
+      "agetargetgroup_6-8 år",
+      "agetargetgroup_9-11 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "606953"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T14:35:00Z",
+      "PrdNumber": "00852604680",
+      "ClassificationRating": "MRAM-07"
+     },
+     "shortDescription": "Nye udfordringer for Ash og hans søgen efter at blive Pokémon-mester! \nAsh og Pikachu udforsker den solrige Alola region, hvor de opdager spændende nye Pokemon og mennesker. Men fjenderne fra Team Rocket har også taget turen til Alola, så der bliver kamp til stregen!\nJapansk tegnefilmserie med dansk tale."
+    },
+    "live": false
+   },
+   {
+    "id": "d42e621",
+    "channelId": "20892",
+    "startDate": "2026-10-12T15:00:00Z",
+    "endDate": "2026-10-12T15:10:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:10:00+02:00",
+    "item": {
+     "id": "434951",
+     "watchPath": "/se/den-magiske-klub_-julemanden_434951",
+     "path": "/episode/den-magiske-klub_-julemanden_434951",
+     "title": "Den magiske klub - Julemanden",
+     "description": "En magisk julemand dukker op på gamercomputeren, og Karl og Luna ønsker på livet løs. Men ønskerne går kun i opfyldelse, hvis de gør gode gerninger! Se Den magiske klub med magi og MGP sange.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721616'&EntityType='LinearSchedule'&EntityId='d42e621a-179b-4fa6-80a4-463d766f042a'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721625'&EntityType='LinearSchedule'&EntityId='d42e621a-179b-4fa6-80a4-463d766f042a'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 17,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T15:00:00Z",
+     "prdNumber": "00952492170",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/fiktion",
+      "editorialptaxsub_venskab",
+      "editorialptaxsub_magi",
+      "agetargetgroup_6-8 år",
+      "agetargetgroup_9-11 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "434951"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T15:00:00Z",
+      "PrdNumber": "00952492170",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "En magisk julemand dukker op på gamercomputeren, og Karl og Luna ønsker på livet løs. Men ønskerne går kun i opfyldelse, hvis de gør gode gerninger! Se Den magiske klub med magi og MGP sange."
+    },
+    "live": false
+   },
+   {
+    "id": "defcb25",
+    "channelId": "20892",
+    "startDate": "2026-10-12T15:10:00Z",
+    "endDate": "2026-10-12T15:25:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:10:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T17:25:00+02:00",
+    "item": {
+     "id": "500725",
+     "watchPath": "/se/den-magiske-klub_-varulven_500725",
+     "path": "/episode/den-magiske-klub_-varulven_500725",
+     "title": "Den magiske klub 2 - Varulven",
+     "description": "Under et spil Varulv bliver Karls kort magisk og forvandler ham til en varulv. Topper er vild med Karls forvandling, men kan Karl styre at være varulv og sin store appetit?",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994355'&EntityType='LinearSchedule'&EntityId='defcb25a-5c9b-4dab-8a87-08f3057e4a8b'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994357'&EntityType='LinearSchedule'&EntityId='defcb25a-5c9b-4dab-8a87-08f3057e4a8b'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 2,
+     "episodeNumber": 1,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T15:10:00Z",
+     "prdNumber": "00952520010",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/fiktion",
+      "editorialptaxsub_venskab",
+      "editorialptaxsub_magi",
+      "agetargetgroup_6-8 år",
+      "agetargetgroup_9-11 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "500725"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T15:10:00Z",
+      "PrdNumber": "00952520010",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Under et spil Varulv bliver Karls kort magisk og forvandler ham til en varulv. Topper er vild med Karls forvandling, men kan Karl styre at være varulv og sin store appetit?"
+    },
+    "live": false
+   },
+   {
+    "id": "5298da7",
+    "channelId": "20892",
+    "startDate": "2026-10-12T15:25:00Z",
+    "endDate": "2026-10-12T16:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T17:25:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:00:00+02:00",
+    "item": {
+     "id": "50692",
+     "watchPath": "/se/rosa-fra-rouladegade_-martins-traktor_kiksekage_50692",
+     "path": "/episode/rosa-fra-rouladegade_-martins-traktor_kiksekage_50692",
+     "title": "Rosa fra Rouladegade (9)",
+     "description": "Hvis man vil overraske nogen med en kage, så er Rosa den helt rigtige at besøge. Så det gør Martin. Han vil nemlig gerne bage en kage til sin morfar. Sammen forklæder de sig som fugleskræmsler og sniger sig ind på morfars gård, for at finde ud af hvad kagen skal smage af og hvordan den skal se ud.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994359'&EntityType='LinearSchedule'&EntityId='5298da7d-3b34-4973-b666-9c7d603481ce'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994361'&EntityType='LinearSchedule'&EntityId='5298da7d-3b34-4973-b666-9c7d603481ce'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 9,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T15:25:00Z",
+     "prdNumber": "00921011200",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "thesaurus_bagværk",
+      "thesaurus_bedsteforældre",
+      "thesaurus_børne-tv",
+      "thesaurus_danmark",
+      "editorialptaxtop_børn/fiktion",
+      "editorialptaxsub_familie",
+      "editorialptaxsub_hverdag",
+      "agetargetgroup_4-5 år",
+      "agetargetgroup_6-8 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "50692"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T15:25:00Z",
+      "PrdNumber": "00921011200",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Hvis man vil overraske nogen med en kage, så er Rosa den helt rigtige at besøge. Så det gør Martin. Han vil nemlig gerne bage en kage til sin morfar. Sammen forklæder de sig som fugleskræmsler og sniger sig ind på morfars gård, for at finde ud af hvad kagen skal smage af og hvordan den skal se ud."
+    },
+    "live": false
+   },
+   {
+    "id": "adc20c0",
+    "channelId": "20892",
+    "startDate": "2026-10-12T16:00:00Z",
+    "endDate": "2026-10-12T16:05:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:05:00+02:00",
+    "item": {
+     "id": "614433",
+     "watchPath": "/se/f-for-faar_-dukkejagten_614433",
+     "path": "/episode/f-for-faar_-dukkejagten_614433",
+     "title": "F for Får (9)",
+     "description": "Fårrygende animation fra Aardman",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721668'&EntityType='LinearSchedule'&EntityId='adc20c09-e8ed-47cc-a850-0056556fb6d1'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&ImageId='81721679'&EntityType='LinearSchedule'&EntityId='adc20c09-e8ed-47cc-a850-0056556fb6d1'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 9,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T16:00:00Z",
+     "prdNumber": "00850612390",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_dyr",
+      "editorialptaxsub_humor",
+      "agetargetgroup_4-5 år",
+      "agetargetgroup_6-8 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "614433"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T16:00:00Z",
+      "PrdNumber": "00850612390",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Fårrygende animation fra Aardman"
+    },
+    "live": false
+   },
+   {
+    "id": "e53c642",
+    "channelId": "20892",
+    "startDate": "2026-10-12T16:05:00Z",
+    "endDate": "2026-10-12T16:15:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:05:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:15:00+02:00",
+    "item": {
+     "id": "627213",
+     "title": "Pyjamasheltene V",
+     "description": ".",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721690'&EntityType='LinearSchedule'&EntityId='e53c642d-d655-4740-94ed-a5f761b832b9'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721695'&EntityType='LinearSchedule'&EntityId='e53c642d-d655-4740-94ed-a5f761b832b9'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 5,
+     "episodeNumber": 4,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T16:05:00Z",
+     "prdNumber": "00852408910",
+     "classificationRating": "MRAM-ALL",
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T16:05:00Z",
+      "PrdNumber": "00852408910",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "."
+    },
+    "live": false
+   },
+   {
+    "id": "bbbec66",
+    "channelId": "20892",
+    "startDate": "2026-10-12T16:15:00Z",
+    "endDate": "2026-10-12T16:30:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:15:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T18:30:00+02:00",
+    "item": {
+     "id": "390665",
+     "watchPath": "/se/petronix_-mission_-red-en-leguan_390665",
+     "path": "/episode/petronix_-mission_-red-en-leguan_390665",
+     "title": "Petronix",
+     "description": "Prinsesse Ranedyr har forvandlet en leguan til kæmpestørrelse, så hun kan lege \"Prinsesser og drager\". For at kunne redde den stakkels leguan må Emma med Tims hjælp lære, at der ikke findes drager.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994363'&EntityType='LinearSchedule'&EntityId='bbbec664-09b3-4e18-ae67-fb8de046531b'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81994365'&EntityType='LinearSchedule'&EntityId='bbbec664-09b3-4e18-ae67-fb8de046531b'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 1,
+     "episodeNumber": 46,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T16:15:00Z",
+     "prdNumber": "00852203360",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_dyr",
+      "editorialptaxsub_spænding",
+      "agetargetgroup_4-5 år",
+      "agetargetgroup_6-8 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "390665"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T16:15:00Z",
+      "PrdNumber": "00852203360",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Prinsesse Ranedyr har forvandlet en leguan til kæmpestørrelse, så hun kan lege \"Prinsesser og drager\". For at kunne redde den stakkels leguan må Emma med Tims hjælp lære, at der ikke findes drager."
+    },
+    "live": false
+   },
+   {
+    "id": "9d8f480",
+    "channelId": "20892",
+    "startDate": "2026-10-12T16:30:00Z",
+    "endDate": "2026-10-12T17:25:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T18:30:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T19:25:00+02:00",
+    "item": {
+     "id": "622426",
+     "watchPath": "/se/tintin-og-det-hemmelige-vaaben_622426",
+     "path": "/program/tintin-og-det-hemmelige-vaaben_622426",
+     "title": "Tintin og det hemmelige våben",
+     "description": "Professor Tournesol har opfundet et nyt strålevåben, hvis kraft ville kunne splintre hele New York, hvis det faldt i de forkerte hænder. Og da Tournesol kidnappes, følger Tintin og Kaptajn Haddock naturligvis efter for at redde ham - og forhindre katastrofen. Det bliver en vild og farlig jagt til vands, til lands og i luften. Og den bliver ikke nemmere af, at Dupont'erne prøver at hjælpe.",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721723'&EntityType='LinearSchedule'&EntityId='9d8f4800-61d3-42cd-8ec4-ed3756640dbe'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721729'&EntityType='LinearSchedule'&EntityId='9d8f4800-61d3-42cd-8ec4-ed3756640dbe'&Width=1920&Height=1080"
+     },
+     "type": "program",
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T16:30:00Z",
+     "prdNumber": "00853292580",
+     "classificationRating": "MRAM-ALL",
+     "keywords": [
+      "editorialptaxtop_børn/animation",
+      "editorialptaxsub_spænding",
+      "editorialptaxsub_film",
+      "agetargetgroup_6-8 år",
+      "agetargetgroup_9-11 år"
+     ],
+     "offers": [
+      {
+       "availability": "Available",
+       "deliveryType": "StreamOrDownload",
+       "ownership": "Free",
+       "price": 0,
+       "resolution": "HD-1080",
+       "scopes": [
+        "622426"
+       ]
+      }
+     ],
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T16:30:00Z",
+      "PrdNumber": "00853292580",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Professor Tournesol har opfundet et nyt strålevåben, hvis kraft ville kunne splintre hele New York, hvis det faldt i de forkerte hænder. Og da Tournesol kidnappes, følger Tintin og Kaptajn Haddock naturligvis efter for at redde ham - og forhindre katastrofen. Det bliver en vild og farlig jagt til vands, til lands og i luften. Og den bliver ikke nemmere af, at Dupont'erne prøver at hjælpe."
+    },
+    "live": false
+   },
+   {
+    "id": "fa2135b",
+    "channelId": "20892",
+    "startDate": "2026-10-12T17:25:00Z",
+    "endDate": "2026-10-12T17:50:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T19:25:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T19:50:00+02:00",
+    "item": {
+     "id": "627212",
+     "title": "Svampebob Firkant XI",
+     "description": "Krusedulle Dimensionen + Smultabbor på bevægelsesfod",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721740'&EntityType='LinearSchedule'&EntityId='fa2135b1-26f2-44c9-8f7b-c9f0a30ee04f'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721746'&EntityType='LinearSchedule'&EntityId='fa2135b1-26f2-44c9-8f7b-c9f0a30ee04f'&Width=1920&Height=1080"
+     },
+     "type": "episode",
+     "seasonNumber": 11,
+     "episodeNumber": 14,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T17:25:00Z",
+     "prdNumber": "00852406720",
+     "classificationRating": "MRAM-ALL",
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T17:25:00Z",
+      "PrdNumber": "00852406720",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "Krusedulle Dimensionen + Smultabbor på bevægelsesfod"
+    },
+    "live": false
+   },
+   {
+    "id": "1cb8ef0",
+    "channelId": "20892",
+    "startDate": "2026-10-12T17:50:00Z",
+    "endDate": "2026-10-12T18:00:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T19:50:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T20:00:00+02:00",
+    "item": {
+     "id": "",
+     "title": "Zig og Sharko IV",
+     "description": "En klassisk slapstick-animationsserie uden ord i bedste 'Hjulben og Ulven'-stil. Den evigt sultne hyæne Zig finder på mere og mere sindrige planer for at fange og spise den søde havfrue Marina, men heldigvis er havfruens bedste ven, en haj ved navn Sharko, god til at afværge hyænens planer. Og det er lige opfindsomt, voldeligt og super sjovt hver gang!",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721755'&EntityType='LinearSchedule'&EntityId='1cb8ef06-e681-4903-982c-a0b15ccbdddf'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721760'&EntityType='LinearSchedule'&EntityId='1cb8ef06-e681-4903-982c-a0b15ccbdddf'&Width=1920&Height=1080"
+     },
+     "type": "",
+     "episodeNumber": 11,
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T17:50:00Z",
+     "prdNumber": "00852306930",
+     "classificationRating": "MRAM-ALL",
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T17:50:00Z",
+      "PrdNumber": "00852306930",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "En klassisk slapstick-animationsserie uden ord i bedste 'Hjulben og Ulven'-stil. Den evigt sultne hyæne Zig finder på mere og mere sindrige planer for at fange og spise den søde havfrue Marina, men heldigvis er havfruens bedste ven, en haj ved navn Sharko, god til at afværge hyænens planer. Og det er lige opfindsomt, voldeligt og super sjovt hver gang!"
+    },
+    "live": false
+   },
+   {
+    "id": "38588fb",
+    "channelId": "20892",
+    "startDate": "2026-10-12T18:00:00Z",
+    "endDate": "2026-10-12T18:05:00Z",
+    "startTimeInDefaultTimeZone": "2026-10-12T20:00:00+02:00",
+    "endTimeInDefaultTimeZone": "2026-10-12T20:05:00+02:00",
+    "item": {
+     "id": "",
+     "title": "Godnat - nu går vi i seng",
+     "description": ".",
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721767'&EntityType='LinearSchedule'&EntityId='38588fbc-4372-4491-b31f-fd041cc190aa'&Width=1920&Height=1080",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&ImageId='81721773'&EntityType='LinearSchedule'&EntityId='38588fbc-4372-4491-b31f-fd041cc190aa'&Width=1920&Height=1080"
+     },
+     "type": "",
+     "broadcastChannel": "DR Ramasjang",
+     "broadcastChannelStart": "2026-10-12T18:00:00Z",
+     "prdNumber": "00921809600",
+     "classificationRating": "MRAM-ALL",
+     "customFields": {
+      "BroadcastChannel": "DR Ramasjang",
+      "BroadcastChannelStart": "2026-10-12T18:00:00Z",
+      "PrdNumber": "00921809600",
+      "ClassificationRating": "MRAM-ALL"
+     },
+     "shortDescription": "."
+    },
+    "live": false
+   }
+  ],
+  "channelId": "20892",
+  "startDate": "2026-10-12T12:00:00Z",
+  "endDate": "2026-10-12T18:00:00Z"
+ }
+]

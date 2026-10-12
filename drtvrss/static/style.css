@@ -856,9 +856,22 @@ a:focus-visible .tile-play {
     color: var(--paper);
 }
 
-/* Live channels have no pictures, so their names are the picture, a bit wider than a show's */
-.channel-tile .tile-media {
-    aspect-ratio: 2.2 / 1;
+/* Live channels show what's on now, marked with the channel's own colour.
+   With nothing on, the channel's name is the picture. */
+.tag-channel {
+    background: rgba(15, 16, 19, .8);
+}
+
+.tag-channel::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--channel, var(--on-air));
+}
+
+.tile-progress-live > span {
+    background: var(--channel, var(--on-air));
 }
 
 .channel-art {
@@ -868,7 +881,7 @@ a:focus-visible .tile-play {
     height: 100%;
     margin: 0;
     padding: 16px 18px;
-    background: hsl(var(--hue) 32% 17%);
+    background: color-mix(in srgb, var(--channel, #555) 28%, var(--ink));
     color: #fff;
     font-size: clamp(1.75rem, 2.8vw, 2.5rem);
     font-weight: 850;
@@ -877,7 +890,7 @@ a:focus-visible .tile-play {
 }
 
 a:hover .channel-art {
-    background: hsl(var(--hue) 34% 22%);
+    background: color-mix(in srgb, var(--channel, #555) 38%, var(--ink));
 }
 
 /* Show pages */
@@ -1122,6 +1135,150 @@ a:hover .channel-art {
     margin-top: 32px;
 }
 
+/* What's on a live channel: the programme on now, with how far it's got, and the ones after */
+.programmes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.programme {
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+}
+
+.programme:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.programme-time {
+    color: var(--muted);
+}
+
+.programme-title {
+    margin: 0;
+    font-size: var(--text-body);
+    font-weight: 600;
+}
+
+.programme-now {
+    display: none;
+}
+
+.programme.is-now .programme-time,
+.programme.is-now .programme-title {
+    color: var(--paper);
+    font-weight: 750;
+}
+
+.programme.is-now .programme-now {
+    display: block;
+}
+
+.programme-progress {
+    height: 3px;
+    margin: 10px 0 6px;
+    border-radius: 2px;
+    background: rgba(242, 239, 233, .2);
+    overflow: hidden;
+}
+
+.programme-progress > span {
+    display: block;
+    height: 100%;
+    background: var(--on-air);
+}
+
+.programme-ends {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-small);
+}
+
+.programme-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 8px 0 0;
+    color: rgba(242, 239, 233, .78);
+    font-size: .9375rem;
+}
+
+.js-live-subtitles[aria-pressed=true] {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+/* The next episode, over the picture when one ends */
+.up-next {
+    position: absolute;
+    right: 24px;
+    bottom: 72px;
+    z-index: 5;
+    width: min(360px, calc(100% - 48px));
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(15, 16, 19, .9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--paper);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .5);
+}
+
+video + .up-next {
+    position: static;
+    width: auto;
+    margin: 0;
+    border-radius: 0;
+}
+
+.up-next p {
+    margin: 0;
+}
+
+.up-next-label,
+.up-next-countdown {
+    color: var(--muted);
+    font-size: .875rem;
+}
+
+.up-next-title {
+    margin: 2px 0 4px !important;
+    font-size: var(--text-h3);
+    font-weight: 750;
+    line-height: 1.25;
+}
+
+.up-next-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.up-next .button {
+    min-height: 42px;
+    padding: 8px 18px;
+}
+
+@media (max-width: 575px) {
+    .up-next {
+        right: 12px;
+        bottom: 56px;
+        width: calc(100% - 24px);
+        padding: 14px;
+    }
+
+    .up-next-title {
+        font-size: 1rem;
+    }
+}
+
 /* Search and errors */
 
 .page-head {
@@ -1190,6 +1347,101 @@ a:hover .channel-art {
 
 .empty .search-field {
     margin: 32px auto 24px;
+}
+
+/* Synchronising between devices */
+
+.sync-page {
+    max-width: 920px;
+    padding-top: 56px;
+}
+
+.sync-page h1 {
+    margin: 0 0 12px;
+    font-size: var(--text-h1);
+    font-weight: 850;
+    letter-spacing: -.035em;
+    text-wrap: balance;
+}
+
+.sync-intro {
+    max-width: 56ch;
+    color: var(--muted);
+    font-size: var(--text-lead);
+}
+
+.sync-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.sync-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 24px;
+    border-radius: 12px;
+    background: var(--raised);
+}
+
+.sync-option h2 {
+    margin: 0;
+    font-size: var(--text-h3);
+}
+
+.sync-option p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.code-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(242, 239, 233, .06);
+    color: var(--paper);
+    font-size: 1.125rem;
+    font-weight: 650;
+    letter-spacing: .06em;
+    font-variant-numeric: tabular-nums;
+}
+
+.code-input:focus {
+    outline: none;
+    border-color: rgba(242, 239, 233, .5);
+}
+
+.sync-label {
+    margin: 32px 0 4px;
+    color: var(--muted);
+    font-size: var(--text-body);
+    font-weight: 600;
+}
+
+.sync-code {
+    margin: 0 0 8px;
+    font-size: clamp(1.75rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: .04em;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.sync-error {
+    margin-top: 20px;
+    color: #ff8a80;
+    font-weight: 600;
+}
+
+.sync-privacy {
+    max-width: 64ch;
+    margin-top: 40px;
+    color: var(--muted);
+    font-size: .9375rem;
 }
 
 /* Says what a button did */

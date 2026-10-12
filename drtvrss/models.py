@@ -146,12 +146,39 @@ class Season(Item):
 
 class ChannelCustomFields(BaseModel):
     hls_url: str = Field(alias="hlsURL")
+    # The same channel, with Danish subtitles burnt into the picture
+    hls_subtitles_url: Annotated[Optional[str], Lenient] = Field(None, alias="hlsWithSubtitlesURL")
+    # Like "#FF001E"
+    colour: Annotated[Optional[str], Lenient] = Field(
+        None, alias="channelHexColour", pattern=r"^#[0-9A-Fa-f]{6}$"
+    )
 
 
 class Channel(DRModel):
+    id: str
     title: str
     channel_short_code: str
     custom_fields: ChannelCustomFields
+
+
+class Broadcast(Item):
+    """A programme as it's shown on a live channel"""
+
+    id: Optional[str] = None
+    path: Optional[str] = None
+
+
+class ScheduledBroadcast(DRModel):
+    start_date: datetime
+    end_date: datetime
+    item: Broadcast
+
+
+class ChannelSchedule(DRModel):
+    """What's on a live channel, from /schedules"""
+
+    channel_id: str
+    schedules: list[ScheduledBroadcast]
 
 
 class SearchResponse(DRModel):

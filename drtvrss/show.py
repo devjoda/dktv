@@ -183,6 +183,13 @@ def danish_date(d: datetime) -> str:
     return f"{d.day}. {MONTHS[d.month - 1]} {d.year}"
 
 
+def clock(d: datetime) -> str:
+    """Formats the time of day like 20.00, as it is in Denmark"""
+    if d.tzinfo is not None:
+        d = d.astimezone(COPENHAGEN)
+    return f"{d.hour:02}.{d.minute:02}"
+
+
 def danish_datetime(d: datetime) -> str:
     """Formats a time like 17. okt. kl. 20.00, as it is in Denmark"""
     if d.tzinfo is not None:

@@ -5,6 +5,7 @@ from typing import Optional
 import asyncio
 import hashlib
 import os
+import sqlite3
 
 from quart import (
     abort,
@@ -17,6 +18,7 @@ from quart import (
 )
 
 from . import drtv
+from . import sync as sync_store
 from .drtv import (
     DRUnavailable,
     get_cached_show,
@@ -25,14 +27,16 @@ from .drtv import (
     get_show,
     search,
 )
-from .live import get_channels
-from .show import Show, danish_date, danish_datetime, duration, is_new, thumbnail
+from .live import get_channels, get_schedules, whats_on
+from .show import Show, clock, danish_date, danish_datetime, duration, is_new, thumbnail
 
 app = Quart(__name__)
 app.add_template_filter(thumbnail)
 app.add_template_filter(danish_date)
 app.add_template_filter(danish_datetime)
 app.add_template_filter(duration)
+app.add_template_filter(clock)
+app.add_template_global(whats_on)
 app.add_template_test(is_new, "new")
 
 complaints_email = os.getenv("KLAGE_MAIL", None)
@@ -43,6 +47,9 @@ RECOMMENDED_REFRESH_INTERVAL = 30 * 60
 
 # How many favourite shows the front page asks about at once
 MAX_FAVORITES = 50
+
+# Far more than a viewer's favourites and progress take up
+MAX_SYNC_SIZE = 2 * 1024 * 1024
 
 
 @lru_cache(maxsize=None)
@@ -116,6 +123,7 @@ async def index():
         SERVICE_NAME=SERVICE_NAME,
         birthday=birthday(),
         channels=await get_channels(),
+        schedules=await get_schedules(),
     )
 
 
@@ -262,6 +270,60 @@ async def favorites():
     return {show_id: show for show_id, show in zip(ids, shows) if show is not None}
 
 
+@app.route("/sync/")
+async def sync_page():
+    return await render_template(
+        "sync.html",
+        SERVICE_NAME=SERVICE_NAME,
+        birthday=birthday(),
+        channels=await get_channels(),
+    )
+
+
+@app.route("/sync/", methods=["POST"])
+async def sync_create():
+    try:
+        code = await asyncio.to_thread(sync_store.create)
+    except sqlite3.Error as e:
+        print("Could not make a sync code", repr(e))
+        return {"error": "Serveren kan ikke gemme noget lige nu. Prøv igen senere."}, 503
+    return {"code": code}, 201
+
+
+@app.route("/sync/<code>", methods=["POST"])
+async def sync_data(code):
+    """Takes what a device knows, and gives back that merged with what the others knew"""
+    code = sync_store.normalize_code(code)
+    if code is None:
+        return {"error": "Koden findes ikke."}, 404
+    if (request.content_length or 0) > MAX_SYNC_SIZE:
+        return {"error": "For meget at synkronisere."}, 413
+    # Only JSON, which other sites can't send here without the browser asking first
+    data = await request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return {"error": "Forventede JSON."}, 400
+    try:
+        merged = await asyncio.to_thread(sync_store.sync, code, data)
+    except sqlite3.Error as e:
+        print("Could not sync", repr(e))
+        return {"error": "Serveren kan ikke gemme noget lige nu. Prøv igen senere."}, 503
+    if merged is None:
+        return {"error": "Koden findes ikke."}, 404
+    return merged
+
+
+@app.route("/sync/<code>", methods=["DELETE"])
+async def sync_delete(code):
+    code = sync_store.normalize_code(code)
+    if code is not None:
+        try:
+            await asyncio.to_thread(sync_store.delete, code)
+        except sqlite3.Error as e:
+            print("Could not delete synced data", repr(e))
+            return {"error": "Serveren kan ikke slette noget lige nu. Prøv igen senere."}, 503
+    return "", 204
+
+
 @app.route("/live/<channel>")
 async def live_channel(channel):
     channels = await get_channels()
@@ -270,6 +332,7 @@ async def live_channel(channel):
             "live.html",
             channel=channels[channel],
             current_channel=channel,
+            programmes=(await get_schedules()).get(channels[channel].id, []),
             SERVICE_NAME=SERVICE_NAME,
             birthday=birthday(),
             channels=await get_channels(),
