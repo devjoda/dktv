@@ -14,6 +14,8 @@ test.describe("on a phone", () => {
 		for (const tab of await tabs.all()) {
 			await expect(tab).toBeInViewport({ratio: 1});
 		}
+		// Always as high, whatever the browser's own toolbars do
+		expect((await page.locator(".tab-bar").boundingBox())!.height).toBe(64);
 		// The end of the page isn't hidden under them
 		await page.keyboard.press("End");
 		await expect.poll(() => page.evaluate("Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight")).toBe(true);

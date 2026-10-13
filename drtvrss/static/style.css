@@ -334,7 +334,9 @@ h1, h2, h3 {
     bottom: 0;
     z-index: 1030;
     display: flex;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* Always as high, without the safe area at the bottom, which Firefox on Android changes as its own toolbar
+       comes and goes; and which, without viewport-fit=cover, the page needn't keep clear of */
+    height: 64px;
     background: rgba(15, 16, 19, .94);
     backdrop-filter: saturate(150%) blur(16px);
     -webkit-backdrop-filter: saturate(150%) blur(16px);
@@ -347,8 +349,9 @@ h1, h2, h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 4px;
-    padding: 8px 2px 10px;
+    padding: 0 2px;
     color: var(--muted);
     font-size: .75rem;
     font-weight: 600;
@@ -395,7 +398,7 @@ h1, h2, h3 {
 
     /* So the end of the page isn't hidden under the tabs */
     body {
-        padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: 64px;
     }
 }
 
@@ -2460,7 +2463,7 @@ video + .up-next {
 /* Above the tabs, on small screens */
 @media (max-width: 899.98px) {
     .toast-message {
-        bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+        bottom: 88px;
     }
 }
 
