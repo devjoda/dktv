@@ -1425,69 +1425,108 @@ a:hover .channel-art {
     }
 }
 
-/* Watching together: the room's panel below the title, and reactions floating over the picture */
+/* Watching together: the room, with its chat, right after the video, and reactions floating over the picture.
+   On wide screens it's a column beside the video, as high as it, like on Twitch and YouTube; below it, it's
+   between the video and the title, and on a phone held upright it takes the rest of the screen. */
 .together {
-    display: grid;
-    gap: 16px;
-    max-width: 640px;
-    margin-top: 24px;
-    padding: 20px 22px;
-    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    padding: 14px var(--gutter);
+    border-bottom: 1px solid var(--line);
     background: var(--raised);
+}
+
+.together > *,
+.watch > * {
+    min-width: 0;
+}
+
+.together-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .together-top {
     display: grid;
-    gap: 2px;
+    gap: 1px;
+    min-width: 0;
 }
 
 .together-title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     margin: 0;
-    font-size: var(--text-h3);
+    font-size: 1.0625rem;
+    font-weight: 750;
+}
+
+.together-top .meta {
+    margin: 0;
+    font-size: var(--text-small);
 }
 
 .together-share {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 }
 
 .together-link {
-    flex: 1 1 240px;
+    flex: 1 1 auto;
+    width: 0;
     min-width: 0;
-    padding: 10px 16px;
+    padding: 7px 14px;
     border: 1px solid var(--line);
     border-radius: 999px;
     background: rgba(242, 239, 233, .06);
     color: var(--muted);
-    font-size: .9375rem;
+    font-size: var(--text-small);
+}
+
+.together-share .button {
+    flex: none;
+    min-height: 0;
+    padding: 7px 14px;
+    font-size: .875rem;
 }
 
 .together-bottom {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 12px 20px;
+    gap: 12px;
 }
 
 .together-name {
     display: flex;
+    flex: 1 1 auto;
     align-items: center;
     gap: 10px;
+    min-width: 0;
     color: var(--muted);
-    font-size: .9375rem;
+    font-size: .875rem;
 }
 
 .together-name-field {
-    width: 9em;
-    padding: 6px 12px;
+    flex: 1 1 auto;
+    width: 0;
+    min-width: 0;
+    max-width: 12em;
+    padding: 5px 12px;
     border: 1px solid var(--line);
     border-radius: 8px;
     background: rgba(242, 239, 233, .06);
     color: var(--paper);
+}
+
+.together-bottom .button-quiet {
+    flex: none;
+    min-height: 0;
+    padding: 5px 4px;
+    font-size: .875rem;
 }
 
 .together-reactions {
@@ -1498,12 +1537,12 @@ a:hover .channel-art {
 .together-react {
     display: grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     border: 0;
     border-radius: 50%;
     background: rgba(242, 239, 233, .08);
-    font-size: 1.25rem;
+    font-size: 1.0625rem;
     transition: background-color .15s, transform .15s;
 }
 
@@ -1515,8 +1554,42 @@ a:hover .channel-art {
     transform: scale(.9);
 }
 
-.together-bottom .button-quiet {
-    margin-left: auto;
+/* Folds the column beside the video away, leaving the button, with how many messages came */
+.together-fold {
+    position: relative;
+    display: none;
+    flex: none;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(242, 239, 233, .1);
+    color: var(--paper);
+}
+
+.together-fold:hover {
+    background: rgba(242, 239, 233, .2);
+}
+
+.together-fold .icon {
+    width: 18px;
+    height: 18px;
+}
+
+.together-fold .icon:nth-of-type(2),
+.chat-folded .together-fold .icon:nth-of-type(1) {
+    display: none;
+}
+
+.chat-folded .together-fold .icon:nth-of-type(2) {
+    display: block;
+}
+
+.together-fold .chat-unread {
+    position: absolute;
+    top: -6px;
+    right: -6px;
 }
 
 .together-reaction {
@@ -1541,6 +1614,283 @@ a:hover .channel-art {
     color: var(--paper);
     font-size: .75rem;
     font-weight: 650;
+}
+
+/* The room's chat: the messages scroll by themselves, and the field to write in stays at the bottom */
+.together-chat {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Between the video and the title, as high as most of a screen's lower half */
+    height: 40vh;
+    min-height: 260px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+}
+
+.chat-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.chat-unread {
+    display: inline-grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: .6875rem;
+    font-weight: 750;
+    line-height: 1;
+}
+
+.chat-unread[hidden] {
+    display: none;
+}
+
+.chat-messages {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.chat-messages:empty {
+    display: none;
+}
+
+.chat-line {
+    justify-self: start;
+    display: grid;
+    gap: 1px;
+    max-width: 88%;
+    padding: 6px 11px;
+    border-radius: 12px 12px 12px 4px;
+    background: rgba(242, 239, 233, .07);
+    overflow-wrap: anywhere;
+}
+
+/* The viewer's own, on the other side, a little lighter */
+.chat-line.is-mine {
+    justify-self: end;
+    border-radius: 12px 12px 4px 12px;
+    background: rgba(242, 239, 233, .16);
+}
+
+.chat-line.is-system {
+    justify-self: center;
+    padding: 2px 0;
+    background: none;
+    color: var(--muted);
+    font-size: var(--text-small);
+}
+
+.chat-meta {
+    display: flex;
+    gap: 8px;
+    color: var(--muted);
+    font-size: .75rem;
+    font-weight: 650;
+}
+
+.chat-name {
+    color: var(--paper);
+}
+
+.chat-time {
+    font-variant-numeric: tabular-nums;
+}
+
+.chat-text {
+    color: var(--paper);
+    font-size: .9375rem;
+}
+
+.chat-empty,
+.chat-hint,
+.chat-note {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-small);
+}
+
+.chat-hint[hidden],
+.chat-empty[hidden] {
+    display: none;
+}
+
+.chat-form {
+    display: flex;
+    flex: none;
+    gap: 8px;
+}
+
+.chat-input {
+    flex: 1 1 auto;
+    /* From nothing, so a narrow screen doesn't make the panel wider than itself */
+    width: 0;
+    min-width: 0;
+    padding: 9px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .06);
+    color: var(--paper);
+}
+
+.chat-input:focus {
+    outline: none;
+    border-color: rgba(242, 239, 233, .5);
+}
+
+.chat-input::placeholder {
+    color: var(--muted);
+}
+
+.chat-form .button {
+    min-height: 0;
+    padding: 8px 18px;
+}
+
+.chat-name-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--paper);
+    font-weight: 650;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* In full screen, only how many messages came, small, in a corner of the player, and nothing written */
+.chat-corner {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 31;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(15, 16, 19, .6);
+    color: rgba(242, 239, 233, .9);
+    font-size: .75rem;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+.chat-corner[hidden] {
+    display: none;
+}
+
+.chat-corner .icon {
+    width: 14px;
+    height: 14px;
+}
+
+/* A phone held upright: the video at the top, the room below it, filling the rest of the screen above the tabs,
+   and the title below that */
+@media (max-width: 699.98px) and (orientation: portrait) {
+    .together {
+        height: calc(100vh - 69px - 56.25vw - 64px);
+        height: calc(100svh - 69px - 56.25vw - 64px);
+        min-height: 380px;
+    }
+
+    .together-chat {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+    }
+
+    /* The button shares the link, or copies it */
+    .together-link {
+        display: none;
+    }
+}
+
+/* A phone on its side: the video as large as the screen allows, the room below it */
+@media (orientation: landscape) and (max-height: 500px) {
+    .in-room .stage video {
+        max-height: calc(100vh - 69px - 64px);
+        max-height: calc(100svh - 69px - 64px);
+    }
+
+    .in-room .stage .plyr {
+        max-width: calc((100vh - 69px - 64px) * 16 / 9);
+        max-width: calc((100svh - 69px - 64px) * 16 / 9);
+    }
+}
+
+/* Wide screens: the video on the left, the room in a column on the right, as high as the video, which is as high
+   as the screen allows below the header, so both can be seen at once; the title and the rest below the video */
+@media (min-width: 1100px) {
+    .in-room main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        align-items: start;
+    }
+
+    .in-room.chat-folded main {
+        grid-template-columns: minmax(0, 1fr) 54px;
+    }
+
+    .in-room .stage {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .in-room .stage video {
+        max-height: calc(100vh - 69px - 16px);
+    }
+
+    .in-room .stage .plyr {
+        max-width: calc((100vh - 69px - 16px) * 16 / 9);
+    }
+
+    .in-room .together {
+        grid-column: 2;
+        grid-row: 1;
+        align-self: stretch;
+        /* Its content doesn't make the row higher: it's as high as the video, and its messages scroll */
+        contain: size;
+        overflow: hidden;
+        padding: 14px 16px;
+        border-bottom: 0;
+        border-left: 1px solid var(--line);
+    }
+
+    .in-room .together-chat {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+    }
+
+    .in-room .watch {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .together-fold {
+        display: grid;
+    }
+
+    .chat-folded .together {
+        align-items: center;
+        padding: 14px 10px;
+    }
+
+    .chat-folded .together > :not(.together-head),
+    .chat-folded .together-top {
+        display: none;
+    }
 }
 
 @keyframes float-up {
