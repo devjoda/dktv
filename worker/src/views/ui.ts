@@ -101,18 +101,21 @@ export function channelTile(slug: string, channel: LiveChannel, programmes: Prog
 </article>`;
 }
 
-/** The top of a row of tiles that scrolls sideways, with a link to all of it when it's longer */
-export function shelfHead(title: string, id: string, more?: string): Html {
+/**
+ * The top of a row of tiles that scrolls sideways, with a link to all of it. When the row
+ * has all of it, ui.js only shows the link when the row is wider than the page.
+ */
+export function shelfHead(title: string, id: string, more?: string, overflowOnly = false): Html {
 	return html`<div class="shelf-head">
 <h2 class="shelf-title" id="${id}">${title}</h2>${
-	more ? html`<a class="shelf-more" href="${more}">Se alle <span class="visually-hidden">${title}</span>${icon("chevron-right")}</a>` : ""}
+	more ? html`<a class="shelf-more" href="${more}"${overflowOnly ? html` data-overflow-only` : ""}>Se alle <span class="visually-hidden">${title}</span>${icon("chevron-right")}</a>` : ""}
 <div class="shelf-nav" hidden><button type="button" class="js-shelf-back" aria-label="Tilbage">${icon("chevron-left")}</button><button type="button" class="js-shelf-forward" aria-label="Frem">${icon("chevron-right")}</button></div>
 </div>`;
 }
 
-/** Where all of one of DR's rows is, when it has more than it shows */
-export function moreLink(row: {title: string; more?: string}): string | undefined {
-	return row.more ? `/liste/${row.more}/?titel=${encodeURIComponent(row.title)}` : undefined;
+/** Where all of one of DR's rows is */
+export function moreLink(row: {title: string; more: string}): string {
+	return `/liste/${row.more}/?titel=${encodeURIComponent(row.title)}`;
 }
 
 export function searchField(query?: string, autofocus = false): Html {

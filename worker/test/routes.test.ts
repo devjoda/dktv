@@ -37,6 +37,12 @@ describe("the front page", () => {
 		expect(r.text).toContain('data-preview="https://');
 		// DR's rows, with links to the pages here
 		expect(r.text).toContain('<h2 class="shelf-title" id="row-1">');
+		// Each with a link to all of it, which ui.js hides when the row has room for all of it
+		const rows = r.text.split('<section class="shelf" aria-labelledby="row-').slice(1);
+		expect(rows.length).toBeGreaterThan(0);
+		for (const row of rows) {
+			expect(row).toMatch(/<a class="shelf-more" href="\/liste\/\d+\/\?titel=[^"]+"( data-overflow-only)?>Se alle/);
+		}
 		expect(between(r.text, 'id="featured-1"', 'id="featured-2"')).toContain('<a class="button button-primary" href="/');
 	});
 

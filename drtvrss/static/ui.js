@@ -301,8 +301,13 @@ function setupShelves() {
         shelf.dataset.ready = "true";
         const back = nav.querySelector(".js-shelf-back");
         const forward = nav.querySelector(".js-shelf-forward");
+        // Only when there's more than the page has room for
+        const more = shelf.querySelector(".shelf-more[data-overflow-only]");
         const update = function () {
             nav.hidden = track.scrollWidth <= track.clientWidth + 1;
+            if (more) {
+                more.hidden = nav.hidden;
+            }
             back.disabled = track.scrollLeft <= 0;
             forward.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
         };
