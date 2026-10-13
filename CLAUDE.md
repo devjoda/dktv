@@ -26,14 +26,26 @@ The site must stay on the free plan, which allows 10 ms of CPU per request (and 
 - Each visit does little: pages and DR's data are kept in Cloudflare's cache (`worker/src/cache.ts`),
   a visit refreshes at most two stale things, and a request budget (`Budget` in `worker/src/dr.ts`) leaves the rest.
 - The cron (`worker/src/alerts.ts`) does at most 6 units of work per run.
-- `npm run bench` measures CPU in Node; after deploying, `wrangler tail dktv --format json` shows the real `cpuTime`.
+- `npm run bench` measures CPU in Node; after deploying, `wrangler tail dktv --format json` shows the real `cpuTime`,
+  which needs a Cloudflare login, so only the user's machine can run it.
+
+## Deploying
+
+Pushing to `workers` deploys the site: `.github/workflows/worker.yml` runs the Worker's tests, then
+`npm run deploy`, which applies new D1 migrations in `worker/migrations` and deploys. Only GitHub has the Cloudflare
+token, so nothing else needs it.
+
+- Push to `workers` when the user has asked for a change to go live; otherwise work on a branch of your own,
+  where the same tests run without deploying.
+- After pushing, follow the run with `gh api "repos/devjoda/dktv/actions/runs?branch=workers&per_page=3"`,
+  and when it's done, check the change on https://dktv.joachim-144.workers.dev.
+- A migration can't be undone by deploying again: make them only add tables and columns.
 
 ## Rules
 
 - Never commit secrets. The private push key is only the Cloudflare secret `VAPID_PRIVATE_KEY` and `worker/.dev.vars`,
   which git ignores.
 - Deploy only to workers.dev, never to another domain.
-- `cd worker && npm run deploy` applies the D1 migrations in `worker/migrations`, then deploys.
 - Serve every library and font from the site itself: no CDNs, no Google Fonts, no tracking.
 - Keep to the look: warm white on ink, Schibsted Grotesk, the programmes' pictures for colour, red only for live and
   progress. No all-caps labels, and no meta joined with " · ".
@@ -51,4 +63,4 @@ DR's API and pictures may answer from abroad; the tests don't need them.
 - What needs a playing video (the player, skipping intros, Se sammen, progress) can only be checked in Denmark:
   cover it with tests where you can, and end the session with a short list, in Danish, of what the user should
   try on their own machine.
-- Don't deploy from a cloud session.
+- Don't run `npm run deploy` or other `wrangler` commands that need an account: there's no token, and pushing deploys.

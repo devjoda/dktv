@@ -1,0 +1,60 @@
+name: Worker
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run check
+      - run: npm test
+
+  deploy:
+    name: Deploy
+    # Only what reaches the workers branch, once the tests pass
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/workers'
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # One deploy at a time, in the order they were pushed
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+    environment:
+      name: workers.dev
+      url: https://dktv.joachim-144.workers.dev
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      # Applies the database's new migrations, then deploys
+      - run: npm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # The site still answers
+      - run: curl -fsS -m 20 -o /dev/null https://dktv.joachim-144.workers.dev/

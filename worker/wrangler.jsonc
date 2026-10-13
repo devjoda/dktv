@@ -1,6 +1,8 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "dktv",
+	// Not a secret: it names the account, and the API token gives the access
+	"account_id": "144b7e09a21af23b5f55e266e95a8c01",
 	"main": "src/index.ts",
 	"compatibility_date": "2026-10-01",
 	"workers_dev": true,
