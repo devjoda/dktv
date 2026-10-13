@@ -1,6 +1,7 @@
 // The site as it runs on this computer for trying the player without DR's streams, which only
 // play in Denmark, and for the browser tests: DR's answers come from the fixtures in
-// ../../../tests/fixtures, and every programme plays the test video in ./video, which
+// ../../../tests/fixtures, with the live channels' schedules moved to now, and every programme and
+// live channel plays the test video in ./video, which
 // `node scripts/test-video.mjs` makes. Only with ./wrangler.jsonc, which is never deployed;
 // and even then, it only answers on localhost.
 
@@ -66,11 +67,46 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
 	}
 	if (url.hostname == "production-cdn.dr-massive.com") {
 		const path = url.pathname.replace(/^\/api/, "");
-		const found = FIXTURES[fixtureName(path, url.searchParams)];
-		return found === undefined ? json({message: `Item '${path}' not found`}, 404) : json(found);
+		const name = fixtureName(path, url.searchParams);
+		const found = FIXTURES[name];
+		if (found === undefined) {
+			return json({message: `Item '${path}' not found`}, 404);
+		}
+		if (name == "lists_155156.json") {
+			return json(withTestChannels(found as any));
+		}
+		if (name == "schedules.json") {
+			return json(scheduledNow(found as any[]));
+		}
+		return json(found);
 	}
 	return realFetch(input, init);
 };
+
+/** The live channels, each playing the test video, which says which channel it plays for, like ?kanal=DR2 */
+function withTestChannels(list: any): unknown {
+	return {...list, items: list.items.map((channel: any) => ({
+		...channel,
+		customFields: {
+			...channel.customFields,
+			hlsURL: `/testvideo/video.m3u8?kanal=${channel.channelShortCode}`,
+			hlsWithSubtitlesURL: `/testvideo/video.m3u8?kanal=${channel.channelShortCode}&undertekster`,
+		},
+	}))};
+}
+
+// The middle of the day the schedules' fixture has, which becomes now
+const SCHEDULED_AROUND = Date.parse("2026-10-12T14:00:00Z");
+
+/** The schedules, moved so what was on in the middle of their day is on now */
+function scheduledNow(schedules: any[]): unknown {
+	const by = Math.round((Date.now() - SCHEDULED_AROUND) / 60_000) * 60_000;
+	const move = (time: string) => new Date(Date.parse(time) + by).toISOString();
+	return schedules.map(channel => ({
+		...channel,
+		schedules: channel.schedules.map((b: any) => ({...b, startDate: move(b.startDate), endDate: move(b.endDate)})),
+	}));
+}
 
 /** The test video's files, with the parts of the video that the playlist asks for */
 function testVideo(request: Request, name: string): Response {

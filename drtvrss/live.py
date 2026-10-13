@@ -11,8 +11,8 @@ from .drtv import get_api
 # The list of live channels on DR's website
 CHANNEL_LIST = 155156
 
-# How far ahead to get the live channels' schedules, in hours
-SCHEDULE_HOURS = 6
+# How far ahead to get the live channels' schedules, in hours: the rest of the day, and some
+SCHEDULE_HOURS = 24
 SCHEDULE_CACHE_TIME = 5 * 60
 
 
@@ -116,3 +116,29 @@ async def get_schedules() -> dict[str, list[Programme]]:
         # Try again in a minute
         schedules_fetched = time() - SCHEDULE_CACHE_TIME + 60
     return schedules
+
+
+def plan_from(channels: dict, schedules: dict[str, list[Programme]], at: Optional[datetime] = None) -> dict[str, list[dict]]:
+    """What's left of each channel's schedule from `at`, by the channel's short name, as the browser gets it:
+    times in milliseconds, like the Worker's planFrom()"""
+    at = at or now()
+
+    def planned(p: Programme) -> dict:
+        description = p.description or ""
+        if len(description) > 280:
+            description = description[:279].rstrip() + "…"
+        return {
+            "title": p.title,
+            "start": round(p.start.timestamp() * 1000),
+            "end": round(p.end.timestamp() * 1000),
+            "description": description,
+        }
+
+    return {slug: [planned(p) for p in schedules.get(c.id, []) if p.end > at] for slug, c in channels.items()}
+
+
+def channel_named(channels: dict, name: str) -> Optional[str]:
+    """The channel a live channel's address names, like DR2 for dr2, if any"""
+    if name in channels:
+        return name
+    return next((slug for slug in channels if slug.lower() == name.lower()), None)

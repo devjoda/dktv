@@ -6,7 +6,7 @@ import {join} from "node:path";
 import {describe, expect, test} from "vitest";
 import {expireAll, forgetAll} from "../src/cache";
 import {clock} from "../src/time";
-import {between, dr, env, get, load} from "./helpers";
+import {between, dr, env, get, load, request} from "./helpers";
 
 const PUBLIC = join(__dirname, "..", "public");
 
@@ -82,7 +82,8 @@ describe("the front page", () => {
 		expect((await get("/")).text).toContain('<div class="channel-art">DR1</div>');
 		const r = await get("/live/DR1");
 		expect(r.status).toBe(200);
-		expect(r.text).not.toContain("Programoversigt");
+		expect(r.text).toContain('<section class="schedule" aria-labelledby="schedule-title" hidden>');
+		expect(between(r.text, '<a class="guide-channel" href="/live/DR1"', "</a>")).toContain('<span class="guide-now"></span>');
 	});
 
 	test("can continue watching, and list favourites", async () => {
@@ -159,7 +160,7 @@ describe("every page", () => {
 		const r = await get("/privatliv/");
 		expect(r.status).toBe(200);
 		expect(r.text).toContain("<title>Privatliv - GLOTV</title>");
-		expect(r.text).toContain("ingen cookies og ingen sporing");
+		expect(r.text).toContain("ingen reklamer og ingen sporing");
 		expect(r.text).toContain('<a href="/sync/">Din konto</a>');
 		expect(between(r.text, '<footer class="site-footer">', "</footer>")).toContain('<a href="/privatliv/" aria-current="page">Privatliv</a>');
 		expect((await get("/privatliv")).location).toBe("/privatliv/");
@@ -436,21 +437,69 @@ describe("a programme on its own", () => {
 });
 
 describe("live", () => {
-	test("the channels", async () => {
+	const cookie = (value: string) => request("/live/", {headers: {Cookie: `lastChannel=${value}`}});
+
+	test("Direkte opens DR1, for those who haven't watched a channel", async () => {
 		const r = await get("/live/");
-		expect(r.status).toBe(200);
-		expect(r.text).toContain('<a class="tile-link" href="/live/DR1" style="--channel: #FF001E;">');
-		expect(r.text).toContain('<a href="/live/" class="nav-item" aria-current="page"><span class="live-dot"></span>Direkte</a>');
+		expect(r.status).toBe(302);
+		expect(r.location).toBe("/live/DR1");
+		expect(r.headers.get("Cache-Control")).toBe("private, no-store");
 	});
 
-	test("a channel", async () => {
+	test("Direkte opens the channel the viewer watched last, as the browser remembers", async () => {
+		for (const slug of ["DR2", "EVA", "TVR"]) {
+			const r = await cookie(slug);
+			expect(r.status).toBe(302);
+			expect(r.location).toBe(`/live/${slug}`);
+			expect(r.headers.get("Cache-Control")).toBe("private, no-store");
+		}
+		// The next viewer isn't sent where the last one went
+		expect((await get("/live/")).location).toBe("/live/DR1");
+	});
+
+	test("Direkte ignores what isn't a channel in the cookie", async () => {
+		for (const value of ["DR9", "dr2", "constructor", "__proto__", "..%2F..%2Fsync%2F", "%22%3E%3Cscript%3E", ""]) {
+			expect((await cookie(value)).location).toBe("/live/DR1");
+		}
+	});
+
+	test("a channel, with the others in a guide, as ordinary links", async () => {
 		const r = await get("/live/DR1");
 		expect(r.status).toBe(200);
-		expect(r.text).toContain("https://drlivedr1hls.akamaized.net/");
-		expect(r.text).toContain("setupLive(document.getElementById('video'), ");
-		const switcher = between(r.text, '<nav class="channel-switcher"', "</nav>");
-		expect(switcher).toContain('<a href="/live/DR1" class="nav-item" aria-current="page"><span class="live-dot"></span>DR1</a>');
-		expect(count(switcher, "aria-current")).toBe(1);
+		expect(r.text).toContain('<a href="/live/" class="nav-item" aria-current="page"><span class="live-dot"></span>Direkte</a>');
+		expect(r.text).toContain('<a href="/live/" class="tab" aria-current="page">');
+		const guide = between(r.text, '<nav class="channel-guide" id="channel-guide" aria-label="Kanaler">', "</nav>");
+		expect([...guide.matchAll(/<a class="guide-channel" href="(\/live\/\w+)" data-channel="(\w+)"/g)].map(m => m[1])).toEqual(["/live/DR1", "/live/DR2", "/live/EVA", "/live/TVR"]);
+		expect(guide).toContain('<a class="guide-channel" href="/live/DR1" data-channel="DR1" aria-current="page">');
+		expect(count(guide, "aria-current")).toBe(1);
+		expect(guide).toContain('<span class="guide-key" aria-hidden="true">4</span>');
+		// What the browser needs to change channels by itself
+		const data = JSON.parse(between(r.text, '<script type="application/json" id="live-data">', "</script>"));
+		expect(data.channel).toBe("DR1");
+		expect(data.channels.map((c: any) => c.slug)).toEqual(["DR1", "DR2", "EVA", "TVR"]);
+		expect(data.channels[0]).toMatchObject({title: "DR1", stream: expect.stringContaining("https://drlivedr1hls.akamaized.net/"), subtitles: expect.stringContaining("drlivedr1texthls")});
+		expect(r.text).toContain("setupChannels(document.getElementById('video'), ");
+		expect(r.text).toContain('<script src="/static/live.js?v=');
+		// The overview of the channels is the guide now
+		expect(r.text).not.toContain("channel-switcher");
+	});
+
+	test("the guide says what's on now, how far it's got, and what's next", async () => {
+		clock.now = () => Date.UTC(2026, 9, 12, 11, 55);
+		const r = await get("/live/DR1");
+		const dr1 = between(r.text, '<a class="guide-channel" href="/live/DR1"', "</a>");
+		expect(dr1).toMatch(/<span class="guide-now">[^<]+<\/span>/);
+		expect(dr1).toMatch(/<span class="guide-progress" aria-hidden="true"><span style="width: 50%;"><\/span><\/span>/);
+		expect(dr1).toMatch(/<span class="guide-next">14\.10 [^<]+<\/span>/);
+	});
+
+	test("the guide says when a channel is on again, when it isn't on", async () => {
+		// Before DR Ramasjang's first programme in the fixture, at 11.35
+		clock.now = () => Date.UTC(2026, 9, 12, 11, 0);
+		const r = await get("/live/DR1");
+		const ramasjang = between(r.text, '<a class="guide-channel" href="/live/TVR"', "</a>");
+		expect(ramasjang).toContain('<span class="guide-now">Sender igen kl. 13.35</span>');
+		expect(ramasjang).toContain('<span class="guide-progress" aria-hidden="true" hidden>');
 	});
 
 	test("a channel's programmes, with subtitles to choose", async () => {
@@ -459,13 +508,42 @@ describe("live", () => {
 		expect(r.text).toContain('<li class="programme is-now" data-start="2026-10-12T11:40:00+00:00" data-end="2026-10-12T12:10:00+00:00">');
 		expect(r.text).toContain('<time class="programme-time" datetime="2026-10-12T11:40:00+00:00">13.40</time>');
 		expect(r.text).toContain("Til 14.10");
-		expect(r.text).toContain('class="button button-secondary js-live-subtitles" aria-pressed="false"');
-		expect(r.text).toContain("drlivedr1texthls");
+		expect(r.text).toContain('<button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false">');
+		// The rest of the day, for the guide and the programmes to keep up with
+		const data = JSON.parse(between(r.text, '<script type="application/json" id="live-data">', "</script>"));
+		expect(data.plan.DR1[0]).toMatchObject({start: Date.UTC(2026, 9, 12, 11, 40), end: Date.UTC(2026, 9, 12, 12, 10)});
+		expect(Object.keys(data.plan)).toEqual(["DR1", "DR2", "EVA", "TVR"]);
+	});
+
+	test("a channel's address in small letters leads to it", async () => {
+		const r = await get("/live/dr2");
+		expect(r.status).toBe(308);
+		expect(r.location).toBe("/live/DR2");
 	});
 
 	test("a channel that isn't there", async () => {
 		expect((await get("/live/DR9")).status).toBe(404);
 		expect((await get("/live/constructor")).status).toBe(404);
+	});
+
+	test("the rest of the day's schedule, for the guide when the page's runs out", async () => {
+		clock.now = () => Date.UTC(2026, 9, 12, 15, 0);
+		const r = await get("/live/plan.json");
+		expect(r.status).toBe(200);
+		expect(r.contentType).toContain("application/json");
+		const {plan} = JSON.parse(r.text);
+		expect(Object.keys(plan)).toEqual(["DR1", "DR2", "EVA", "TVR"]);
+		for (const programmes of Object.values(plan) as any[][]) {
+			expect(programmes.length).toBeGreaterThan(0);
+			for (const p of programmes) {
+				// Only what isn't over
+				expect(p.end).toBeGreaterThan(Date.UTC(2026, 9, 12, 15, 0));
+				expect(Object.keys(p).sort()).toEqual(["description", "end", "start", "title"]);
+				expect(p.description.length).toBeLessThanOrEqual(280);
+			}
+		}
+		// The whole day is asked for
+		expect(dr.requested.find(path => path.startsWith("/schedules"))).toContain("duration=24");
 	});
 });
 

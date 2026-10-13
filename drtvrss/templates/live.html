@@ -8,40 +8,48 @@
 <script src="/static/vendor/plyr-3.8.4.min.js" integrity="sha384-I+WOYmeHMpGhifL4sNlgOjvE/aIyNeReJ8GmAHzi4hy38rtVS/eav1hVJKvMvHrY"></script>
 <script src="/static/vendor/hls-1.7.3.min.js" integrity="sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX"></script>
 <script src="{{ static_url('player.js') }}"></script>
+<script src="{{ static_url('live.js') }}"></script>
 {% endblock %}
+{% block body_class %}live-page{% endblock %}
 {% block content %}
+{# Like the Worker's livePage(): the channel, with the others in a little guide beside or below the video, as
+   ordinary links, which live.js takes over to change the channel in the same player #}
 <div class="stage">
-    <video id="video" controls crossorigin="anonymous"></video>
+    <video id="video" controls crossorigin="anonymous" data-channel="{{ current_channel }}"></video>
 </div>
+<nav class="channel-guide" id="channel-guide" aria-label="Kanaler">
+    <div class="guide-head"><h2 class="guide-title">Kanaler</h2></div>
+    <ol class="guide-list">
+        {% for g in guide %}
+        <li><a class="guide-channel" href="/live/{{ g.slug }}" data-channel="{{ g.slug }}"{% if g.current %} aria-current="page"{% endif %}>
+            <span class="guide-key" aria-hidden="true">{{ g.number }}</span>
+            <span class="guide-name">{{ g.title }}</span>
+            <span class="guide-now">{{ g.now }}</span>
+            <span class="guide-progress" aria-hidden="true"{% if g.progress is none %} hidden{% endif %}><span style="width: {{ g.progress or 0 }}%;"></span></span>
+            <span class="guide-next">{{ g.next }}</span>
+        </a></li>
+        {% endfor %}
+    </ol>
+</nav>
 <div class="watch">
     <div>
         <div class="badges"><span class="tag tag-live">Direkte</span></div>
-        <h1 class="watch-title">{{ channel.title }}</h1>
-        <nav class="channel-switcher" aria-label="Kanaler">
-            {% for slug, other in channels.items() %}
-            <a href="/live/{{ slug }}" class="nav-item"{% if slug == current_channel %} aria-current="page"{% endif %}><span class="live-dot"></span>{{ other.title }}</a>
-            {% endfor %}
-        </nav>
-        {% if channel.subtitles_url %}
+        <h1 class="watch-title js-live-title">{{ channel.title }}</h1>
         <div class="actions">
-            <button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false">{{ icon("captions") }} Undertekster</button>
+            <button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false"{% if not channel.subtitles_url %} hidden{% endif %}>{{ icon("captions") }} Undertekster</button>
         </div>
-        {% endif %}
     </div>
-    {% set on_now, later = whats_on(programmes) %}
-    {% if on_now or later %}
-    {# ui.js keeps it up to date while the page is open, without reloading the stream #}
-    <section class="schedule" aria-labelledby="schedule-title">
+    <section class="schedule" aria-labelledby="schedule-title"{% if not programmes %} hidden{% endif %}>
         <h2 class="side-title" id="schedule-title">Programoversigt</h2>
         <ol class="programmes">
-            {% for p in ([on_now] if on_now else []) + later[:8] %}
-            <li class="programme{% if p is sameas on_now %} is-now{% endif %}" data-start="{{ p.start.isoformat() }}" data-end="{{ p.end.isoformat() }}">
-                <time class="programme-time" datetime="{{ p.start.isoformat() }}">{{ p.start|clock }}</time>
+            {% for p in programmes %}
+            <li class="programme{% if p.is_now %} is-now{% endif %}" data-start="{{ p.iso_start }}" data-end="{{ p.iso_end }}">
+                <time class="programme-time" datetime="{{ p.iso_start }}">{{ p.clock_start }}</time>
                 <div class="programme-body">
                     <h3 class="programme-title">{{ p.title }}</h3>
                     <div class="programme-now">
-                        <div class="programme-progress" role="progressbar" aria-label="Sendt indtil videre" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ p.percent_done() }}"><span style="width: {{ p.percent_done() }}%;"></span></div>
-                        <p class="programme-ends">Til {{ p.end|clock }}</p>
+                        <div class="programme-progress" role="progressbar" aria-label="Sendt indtil videre" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ p.percent }}"><span style="width: {{ p.percent }}%;"></span></div>
+                        <p class="programme-ends">Til {{ p.clock_end }}</p>
                         {% if p.description %}<p class="programme-desc">{{ p.description }}</p>{% endif %}
                     </div>
                 </div>
@@ -49,9 +57,9 @@
             {% endfor %}
         </ol>
     </section>
-    {% endif %}
 </div>
+<script type="application/json" id="live-data">{{ data|tojson }}</script>
 <script>
-    setupLive(document.getElementById('video'), {{ channel.stream_url|tojson }}, {{ channel.subtitles_url|tojson }});
+    setupChannels(document.getElementById('video'), JSON.parse(document.getElementById('live-data').textContent));
 </script>
 {% endblock %}

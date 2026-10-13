@@ -101,9 +101,38 @@ function autoplay(video) {
             stopLoading(video);
             return;
         }
+        // Not the viewer's choice, so not remembered, see keepSound()
+        video.dataset.forcedMute = "true";
         video.muted = true;
         // When it won't play at all, the play button shows instead of the spinner
         video.play().then(() => offerSound(video)).catch(() => stopLoading(video));
+    });
+}
+
+// The volume, and whether the sound is off, as the viewer last left them, for every video and channel
+function keepSound(video) {
+    try {
+        const sound = JSON.parse(localStorage.getItem("sound"));
+        if (sound && Number.isFinite(sound.volume)) {
+            video.volume = Math.min(Math.max(sound.volume, 0), 1);
+            video.muted = Boolean(sound.muted);
+        }
+    } catch (error) {
+        // As the player has it, then
+    }
+    video.addEventListener("volumechange", function () {
+        // Unless the browser wouldn't play it with sound
+        if (video.dataset.forcedMute) {
+            if (video.muted) {
+                return;
+            }
+            delete video.dataset.forcedMute;
+        }
+        try {
+            localStorage.setItem("sound", JSON.stringify({volume: video.volume, muted: video.muted}));
+        } catch (error) {
+            console.error("Could not remember the volume:", error);
+        }
     });
 }
 
@@ -270,17 +299,38 @@ function liveSubtitlesButton(video) {
     if (pageButton == null || fullscreen == null) {
         return pageButton;
     }
-    pageButton.closest(".actions").remove();
     const button = element("button", {
         type: "button",
         class: "plyr__controls__item plyr__control js-live-subtitles",
         "aria-pressed": "false",
     }, icon("captions"), element("span", {class: "plyr__tooltip"}, "Undertekster"));
+    button.hidden = pageButton.hidden;
+    pageButton.remove();
     fullscreen.before(button);
     return button;
 }
 
-// Plays a live channel, with or without subtitles, as the viewer last chose
+// A message on the picture, like "Skifter til DR2 …", or what went wrong, with a button to try again
+function playerMessage(video) {
+    const text = element("p", {class: "player-message-text"});
+    const retry = element("button", {type: "button", class: "button button-primary"}, "Prøv igen");
+    const box = element("div", {class: "player-message", role: "status"}, text, retry);
+    box.hidden = true;
+    playerOf(video).append(box);
+    return {
+        show(message, onRetry) {
+            text.textContent = message;
+            retry.hidden = !onRetry;
+            retry.onclick = onRetry || null;
+            box.classList.toggle("is-error", Boolean(onRetry));
+            box.hidden = false;
+        },
+        hide() {
+            box.hidden = true;
+        },
+    };
+}
+
 // How far the skip buttons, and those on headphones and lock screens, skip, in seconds
 const SKIP_SECONDS = 15;
 
@@ -382,31 +432,59 @@ function setupSharing(video) {
     actions.prepend(button);
 }
 
-function setupLive(video, url, subtitlesURL) {
+// A live channel, with or without subtitles, as the viewer last chose. Returns what changes it to another
+// channel in the same player, without a new page, so the sound and the subtitles stay as they were.
+function setupLive(video, url, subtitlesURL, title) {
     setupControls(video, true);
+    keepSound(video);
     showLoading(video);
     const channel = document.querySelector(".watch-title");
     const onNow = document.querySelector(".programme.is-now .programme-title");
     setupMediaSession(video, {title: onNow ? onNow.textContent : channel.textContent, show: channel.textContent, live: true});
     const button = liveSubtitlesButton(video);
+    const message = playerMessage(video);
     let withSubtitles = false;
     try {
-        withSubtitles = subtitlesURL != null && localStorage.getItem("liveSubtitles") == "true";
+        withSubtitles = localStorage.getItem("liveSubtitles") == "true";
     } catch (error) {
         // Without the browser's storage, they start off
     }
+    let current = {url, subtitlesURL, title: title || channel.textContent};
     let hls = null;
-    const play = function () {
-        if (hls) {
+    let failed = false;
+    const fail = function (text) {
+        failed = true;
+        stopLoading(video);
+        const why = text == NOT_IN_DENMARK ? "Den kan kun ses i Danmark." : "Prøv igen om lidt.";
+        message.show(`Kunne ikke vise ${current.title}. ${why}`, function () {
+            message.show(`Prøver ${current.title} igen …`);
+            play(true);
+        });
+    };
+    const play = function (afresh = false) {
+        const src = withSubtitles && current.subtitlesURL ? current.subtitlesURL : current.url;
+        // After an error, hls.js starts over
+        if (hls && (afresh || failed)) {
             hls.destroy();
+            hls = null;
         }
-        hls = attachStream(video, withSubtitles ? subtitlesURL : url);
+        failed = false;
+        if (hls) {
+            hls.loadSource(src);
+        } else if (typeof Hls != "undefined" && Hls.isSupported()) {
+            hls = attachStream(video, src, fail);
+        } else {
+            attachStream(video, src, fail);
+        }
         if (button) {
-            button.setAttribute("aria-pressed", withSubtitles);
-            button.classList.toggle("plyr__control--pressed", withSubtitles);
+            const on = withSubtitles && Boolean(current.subtitlesURL);
+            button.hidden = !current.subtitlesURL;
+            button.setAttribute("aria-pressed", on);
+            button.classList.toggle("plyr__control--pressed", on);
         }
         autoplay(video);
     };
+    video.addEventListener("playing", () => !failed && message.hide());
     play();
     if (button) {
         button.addEventListener("click", function () {
@@ -419,11 +497,20 @@ function setupLive(video, url, subtitlesURL) {
             play();
         });
     }
+    return {
+        // To another channel, with its subtitles if the viewer has them on and it has them
+        change(next) {
+            current = next;
+            message.show(`Skifter til ${next.title} …`);
+            play();
+            setupMediaSession(video, {title: next.now || next.title, show: next.title, live: true});
+        },
+    };
 }
 
 // Starts loading the stream into the video element.
 // Returns the Hls instance, or null if the browser plays HLS natively.
-function attachStream(video, src) {
+function attachStream(video, src, onFatal = message => showError(video, message)) {
     if (Hls.isSupported()) {
         // DR's subtitles come as a track of their own, see addSubtitles(), so not twice from the stream too
         const hls = new Hls({enableWebVTT: false, enableIMSC1: false, enableCEA708Captions: false});
@@ -435,18 +522,14 @@ function attachStream(video, src) {
             if (!data.fatal) {
                 return;
             }
-            if (data.details == Hls.ErrorDetails.MANIFEST_LOAD_ERROR) {
-                showError(video, NOT_IN_DENMARK);
-            } else {
-                showError(video, COULD_NOT_LOAD);
-            }
+            onFatal(data.details == Hls.ErrorDetails.MANIFEST_LOAD_ERROR ? NOT_IN_DENMARK : COULD_NOT_LOAD);
         });
         return hls;
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.addEventListener("error", () => showError(video, COULD_NOT_LOAD));
+        video.addEventListener("error", () => onFatal(COULD_NOT_LOAD));
         video.src = src;
     } else {
-        showError(video, COULD_NOT_LOAD);
+        onFatal(COULD_NOT_LOAD);
     }
     return null;
 }
@@ -454,6 +537,7 @@ function attachStream(video, src) {
 // Plays a program or an episode, continuing where the viewer left off
 async function playVideo(video, videoID) {
     setupControls(video);
+    keepSound(video);
     showLoading(video);
     setupMediaSession(video, {title: video.dataset.title, show: video.dataset.show});
     setupSharing(video);
