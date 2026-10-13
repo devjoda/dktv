@@ -13,7 +13,7 @@ type Schedules = Record<string, Programme[]>;
 
 function rows(found: Row[]): Html {
 	return each(found, (row, i) => html`<section class="shelf" aria-labelledby="row-${i + 1}">
-${shelfHead(row.title, `row-${i + 1}`, moreLink(row))}
+${shelfHead(row.title, `row-${i + 1}`, moreLink(row), row.complete)}
 <div class="shelf-track">${each(row.cards, cardTile)}</div>
 </section>
 `);
@@ -64,7 +64,7 @@ ${featured.length ? featuredSlides(featured) : html`<section class="intro wrap">
 ${searchField()}
 </section>`}
 <section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>
-${shelfHead("Fortsæt med at se", "continue-title")}
+${shelfHead("Fortsæt med at se", "continue-title", "/favoritter/#continue-watching", true)}
 <div class="shelf-track js-tiles"></div>
 </section>
 <section class="shelf" id="leaving-soon" aria-labelledby="leaving-title" hidden>
@@ -72,7 +72,7 @@ ${shelfHead("Udløber snart", "leaving-title")}
 <div class="shelf-track js-tiles"></div>
 </section>
 <section class="shelf" id="favorites" data-favorites="all" aria-labelledby="favorites-title" hidden>
-${shelfHead("Mine favoritter", "favorites-title")}
+${shelfHead("Mine favoritter", "favorites-title", "/favoritter/", true)}
 <p class="shelf-empty js-favorites-empty">
 ${icon("heart")}
 <span>Tryk på <strong>Favorit</strong> på en serie eller film, så samles de her. De gemmes i din browser, og du kan <a href="/sync/">synkronisere dem mellem dine enheder</a>.</span>
@@ -80,7 +80,7 @@ ${icon("heart")}
 <div class="shelf-track js-tiles"></div>
 </section>
 ${Object.keys(channels).length ? html`<section class="shelf" aria-labelledby="live-title">
-${shelfHead("Direkte TV", "live-title")}
+${shelfHead("Direkte TV", "live-title", "/live/", true)}
 <div class="shelf-track">${channelTiles(channels, schedules)}</div>
 </section>` : ""}
 ${shows.length ? html`<section class="shelf" aria-labelledby="recommended-title">
@@ -300,7 +300,7 @@ ${searchField()}
 export function categoriesPage(site: Site, categories: Category[]): Html {
 	return layout(site, {title: "Kategorier"}, html`${pageHead("Kategorier")}
 <ul class="category-grid wrap">
-${each(categories, c => html`<li><a class="category" href="${c.url}">${c.image ? html`<img src="${thumbnail(c.image)}" alt="" loading="lazy">` : ""}<span class="category-title">${c.title}</span></a></li>\n`)}
+${each(categories, c => html`<li><a class="category" href="${c.url}"><span class="category-mark" aria-hidden="true">${[...c.title][0] ?? ""}</span><span class="category-title">${c.title}</span></a></li>\n`)}
 </ul>`);
 }
 

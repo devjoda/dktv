@@ -10,7 +10,7 @@
     {% for c in categories %}
     <li>
         <a class="category" href="{{ c.url }}">
-            {% if c.image %}<img src="{{ c.image|thumbnail }}" alt="" loading="lazy">{% endif %}
+            <span class="category-mark" aria-hidden="true">{{ c.title[:1] }}</span>
             <span class="category-title">{{ c.title }}</span>
         </a>
     </li>

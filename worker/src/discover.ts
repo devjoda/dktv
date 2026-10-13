@@ -46,8 +46,10 @@ export interface Card {
 export interface Row {
 	title: string;
 	cards: Card[];
-	// DR's list, when it has more than the row shows
-	more?: string;
+	// DR's list, which all of the row is on
+	more: string;
+	// Whether the row has all of DR's list, so it needs "Se alle" only when it's wider than the page
+	complete: boolean;
 }
 
 export interface DiscoverPage {
@@ -59,7 +61,6 @@ export interface DiscoverPage {
 export interface Category {
 	title: string;
 	url: string;
-	image?: string;
 }
 
 /** Where an item of DR's goes here, or undefined if it doesn't go anywhere here */
@@ -281,7 +282,7 @@ export async function getPage(ctx: Ctx, path: string, maxRows = 10): Promise<Dis
 	wanted.forEach((row, i) => {
 		const list = found[i];
 		if (list !== undefined && list.cards.length >= MIN_ROW) {
-			rows.push({title: row.title, cards: list.cards, more: list.pages > 1 ? row.list : undefined});
+			rows.push({title: row.title, cards: list.cards, more: row.list, complete: list.pages <= 1});
 		}
 	});
 	return {title: layout.title, featured, rows};
@@ -322,7 +323,7 @@ export async function getCategories(ctx: Ctx): Promise<Category[]> {
 				const path = dr.text(item.path) ?? "";
 				// Search finds anything from A to Å better
 				if (path.startsWith("/kategorier/") && path != "/kategorier/a-aa") {
-					found.push({title: dr.text(item.title) ?? "", url: path + "/", image: dr.text(item.images?.tile) || dr.text(item.images?.wallpaper)});
+					found.push({title: dr.text(item.title) ?? "", url: path + "/"});
 				}
 			}
 			return found;
