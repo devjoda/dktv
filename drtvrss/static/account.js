@@ -10,13 +10,14 @@ const SUBSCRIBE_TIMEOUT = 20 * 1000;
 
 let accountFeatures = null;
 
-// What the server can do: {push: its public key or null, passkeys and together: true or false}
+// What the server can do: {push: its public key or null, and passkeys, together, segments and
+// whatever else it has: true}. A server without /konto.json has none of them.
 function features() {
     if (accountFeatures == null) {
         accountFeatures = fetch("/konto.json")
             .then(response => response.ok ? response.json() : {})
             .catch(() => ({}))
-            .then(found => ({push: found.push || null, passkeys: found.passkeys === true, together: found.together === true}));
+            .then(found => ({...found, push: found.push || null}));
     }
     return accountFeatures;
 }

@@ -451,6 +451,10 @@ async function playVideo(video, videoID) {
     if (typeof setupTogether == "function") {
         setupTogether(video);
     }
+    // Skipping intros and credits that viewers have marked, see skip.js
+    if (typeof setupSkipping == "function") {
+        setupSkipping(video, videoID);
+    }
     let stream;
     try {
         stream = await getStream(videoID);

@@ -1423,6 +1423,160 @@ a:hover .channel-art {
     100% { opacity: 0; }
 }
 
+/* Skipping the intro, and asking whether the viewer did, over the picture */
+.skip-button {
+    position: absolute;
+    right: 24px;
+    bottom: 76px;
+    z-index: 25;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border: 1px solid rgba(242, 239, 233, .5);
+    border-radius: 6px;
+    background: rgba(15, 16, 19, .78);
+    color: var(--paper);
+    font-weight: 700;
+    backdrop-filter: blur(6px);
+}
+
+.skip-button:hover,
+.skip-button:focus-visible {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.skip-wrong {
+    padding: 8px 14px;
+    border-color: transparent;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.skip-ask {
+    position: absolute;
+    left: 24px;
+    bottom: 76px;
+    z-index: 25;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 6px 6px 16px;
+    border-radius: 999px;
+    background: rgba(15, 16, 19, .85);
+    color: var(--paper);
+    font-size: .9375rem;
+    backdrop-filter: blur(6px);
+}
+
+.skip-ask span {
+    margin-right: 6px;
+}
+
+.skip-ask button {
+    padding: 5px 14px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .12);
+    color: var(--paper);
+    font-weight: 650;
+}
+
+.skip-ask button:hover {
+    background: rgba(242, 239, 233, .24);
+}
+
+@media (max-width: 575px) {
+    .skip-button,
+    .skip-ask {
+        bottom: 60px;
+    }
+
+    .skip-button {
+        right: 12px;
+    }
+
+    .skip-ask {
+        left: 12px;
+    }
+}
+
+/* Marking the intro and credits, for viewers with accounts */
+.marking {
+    display: grid;
+    gap: 14px;
+    max-width: 640px;
+    margin-top: 24px;
+    padding: 20px 22px;
+    border-radius: 12px;
+    background: var(--raised);
+}
+
+.marking-title {
+    margin: 0;
+    font-size: var(--text-h3);
+}
+
+.marking .meta {
+    display: block;
+}
+
+.marking-group {
+    display: grid;
+    gap: 8px;
+}
+
+.marking-group h3 {
+    margin: 4px 0 0;
+    font-size: 1rem;
+}
+
+.marking-group > .button {
+    justify-self: start;
+}
+
+.marking-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.marking-label {
+    width: 3.5em;
+    color: var(--muted);
+}
+
+.marking-time {
+    min-width: 5em;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.marking-now {
+    min-height: 36px;
+    padding: 6px 16px;
+}
+
+.marking-nudge {
+    width: 40px;
+    height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: none;
+    color: var(--paper);
+    font-weight: 650;
+}
+
+.marking-nudge:hover {
+    background: rgba(242, 239, 233, .08);
+}
+
+.marking > .button-quiet {
+    justify-self: start;
+}
+
 /* Finding something in a long list, like all films from A to Å */
 .list-filter {
     display: flex;

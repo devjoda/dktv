@@ -113,6 +113,7 @@ export function fakeD1(): D1Database {
 		prepare(sql: string) {
 			let args: any[] = [];
 			const statement = {
+				sql,
 				bind(...values: any[]) {
 					args = values;
 					return statement;
@@ -130,13 +131,13 @@ export function fakeD1(): D1Database {
 			};
 			return statement;
 		},
-		// All or nothing, like D1's
-		async batch(statements: {run(): Promise<unknown>}[]) {
+		// All or nothing, like D1's, with the rows of those that read
+		async batch(statements: {sql: string; run(): Promise<unknown>; all(): Promise<unknown>}[]) {
 			db.exec("BEGIN");
 			try {
 				const results = [];
 				for (const statement of statements) {
-					results.push(await statement.run());
+					results.push(await (/^\s*SELECT|RETURNING/i.test(statement.sql) ? statement.all() : statement.run()));
 				}
 				db.exec("COMMIT");
 				return results;
@@ -155,6 +156,7 @@ export const env = {
 	RECOMMENDED_SHOWS: "",
 	VAPID_PUBLIC_KEY: undefined as string | undefined,
 	VAPID_PRIVATE_KEY: undefined as string | undefined,
+	TRUSTED_ACCOUNTS: undefined as string | undefined,
 };
 
 /** What a visit has, for calling the Worker's parts on their own */
@@ -212,6 +214,7 @@ beforeEach(() => {
 	env.RECOMMENDED_SHOWS = "";
 	env.VAPID_PUBLIC_KEY = undefined;
 	env.VAPID_PRIVATE_KEY = undefined;
+	env.TRUSTED_ACCOUNTS = undefined;
 	clock.now = realNow;
 	forgetAll();
 	forgetToken();

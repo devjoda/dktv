@@ -10,6 +10,7 @@ import {getChannels, getSchedules} from "./live";
 import {search} from "./search";
 import {allEpisodes, getLongDescription, getProgram, getShow, itemId, rssFeed, type Show, thumbnail} from "./show";
 import * as passkeys from "./passkeys";
+import * as segments from "./segments";
 import {isRoomId, newRoomId} from "./room";
 import * as syncStore from "./sync";
 import {clock, copenhagen, isNew} from "./time";
@@ -351,7 +352,48 @@ app.delete("/sync/:code", async c => {
 });
 
 /** What this server can do besides syncing, which the browser's scripts ask before offering it */
-app.get("/konto.json", c => c.json({push: vapidKeys(c.env)?.publicKey ?? null, passkeys: true, together: c.env.ROOMS !== undefined}));
+app.get("/konto.json", c => c.json({push: vapidKeys(c.env)?.publicKey ?? null, passkeys: true, together: c.env.ROOMS !== undefined, segments: true}));
+
+/** Where a video's intro or credits are, as an account marked them, like {code, kind: "credits", start, end, duration} */
+app.post("/spring/:video{[0-9]{1,12}}", async c => {
+	const body = await jsonBody(c);
+	const code = syncStore.normalizeCode(typeof body?.code == "string" ? body.code : "");
+	const kind = body?.kind;
+	if (code === undefined) {
+		return c.json({error: UNKNOWN_CODE}, 404);
+	}
+	if ((kind != "intro" && kind != "credits") || (body?.source != "marked" && body?.source != "answered")) {
+		return c.json({error: "Forventede en markering."}, 400);
+	}
+	return stored(c, async () => {
+		const result = await segments.mark(c.get("ctx"), code, c.req.param("video"), kind as segments.Kind, Number(body.start), Number(body.end), Number(body.duration), body.source as "marked" | "answered");
+		if (result == "unknown code") {
+			return c.json({error: UNKNOWN_CODE}, 404);
+		}
+		if (result == "too many") {
+			return c.json({error: "Du har markeret mange i dag. Prøv igen i morgen."}, 429);
+		}
+		if (result == "implausible") {
+			return c.json({error: "Det ligner ikke en intro eller rulletekster."}, 400);
+		}
+		return c.body(null, 201);
+	});
+});
+
+/** An account finding a video's intro or credits right, or wrong, like {code, kind: "intro", vote: -1} */
+app.post("/spring/:video{[0-9]{1,12}}/stem", async c => {
+	const body = await jsonBody(c);
+	const code = syncStore.normalizeCode(typeof body?.code == "string" ? body.code : "");
+	if (code === undefined) {
+		return c.json({error: UNKNOWN_CODE}, 404);
+	}
+	if ((body?.kind != "intro" && body?.kind != "credits") || (body?.vote !== 1 && body?.vote !== -1)) {
+		return c.json({error: "Forventede en stemme."}, 400);
+	}
+	return stored(c, async () => (await segments.vote(c.get("ctx"), code, c.req.param("video"), body.kind as segments.Kind, body.vote as 1 | -1))
+		? c.body(null, 204)
+		: c.json({error: UNKNOWN_CODE}, 404));
+});
 
 /** Makes a room to watch together in, which is made for real when the first viewer joins */
 app.post("/sammen/", c => {
@@ -557,8 +599,15 @@ app.get("/:showid/:episode", edgeCached(10 * MINUTE), async c => {
 		};
 	}
 
-	const description = await getLongDescription(ctx, e);
-	return render(c, pages.videoPage(site(c), {show, e, description, previous: neighbour(i - 1), next: neighbour(i + 1)}));
+	const [description, skips] = await Promise.all([
+		getLongDescription(ctx, e),
+		// Only extra, so the page does without when the database doesn't answer
+		segments.getSegments(ctx, e.videoId, season.episodes.map(other => other.videoId)).catch(error => {
+			console.log("Could not get the intro and credits of", e.videoId, String(error));
+			return {};
+		}),
+	]);
+	return render(c, pages.videoPage(site(c), {show, e, description, previous: neighbour(i - 1), next: neighbour(i + 1), segments: skips}));
 });
 
 // Like /rejseholdet_503605, for /rejseholdet_503605/

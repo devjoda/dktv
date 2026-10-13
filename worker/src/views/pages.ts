@@ -3,6 +3,7 @@
 import type {Card, Category, DiscoverPage, Row} from "../discover";
 import {type Channels, percentDone, type Programme, whatsOn} from "../live";
 import type {SearchResult, SearchResultItem} from "../search";
+import type {Segments} from "../segments";
 import {allEpisodes, type Episode, type Program, type Show, thumbnail} from "../show";
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
@@ -164,10 +165,10 @@ ${tile({href: n.url, image: n.wallpaper, title: n.title, minutes: n.minutes, vid
 }
 
 /** Plays an episode of a show, or a programme on its own, like a film */
-export function videoPage(site: Site, {show, e, description, previous, next}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour}): Html {
+export function videoPage(site: Site, {show, e, description, previous, next, segments}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour; segments?: Segments}): Html {
 	const film = show === undefined ? (e as Program) : undefined;
 	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title, head: show ? feedLink(show) : undefined, scripts: VIDEO_SCRIPTS}, html`<div class="stage">
-<video id="video" controls crossorigin="anonymous"${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)}${attr("data-previous-url", previous?.url)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}></video>
+<video id="video" controls crossorigin="anonymous"${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)}${attr("data-previous-url", previous?.url)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}${attr("data-segments", segments ? JSON.stringify(segments) : undefined)}></video>
 </div>
 <div class="watch">
 <div>

@@ -8,6 +8,8 @@ export interface Env {
 	SERVICE_NAME?: string;
 	SOURCE_URL?: string;
 	RECOMMENDED_SHOWS?: string;
+	// Accounts whose marks of intros and credits count on their own, as a secret, like "ABCD-EFGH-JKMN-PQRS"
+	TRUSTED_ACCOUNTS?: string;
 	// For notifications: our public key, uncompressed and base64url, and the private one as a JWK
 	VAPID_PUBLIC_KEY?: string;
 	VAPID_PRIVATE_KEY?: string;

@@ -228,6 +228,8 @@ export async function remove(ctx: Ctx, code: string): Promise<void> {
 		db.prepare("DELETE FROM push WHERE code = ?").bind(code),
 		db.prepare("DELETE FROM follows WHERE code = ?").bind(code),
 		db.prepare("DELETE FROM passkeys WHERE code = ?").bind(code),
+		db.prepare("DELETE FROM segments WHERE code = ?").bind(code),
+		db.prepare("DELETE FROM segment_votes WHERE code = ?").bind(code),
 		db.prepare("DELETE FROM challenges WHERE code = ?").bind(code),
 		db.prepare("DELETE FROM sync WHERE code = ?").bind(code),
 	]);
