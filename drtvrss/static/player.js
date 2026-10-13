@@ -447,6 +447,10 @@ async function playVideo(video, videoID) {
     showLoading(video);
     setupMediaSession(video, {title: video.dataset.title, show: video.dataset.show});
     setupSharing(video);
+    // Where the server has rooms to watch together in, see together.js
+    if (typeof setupTogether == "function") {
+        setupTogether(video);
+    }
     let stream;
     try {
         stream = await getStream(videoID);
@@ -457,9 +461,11 @@ async function playVideo(video, videoID) {
     }
     const progress = loadProgress(videoID);
     video.addEventListener("loadedmetadata", function () {
-        // Where a shared link says, or where the viewer got to
+        // Where a shared link says, or where the viewer got to; in a room to watch together, where the room is
         const start = startFromLink();
-        if (start != null && start < video.duration) {
+        if (typeof togetherRoom == "function" && togetherRoom()) {
+            // together.js takes it from there
+        } else if (start != null && start < video.duration) {
             video.currentTime = start;
         } else if (progress != null && progress.time > 0 && !isFinished(progress.time, video.duration)) {
             video.currentTime = Math.max(0, progress.time - RESUME_REWIND);

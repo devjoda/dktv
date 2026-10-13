@@ -2,7 +2,10 @@
 
 import {beforeEach, describe, expect, test, vi} from "vitest";
 import {forgetAll} from "../src/cache";
-import {dr, get} from "./helpers";
+import {dr, get as getLocal} from "./helpers";
+
+// From a site's own address, since pages aren't kept when running locally
+const get = (path: string) => getLocal("https://dktv.example" + path);
 
 let kept: Map<string, Response>;
 

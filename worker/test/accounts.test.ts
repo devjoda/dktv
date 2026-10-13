@@ -78,7 +78,7 @@ async function rows(sql: string): Promise<unknown[]> {
 
 describe("notifications", () => {
 	test("say whether the server can send them", async () => {
-		expect(json(await get("/konto.json"))).toEqual({push: env.VAPID_PUBLIC_KEY, passkeys: true});
+		expect(json(await get("/konto.json"))).toEqual({push: env.VAPID_PUBLIC_KEY, passkeys: true, together: false});
 		env.VAPID_PUBLIC_KEY = undefined;
 		expect(json(await get("/konto.json")).push).toBeNull();
 	});

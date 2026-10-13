@@ -10,6 +10,7 @@ import {getChannels, getSchedules} from "./live";
 import {search} from "./search";
 import {allEpisodes, getLongDescription, getProgram, getShow, itemId, rssFeed, type Show, thumbnail} from "./show";
 import * as passkeys from "./passkeys";
+import {isRoomId, newRoomId} from "./room";
 import * as syncStore from "./sync";
 import {clock, copenhagen, isNew} from "./time";
 import type {Html} from "./views/html";
@@ -75,7 +76,9 @@ function edgeCached(seconds: number): MiddlewareHandler<App> {
 	return async (c, next) => {
 		const ctx = c.get("ctx");
 		const cache = typeof caches != "undefined" ? caches.default : null;
-		if (cache == null) {
+		// Not when running locally, where the version stays the same while the code changes
+		const local = ["localhost", "127.0.0.1"].includes(new URL(c.req.url).hostname);
+		if (cache == null || local) {
 			await next();
 			return;
 		}
@@ -348,7 +351,24 @@ app.delete("/sync/:code", async c => {
 });
 
 /** What this server can do besides syncing, which the browser's scripts ask before offering it */
-app.get("/konto.json", c => c.json({push: vapidKeys(c.env)?.publicKey ?? null, passkeys: true}));
+app.get("/konto.json", c => c.json({push: vapidKeys(c.env)?.publicKey ?? null, passkeys: true, together: c.env.ROOMS !== undefined}));
+
+/** Makes a room to watch together in, which is made for real when the first viewer joins */
+app.post("/sammen/", c => {
+	if (!c.env.ROOMS) {
+		return c.json({error: "Serveren kan ikke det."}, 501);
+	}
+	return c.json({id: newRoomId()}, 201);
+});
+
+/** Joins a room, with a WebSocket, which the room's Durable Object takes */
+app.get("/sammen/:id", async c => {
+	const id = c.req.param("id").toUpperCase();
+	if (!c.env.ROOMS || !isRoomId(id)) {
+		throw new NotFound(`No room ${id}`);
+	}
+	return c.env.ROOMS.get(c.env.ROOMS.idFromName(id)).fetch(c.req.raw);
+});
 
 /** A request's JSON body, or undefined if it has none. Only JSON, which other sites can't send without the browser asking first. */
 async function jsonBody(c: Context<App>): Promise<Record<string, unknown> | undefined> {
@@ -567,6 +587,8 @@ app.onError((e, c) => {
 });
 
 export {app};
+// The rooms to watch together in, which Cloudflare finds here
+export {Room} from "./room";
 
 export default {
 	fetch: app.fetch,

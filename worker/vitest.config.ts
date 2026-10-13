@@ -4,4 +4,7 @@ export default defineConfig({
 	test: {
 		include: ["test/**/*.test.ts"],
 	},
+	resolve: {
+		alias: {"cloudflare:workers": new URL("./test/cloudflare-workers.ts", import.meta.url).pathname},
+	},
 });

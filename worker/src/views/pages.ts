@@ -6,7 +6,7 @@ import type {SearchResult, SearchResultItem} from "../search";
 import {allEpisodes, type Episode, type Program, type Show, thumbnail} from "../show";
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
-import {layout, LIBRARIES, PLAYER_SCRIPTS, type Site} from "./layout";
+import {layout, LIBRARIES, PLAYER_SCRIPTS, type Site, VIDEO_SCRIPTS} from "./layout";
 import {cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, searchField, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
 
 type Schedules = Record<string, Programme[]>;
@@ -166,7 +166,7 @@ ${tile({href: n.url, image: n.wallpaper, title: n.title, minutes: n.minutes, vid
 /** Plays an episode of a show, or a programme on its own, like a film */
 export function videoPage(site: Site, {show, e, description, previous, next}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour}): Html {
 	const film = show === undefined ? (e as Program) : undefined;
-	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title, head: show ? feedLink(show) : undefined, scripts: PLAYER_SCRIPTS}, html`<div class="stage">
+	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title, head: show ? feedLink(show) : undefined, scripts: VIDEO_SCRIPTS}, html`<div class="stage">
 <video id="video" controls crossorigin="anonymous"${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)}${attr("data-previous-url", previous?.url)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}></video>
 </div>
 <div class="watch">

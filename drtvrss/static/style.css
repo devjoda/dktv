@@ -1288,6 +1288,141 @@ a:hover .channel-art {
     }
 }
 
+/* Watching together: the room's panel below the title, and reactions floating over the picture */
+.together {
+    display: grid;
+    gap: 16px;
+    max-width: 640px;
+    margin-top: 24px;
+    padding: 20px 22px;
+    border-radius: 12px;
+    background: var(--raised);
+}
+
+.together-top {
+    display: grid;
+    gap: 2px;
+}
+
+.together-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: var(--text-h3);
+}
+
+.together-share {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.together-link {
+    flex: 1 1 240px;
+    min-width: 0;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .06);
+    color: var(--muted);
+    font-size: .9375rem;
+}
+
+.together-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+}
+
+.together-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: .9375rem;
+}
+
+.together-name-field {
+    width: 9em;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(242, 239, 233, .06);
+    color: var(--paper);
+}
+
+.together-reactions {
+    display: flex;
+    gap: 4px;
+}
+
+.together-react {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(242, 239, 233, .08);
+    font-size: 1.25rem;
+    transition: background-color .15s, transform .15s;
+}
+
+.together-react:hover {
+    background: rgba(242, 239, 233, .16);
+}
+
+.together-react:active {
+    transform: scale(.9);
+}
+
+.together-bottom .button-quiet {
+    margin-left: auto;
+}
+
+.together-reaction {
+    position: absolute;
+    bottom: 64px;
+    z-index: 30;
+    display: grid;
+    justify-items: center;
+    pointer-events: none;
+    animation: float-up 2.5s ease-out forwards;
+}
+
+.together-emoji {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .5));
+}
+
+.together-by {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: rgba(15, 16, 19, .75);
+    color: var(--paper);
+    font-size: .75rem;
+    font-weight: 650;
+}
+
+@keyframes float-up {
+    0% { opacity: 0; transform: translateY(16px) scale(.8); }
+    15% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-160px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .together-reaction {
+        animation: fade-out 2.5s forwards;
+    }
+}
+
+@keyframes fade-out {
+    0%, 70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
 /* Finding something in a long list, like all films from A to Å */
 .list-filter {
     display: flex;

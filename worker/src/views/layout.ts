@@ -49,6 +49,10 @@ export const PLAYER_SCRIPTS = html`<link href="${LIBRARIES.plyrStyle.href}" rel=
 <script src="${LIBRARIES.hls.href}" integrity="${LIBRARIES.hls.integrity}"></script>
 <script src="${staticURL("player.js")}"></script>`;
 
+/** The scripts a video's page needs: the player's, and watching together's */
+export const VIDEO_SCRIPTS = html`${PLAYER_SCRIPTS}
+<script src="${staticURL("together.js")}"></script>`;
+
 export interface PageProps {
 	// The window's title, before the site's name
 	title?: string;

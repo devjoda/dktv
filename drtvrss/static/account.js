@@ -10,13 +10,13 @@ const SUBSCRIBE_TIMEOUT = 20 * 1000;
 
 let accountFeatures = null;
 
-// What the server can do: {push: its public key or null, passkeys: true or false}
+// What the server can do: {push: its public key or null, passkeys and together: true or false}
 function features() {
     if (accountFeatures == null) {
         accountFeatures = fetch("/konto.json")
             .then(response => response.ok ? response.json() : {})
             .catch(() => ({}))
-            .then(found => ({push: found.push || null, passkeys: found.passkeys === true}));
+            .then(found => ({push: found.push || null, passkeys: found.passkeys === true, together: found.together === true}));
     }
     return accountFeatures;
 }

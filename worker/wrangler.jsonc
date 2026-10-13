@@ -30,6 +30,16 @@
 		// Browsers subscribe with this one, so changing it means turning notifications on again.
 		"VAPID_PUBLIC_KEY": "BNfgOxwFCdEoFrhqG8t5AhzWaqzWa29w3jCcisROVirBcvE7DJZ6N-yhqrd_rI_--vQPbpoeU4h42A_4aK5rEK4"
 	},
+	// "Se sammen": a room for each group watching together
+	"durable_objects": {
+		"bindings": [
+			{"name": "ROOMS", "class_name": "Room"}
+		]
+	},
+	"migrations": [
+		// SQLite-backed, which the free plan has
+		{"tag": "v1", "new_sqlite_classes": ["Room"]}
+	],
 	// Checks the followed series for new episodes, and sends notifications
 	"triggers": {
 		"crons": ["* * * * *"]

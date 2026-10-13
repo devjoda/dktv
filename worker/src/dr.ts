@@ -2,6 +2,8 @@
 
 export interface Env {
 	SYNC: D1Database;
+	// "Se sammen": a Durable Object for each room
+	ROOMS?: DurableObjectNamespace;
 	VERSION?: {id: string};
 	SERVICE_NAME?: string;
 	SOURCE_URL?: string;
