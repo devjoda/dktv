@@ -53,10 +53,24 @@
     <button type="button" class="button button-secondary js-passkey-create">{{ icon("key") }} Opret en adgangsnøgle</button>
     </div>
     </section>
+    <section class="account-section js-contribute" aria-labelledby="contribute-title" hidden>
+    <h2 id="contribute-title">Intro og rulletekster</h2>
+    <p>Vil du hjælpe andre med at springe introer over? Slå det til, så kan du markere, hvor intro og rulletekster starter og slutter, når du ser noget på en computer. En markering bruges, når flere er enige om den.</p>
+    <label class="switch"><input type="checkbox" class="js-contribute-toggle"><span>Bidrag med intro og rulletekster</span></label>
+    </section>
     <div class="actions account-end">
     <button type="button" class="button button-quiet js-sync-stop">Log ud på denne enhed</button>
     <button type="button" class="button button-quiet js-sync-delete">Slet din konto</button>
     </div>
+    <section class="account-confirm js-sync-delete-confirm" role="alertdialog" aria-labelledby="delete-title" aria-describedby="delete-text" tabindex="-1" hidden>
+    <h2 id="delete-title">Slet din konto?</h2>
+    <p id="delete-text">Dine favoritter og hvor langt du er nået slettes fra serveren. Det kan ikke fortrydes, og koden kan ikke bruges igen. Det, der er gemt på denne enhed, bliver her.</p>
+    <label class="switch"><input type="checkbox" class="js-sync-delete-sure"><span>Jeg forstår, at kontoen ikke kan gendannes</span></label>
+    <div class="actions">
+    <button type="button" class="button button-primary js-sync-delete-yes" disabled>Slet kontoen for altid</button>
+    <button type="button" class="button button-secondary js-sync-delete-no">Annullér</button>
+    </div>
+    </section>
     </div>
     <p class="sync-error js-sync-error" role="alert" hidden></p>
     <p class="sync-privacy">Din konto er koden. Under den gemmes dine favoritter, hvor langt du er nået i hvert afsnit, og hvilke af dine enheder der får beskeder. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en konto gemmes de kun i din browser.</p>

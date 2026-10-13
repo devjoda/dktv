@@ -165,7 +165,7 @@ export async function check(ctx: Ctx, row: Checked): Promise<Found> {
 		if (expires !== null && expires > Date.now() && expires - Date.now() <= LEAVING_NOTICE && !told) {
 			const notice = {
 				title: `${title ?? ""} udløber ${inDays(expires)}`,
-				body: "Se den færdig, før den forsvinder fra DRTV.",
+				body: "Se den færdig, før den forsvinder.",
 				url: `/${row.show}/`,
 				image: thumbnail(dr.wallpaper(show)),
 			};

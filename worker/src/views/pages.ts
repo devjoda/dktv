@@ -8,7 +8,7 @@ import {allEpisodes, type Episode, type Program, type Show, thumbnail} from "../
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
 import {layout, LIBRARIES, MAIN_CATEGORIES, PLAYER_SCRIPTS, type Site, VIDEO_SCRIPTS} from "./layout";
-import {cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, searchField, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
+import {cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, PROGRESS_BAR, searchField, SEEN_MARK, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
 
 type Schedules = Record<string, Programme[]>;
 
@@ -60,7 +60,7 @@ export function indexPage(site: Site, {page, featured, shows, channels, schedule
 		scripts: featured.length ? html`<link href="${LIBRARIES.hls.href}" rel="preload" as="script" integrity="${LIBRARIES.hls.integrity}">` : undefined,
 	}, html`<h1 class="visually-hidden">Forside</h1>
 ${featured.length ? featuredSlides(featured) : html`<section class="intro wrap">
-<h2>DR's serier, film og direkte TV</h2>
+<h2>Serier, film og direkte TV</h2>
 <p>Fortsæt hvor du slap, saml dine yndlingsserier, og abonnér på dem med RSS.</p>
 ${searchField()}
 </section>`}
@@ -135,7 +135,7 @@ ${show.nextEpisode ? html`<p class="hero-note">${icon("calendar")} Nyt afsnit ${
 <div class="actions">
 ${playButton(show)}
 ${favoriteButton(show.url, show.title, show.wallpaper)}
-<a href="https://www.dr.dk/drtv/serie/${show.url}" class="button button-quiet">Vis på DRTV ${icon("external")}</a>
+<a href="https://www.dr.dk/drtv/serie/${show.url}" class="button button-quiet">Se originalen ${icon("external")}</a>
 </div>
 </div>
 </section>
@@ -159,9 +159,19 @@ export interface Neighbour {
 	minutes?: number;
 }
 
-function neighbourTile(heading: string, n: Neighbour | undefined): Html | "" {
-	return n ? html`<h2 class="side-title">${heading}</h2>
-${tile({href: n.url, image: n.wallpaper, title: n.title, minutes: n.minutes, videoId: n.url.split("_").at(-1)})}` : "";
+/**
+ * The episode before or after one, below it: the one before on the left and quiet, the one after on the right,
+ * to go on to, like the player's own "Næste afsnit"
+ */
+function neighbourLink(kind: "previous" | "next", n: Neighbour | undefined): Html | "" {
+	if (n === undefined) {
+		return "";
+	}
+	const label = kind == "next" ? html`Næste afsnit ${icon("chevron-right")}` : html`${icon("chevron-left")} Forrige afsnit`;
+	return html`<a class="episode-link episode-${kind}" href="${n.url}" data-video-id="${n.url.split("_").at(-1)!}"${kind == "next" ? html` rel="next"` : html` rel="prev"`}>
+<span class="episode-thumb">${n.wallpaper ? html`<img src="${thumbnail(n.wallpaper)}" alt="" loading="lazy">` : ""}${SEEN_MARK}${kind == "next" ? html`<span class="episode-play">${icon("play")}</span>` : ""}${PROGRESS_BAR}</span>
+<span class="episode-text"><span class="episode-label">${label}</span><span class="episode-name">${n.title}</span>${n.minutes ? html`<span class="episode-minutes">${duration(n.minutes)}</span>` : ""}</span>
+</a>`;
 }
 
 /** Plays an episode of a show, or a programme on its own, like a film */
@@ -179,13 +189,13 @@ ${show ? html`<a class="eyebrow" href="/${show.url}/">${icon("chevron-left")} ${
 <p class="description">${description}</p>
 <div class="actions">
 ${film ? favoriteButton(film.url.split("/").at(-1)!, e.title, e.wallpaper, {kind: "film"}) : ""}
-<a class="button button-quiet" href="https://www.dr.dk/drtv${e.url}">Se på DRTV ${icon("external")}</a>
+<a class="button button-quiet" href="https://www.dr.dk/drtv${e.url}">Se originalen ${icon("external")}</a>
 </div>
+${previous || next ? html`<nav class="episode-nav" aria-label="Flere afsnit">
+${neighbourLink("previous", previous)}
+${neighbourLink("next", next)}
+</nav>` : ""}
 </div>
-${previous || next ? html`<aside class="watch-side" aria-label="Flere afsnit">
-${neighbourTile("Næste afsnit", next)}
-${neighbourTile("Forrige afsnit", previous)}
-</aside>` : ""}
 </div>
 <script>
 playVideo(document.getElementById('video'), ${scriptJSON(e.videoId)});
@@ -254,7 +264,7 @@ export function searchPage(site: Site, {query, results}: {query: string; results
 		return layout(site, {title}, html`<div class="empty">
 ${icon("search")}
 <h1>Søg</h1>
-<p>Find serier, film og afsnit fra DRTV.</p>
+<p>Find serier, film og afsnit.</p>
 ${searchField(undefined, true)}
 </div>`);
 	}
@@ -313,7 +323,7 @@ ${each(sorted, c => html`<li><a class="category" href="${c.url}"><span class="ca
 
 export function categoryPage(site: Site, {category, page}: {category: Category; page: DiscoverPage}): Html {
 	return layout(site, {title: category.title}, html`${pageHead(category.title)}
-${page.rows.length ? rows(page.rows) : html`<p class="wrap">DR har ikke noget i denne kategori lige nu.</p>`}`);
+${page.rows.length ? rows(page.rows) : html`<p class="wrap">Der er ikke noget i denne kategori lige nu.</p>`}`);
 }
 
 export function listPage(site: Site, {title, cards}: {title: string; cards: Card[]}): Html {
@@ -397,10 +407,24 @@ export function syncPage(site: Site): Html {
 <button type="button" class="button button-secondary js-passkey-create">${icon("key")} Opret en adgangsnøgle</button>
 </div>
 </section>
+<section class="account-section js-contribute" aria-labelledby="contribute-title" hidden>
+<h2 id="contribute-title">Intro og rulletekster</h2>
+<p>Vil du hjælpe andre med at springe introer over? Slå det til, så kan du markere, hvor intro og rulletekster starter og slutter, når du ser noget på en computer. En markering bruges, når flere er enige om den.</p>
+<label class="switch"><input type="checkbox" class="js-contribute-toggle"><span>Bidrag med intro og rulletekster</span></label>
+</section>
 <div class="actions account-end">
 <button type="button" class="button button-quiet js-sync-stop">Log ud på denne enhed</button>
 <button type="button" class="button button-quiet js-sync-delete">Slet din konto</button>
 </div>
+<section class="account-confirm js-sync-delete-confirm" role="alertdialog" aria-labelledby="delete-title" aria-describedby="delete-text" tabindex="-1" hidden>
+<h2 id="delete-title">Slet din konto?</h2>
+<p id="delete-text">Dine favoritter, hvor langt du er nået, dine beskeder, adgangsnøgler og markeringer af intro og rulletekster slettes fra serveren. Det kan ikke fortrydes, og koden kan ikke bruges igen. Det, der er gemt på denne enhed, bliver her.</p>
+<label class="switch"><input type="checkbox" class="js-sync-delete-sure"><span>Jeg forstår, at kontoen ikke kan gendannes</span></label>
+<div class="actions">
+<button type="button" class="button button-primary js-sync-delete-yes" disabled>Slet kontoen for altid</button>
+<button type="button" class="button button-secondary js-sync-delete-no">Annullér</button>
+</div>
+</section>
 </div>
 <p class="sync-error js-sync-error" role="alert" hidden></p>
 <p class="sync-privacy">Din konto er koden. Under den gemmes dine favoritter, hvor langt du er nået i hvert afsnit, og hvilke af dine enheder der får beskeder. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en konto gemmes de kun i din browser.</p>
@@ -419,7 +443,7 @@ export function privacyPage(site: Site): Html {
 <ul>
 <li>Dine favoritter, og hvor langt du er nået i det, du ser.</li>
 <li>Dine valg: undertekster til direkte TV, om sete afsnit skjules, afspillerens lydstyrke, hastighed og undertekster, og dit navn i Se sammen.</li>
-<li>De intro og rulletekster, du selv har markeret, og om du er blevet spurgt, om du sprang introen over.</li>
+<li>Om du har valgt at markere intro og rulletekster, og dem, du selv har markeret.</li>
 <li>Din kode, hvis du har en konto.</li>
 <li>Så længe fanen er åben: det rum, du ser sammen med andre i.</li>
 <li>Programmernes billeder, så siderne åbner hurtigere.</li>

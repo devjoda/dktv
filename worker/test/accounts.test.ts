@@ -236,7 +236,7 @@ describe("notifications", () => {
 		expect(dr.pushed).toHaveLength(1);
 		expect(await phone.read(dr.pushed[0].body)).toEqual({
 			title: "Rejseholdet udløber om 5 dage",
-			body: "Se den færdig, før den forsvinder fra DRTV.",
+			body: "Se den færdig, før den forsvinder.",
 			url: "/503605/",
 			image: expect.stringContaining("Width=640"),
 		});
@@ -370,7 +370,7 @@ describe("passkeys", () => {
 		const code = await newCode(["rejseholdet_503605"]);
 		const passkey = await authenticator();
 		const options = json(await post(`/passkeys/${code}/options`));
-		expect(options).toMatchObject({rp: {id: "localhost", name: "DKTV"}, attestation: "none", authenticatorSelection: {residentKey: "required"}});
+		expect(options).toMatchObject({rp: {id: "localhost", name: "GLOTV"}, attestation: "none", authenticatorSelection: {residentKey: "required"}});
 		expect(options.pubKeyCredParams.map((p: {alg: number}) => p.alg)).toEqual([-8, -7, -257]);
 		const made = await request(`/passkeys/${code}`, {method: "POST", body: JSON.stringify(passkey.create(options)),
 			headers: {"Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/141.0 Mobile Safari/537.36"}});

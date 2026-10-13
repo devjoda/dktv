@@ -87,7 +87,7 @@ def test_front_page_without_drs(get, monkeypatch):
     monkeypatch.setattr("drtvrss.discover.get_page", get_page)
     r = get("/")
     assert r.status_code == 200
-    assert "DR's serier, film og direkte TV" in r.text
+    assert "<h2>Serier, film og direkte TV</h2>" in r.text
     assert 'action="/search/"' in r.text
 
 
@@ -109,12 +109,12 @@ def test_front_page_features_drs_programmes(get):
 
 def test_header_has_the_logo_and_the_sections(get):
     r = get("/")
-    assert '<a class="logo" href="/" aria-label="DKTV, forsiden" aria-current="page">DKTV</a>' in r.text
+    assert '<a class="logo" href="/" aria-label="GLOTV, forsiden" aria-current="page"><span class="logo-word">GLO</span><span class="logo-tag">TV</span></a>' in r.text
     nav = r.text.split('<nav class="site-nav"')[1].split("</nav>")[0]
     for title in ["Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]:
         assert f"{title}</a>" in nav
     assert "Forside" not in nav
-    assert "<title>DKTV</title>" in r.text
+    assert "<title>GLOTV</title>" in r.text
     assert '<link rel="icon" href="/favicon.svg" type="image/svg+xml">' in r.text
 
 
@@ -132,7 +132,7 @@ def test_films_can_be_favourites_from_their_page(get):
     r = get("/program/lise-noergaard_-ikke-kun-en-pige_362031")
     assert 'data-favorite-id="lise-noergaard_-ikke-kun-en-pige_362031" data-kind="film"' in r.text
     # But not an episode, which belongs to its show
-    assert "js-favorite" not in get("/rejseholdet_503605/rejseholdet_503615").text.split('class="watch"')[1].split("</aside>")[0].split('class="watch-side"')[0]
+    assert "js-favorite" not in get("/rejseholdet_503605/rejseholdet_503615").text.split('class="watch"')[1].split('class="episode-nav"')[0]
 
 
 def test_rows_link_to_all_of_them(get):
@@ -164,16 +164,26 @@ def test_all_of_a_list(get, fake_dr, monkeypatch):
 
 def test_footer_says_it_isnt_drs_and_links_to_privacy_syncing_and_the_source(get):
     footer = get("/").text.split('<footer class="site-footer">')[1].split("</footer>")[0]
-    assert "DKTV er et uofficielt, uafhængigt projekt og er hverken tilknyttet, godkendt af eller sponsoreret af DR." in footer
+    assert "GLOTV er et uofficielt, uafhængigt projekt og er hverken tilknyttet eller sponsoreret af DR. DR og DRTV er DR's varemærker." in footer
+    assert "GLOTV er udelukkende en alternativ brugerflade: alt indhold hentes direkte fra DR's servere" in footer
     assert '<a href="/privatliv/">Privatliv</a>' in footer
     assert '<a href="/sync/">' in footer
     assert '<a href="https://github.com/devjoda/dktv">Kildekode</a>' in footer
 
 
+def test_names_dr_only_in_the_footer(get):
+    # Not the front page or searches, whose channels and descriptions are DR's own, like "DR Ramasjang"
+    for path in ["/rejseholdet_503605/", "/rejseholdet_503605/rejseholdet_503615", "/search/", "/kategorier/", "/favoritter/", "/sync/"]:
+        page = get(path).text
+        said = re.sub(r"<[^>]*>", " ", re.sub(r"<script.*?</script>", "", page.split('<footer class="site-footer">')[0], flags=re.S))
+        said += " ".join(re.findall(r'(?:placeholder|aria-label|title)="([^"]*)"', page))
+        assert not re.search(r"\bDR\b|DRTV", said), path
+
+
 def test_privacy(get):
     r = get("/privatliv/")
     assert r.status_code == 200
-    assert "<title>Privatliv - DKTV</title>" in r.text
+    assert "<title>Privatliv - GLOTV</title>" in r.text
     assert "ingen cookies og ingen sporing" in r.text
 
 
@@ -266,9 +276,8 @@ def test_episode(get):
     assert 'playVideo(document.getElementById(\'video\'), "503615")' in r.text
     # The first episode has nothing before it
     assert "Forrige afsnit" not in r.text
-    assert '<h2 class="side-title">Næste afsnit</h2>' in r.text
-    assert '<a class="tile-link" href="/rejseholdet_503605/rejseholdet_503640">' in r.text
-    assert '<article class="tile" data-video-id="503640">' in r.text
+    assert '<a class="episode-link episode-next" href="/rejseholdet_503605/rejseholdet_503640" data-video-id="503640" rel="next">' in r.text
+    assert '<span class="episode-name">2. episode</span>' in r.text
     assert 'data-next-url="/rejseholdet_503605/rejseholdet_503640"' in r.text
     # What it saves about the video, to list it under "Fortsæt med at se"
     assert 'data-title="1. episode"' in r.text
@@ -280,9 +289,9 @@ def test_episode_links_into_the_next_season(get):
     # The last episode of season 1
     r = get("/rejseholdet_503605/rejseholdet_503638")
     assert r.status_code == 200
-    assert '<h2 class="side-title">Forrige afsnit</h2>' in r.text
-    assert '<h3 class="tile-title">8. episode</h3>' in r.text
-    assert '<h3 class="tile-title">Sæson 2, 1. episode</h3>' in r.text
+    assert '<a class="episode-link episode-previous" href="/rejseholdet_503605/rejseholdet_503618" data-video-id="503618" rel="prev">' in r.text
+    assert '<span class="episode-name">8. episode</span>' in r.text
+    assert '<span class="episode-name">Sæson 2, 1. episode</span>' in r.text
     # There's no fixture for this episode's page, so it falls back to the short description
     assert "Dansk krimiserie fra 2000." in r.text
 
@@ -372,7 +381,7 @@ def test_dr_being_down_is_not_a_missing_page(get, monkeypatch):
     for path in ["/", "/rejseholdet_503605/"]:
         r = get(path)
         assert r.status_code == 503
-        assert "DR svarer ikke lige nu" in r.text
+        assert "Programmerne kan ikke hentes lige nu" in r.text
 
 
 def test_unexpected_errors_get_a_page_too(get, monkeypatch):

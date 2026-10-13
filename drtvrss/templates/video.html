@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, tile, favorite_button %}
+{% from "_ui.html" import icon, episode_link, favorite_button %}
 {% block head %}
 <title>{% if s %}{{ s.title }} - {% endif %}{{ e.title }}</title>
 {% if s %}
@@ -38,22 +38,17 @@
         <div class="actions">
             {% if not s and e.url %}{{ favorite_button(e.url.split("/")[-1], e.title, e.wallpaper, kind="film") }}{% endif %}
             {% if e.url %}
-            <a class="button button-quiet" href="https://www.dr.dk/drtv{{ e.url }}">Se på DRTV {{ icon("external") }}</a>
+            <a class="button button-quiet" href="https://www.dr.dk/drtv{{ e.url }}">Se originalen {{ icon("external") }}</a>
             {% endif %}
         </div>
+        {% if previous or next %}
+        {# The episode before on the left and quiet, the one after on the right, to go on to #}
+        <nav class="episode-nav" aria-label="Flere afsnit">
+            {% if previous %}{{ episode_link("previous", previous) }}{% endif %}
+            {% if next %}{{ episode_link("next", next) }}{% endif %}
+        </nav>
+        {% endif %}
     </div>
-    {% if previous or next %}
-    <aside class="watch-side" aria-label="Flere afsnit">
-        {% if next %}
-        <h2 class="side-title">Næste afsnit</h2>
-        {{ tile(next.url, next.wallpaper, next.title, minutes=next.len_minutes, video_id=next.url.split("_")[-1]) }}
-        {% endif %}
-        {% if previous %}
-        <h2 class="side-title">Forrige afsnit</h2>
-        {{ tile(previous.url, previous.wallpaper, previous.title, minutes=previous.len_minutes, video_id=previous.url.split("_")[-1]) }}
-        {% endif %}
-    </aside>
-    {% endif %}
 </div>
 <script>
     playVideo(document.getElementById('video'), {{ e.video_id|tojson }});

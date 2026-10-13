@@ -253,18 +253,38 @@ function setupSyncPage() {
         stop();
         announce("Du er logget ud på denne enhed");
     });
-    find(".js-sync-delete").addEventListener("click", async function () {
-        if (!confirm("Slet din konto? Dine favoritter, fremskridt, beskeder og adgangsnøgler slettes fra serveren. Det, der er gemt på denne enhed, bliver her.")) {
+    // Deleting the account only once the viewer has said, twice, that they mean it
+    const confirmDelete = find(".js-sync-delete-confirm");
+    const sure = find(".js-sync-delete-sure");
+    const yes = find(".js-sync-delete-yes");
+    const closeConfirm = function () {
+        confirmDelete.hidden = true;
+        sure.checked = false;
+        yes.disabled = true;
+        find(".js-sync-delete").focus();
+    };
+    find(".js-sync-delete").addEventListener("click", function () {
+        confirmDelete.hidden = false;
+        confirmDelete.focus();
+    });
+    sure.addEventListener("change", () => { yes.disabled = !sure.checked; });
+    find(".js-sync-delete-no").addEventListener("click", closeConfirm);
+    confirmDelete.addEventListener("keydown", event => event.key == "Escape" && closeConfirm());
+    yes.addEventListener("click", async function () {
+        if (!sure.checked) {
             return;
         }
+        yes.disabled = true;
         try {
             const response = await fetch(`/sync/${syncCode()}`, {method: "DELETE"});
             if (!response.ok) {
                 throw new Error(`Status ${response.status}`);
             }
+            closeConfirm();
             stop();
             announce("Din konto er slettet");
         } catch (error) {
+            yes.disabled = false;
             showError("Kunne ikke slette. Prøv igen senere.");
         }
     });

@@ -110,14 +110,6 @@ h1, h2, h3 {
     padding-inline: var(--gutter);
 }
 
-.birthday {
-    padding: 6px var(--gutter);
-    background: var(--on-air);
-    color: #fff;
-    font-weight: 600;
-    text-align: center;
-}
-
 /* Header */
 
 .site-header {
@@ -161,19 +153,41 @@ h1, h2, h3 {
     padding-block: 12px;
 }
 
-/* DKTV, in the site's own letters, which leads to the front page */
+/* The site's name, in its own letters, which leads to the front page: GLO, with TV on a warm white tag
+   at the height of its capitals, like a screen's badge */
 .logo {
+    display: inline-flex;
+    align-items: flex-start;
     flex: none;
     color: var(--paper);
-    font-size: 1.625rem;
-    font-weight: 850;
+    font-size: 1.75rem;
     line-height: 1;
-    letter-spacing: -.045em;
     text-decoration: none;
+}
+
+.logo-word {
+    font-weight: 850;
+    letter-spacing: -.055em;
+}
+
+.logo-tag {
+    margin: .1em 0 0 .16em;
+    padding: .17em .3em .13em;
+    border-radius: .28em;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: .34em;
+    font-weight: 800;
+    letter-spacing: .02em;
+    line-height: 1;
 }
 
 .logo:hover {
     color: #fff;
+}
+
+.logo:hover .logo-tag {
+    background: #fff;
 }
 
 .has-hero .site-header:not(.is-scrolled) .logo {
@@ -250,37 +264,44 @@ h1, h2, h3 {
 /* Instead of the search box, where the header has no room for it, and the tabs have no search */
 .search-link {
     display: none;
-    place-items: center;
-    flex: none;
-    width: 40px;
-    height: 40px;
     margin-left: auto;
-    border-radius: 50%;
-    color: var(--paper);
-}
-
-.search-link:hover,
-.search-link[aria-current] {
-    background: rgba(242, 239, 233, .12);
-    color: #fff;
 }
 
 /* The viewer's account, at the end of the header */
 .account-link {
-    margin-left: auto;
     display: grid;
-    place-items: center;
-    flex: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    color: var(--paper);
+    margin-left: auto;
 }
 
-.account-link:hover,
-.account-link[aria-current] {
+/* Both as round buttons, always with their circle, which turns warm white on their own page */
+.search-link,
+.account-link {
+    place-items: center;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
     background: rgba(242, 239, 233, .12);
+    color: var(--paper);
+    transition: background-color .15s, color .15s;
+}
+
+.search-link .icon,
+.account-link .icon {
+    width: 22px;
+    height: 22px;
+}
+
+.search-link:hover,
+.account-link:hover {
+    background: rgba(242, 239, 233, .22);
     color: #fff;
+}
+
+.search-link[aria-current],
+.account-link[aria-current] {
+    background: var(--paper);
+    color: var(--ink);
 }
 
 .header-search input,
@@ -1570,127 +1591,129 @@ a:hover .channel-art {
     font-weight: 600;
 }
 
-.skip-ask {
-    position: absolute;
-    left: 24px;
-    bottom: 76px;
-    z-index: 25;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 6px 6px 16px;
-    border-radius: 999px;
-    background: rgba(15, 16, 19, .85);
-    color: var(--paper);
-    font-size: .9375rem;
-    backdrop-filter: blur(6px);
-}
-
-.skip-ask span {
-    margin-right: 6px;
-}
-
-.skip-ask button {
-    padding: 5px 14px;
-    border: 0;
-    border-radius: 999px;
-    background: rgba(242, 239, 233, .12);
-    color: var(--paper);
-    font-weight: 650;
-}
-
-.skip-ask button:hover {
-    background: rgba(242, 239, 233, .24);
-}
-
 @media (max-width: 575px) {
-    .skip-button,
-    .skip-ask {
-        bottom: 60px;
-    }
-
     .skip-button {
+        bottom: 60px;
         right: 12px;
     }
-
-    .skip-ask {
-        left: 12px;
-    }
 }
 
-/* Marking the intro and credits, for viewers with accounts */
+/* Marking the intro and credits, for viewers who chose to, on a computer: on the video, at its top, so the
+   times can be set while watching it */
 .marking {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 4;
     display: grid;
-    gap: 14px;
-    max-width: 640px;
-    margin-top: 24px;
-    padding: 20px 22px;
+    gap: 10px;
+    max-width: calc(100% - 24px);
+    padding: 14px 16px;
     border-radius: 12px;
-    background: var(--raised);
+    background: rgba(15, 16, 19, .9);
+    color: var(--paper);
+    font-size: .875rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+}
+
+.marking-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding-right: 36px;
 }
 
 .marking-title {
     margin: 0;
-    font-size: var(--text-h3);
+    font-size: 1rem;
+    font-weight: 750;
 }
 
-.marking .meta {
-    display: block;
+.marking-hint {
+    margin: 0;
+    color: var(--muted);
+}
+
+.marking-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(242, 239, 233, .12);
+    color: var(--paper);
 }
 
 .marking-group {
-    display: grid;
-    gap: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 18px;
 }
 
 .marking-group h3 {
-    margin: 4px 0 0;
-    font-size: 1rem;
-}
-
-.marking-group > .button {
-    justify-self: start;
+    width: 7.5em;
+    margin: 0;
+    font-size: .875rem;
+    font-weight: 700;
 }
 
 .marking-row {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .marking-label {
-    width: 3.5em;
     color: var(--muted);
 }
 
 .marking-time {
-    min-width: 5em;
+    min-width: 4.2em;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
 }
 
-.marking-now {
-    min-height: 36px;
-    padding: 6px 16px;
-}
-
-.marking-nudge {
-    width: 40px;
-    height: 36px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: none;
+.marking-now,
+.marking-nudge,
+.marking-save {
+    height: 30px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .14);
     color: var(--paper);
     font-weight: 650;
 }
 
-.marking-nudge:hover {
-    background: rgba(242, 239, 233, .08);
+.marking-now {
+    padding: 0 12px;
 }
 
-.marking > .button-quiet {
-    justify-self: start;
+.marking-nudge {
+    width: 34px;
+}
+
+.marking-save {
+    padding: 0 14px;
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.marking-now:hover,
+.marking-nudge:hover,
+.marking-close:hover {
+    background: rgba(242, 239, 233, .26);
+}
+
+.marking-save:hover {
+    background: #fff;
 }
 
 /* Finding something in a long list, like all films from A to Å */
@@ -1771,7 +1794,10 @@ a:hover .channel-art {
 /* Watching */
 
 .stage {
+    position: relative;
     background: #000;
+    /* Below the header, when marking brings the video into view */
+    scroll-margin-top: 72px;
 }
 
 .stage video {
@@ -1900,17 +1926,14 @@ a:hover .channel-art {
     border-radius: 0;
 }
 
+/* What plays, below the video: in one column, along the page's left edge like the rest of the site, with the
+   episodes before and after, or a channel's programmes, below it */
 .watch {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 48px;
+    gap: 40px;
+    max-width: 1000px;
     padding: 36px var(--gutter) 0;
-}
-
-@media (min-width: 992px) {
-    .watch {
-        grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
-    }
+    box-sizing: content-box;
 }
 
 .eyebrow {
@@ -1955,8 +1978,127 @@ a:hover .channel-art {
     letter-spacing: 0;
 }
 
-.watch-side .tile + .side-title {
-    margin-top: 32px;
+/* The episodes before and after: the one before on the left and quiet, the one after on the right, to go on to */
+.episode-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 40px;
+}
+
+.episode-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: var(--paper);
+    text-decoration: none;
+    transition: background-color .15s, border-color .15s;
+}
+
+.episode-next {
+    grid-column: 2;
+    background: var(--raised);
+    border-color: rgba(242, 239, 233, .18);
+}
+
+.episode-link:hover {
+    background: var(--raised-hover);
+    border-color: rgba(242, 239, 233, .3);
+    color: #fff;
+}
+
+.episode-thumb {
+    position: relative;
+    flex: none;
+    width: 144px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--media-radius);
+    background: var(--raised-hover);
+}
+
+.episode-previous .episode-thumb {
+    width: 112px;
+    opacity: .8;
+}
+
+.episode-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.episode-play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(15, 16, 19, .25);
+}
+
+.episode-play .icon {
+    width: 34px;
+    height: 34px;
+    padding: 9px;
+    border-radius: 50%;
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.episode-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.episode-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--muted);
+    font-size: var(--text-small);
+    font-weight: 650;
+}
+
+.episode-next .episode-label {
+    color: var(--paper);
+}
+
+.episode-name {
+    overflow: hidden;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.episode-previous .episode-name {
+    font-weight: 600;
+}
+
+.episode-minutes {
+    color: var(--muted);
+    font-size: var(--text-small);
+}
+
+/* On small screens, the next one first, and above the one before */
+@media (max-width: 699.98px) {
+    .episode-nav {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .episode-next {
+        grid-column: auto;
+        order: -1;
+    }
+}
+
+/* A channel's programmes, below its name, as long as is easily read */
+.schedule {
+    max-width: 680px;
 }
 
 /* What's on a live channel: the programme on now, with how far it's got, and the ones after */
@@ -2352,6 +2494,52 @@ video + .up-next {
 }
 
 .account-section .actions {
+    margin-top: 20px;
+}
+
+/* A choice to turn on or off, like marking intros and credits */
+.switch {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.switch input {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    accent-color: var(--paper);
+}
+
+/* Asks before the account is deleted for good */
+.account-confirm {
+    max-width: 64ch;
+    margin-top: 20px;
+    padding: 24px;
+    border: 1px solid rgba(242, 239, 233, .35);
+    border-radius: 12px;
+    background: var(--raised);
+}
+
+.account-confirm:focus {
+    outline: none;
+}
+
+.account-confirm h2 {
+    margin: 0 0 8px;
+    font-size: var(--text-h3);
+}
+
+.account-confirm p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.account-confirm .actions {
     margin-top: 20px;
 }
 

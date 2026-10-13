@@ -270,6 +270,11 @@ function shortDate(seconds) {
     return new Date(seconds * 1000).toLocaleDateString("da-DK", {day: "numeric", month: "short", year: "numeric"});
 }
 
+// Whether the viewer has chosen to mark intros and credits for others, see skip.js
+function contributes() {
+    return stored("contribute") == "true" && syncCode() != null;
+}
+
 async function setupAccountPage() {
     const page = document.getElementById("sync-page");
     if (page == null || page.dataset.accountReady) {
@@ -281,7 +286,19 @@ async function setupAccountPage() {
         find(".js-sync-error").textContent = message || "";
         find(".js-sync-error").hidden = !message;
     };
-    const {push, passkeys} = await features();
+    const {push, passkeys, segments} = await features();
+
+    // Marking intros and credits, for those who'd like to
+    const contributeSection = find(".js-contribute");
+    const contributeToggle = find(".js-contribute-toggle");
+    const renderContribute = function () {
+        contributeSection.hidden = !segments || syncCode() == null;
+        contributeToggle.checked = contributes();
+    };
+    contributeToggle.addEventListener("change", function () {
+        store("contribute", contributeToggle.checked ? "true" : null);
+        announce(contributeToggle.checked ? "Du kan nu markere intro og rulletekster, når du ser noget på en computer" : "Du markerer ikke længere intro og rulletekster");
+    });
 
     const alertsSection = find(".js-alerts");
     const alertsButton = find(".js-alerts-toggle");
@@ -381,9 +398,11 @@ async function setupAccountPage() {
     page.addEventListener("accountchange", function () {
         renderAlerts();
         renderPasskeys();
+        renderContribute();
     });
     renderAlerts();
     renderPasskeys();
+    renderContribute();
 }
 
 document.addEventListener("click", function (event) {

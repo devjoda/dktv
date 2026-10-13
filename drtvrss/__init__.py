@@ -1,5 +1,4 @@
 from contextlib import suppress
-from datetime import datetime
 from functools import lru_cache
 from typing import Optional
 import asyncio
@@ -40,7 +39,7 @@ app.add_template_filter(clock)
 app.add_template_global(whats_on)
 app.add_template_test(is_new, "new")
 
-SERVICE_NAME = os.getenv("SERVICE_NAME", "DKTV")
+SERVICE_NAME = os.getenv("SERVICE_NAME", "GLOTV")
 # Where the code that runs here can be got
 SOURCE_URL = os.getenv("SOURCE_URL", "https://github.com/devjoda/dktv")
 
@@ -108,15 +107,6 @@ def footer():
     return {"source_url": SOURCE_URL, "SERVICE_NAME": SERVICE_NAME}
 
 
-def birthday() -> Optional[int]:
-    """If today is April 1st, returns the age of Danmarks Radio in years.
-    On any other day of the year, return None"""
-    n = datetime.now()
-    if n.month == 4 and n.day == 1:
-        return n.year - 1925
-    return None
-
-
 async def keep_fresh(recommended_shows: list[str]):
     """Fetches the recommended shows and DR's front page, and keeps fetching them regularly"""
     while True:
@@ -160,7 +150,6 @@ async def index():
         page=page,
         featured=page.featured[:FEATURED] if page else [],
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
         schedules=await get_schedules(),
     )
@@ -176,7 +165,6 @@ async def categories():
         # Serier, Film and Dokumentar first, which small screens' tabs lead here for
         categories=sorted(await discover.get_categories(), key=lambda c: MAIN_CATEGORIES.index(c.url) if c.url in MAIN_CATEGORIES else len(MAIN_CATEGORIES)),
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
     )
 
@@ -194,7 +182,6 @@ async def category(slug):
         category=found,
         page=page,
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
     )
 
@@ -212,7 +199,6 @@ async def full_list(list_id):
         title=title,
         cards=found.cards,
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
     )
 
@@ -222,7 +208,6 @@ async def live_channels():
     return await render_template(
         "live_index.html",
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
         schedules=await get_schedules(),
     )
@@ -233,14 +218,13 @@ async def favorites_page():
     return await render_template(
         "favorites.html",
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
     )
 
 
 @app.route("/privatliv/")
 async def privacy():
-    return await render_template("privacy.html", birthday=birthday())
+    return await render_template("privacy.html")
 
 
 @app.route("/favicon.ico")
@@ -280,7 +264,6 @@ async def view_program(progid):
         "video.html",
         e=await get_program(progid),
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
     )
 
@@ -318,7 +301,6 @@ async def view_episode(showid, episode):
         previous=neighbour(i - 1),
         next=neighbour(i + 1),
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
     )
 
@@ -343,7 +325,6 @@ async def view_show(showid):
         "show.html",
         s=show,
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
     )
 
@@ -371,7 +352,6 @@ async def search_view():
         results=results,
         query=query,
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
     )
 
@@ -435,7 +415,6 @@ async def sync_page():
     return await render_template(
         "sync.html",
         SERVICE_NAME=SERVICE_NAME,
-        birthday=birthday(),
         channels=await get_channels(),
     )
 
@@ -494,7 +473,6 @@ async def live_channel(channel):
             current_channel=channel,
             programmes=(await get_schedules()).get(channels[channel].id, []),
             SERVICE_NAME=SERVICE_NAME,
-            birthday=birthday(),
             channels=await get_channels(),
         )
     else:
@@ -513,7 +491,6 @@ async def error_page(title: str, message: str, status: int):
             title=title,
             message=message,
             SERVICE_NAME=SERVICE_NAME,
-            birthday=birthday(),
             channels=channels,
         ),
         status,
@@ -525,7 +502,7 @@ async def not_found(e):
     return await error_page(
         "Siden findes ikke",
         "Vi kunne ikke finde det, du leder efter. "
-        "Måske er det ikke længere tilgængeligt på DRTV.",
+        "Måske kan det ikke længere ses.",
         404,
     )
 
@@ -534,8 +511,8 @@ async def not_found(e):
 async def dr_unavailable(e):
     print("DR is unavailable:", e)
     return await error_page(
-        "DR svarer ikke lige nu",
-        "Siden kunne ikke hentes fra DR. Prøv igen om lidt.",
+        "Programmerne kan ikke hentes lige nu",
+        "Prøv igen om lidt.",
         503,
     )
 

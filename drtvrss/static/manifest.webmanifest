@@ -1,7 +1,7 @@
 {
-    "name": "DKTV",
-    "short_name": "DKTV",
-    "description": "Uofficiel brugerflade til DRTV",
+    "name": "GLOTV",
+    "short_name": "GLOTV",
+    "description": "Serier, film og direkte TV",
     "lang": "da",
     "start_url": "/",
     "scope": "/",

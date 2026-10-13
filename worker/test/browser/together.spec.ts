@@ -81,7 +81,7 @@ test("reactions show for the others", async ({browser}) => {
 
 test("the others come along to the next episode", async ({browser}) => {
 	const [anna, bo] = await together(browser);
-	await anna.locator(".watch-side a").first().click();
+	await anna.getByRole("link", {name: /Næste afsnit/}).click();
 	await expect(anna).toHaveURL(NEXT_EPISODE);
 	await expect(bo).toHaveURL(NEXT_EPISODE);
 	await playsPast(bo, 0.2);

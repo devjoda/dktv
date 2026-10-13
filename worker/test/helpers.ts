@@ -144,7 +144,7 @@ export function fakeD1(): D1Database {
 
 export const env = {
 	SYNC: undefined as unknown as D1Database,
-	SERVICE_NAME: "DKTV",
+	SERVICE_NAME: "GLOTV",
 	SOURCE_URL: "https://github.com/devjoda/dktv",
 	RECOMMENDED_SHOWS: "",
 	VAPID_PUBLIC_KEY: undefined as string | undefined,

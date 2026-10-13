@@ -3,7 +3,7 @@
 // Uses Plyr's controls when it's there, and the browser's own when not.
 
 const NOT_IN_DENMARK = "Kunne ikke indlæse videoen. Formentligt befinder du dig udenfor Danmark, og forsøger at se noget der kun er tilgængeligt hjemme.";
-const COULD_NOT_LOAD = "Kunne ikke indlæse videoen. Prøv igen senere, eller se den på DRTV.";
+const COULD_NOT_LOAD = "Kunne ikke indlæse videoen. Prøv igen senere.";
 
 // How long to wait before playing the next episode, in seconds
 const NEXT_EPISODE_DELAY = 10;
@@ -292,7 +292,8 @@ function setupMediaSession(video, {title, show, live = false}) {
     }
     const artwork = [video.dataset.image && {src: video.dataset.image, sizes: "640x360", type: "image/jpeg"},
         video.poster && {src: video.poster, sizes: "1280x720", type: "image/jpeg"}].filter(Boolean);
-    navigator.mediaSession.metadata = new MediaMetadata({title, artist: show || "DRTV", album: live ? "Direkte" : "", artwork});
+    const site = document.querySelector('meta[name="application-name"]');
+    navigator.mediaSession.metadata = new MediaMetadata({title, artist: show || (site ? site.content : ""), album: live ? "Direkte" : "", artwork});
     const handle = function (action, handler) {
         try {
             navigator.mediaSession.setActionHandler(action, handler);

@@ -49,19 +49,12 @@ app.use("*", async (c, next) => {
 	await next();
 });
 
-/** If today is April 1st in Denmark, the age of Danmarks Radio in years */
-function birthday(): number | undefined {
-	const today = copenhagen(clock.now());
-	return today.month == 3 && today.day == 1 ? today.year - 1925 : undefined;
-}
-
 function site(c: Context<App>, query?: string): Site {
 	return {
-		serviceName: c.env.SERVICE_NAME || "DKTV",
+		serviceName: c.env.SERVICE_NAME || "GLOTV",
 		sourceURL: c.env.SOURCE_URL || DEFAULT_SOURCE_URL,
 		path: c.req.path,
 		query,
-		birthday: birthday(),
 	};
 }
 
@@ -491,7 +484,7 @@ app.delete("/push/:code", async c => {
 /** Where passkeys are made for: this site */
 function passkeySite(c: Context<App>): passkeys.Site {
 	const url = new URL(c.req.url);
-	return {origin: url.origin, rpId: url.hostname, name: c.env.SERVICE_NAME || "DKTV"};
+	return {origin: url.origin, rpId: url.hostname, name: c.env.SERVICE_NAME || "GLOTV"};
 }
 
 app.post("/passkeys/:code/options", async c => {
@@ -620,7 +613,7 @@ function errorPage(c: Context<App>, title: string, message: string, status: 404 
 }
 
 function notFound(c: Context<App>) {
-	return errorPage(c, "Siden findes ikke", "Vi kunne ikke finde det, du leder efter. Måske er det ikke længere tilgængeligt på DRTV.", 404);
+	return errorPage(c, "Siden findes ikke", "Vi kunne ikke finde det, du leder efter. Måske kan det ikke længere ses.", 404);
 }
 
 app.notFound(notFound);
@@ -631,7 +624,7 @@ app.onError((e, c) => {
 	}
 	if (e instanceof DRUnavailable || e instanceof OverBudget) {
 		console.log("DR is unavailable:", String(e));
-		return errorPage(c, "DR svarer ikke lige nu", "Siden kunne ikke hentes fra DR. Prøv igen om lidt.", 503);
+		return errorPage(c, "Programmerne kan ikke hentes lige nu", "Prøv igen om lidt.", 503);
 	}
 	console.error("Error on", c.req.url, e);
 	return errorPage(c, "Noget gik galt", "Der skete en fejl, da siden skulle vises. Prøv igen om lidt.", 500);

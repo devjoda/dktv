@@ -1,5 +1,6 @@
 // Skipping intros, going on as the credits start, and marking them, with the test video
 
+import type {Page} from "@playwright/test";
 import {CREDITS, EPISODE, EPISODE_ID, expect, INTRO, mark, newAccount, NEXT_EPISODE, NEXT_EPISODE_ID, playsPast, position, seek, test, watch} from "./test";
 
 test.describe("with the intro and credits marked by two accounts", () => {
@@ -71,23 +72,40 @@ test("doesn't offer to skip what isn't marked", async ({page}) => {
 	await expect(page.getByRole("button", {name: "Spring intro over"})).toBeHidden();
 });
 
-test("lets a viewer with an account mark the intro, which they can then skip", async ({page}) => {
+/** A viewer with an account, who chose to mark intros and credits, or not, on their account's page */
+async function withAccount(page: Page, contribute: boolean) {
 	const code = await newAccount(page);
-	await page.addInitScript(code => localStorage.setItem("syncCode", code), code);
+	await page.addInitScript(([code, contribute]) => {
+		localStorage.setItem("syncCode", code);
+		if (contribute) {
+			localStorage.setItem("contribute", "true");
+		}
+	}, [code, contribute] as const);
+}
+
+test("lets a viewer who chose to mark the intro do it on the video, and then skip it", async ({page}) => {
+	await withAccount(page, true);
 	await watch(page, EPISODE);
 	await page.getByRole("button", {name: "Markér intro og rulletekster"}).click();
 	const panel = page.getByRole("region", {name: "Markér intro og rulletekster"});
 	await expect(panel).toBeVisible();
-	const intro = panel.locator(".marking-group").filter({hasText: "Intro"});
+	// On the video, so both can be seen at once
+	const video = (await page.locator("#video").boundingBox())!;
+	const box = (await panel.boundingBox())!;
+	expect(box.y).toBeGreaterThanOrEqual(video.y);
+	expect(box.y + box.height).toBeLessThanOrEqual(video.y + video.height);
+	await expect(page.locator("#video")).toBeInViewport({ratio: 0.9});
 	await seek(page, INTRO.start);
-	await intro.locator(".marking-row").filter({hasText: "Start"}).getByRole("button", {name: "Nu"}).click();
+	await panel.getByRole("button", {name: "Introen starter nu"}).click();
 	await seek(page, INTRO.end);
-	await intro.locator(".marking-row").filter({hasText: "Slut"}).getByRole("button", {name: "Nu"}).click();
+	await panel.getByRole("button", {name: "Introen slutter nu"}).click();
+	await expect(panel.locator(".marking-time").nth(0)).toHaveText("0:05.0");
 	const saved = page.waitForResponse(response => response.url().endsWith(`/spring/${EPISODE_ID}`));
-	await intro.getByRole("button", {name: "Gem introen"}).click();
+	await panel.getByRole("button", {name: "Gem introen"}).click();
 	expect((await saved).status()).toBe(201);
 	await expect(page.locator("#toast")).toHaveText("Tak! Introen er markeret");
 	await panel.getByRole("button", {name: "Luk"}).click();
+	await expect(panel).toHaveCount(0);
 	// Their own mark counts for them right away
 	await seek(page, INTRO.start + 1);
 	await expect(page.getByRole("button", {name: "Spring intro over"})).toBeVisible();
@@ -97,17 +115,29 @@ test("lets a viewer with an account mark the intro, which they can then skip", a
 	await expect(page.getByRole("button", {name: "Spring intro over"})).toBeVisible();
 });
 
-test("asks a viewer with an account who skips ahead early whether it was the intro", async ({page}) => {
-	const code = await newAccount(page);
-	await page.addInitScript(code => localStorage.setItem("syncCode", code), code);
+test("doesn't offer marking to those who didn't choose it", async ({page}) => {
+	await withAccount(page, false);
+	await watch(page, EPISODE);
+	await expect(page.getByRole("button", {name: "Se sammen"})).toBeVisible();
+	await expect(page.getByRole("button", {name: "Markér intro og rulletekster"})).toHaveCount(0);
+});
+
+test.describe("on a phone", () => {
+	test.use({viewport: {width: 384, height: 830}, isMobile: true, hasTouch: true});
+
+	test("doesn't offer marking, even to those who chose it", async ({page}) => {
+		await withAccount(page, true);
+		await watch(page, EPISODE);
+		await expect(page.getByRole("button", {name: "Se sammen"})).toBeVisible();
+		await expect(page.getByRole("button", {name: "Markér intro og rulletekster"})).toHaveCount(0);
+	});
+});
+
+test("never asks whether the viewer skipped the intro", async ({page}) => {
+	await withAccount(page, true);
 	await watch(page, EPISODE);
 	await playsPast(page, 3.5);
-	const from = await position(page);
-	await seek(page, from + 30);
-	const ask = page.getByRole("status").filter({hasText: "Sprang du introen over?"});
-	await expect(ask).toBeVisible({timeout: 10_000});
-	const saved = page.waitForResponse(response => response.url().endsWith(`/spring/${EPISODE_ID}`));
-	await ask.getByRole("button", {name: "Ja"}).click();
-	expect((await saved).status()).toBe(201);
-	await expect(page.locator("#toast")).toHaveText("Tak! Det hjælper andre med at springe den over");
+	await seek(page, 35);
+	await page.waitForTimeout(5000);
+	await expect(page.getByText("Sprang du introen over?")).toHaveCount(0);
 });
