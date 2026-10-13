@@ -1,4 +1,5 @@
 from contextlib import suppress
+from datetime import datetime, timezone
 from functools import lru_cache
 from typing import Optional
 import asyncio
@@ -27,7 +28,8 @@ from .drtv import (
     get_show,
     search,
 )
-from .live import get_channels, get_schedules, whats_on
+from . import live as live_tv
+from .live import channel_named, get_channels, get_schedules, plan_from, whats_on
 from .show import Show, clock, danish_date, danish_datetime, duration, is_new, thumbnail
 
 app = Quart(__name__)
@@ -205,12 +207,23 @@ async def full_list(list_id):
 
 @app.route("/live/")
 async def live_channels():
-    return await render_template(
-        "live_index.html",
-        SERVICE_NAME=SERVICE_NAME,
-        channels=await get_channels(),
-        schedules=await get_schedules(),
-    )
+    """Direkte: the channel the viewer last watched, which the browser keeps in the cookie lastChannel, or DR1.
+    Different for each viewer, so never kept by anyone."""
+    channels = await get_channels()
+    last = request.cookies.get("lastChannel")
+    slug = last if last in channels else ("DR1" if "DR1" in channels else next(iter(channels), None))
+    if slug is None:
+        abort(503)
+    response = redirect(f"/live/{slug}", 302)
+    response.headers["Cache-Control"] = "private, no-store"
+    return response
+
+
+@app.route("/live/plan.json")
+async def live_plan():
+    """What's left of the day on each channel, for the channel guide when the page's own schedule runs out"""
+    channels = await get_channels()
+    return {"plan": plan_from(channels, await get_schedules())}
 
 
 @app.route("/favoritter/")
@@ -466,17 +479,64 @@ async def sync_delete(code):
 @app.route("/live/<channel>")
 async def live_channel(channel):
     channels = await get_channels()
-    if channel in channels:
-        return await render_template(
-            "live.html",
-            channel=channels[channel],
-            current_channel=channel,
-            programmes=(await get_schedules()).get(channels[channel].id, []),
-            SERVICE_NAME=SERVICE_NAME,
-            channels=await get_channels(),
-        )
-    else:
+    slug = channel_named(channels, channel)
+    if slug is None:
         abort(404)
+    # Like /live/dr2, for /live/DR2
+    if slug != channel:
+        return redirect(f"/live/{slug}", 308)
+    schedules = await get_schedules()
+    plan = plan_from(channels, schedules)
+    at = live_tv.now().timestamp() * 1000
+
+    def clock_at(ms: int) -> str:
+        return clock(datetime.fromtimestamp(ms / 1000, timezone.utc))
+
+    def on_channel(programmes: list[dict]):
+        on_now = next((p for p in programmes if p["start"] <= at < p["end"]), None)
+        return on_now, [p for p in programmes if p["start"] >= at]
+
+    # What's on each channel, like the Worker's guideChannel()
+    guide = []
+    for number, (other, c) in enumerate(channels.items(), 1):
+        on_now, later = on_channel(plan[other])
+        following = later[0] if later else None
+        guide.append({
+            "slug": other,
+            "title": c.title,
+            "number": number,
+            "current": other == slug,
+            "now": on_now["title"] if on_now else (f"Sender igen kl. {clock_at(following['start'])}" if following else ""),
+            "progress": round(100 * min(max((at - on_now["start"]) / (on_now["end"] - on_now["start"]), 0), 1)) if on_now else None,
+            "next": (f"{clock_at(following['start'])} {following['title']}" if on_now else following["title"]) if following else "",
+        })
+    on_now, later = on_channel(plan[slug])
+    programmes = [
+        {
+            **p,
+            "is_now": p is on_now,
+            "iso_start": datetime.fromtimestamp(p["start"] / 1000, timezone.utc).isoformat(),
+            "iso_end": datetime.fromtimestamp(p["end"] / 1000, timezone.utc).isoformat(),
+            "clock_start": clock_at(p["start"]),
+            "clock_end": clock_at(p["end"]),
+            "percent": round(100 * min(max((at - p["start"]) / (p["end"] - p["start"]), 0), 1)) if p is on_now else 0,
+        }
+        for p in ([on_now] if on_now else []) + later[:8]
+    ]
+    return await render_template(
+        "live.html",
+        channel=channels[slug],
+        current_channel=slug,
+        guide=guide,
+        programmes=programmes,
+        data={
+            "channel": slug,
+            "channels": [{"slug": s, "title": c.title, "stream": c.stream_url, "subtitles": c.subtitles_url} for s, c in channels.items()],
+            "plan": plan,
+        },
+        SERVICE_NAME=SERVICE_NAME,
+        channels=channels,
+    )
 
 
 async def error_page(title: str, message: str, status: int):

@@ -1,5 +1,6 @@
 """Renders every page against the fixtures, to catch template breakage"""
 
+import json
 import re
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -184,7 +185,7 @@ def test_privacy(get):
     r = get("/privatliv/")
     assert r.status_code == 200
     assert "<title>Privatliv - GLOTV</title>" in r.text
-    assert "ingen cookies og ingen sporing" in r.text
+    assert "ingen reklamer og ingen sporing" in r.text
 
 
 def test_favicon(get):
@@ -238,11 +239,39 @@ def test_category(get):
     assert get("/kategorier/findes-ikke/").status_code == 404
 
 
-def test_live_channels(get):
+def test_direkte_opens_dr1_without_a_channel_watched(get):
     r = get("/live/")
+    assert r.status_code == 302
+    assert r.location == "/live/DR1"
+    assert r.headers["Cache-Control"] == "private, no-store"
+
+
+def test_direkte_opens_the_channel_watched_last(get):
+    for slug in ["DR2", "EVA", "TVR"]:
+        r = get("/live/", {"Cookie": f"lastChannel={slug}"})
+        assert r.status_code == 302
+        assert r.location == f"/live/{slug}"
+        assert r.headers["Cache-Control"] == "private, no-store"
+    assert get("/live/").location == "/live/DR1"
+
+
+def test_direkte_ignores_what_isnt_a_channel(get):
+    for value in ["DR9", "dr2", "__proto__", "..%2Fsync%2F", ""]:
+        assert get("/live/", {"Cookie": f"lastChannel={value}"}).location == "/live/DR1"
+
+
+def test_live_plan(get, monkeypatch):
+    monkeypatch.setattr("drtvrss.live.now", lambda: datetime(2026, 10, 12, 15, 0, tzinfo=timezone.utc))
+    r = get("/live/plan.json")
     assert r.status_code == 200
-    assert '<a class="tile-link" href="/live/DR1" style="--channel: #FF001E;">' in r.text
-    assert '<a href="/live/" class="nav-item" aria-current="page"><span class="live-dot"></span>Direkte</a>' in r.text
+    plan = json.loads(r.text)["plan"]
+    assert list(plan) == ["DR1", "DR2", "EVA", "TVR"]
+    for programmes in plan.values():
+        assert programmes
+        for p in programmes:
+            assert p["end"] > datetime(2026, 10, 12, 15, 0, tzinfo=timezone.utc).timestamp() * 1000
+            assert sorted(p) == ["description", "end", "start", "title"]
+            assert len(p["description"]) <= 280
 
 
 def test_favorites_page(get):
@@ -320,14 +349,38 @@ def test_program(get):
 def test_live_channel(get):
     r = get("/live/DR1")
     assert r.status_code == 200
-    assert "https://drlivedr1hls.akamaized.net/" in r.text
+    assert '<a href="/live/" class="nav-item" aria-current="page"><span class="live-dot"></span>Direkte</a>' in r.text
+    data = json.loads(r.text.split('<script type="application/json" id="live-data">')[1].split("</script>")[0])
+    assert data["channel"] == "DR1"
+    assert [c["slug"] for c in data["channels"]] == ["DR1", "DR2", "EVA", "TVR"]
+    assert data["channels"][0]["stream"].startswith("https://drlivedr1hls.akamaized.net/")
+    assert "setupChannels(document.getElementById('video'), " in r.text
 
 
-def test_current_live_channel_is_marked(get):
+def test_live_channels_are_in_a_guide_of_ordinary_links(get):
     r = get("/live/DR1")
-    switcher = r.text.split('<nav class="channel-switcher"')[1].split("</nav>")[0]
-    assert '<a href="/live/DR1" class="nav-item" aria-current="page"><span class="live-dot"></span>DR1</a>' in switcher
-    assert switcher.count("aria-current") == 1
+    guide = r.text.split('<nav class="channel-guide" id="channel-guide" aria-label="Kanaler">')[1].split("</nav>")[0]
+    assert re.findall(r'<a class="guide-channel" href="(/live/\w+)"', guide) == ["/live/DR1", "/live/DR2", "/live/EVA", "/live/TVR"]
+    assert '<a class="guide-channel" href="/live/DR1" data-channel="DR1" aria-current="page">' in guide
+    assert guide.count("aria-current") == 1
+    assert "channel-switcher" not in r.text
+
+
+def test_live_guide_says_whats_on_and_when_a_channel_is_on_again(get, monkeypatch):
+    monkeypatch.setattr("drtvrss.live.now", lambda: datetime(2026, 10, 12, 11, 0, tzinfo=timezone.utc))
+    r = get("/live/DR1")
+    ramasjang = r.text.split('<a class="guide-channel" href="/live/TVR"')[1].split("</a>")[0]
+    assert '<span class="guide-now">Sender igen kl. 13.35</span>' in ramasjang
+    monkeypatch.setattr("drtvrss.live.now", lambda: datetime(2026, 10, 12, 11, 55, tzinfo=timezone.utc))
+    dr1 = get("/live/DR1").text.split('<a class="guide-channel" href="/live/DR1"')[1].split("</a>")[0]
+    assert '<span style="width: 50%;"></span>' in dr1
+    assert re.search(r'<span class="guide-next">14\.10 [^<]+</span>', dr1)
+
+
+def test_live_channel_in_small_letters(get):
+    r = get("/live/dr2")
+    assert r.status_code == 308
+    assert r.location == "/live/DR2"
 
 
 def test_pages_load_no_unused_scripts(get):
@@ -494,7 +547,7 @@ def test_players_use_plyr(get):
         text = get(path).text
         assert '<script src="/static/vendor/plyr-3.8.4.min.js" integrity="sha384-' in text
         assert '<link href="/static/vendor/plyr-3.8.4.css" rel="stylesheet" integrity="sha384-' in text
-    assert "setupLive(document.getElementById('video'), " in get("/live/DR1").text
+    assert "setupChannels(document.getElementById('video'), " in get("/live/DR1").text
     for path in ["/static/vendor/plyr-3.8.4.min.js", "/static/vendor/plyr-3.8.4.css", "/static/vendor/plyr-3.8.4.svg"]:
         assert get(path).status_code == 200
 
@@ -519,7 +572,7 @@ def test_channels_show_whats_on(get, monkeypatch):
     assert '<time class="programme-time" datetime="2026-10-12T11:40:00+00:00">13.40</time>' in r.text
     assert "Til 14.10" in r.text
     # With a choice of subtitles
-    assert 'class="button button-secondary js-live-subtitles" aria-pressed="false"' in r.text
+    assert '<button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false">' in r.text
     assert "drlivedr1texthls" in r.text
 
 
@@ -529,7 +582,7 @@ def test_channels_without_a_schedule(get, monkeypatch):
     assert '<div class="channel-art">DR1</div>' in get("/").text
     r = get("/live/DR1")
     assert r.status_code == 200
-    assert "Programoversigt" not in r.text
+    assert '<section class="schedule" aria-labelledby="schedule-title" hidden>' in r.text
 
 
 def test_pages_are_dark(get):

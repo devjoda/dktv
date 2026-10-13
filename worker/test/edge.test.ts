@@ -2,7 +2,7 @@
 
 import {beforeEach, describe, expect, test, vi} from "vitest";
 import {forgetAll} from "../src/cache";
-import {dr, get as getLocal} from "./helpers";
+import {dr, get as getLocal, request} from "./helpers";
 
 // From a site's own address, since pages aren't kept when running locally
 const get = (path: string) => getLocal("https://dktv.example" + path);
@@ -61,5 +61,26 @@ describe("Cloudflare's cache", () => {
 		dr.down = true;
 		expect((await get("/rejseholdet_503605/")).status).toBe(503);
 		expect(pages()).toEqual([]);
+	});
+
+	test("never keeps where Direkte sends a viewer", async () => {
+		const r = await request("https://dktv.example/live/", {headers: {Cookie: "lastChannel=DR2"}});
+		expect(r.location).toBe("/live/DR2");
+		expect(r.headers.get("Cache-Control")).toBe("private, no-store");
+		expect(pages()).toEqual([]);
+		expect((await get("/live/")).location).toBe("/live/DR1");
+		expect(pages()).toEqual([]);
+	});
+
+	test("keeps the schedule for the guide, like the pages", async () => {
+		let r = await get("/live/plan.json");
+		for (let i = 0; i < 4 && r.headers.get("Cache-Control") != "public, max-age=60"; i++) {
+			r = await get("/live/plan.json");
+		}
+		expect(r.headers.get("Cache-Control")).toBe("public, max-age=60");
+		expect(pages().some(key => key.includes("/live/plan.json"))).toBe(true);
+		dr.requested = [];
+		expect((await get("/live/plan.json")).text).toBe(r.text);
+		expect(dr.requested).toEqual([]);
 	});
 });

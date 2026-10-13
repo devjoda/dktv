@@ -341,6 +341,21 @@ function updateSchedule() {
 
 setInterval(updateSchedule, 30 * 1000);
 
+// The live channel the viewer watched last, for Direkte to open it again. Only the browser sets it, since the
+// channels' pages are kept for everyone; live.js sets it as a channel is watched, and here as one is chosen in the
+// row of channels on the front page.
+function rememberChannel(slug) {
+    const secure = location.protocol == "https:" || ["localhost", "127.0.0.1"].includes(location.hostname);
+    document.cookie = `lastChannel=${encodeURIComponent(slug)}; Path=/live; Max-Age=31536000; SameSite=Lax${secure ? "; Secure" : ""}`;
+}
+
+document.addEventListener("click", function (event) {
+    const link = event.target instanceof Element && event.target.closest(".channel-tile a[href^='/live/']");
+    if (link) {
+        rememberChannel(link.getAttribute("href").slice("/live/".length));
+    }
+});
+
 // The header lies on a page's big picture, until the page is scrolled
 function updateHeader() {
     const header = document.querySelector(".site-header");

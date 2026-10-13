@@ -1,12 +1,13 @@
 // dktv: an unofficial way to watch DR's programmes, as a Cloudflare Worker
 
 import {Hono, type Context, type MiddlewareHandler} from "hono";
+import {getCookie} from "hono/cookie";
 import * as alerts from "./alerts";
 import {vapidKeys} from "./alerts";
 import {peek, REFRESHES_PER_VISIT} from "./cache";
 import {getCategories, getList, getPage} from "./discover";
 import {Budget, type Ctx, DRUnavailable, type Env, NotFound, OverBudget} from "./dr";
-import {getChannels, getSchedules} from "./live";
+import {channelNamed, getChannels, getSchedules, planFrom} from "./live";
 import {search} from "./search";
 import {allEpisodes, getLongDescription, getProgram, getShow, itemId, rssFeed, type Show, thumbnail} from "./show";
 import * as passkeys from "./passkeys";
@@ -180,21 +181,43 @@ app.get("/liste/:id{[0-9]+}/", edgeCached(10 * MINUTE), async c => {
 
 app.get("/liste/:id{[0-9]+}", c => c.redirect(`/liste/${c.req.param("id")}/`, 308));
 
-app.get("/live/", edgeCached(2 * MINUTE), async c => {
+/**
+ * Direkte: the channel the viewer last watched, which the browser keeps in the cookie lastChannel, or DR1.
+ * Different for each viewer, so never kept, by Cloudflare or anyone else.
+ */
+app.get("/live/", async c => {
+	const channels = await getChannels(c.get("ctx"));
+	const last = getCookie(c, "lastChannel");
+	const slug = (last !== undefined && Object.hasOwn(channels, last) ? last : undefined)
+		?? (Object.hasOwn(channels, "DR1") ? "DR1" : Object.keys(channels)[0]);
+	if (slug === undefined) {
+		throw new DRUnavailable("No live channels");
+	}
+	c.header("Cache-Control", "private, no-store");
+	return c.redirect(`/live/${slug}`, 302);
+});
+
+/** What's left of the day on each channel, for the channel guide when the page's own schedule runs out */
+app.get("/live/plan.json", edgeCached(2 * MINUTE), async c => {
 	const ctx = c.get("ctx");
 	const channels = await getChannels(ctx);
-	return render(c, pages.liveIndexPage(site(c), {channels, schedules: await getSchedules(ctx, channels)}));
+	return c.json({plan: planFrom(channels, await getSchedules(ctx, channels))});
 });
 
 app.get("/live/:channel", edgeCached(2 * MINUTE), async c => {
 	const ctx = c.get("ctx");
 	const channels = await getChannels(ctx);
-	const slug = c.req.param("channel");
-	if (!Object.hasOwn(channels, slug)) {
-		throw new NotFound(`No channel ${slug}`);
+	const wanted = c.req.param("channel");
+	const slug = channelNamed(channels, wanted);
+	if (slug === undefined) {
+		throw new NotFound(`No channel ${wanted}`);
+	}
+	// Like /live/dr2, for /live/DR2
+	if (slug != wanted) {
+		return c.redirect(`/live/${slug}`, 308);
 	}
 	const schedules = await getSchedules(ctx, channels);
-	return render(c, pages.livePage(site(c), {slug, channels, programmes: schedules[channels[slug].id] ?? []}));
+	return render(c, pages.livePage(site(c), {slug, channels, schedules}));
 });
 
 app.get("/favoritter/", edgeCached(60 * MINUTE), c => render(c, pages.favoritesPage(site(c))));

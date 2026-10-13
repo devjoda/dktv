@@ -1,13 +1,13 @@
 // The pages
 
 import type {Card, Category, DiscoverPage, Row} from "../discover";
-import {type Channels, percentDone, type Programme, whatsOn} from "../live";
+import {type Channels, percentDone, planFrom, type PlannedProgramme, type Programme, whatsOn} from "../live";
 import type {SearchResult, SearchResultItem} from "../search";
 import type {Segments} from "../segments";
 import {allEpisodes, type Episode, type Program, type Show, thumbnail} from "../show";
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
-import {layout, LIBRARIES, MAIN_CATEGORIES, PLAYER_SCRIPTS, type Site, VIDEO_SCRIPTS} from "./layout";
+import {layout, LIBRARIES, LIVE_SCRIPTS, MAIN_CATEGORIES, type Site, VIDEO_SCRIPTS} from "./layout";
 import {cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, PROGRESS_BAR, searchField, SEEN_MARK, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
 
 type Schedules = Record<string, Programme[]>;
@@ -81,7 +81,7 @@ ${icon("heart")}
 <div class="shelf-track js-tiles"></div>
 </section>
 ${Object.keys(channels).length ? html`<section class="shelf" aria-labelledby="live-title">
-${shelfHead("Direkte TV", "live-title", "/live/", true)}
+${shelfHead("Direkte TV", "live-title")}
 <div class="shelf-track">${channelTiles(channels, schedules)}</div>
 </section>` : ""}
 ${shows.length ? html`<section class="shelf" aria-labelledby="recommended-title">
@@ -202,29 +202,25 @@ playVideo(document.getElementById('video'), ${scriptJSON(e.videoId)});
 </script>`);
 }
 
-/** A live channel. ui.js keeps the programmes up to date while the page is open, without reloading the stream. */
-export function livePage(site: Site, {slug, channels, programmes}: {slug: string; channels: Channels; programmes: Programme[]}): Html {
-	const channel = channels[slug];
+/** One of the channels in the channel guide: what's on it now, how far it's got, and what's next */
+function guideChannel(slug: string, title: string, programmes: PlannedProgramme[], current: boolean, number: number): Html {
+	const [onNow, later] = whatsOn(programmes);
+	const next = later[0];
+	return html`<li><a class="guide-channel" href="/live/${slug}" data-channel="${slug}"${attr("aria-current", current && "page")}>
+<span class="guide-key" aria-hidden="true">${number}</span>
+<span class="guide-name">${title}</span>
+<span class="guide-now">${onNow ? onNow.title : next ? `Sender igen kl. ${clockTime(next.start)}` : ""}</span>
+<span class="guide-progress" aria-hidden="true"${onNow ? "" : html` hidden`}><span style="width: ${onNow ? percentDone(onNow) : 0}%;"></span></span>
+<span class="guide-next">${next ? (onNow ? `${clockTime(next.start)} ${next.title}` : next.title) : ""}</span>
+</a></li>
+`;
+}
+
+/** The programmes on a channel, from the one on now; live.js makes them again for another channel */
+function programmeItems(programmes: PlannedProgramme[]): Html {
 	const [onNow, later] = whatsOn(programmes);
 	const shown = (onNow ? [onNow] : []).concat(later.slice(0, 8));
-	return layout(site, {title: channel.title, scripts: PLAYER_SCRIPTS}, html`<div class="stage">
-<video id="video" controls crossorigin="anonymous"></video>
-</div>
-<div class="watch">
-<div>
-<div class="badges"><span class="tag tag-live">Direkte</span></div>
-<h1 class="watch-title">${channel.title}</h1>
-<nav class="channel-switcher" aria-label="Kanaler">
-${each(Object.entries(channels), ([other, c]) => html`<a href="/live/${other}" class="nav-item"${attr("aria-current", other == slug && "page")}><span class="live-dot"></span>${c.title}</a>\n`)}
-</nav>
-${channel.subtitlesURL ? html`<div class="actions">
-<button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false">${icon("captions")} Undertekster</button>
-</div>` : ""}
-</div>
-${shown.length ? html`<section class="schedule" aria-labelledby="schedule-title">
-<h2 class="side-title" id="schedule-title">Programoversigt</h2>
-<ol class="programmes">
-${each(shown, p => {
+	return each(shown, p => {
 		const done = percentDone(p);
 		return html`<li class="programme${p === onNow ? " is-now" : ""}" data-start="${isoTime(p.start)}" data-end="${isoTime(p.end)}">
 <time class="programme-time" datetime="${isoTime(p.start)}">${clockTime(p.start)}</time>
@@ -238,12 +234,49 @@ ${p.description ? html`<p class="programme-desc">${p.description}</p>` : ""}
 </div>
 </li>
 `;
-	})}
-</ol>
-</section>` : ""}
+	});
+}
+
+/**
+ * A live channel, with the others in a little guide beside or below the video. Its links are ordinary links,
+ * which live.js takes over, to change the channel in the same player, without a new page; it keeps the guide and
+ * the programmes up to date from the rest of the day's schedule, which the page has with it.
+ */
+export function livePage(site: Site, {slug, channels, schedules}: {slug: string; channels: Channels; schedules: Record<string, Programme[]>}): Html {
+	const channel = channels[slug];
+	const plan = planFrom(channels, schedules);
+	const data = {
+		channel: slug,
+		channels: Object.entries(channels).map(([s, c]) => ({slug: s, title: c.title, stream: c.streamURL, subtitles: c.subtitlesURL ?? null})),
+		plan,
+	};
+	const programmes = plan[slug];
+	return layout(site, {title: channel.title, scripts: LIVE_SCRIPTS, bodyClass: "live-page"}, html`<div class="stage">
+<video id="video" controls crossorigin="anonymous" data-channel="${slug}"></video>
 </div>
+<nav class="channel-guide" id="channel-guide" aria-label="Kanaler">
+<div class="guide-head"><h2 class="guide-title">Kanaler</h2></div>
+<ol class="guide-list">
+${each(Object.entries(channels), ([other, c], i) => guideChannel(other, c.title, plan[other], other == slug, i + 1))}
+</ol>
+</nav>
+<div class="watch">
+<div>
+<div class="badges"><span class="tag tag-live">Direkte</span></div>
+<h1 class="watch-title js-live-title">${channel.title}</h1>
+<div class="actions">
+<button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false"${channel.subtitlesURL ? "" : html` hidden`}>${icon("captions")} Undertekster</button>
+</div>
+</div>
+<section class="schedule" aria-labelledby="schedule-title"${programmes.length ? "" : html` hidden`}>
+<h2 class="side-title" id="schedule-title">Programoversigt</h2>
+<ol class="programmes">
+${programmeItems(programmes)}</ol>
+</section>
+</div>
+<script type="application/json" id="live-data">${scriptJSON(data)}</script>
 <script>
-setupLive(document.getElementById('video'), ${scriptJSON(channel.streamURL)}, ${scriptJSON(channel.subtitlesURL ?? null)});
+setupChannels(document.getElementById('video'), JSON.parse(document.getElementById('live-data').textContent));
 </script>`);
 }
 
@@ -251,11 +284,6 @@ function pageHead(title: string): Html {
 	return html`<div class="page-head wrap">
 <h1>${title}</h1>
 </div>`;
-}
-
-export function liveIndexPage(site: Site, {channels, schedules}: {channels: Channels; schedules: Schedules}): Html {
-	return layout(site, {title: "Direkte TV"}, html`${pageHead("Direkte TV")}
-<div class="tile-grid results">${channelTiles(channels, schedules)}</div>`);
 }
 
 export function searchPage(site: Site, {query, results}: {query: string; results?: SearchResult}): Html {
@@ -436,7 +464,7 @@ export function syncPage(site: Site): Html {
 export function privacyPage(site: Site): Html {
 	return layout(site, {title: "Privatliv"}, html`<article class="prose wrap">
 <h1>Privatliv</h1>
-<p class="prose-lead">${site.serviceName} har ingen reklamer, ingen cookies og ingen sporing. Siden bruger ingen analyseværktøjer, og den sælger eller deler ikke noget om dig. Her er alt, hvad den gemmer, og hvor.</p>
+<p class="prose-lead">${site.serviceName} har ingen reklamer og ingen sporing. Siden bruger ingen analyseværktøjer, og den sælger eller deler ikke noget om dig. Her er alt, hvad den gemmer, og hvor.</p>
 
 <h2>I din browser</h2>
 <p>Det meste gemmes kun på din egen enhed, i browserens lager. Det forlader ikke enheden, medmindre du opretter en konto.</p>
@@ -447,6 +475,7 @@ export function privacyPage(site: Site): Html {
 <li>Din kode, hvis du har en konto.</li>
 <li>Så længe fanen er åben: det rum, du ser sammen med andre i.</li>
 <li>Programmernes billeder, så siderne åbner hurtigere.</li>
+<li>Den kanal, du sidst så, i en cookie, så Direkte åbner den igen. Det er sidens eneste cookie: den bruges kun til at åbne kanalen, og den hverken sendes videre eller gemmes på serveren.</li>
 </ul>
 <p>Du sletter det hele ved at slette sidens data i din browser.</p>
 

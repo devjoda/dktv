@@ -96,10 +96,19 @@ function roomPosition() {
     return state.playing ? state.position + Math.max(0, serverNow - state.at) / 1000 : state.position;
 }
 
+// Whether the room watches a live channel, where everyone sees the same anyway: only changing channels is shared
+function togetherLive() {
+    return document.body.classList.contains("live-page");
+}
+
 // Makes the player follow the room: where it is, and whether it plays
 function followRoom() {
     const video = together.video;
     const state = together.state;
+    if (togetherLive()) {
+        together.ready = true;
+        return;
+    }
     if (state == null || video.readyState < 1) {
         return;
     }
@@ -118,7 +127,7 @@ function followRoom() {
 // Tells the room what the viewer did, unless it's only the player following the room
 function reportToRoom() {
     const video = together.video;
-    if (!together.ready || video.readyState < 1) {
+    if (!together.ready || video.readyState < 1 || togetherLive()) {
         return;
     }
     const playing = !video.paused;
@@ -249,7 +258,8 @@ function chatLine(message) {
     }
     const mine = ownIds().includes(message.viewer);
     const meta = element("span", {class: "chat-meta"}, element("span", {class: "chat-name"}, mine ? "Dig" : message.by));
-    if (typeof message.position == "number") {
+    // Not on live TV, which has no time of its own
+    if (typeof message.position == "number" && !togetherLive()) {
         meta.append(element("span", {class: "chat-time"}, clockOf(message.position)));
     }
     return element("li", {class: "chat-line" + (mine ? " is-mine" : "")}, meta, element("span", {class: "chat-text"}, message.text));
@@ -457,8 +467,13 @@ function receive(message) {
     }
 }
 
-// Goes to the video the room went on to, staying in the room
+// Goes to the video the room went on to, staying in the room; on live TV, another channel in the same player
 function goTogether(path) {
+    const channel = /^\/live\/([\w-]+)$/.exec(path);
+    if (channel && togetherLive() && typeof changeChannel == "function") {
+        changeChannel(channel[1], true);
+        return;
+    }
     try {
         sessionStorage.setItem("togetherFollow", path);
     } catch (error) {
@@ -584,7 +599,7 @@ function showTogetherPanel() {
     typing(name, () => name.blur());
     leave.addEventListener("click", leaveRoom);
     // Right after the video, which the page then lays out with the room beside it, or below it
-    document.querySelector(".stage").after(panel);
+    (document.querySelector(".channel-guide") || document.querySelector(".stage")).after(panel);
     document.body.classList.add("in-room");
     document.body.classList.toggle("chat-folded", chatFolded());
     together.panel = panel;

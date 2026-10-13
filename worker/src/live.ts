@@ -9,8 +9,8 @@ import {clock, parseTime} from "./time";
 const CHANNEL_LIST = 155156;
 const CHANNEL_CACHE_TIME = 30 * 60;
 
-// How far ahead to get the live channels' schedules, in hours
-const SCHEDULE_HOURS = 6;
+// How far ahead to get the live channels' schedules, in hours: the rest of the day, and some
+const SCHEDULE_HOURS = 24;
 const SCHEDULE_CACHE_TIME = 5 * 60;
 
 export interface LiveChannel {
@@ -103,4 +103,27 @@ export async function getSchedules(ctx: Ctx, channels: Channels): Promise<Record
 		console.log("Could not get the live channels' schedules", String(e));
 		return {};
 	}
+}
+
+/** A programme as the browser gets it, for the channel guide and the programme list: times in milliseconds */
+export interface PlannedProgramme {
+	title: string;
+	start: number;
+	end: number;
+	description: string;
+}
+
+/** What's left of each channel's schedule from `at`, by the channel's short name, as the browser gets it */
+export function planFrom(channels: Channels, schedules: Record<string, Programme[]>, at = clock.now()): Record<string, PlannedProgramme[]> {
+	return Object.fromEntries(Object.entries(channels).map(([slug, channel]) => [slug, (schedules[channel.id] ?? [])
+		.filter(p => p.end > at)
+		.map(p => ({title: p.title, start: p.start, end: p.end, description: p.description.length > 280 ? p.description.slice(0, 279).trimEnd() + "…" : p.description}))]));
+}
+
+/** The channel a live channel's address names, like DR2 for dr2, if any */
+export function channelNamed(channels: Channels, name: string): string | undefined {
+	if (Object.hasOwn(channels, name)) {
+		return name;
+	}
+	return Object.keys(channels).find(slug => slug.toLowerCase() == name.toLowerCase());
 }

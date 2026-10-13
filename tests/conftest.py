@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from urllib.parse import urlencode
 
 import pytest
+from typing import Optional
 from quart import abort
 
 from drtvrss import app, discover, drtv, live
@@ -56,14 +57,15 @@ def fake_dr(monkeypatch):
 def get(fake_dr):
     """Requests a page from the app, going through its startup and shutdown"""
 
-    def get(path: str) -> SimpleNamespace:
+    def get(path: str, headers: Optional[dict] = None) -> SimpleNamespace:
         async def request():
             async with app.test_app() as test_app:
-                r = await test_app.test_client().get(path)
+                r = await test_app.test_client().get(path, headers=headers or {})
                 return SimpleNamespace(
                     status_code=r.status_code,
                     content_type=r.content_type,
                     location=r.location,
+                    headers=r.headers,
                     text=await r.get_data(as_text=True),
                 )
 
