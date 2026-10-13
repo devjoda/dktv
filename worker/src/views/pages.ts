@@ -7,7 +7,7 @@ import type {Segments} from "../segments";
 import {allEpisodes, type Episode, type Program, type Show, thumbnail} from "../show";
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
-import {layout, LIBRARIES, PLAYER_SCRIPTS, type Site, VIDEO_SCRIPTS} from "./layout";
+import {layout, LIBRARIES, MAIN_CATEGORIES, PLAYER_SCRIPTS, type Site, VIDEO_SCRIPTS} from "./layout";
 import {cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, searchField, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
 
 type Schedules = Record<string, Programme[]>;
@@ -299,9 +299,15 @@ ${searchField()}
 }
 
 export function categoriesPage(site: Site, categories: Category[]): Html {
+	// Serier, Film and Dokumentar first, which small screens' tabs lead here for
+	const rank = (c: Category) => {
+		const i = MAIN_CATEGORIES.indexOf(c.url);
+		return i < 0 ? MAIN_CATEGORIES.length : i;
+	};
+	const sorted = categories.map((c, i) => ({c, i})).sort((a, b) => rank(a.c) - rank(b.c) || a.i - b.i).map(({c}) => c);
 	return layout(site, {title: "Kategorier"}, html`${pageHead("Kategorier")}
 <ul class="category-grid wrap">
-${each(categories, c => html`<li><a class="category" href="${c.url}"><span class="category-mark" aria-hidden="true">${[...c.title][0] ?? ""}</span><span class="category-title">${c.title}</span></a></li>\n`)}
+${each(sorted, c => html`<li><a class="category" href="${c.url}"><span class="category-mark" aria-hidden="true">${[...c.title][0] ?? ""}</span><span class="category-title">${c.title}</span></a></li>\n`)}
 </ul>`);
 }
 
@@ -400,4 +406,47 @@ export function syncPage(site: Site): Html {
 <p class="sync-privacy">Din konto er koden. Under den gemmes dine favoritter, hvor langt du er nået i hvert afsnit, og hvilke af dine enheder der får beskeder. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en konto gemmes de kun i din browser.</p>
 <noscript><p>Din konto kræver JavaScript.</p></noscript>
 </div>`);
+}
+
+/** What the site keeps about its viewers, and where; drtvrss/templates/privacy.html says the same of the Python app */
+export function privacyPage(site: Site): Html {
+	return layout(site, {title: "Privatliv"}, html`<article class="prose wrap">
+<h1>Privatliv</h1>
+<p class="prose-lead">${site.serviceName} har ingen reklamer, ingen cookies og ingen sporing. Siden bruger ingen analyseværktøjer, og den sælger eller deler ikke noget om dig. Her er alt, hvad den gemmer, og hvor.</p>
+
+<h2>I din browser</h2>
+<p>Det meste gemmes kun på din egen enhed, i browserens lager. Det forlader ikke enheden, medmindre du opretter en konto.</p>
+<ul>
+<li>Dine favoritter, og hvor langt du er nået i det, du ser.</li>
+<li>Dine valg: undertekster til direkte TV, om sete afsnit skjules, afspillerens lydstyrke, hastighed og undertekster, og dit navn i Se sammen.</li>
+<li>De intro og rulletekster, du selv har markeret, og om du er blevet spurgt, om du sprang introen over.</li>
+<li>Din kode, hvis du har en konto.</li>
+<li>Så længe fanen er åben: det rum, du ser sammen med andre i.</li>
+<li>Programmernes billeder, så siderne åbner hurtigere.</li>
+</ul>
+<p>Du sletter det hele ved at slette sidens data i din browser.</p>
+
+<h2>Hvis du har en konto</h2>
+<p>En konto er en kode. Den kræver hverken e-mail, navn eller adgangskode. Under koden gemmes på serveren:</p>
+<ul>
+<li>Dine favoritter, og hvor langt du er nået, så dine enheder kan dele dem.</li>
+<li>Dine adgangsnøgler, hvis du opretter nogen: nøglens offentlige del, og hvilken slags enhed den blev lavet på, som "Firefox på Android".</li>
+<li>Hvis du slår beskeder om nye afsnit til: den adresse, din browsers beskedtjeneste (som Googles, Mozillas eller Apples) har givet enheden, og hvilke af dine serier der skal følges. Beskederne er krypteret, så beskedtjenesten ikke kan læse dem.</li>
+<li>De intro og rulletekster, du markerer, og om du har fundet andres markeringer forkerte. Kun tidspunkterne i videoen.</li>
+</ul>
+<p>Det gemmes, indtil du sletter kontoen. Det kan du gøre under <a href="/sync/">Din konto</a>, og så slettes alt, der hører til koden.</p>
+
+<h2>Se sammen</h2>
+<p>Et rum kender kun det, der ses, hvor langt det er nået, og om det spiller, og så længe I er forbundet de navne, I selv skriver. Rummet slettes seks timer efter, at den sidste har forladt det.</p>
+
+<h2>DR</h2>
+<p>Videoerne, underteksterne og billederne kommer direkte fra DR's servere til din browser, ligesom på DRTV. DR får derfor din IP-adresse og oplysninger om din browser, og DR's egne regler for privatliv gælder for det. Din browser fortæller ikke DR, at du kom fra ${site.serviceName}.</p>
+
+<h2>Driften</h2>
+<p>Siden kører hos Cloudflare. Som enhver webserver ser Cloudflare din IP-adresse og browser, når den sender dig siderne, og bruger dem til at beskytte siden mod misbrug. Siden gemmer en log over forespørgslerne (adresse, tidspunkt, svar og fejl) i op til tre dage, for at kunne finde fejl.</p>
+<p>Skrifttyper og biblioteker kommer fra siden selv, ikke fra andre.</p>
+
+<h2>Spørgsmål</h2>
+<p>Koden bag siden er åben, så du kan se præcis, hvad den gør. Spørgsmål kan stilles på <a href="${site.sourceURL}">siden med kildekoden</a>.</p>
+</article>`);
 }

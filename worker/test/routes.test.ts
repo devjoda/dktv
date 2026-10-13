@@ -119,23 +119,49 @@ describe("the front page", () => {
 });
 
 describe("every page", () => {
-	test("has sections in the header instead of a name", async () => {
+	test("has the logo, which leads to the front page, and the sections in the header", async () => {
 		const r = await get("/");
+		expect(r.text).toContain('<a class="logo" href="/" aria-label="DKTV, forsiden" aria-current="page">DKTV</a>');
 		const nav = between(r.text, '<nav class="site-nav"', "</nav>");
-		for (const title of ["Forside", "Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]) {
+		for (const title of ["Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]) {
 			expect(nav).toContain(`${title}</a>`);
 		}
-		expect(nav).toContain('<a href="/" class="nav-item" aria-current="page">Forside</a>');
-		// Only in the window's title, and in the link to the source
-		expect(count(r.text, "dktv")).toBe(2);
-		expect(r.text).toContain("<title>dktv</title>");
+		expect(nav).not.toContain("Forside");
+		expect(r.text).toContain("<title>DKTV</title>");
+		expect(r.text).toContain('<link rel="icon" href="/favicon.svg" type="image/svg+xml">');
 	});
 
-	test("links to syncing and to the source", async () => {
+	test("has tabs for small screens, with the one for the page's section current", async () => {
+		const tabs = (path: string) => between(r(path), '<nav class="tab-bar"', "</nav>");
+		const r = (path: string) => pages.get(path)!;
+		const pages = new Map<string, string>();
+		for (const path of ["/", "/kategorier/film/", "/search/?query=matador"]) {
+			pages.set(path, (await get(path)).text);
+		}
+		const titles = [...tabs("/").matchAll(/<\/span>([^<]+)<\/a>/g)].map(m => m[1]);
+		expect(titles).toEqual(["Forside", "Direkte", "Kategorier", "Søg", "Favoritter"]);
+		expect(tabs("/")).toContain('<a href="/" class="tab" aria-current="page">');
+		expect(tabs("/kategorier/film/")).toContain('<a href="/kategorier/" class="tab" aria-current="page">');
+		expect(tabs("/search/?query=matador")).toContain('<a href="/search/" class="tab" aria-current="page">');
+		expect(count(tabs("/kategorier/film/"), "aria-current")).toBe(1);
+	});
+
+	test("says it isn't DR's, and links to privacy, syncing and the source", async () => {
 		const footer = between((await get("/")).text, '<footer class="site-footer">', "</footer>");
+		expect(footer).toContain("DKTV er et uofficielt, uafhængigt projekt og er hverken tilknyttet, godkendt af eller sponsoreret af DR.");
+		expect(footer).toContain('<a href="/privatliv/">Privatliv</a>');
 		expect(footer).toContain('<a href="/sync/">');
 		expect(footer).toContain('<a href="https://github.com/devjoda/dktv">Kildekode</a>');
-		expect(footer).toContain("Ikke tilknyttet DR");
+	});
+
+	test("says what it keeps about its viewers", async () => {
+		const r = await get("/privatliv/");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain("<title>Privatliv - DKTV</title>");
+		expect(r.text).toContain("ingen cookies og ingen sporing");
+		expect(r.text).toContain('<a href="/sync/">Din konto</a>');
+		expect(between(r.text, '<footer class="site-footer">', "</footer>")).toContain('<a href="/privatliv/" aria-current="page">Privatliv</a>');
+		expect((await get("/privatliv")).location).toBe("/privatliv/");
 	});
 
 	test("the source can be elsewhere", async () => {
@@ -447,6 +473,10 @@ describe("categories and lists", () => {
 		expect(r.text).toContain('<span class="category-title">Dokumentar</span>');
 		// Search does A to Å better
 		expect(r.text).not.toContain("a-aa");
+		// Serier, Film and Dokumentar first
+		const urls = [...r.text.matchAll(/<a class="category" href="([^"]+)">/g)].map(m => m[1]);
+		expect(urls.slice(0, 3)).toEqual(["/kategorier/fiktionsserier/", "/kategorier/film/", "/kategorier/dokumentar/"]);
+		expect(urls.length).toBeGreaterThan(3);
 	});
 
 	test("a category", async () => {

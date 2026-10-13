@@ -13,6 +13,8 @@
         <link href="/static/vendor/bootstrap-5.3.3.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH">
         <link href="/static/vendor/schibsted-grotesk-5.3.0-latin.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
         <link href="{{ static_url('style.css') }}" rel="stylesheet">
+        <link rel="icon" href="/favicon.ico" sizes="48x48">
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="manifest" href="{{ static_url('manifest.webmanifest') }}">
         <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
         <script src="{{ static_url('progress.js') }}"></script>
@@ -32,8 +34,8 @@
             <div class="wrap header-bar">
                 {% set path = request.path %}
                 {% set main_categories = ["/kategorier/fiktionsserier/", "/kategorier/film/", "/kategorier/dokumentar/"] %}
+                {# The logo leads to the front page #}
                 {% set sections = [
-                    ("/", "Forside", path == "/"),
                     ("/live/", "Direkte", path.startswith("/live/")),
                     ("/kategorier/fiktionsserier/", "Serier", path == "/kategorier/fiktionsserier/"),
                     ("/kategorier/film/", "Film", path == "/kategorier/film/"),
@@ -41,7 +43,8 @@
                     ("/kategorier/", "Kategorier", path.startswith("/kategorier/") and path not in main_categories),
                     ("/favoritter/", "Favoritter", path.startswith("/favoritter/")),
                 ] %}
-                {# One row that scrolls sideways on small screens, instead of wrapping #}
+                <a class="logo" href="/" aria-label="{{ SERVICE_NAME }}, forsiden"{% if path == "/" %} aria-current="page"{% endif %}>{{ SERVICE_NAME }}</a>
+                {# On small screens, the tabs at the bottom instead #}
                 <nav class="site-nav" aria-label="Hovedmenu">
                     <ul>
                     {% for url, title, current in sections %}
@@ -53,7 +56,7 @@
                     <input type="search" name="query" placeholder="Søg i DRTV" aria-label="Søg" value="{{ query or '' }}" enterkeyhint="search">
                     <button type="submit" class="search-submit" aria-label="Søg">{{ icon("search") }}</button>
                 </form>
-                <a class="search-link" href="/search/" aria-label="Søg">{{ icon("search") }}</a>
+                <a class="search-link" href="/search/" aria-label="Søg"{% if path.startswith("/search/") %} aria-current="page"{% endif %}>{{ icon("search") }}</a>
                 <a class="account-link" href="/sync/" aria-label="Din konto"{% if path.startswith("/sync/") %} aria-current="page"{% endif %}>{{ icon("user") }}</a>
             </div>
         </header>
@@ -67,10 +70,28 @@
         <div id="toast" class="toast-message" role="status" aria-live="polite"></div>
 
         <footer class="site-footer">
-            <p>Uofficiel brugerflade til DRTV. Ikke tilknyttet DR. Udsendelserne kommer direkte fra DR.</p>
-            <a href="/sync/">Din konto og synkronisering mellem dine enheder</a>
-            <a href="{{ source_url }}">Kildekode</a>
+            <a class="logo" href="/" aria-label="{{ SERVICE_NAME }}, forsiden">{{ SERVICE_NAME }}</a>
+            <p>{{ SERVICE_NAME }} er et uofficielt, uafhængigt projekt og er hverken tilknyttet, godkendt af eller sponsoreret af DR. DR og DRTV er DR's varemærker.</p>
+            <nav class="footer-links" aria-label="Om siden">
+                <a href="/privatliv/"{% if request.path.startswith("/privatliv/") %} aria-current="page"{% endif %}>Privatliv</a>
+                <a href="/sync/">Din konto</a>
+                <a href="{{ source_url }}">Kildekode</a>
+            </nav>
         </footer>
+
+        {# The main menu on small screens, at the bottom, where a thumb reaches it #}
+        {% set tabs = [
+            ("/", "Forside", "home", request.path == "/"),
+            ("/live/", "Direkte", "tv", request.path.startswith("/live/")),
+            ("/kategorier/", "Kategorier", "grid", request.path.startswith("/kategorier/")),
+            ("/search/", "Søg", "search", request.path.startswith("/search/")),
+            ("/favoritter/", "Favoritter", "heart", request.path.startswith("/favoritter/")),
+        ] %}
+        <nav class="tab-bar" aria-label="Hovedmenu">
+            {% for url, title, symbol, current in tabs %}
+            <a href="{{ url }}" class="tab"{% if current %} aria-current="page"{% endif %}><span class="tab-icon">{{ icon(symbol) }}{% if url == "/live/" %}<span class="live-dot"></span>{% endif %}</span>{{ title }}</a>
+            {% endfor %}
+        </nav>
 
         <script>
             if ("serviceWorker" in navigator) {

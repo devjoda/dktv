@@ -107,15 +107,25 @@ def test_front_page_features_drs_programmes(get):
     assert '<a class="button button-primary" href="/' in featured
 
 
-def test_header_has_sections_instead_of_a_name(get):
+def test_header_has_the_logo_and_the_sections(get):
     r = get("/")
+    assert '<a class="logo" href="/" aria-label="DKTV, forsiden" aria-current="page">DKTV</a>' in r.text
     nav = r.text.split('<nav class="site-nav"')[1].split("</nav>")[0]
-    for title in ["Forside", "Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]:
+    for title in ["Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]:
         assert f"{title}</a>" in nav
-    assert '<a href="/" class="nav-item" aria-current="page">Forside</a>' in nav
-    # Only in the window's title, and in the link to the source
-    assert r.text.count("dktv") == 2
-    assert "<title>dktv</title>" in r.text
+    assert "Forside" not in nav
+    assert "<title>DKTV</title>" in r.text
+    assert '<link rel="icon" href="/favicon.svg" type="image/svg+xml">' in r.text
+
+
+def test_small_screens_have_tabs(get):
+    def tabs(path):
+        return get(path).text.split('<nav class="tab-bar"')[1].split("</nav>")[0]
+    assert re.findall(r"</span>([^<]+)</a>", tabs("/")) == ["Forside", "Direkte", "Kategorier", "Søg", "Favoritter"]
+    assert '<a href="/" class="tab" aria-current="page">' in tabs("/")
+    film = tabs("/kategorier/film/")
+    assert '<a href="/kategorier/" class="tab" aria-current="page">' in film
+    assert film.count("aria-current") == 1
 
 
 def test_films_can_be_favourites_from_their_page(get):
@@ -152,11 +162,23 @@ def test_all_of_a_list(get, fake_dr, monkeypatch):
     assert get("/liste/355817/").text.count("<h1>Film: A - Å</h1>") == 1
 
 
-def test_footer_links_to_syncing_and_the_source(get):
+def test_footer_says_it_isnt_drs_and_links_to_privacy_syncing_and_the_source(get):
     footer = get("/").text.split('<footer class="site-footer">')[1].split("</footer>")[0]
+    assert "DKTV er et uofficielt, uafhængigt projekt og er hverken tilknyttet, godkendt af eller sponsoreret af DR." in footer
+    assert '<a href="/privatliv/">Privatliv</a>' in footer
     assert '<a href="/sync/">' in footer
     assert '<a href="https://github.com/devjoda/dktv">Kildekode</a>' in footer
-    assert "Ikke tilknyttet DR" in footer
+
+
+def test_privacy(get):
+    r = get("/privatliv/")
+    assert r.status_code == 200
+    assert "<title>Privatliv - DKTV</title>" in r.text
+    assert "ingen cookies og ingen sporing" in r.text
+
+
+def test_favicon(get):
+    assert get("/favicon.svg").text.startswith("<svg")
 
 
 def test_the_source_can_be_elsewhere(get, monkeypatch):
@@ -191,6 +213,10 @@ def test_categories(get):
     assert '<span class="category-title">Dokumentar</span>' in r.text
     # Search does A to Å better
     assert "a-aa" not in r.text
+    # Serier, Film and Dokumentar first
+    urls = re.findall(r'<a class="category" href="([^"]+)">', r.text)
+    assert urls[:3] == ["/kategorier/fiktionsserier/", "/kategorier/film/", "/kategorier/dokumentar/"]
+    assert len(urls) > 3
 
 
 def test_category(get):

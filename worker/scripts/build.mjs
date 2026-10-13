@@ -32,6 +32,7 @@ for (const path of files(source)) {
 // From the root, so it may keep images for every page
 wanted.set("sw.js", readFileSync(join(source, "sw.js")));
 wanted.set("favicon.ico", readFileSync(join(root, "..", "drtvrss", "templates", "favicon.ico")));
+wanted.set("favicon.svg", readFileSync(join(root, "..", "drtvrss", "templates", "favicon.svg")));
 // Our own files' URLs change with them, so browsers may keep them for good.
 // The libraries have their versions in their names.
 wanted.set("_headers", `/static/*
@@ -39,6 +40,8 @@ wanted.set("_headers", `/static/*
 /sw.js
   Cache-Control: no-cache
 /favicon.ico
+  Cache-Control: public, max-age=86400
+/favicon.svg
   Cache-Control: public, max-age=86400
 `);
 

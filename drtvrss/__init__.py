@@ -40,7 +40,7 @@ app.add_template_filter(clock)
 app.add_template_global(whats_on)
 app.add_template_test(is_new, "new")
 
-SERVICE_NAME = os.getenv("SERVICE_NAME", "dktv")
+SERVICE_NAME = os.getenv("SERVICE_NAME", "DKTV")
 # Where the code that runs here can be got
 SOURCE_URL = os.getenv("SOURCE_URL", "https://github.com/devjoda/dktv")
 
@@ -105,7 +105,7 @@ async def compress(response):
 
 @app.context_processor
 def footer():
-    return {"source_url": SOURCE_URL}
+    return {"source_url": SOURCE_URL, "SERVICE_NAME": SERVICE_NAME}
 
 
 def birthday() -> Optional[int]:
@@ -166,11 +166,15 @@ async def index():
     )
 
 
+MAIN_CATEGORIES = ["/kategorier/fiktionsserier/", "/kategorier/film/", "/kategorier/dokumentar/"]
+
+
 @app.route("/kategorier/")
 async def categories():
     return await render_template(
         "categories.html",
-        categories=await discover.get_categories(),
+        # Serier, Film and Dokumentar first, which small screens' tabs lead here for
+        categories=sorted(await discover.get_categories(), key=lambda c: MAIN_CATEGORIES.index(c.url) if c.url in MAIN_CATEGORIES else len(MAIN_CATEGORIES)),
         SERVICE_NAME=SERVICE_NAME,
         birthday=birthday(),
         channels=await get_channels(),
@@ -234,12 +238,26 @@ async def favorites_page():
     )
 
 
+@app.route("/privatliv/")
+async def privacy():
+    return await render_template("privacy.html", birthday=birthday())
+
+
 @app.route("/favicon.ico")
 async def favicon():
     return await send_from_directory(
         os.path.join(app.root_path, "templates"),
         "favicon.ico",
         mimetype="image/vnd.microsoft.icon",
+    )
+
+
+@app.route("/favicon.svg")
+async def favicon_svg():
+    return await send_from_directory(
+        os.path.join(app.root_path, "templates"),
+        "favicon.svg",
+        mimetype="image/svg+xml",
     )
 
 

@@ -52,6 +52,8 @@ token, so nothing else needs it.
   which git ignores.
 - Deploy only to workers.dev, never to another domain.
 - Serve every library and font from the site itself: no CDNs, no Google Fonts, no tracking.
+- The site is called DKTV (`SERVICE_NAME`): its logo is the name in Schibsted Grotesk, and
+  `worker/scripts/icons.py` draws the favicon and the app's icons from that font.
 - Keep to the look: warm white on ink, Schibsted Grotesk, the programmes' pictures for colour, red only for live and
   progress. No all-caps labels, and no meta joined with " · ".
 - Commits: `feat:`, `fix:`, `perf:`, `test:` or `docs:`, then what the change does for viewers, in a sentence.

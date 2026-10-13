@@ -161,10 +161,28 @@ h1, h2, h3 {
     padding-block: 12px;
 }
 
+/* DKTV, in the site's own letters, which leads to the front page */
+.logo {
+    flex: none;
+    color: var(--paper);
+    font-size: 1.625rem;
+    font-weight: 850;
+    line-height: 1;
+    letter-spacing: -.045em;
+    text-decoration: none;
+}
+
+.logo:hover {
+    color: #fff;
+}
+
+.has-hero .site-header:not(.is-scrolled) .logo {
+    text-shadow: 0 1px 8px rgba(0, 0, 0, .6);
+}
+
 .site-nav {
     flex: 1;
     min-width: 0;
-    margin-left: -12px;
     overflow-x: auto;
     scrollbar-width: none;
 }
@@ -229,24 +247,27 @@ h1, h2, h3 {
     min-width: 0;
 }
 
-/* Instead of the search box, on small screens */
+/* Instead of the search box, where the header has no room for it, and the tabs have no search */
 .search-link {
-    display: grid;
+    display: none;
     place-items: center;
     flex: none;
     width: 40px;
     height: 40px;
+    margin-left: auto;
     border-radius: 50%;
     color: var(--paper);
 }
 
-.search-link:hover {
+.search-link:hover,
+.search-link[aria-current] {
     background: rgba(242, 239, 233, .12);
     color: #fff;
 }
 
 /* The viewer's account, at the end of the header */
 .account-link {
+    margin-left: auto;
     display: grid;
     place-items: center;
     flex: none;
@@ -304,7 +325,99 @@ h1, h2, h3 {
     color: var(--paper);
 }
 
+/* The main menu on small screens: tabs at the bottom, where a thumb reaches them, instead of the header's
+   sections, which didn't all fit */
+.tab-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1030;
+    display: flex;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: rgba(15, 16, 19, .94);
+    backdrop-filter: saturate(150%) blur(16px);
+    -webkit-backdrop-filter: saturate(150%) blur(16px);
+    border-top: 1px solid var(--line);
+}
+
+.tab {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 2px 10px;
+    color: var(--muted);
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tab-icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 30px;
+    border-radius: 999px;
+    transition: background-color .15s;
+}
+
+.tab-icon .icon {
+    width: 24px;
+    height: 24px;
+}
+
+.tab-icon .live-dot {
+    position: absolute;
+    top: 3px;
+    right: 13px;
+    box-shadow: 0 0 0 2px var(--ink);
+}
+
+.tab:hover,
+.tab[aria-current] {
+    color: var(--paper);
+}
+
+.tab[aria-current] .tab-icon {
+    background: rgba(242, 239, 233, .14);
+}
+
+@media (max-width: 899.98px) {
+    .site-nav {
+        display: none;
+    }
+
+    /* So the end of the page isn't hidden under the tabs */
+    body {
+        padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
 @media (min-width: 900px) {
+    .search-link {
+        display: grid;
+    }
+
+    .account-link {
+        margin-left: 0;
+    }
+
+    .tab-bar {
+        display: none;
+    }
+
+    .footer-links {
+        margin-left: auto;
+    }
+}
+
+@media (min-width: 1180px) {
     .header-search {
         display: block;
     }
@@ -2077,6 +2190,54 @@ video + .up-next {
     margin: 32px auto 24px;
 }
 
+/* Pages to read, like the one about privacy */
+
+.prose {
+    max-width: 760px;
+    padding-top: 56px;
+}
+
+.prose h1 {
+    margin: 0 0 16px;
+    font-size: var(--text-h1);
+    font-weight: 850;
+    letter-spacing: -.035em;
+    text-wrap: balance;
+}
+
+.prose-lead {
+    color: var(--paper);
+    font-size: var(--text-lead);
+}
+
+.prose h2 {
+    margin: 40px 0 10px;
+    font-size: var(--text-h3);
+    font-weight: 750;
+    letter-spacing: -.015em;
+}
+
+.prose p,
+.prose li {
+    color: var(--muted);
+    max-width: 66ch;
+}
+
+.prose ul {
+    padding-left: 1.25em;
+}
+
+.prose li + li {
+    margin-top: 6px;
+}
+
+.prose a {
+    color: var(--paper);
+    text-decoration: underline;
+    text-decoration-color: rgba(242, 239, 233, .35);
+    text-underline-offset: 3px;
+}
+
 /* Synchronising between devices */
 
 .sync-page {
@@ -2296,32 +2457,52 @@ video + .up-next {
     opacity: 1;
 }
 
+/* Above the tabs, on small screens */
+@media (max-width: 899.98px) {
+    .toast-message {
+        bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
 /* Footer */
 
 .site-footer {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 32px;
+    align-items: baseline;
+    gap: 12px 32px;
     margin-top: 120px;
-    padding: 32px var(--gutter) 48px;
+    padding: 40px var(--gutter) 48px;
     border-top: 1px solid var(--line);
     font-size: .9375rem;
 }
 
+.site-footer .logo {
+    font-size: 1.25rem;
+}
+
 .site-footer p {
-    flex-basis: 100%;
-    margin: 0 0 4px;
+    flex: 1 1 320px;
+    max-width: 62ch;
+    margin: 0;
     color: var(--muted);
 }
 
-.site-footer a {
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+}
+
+.footer-links a {
     color: var(--paper);
     text-decoration: underline;
     text-decoration-color: rgba(242, 239, 233, .35);
     text-underline-offset: 3px;
 }
 
-.site-footer a:hover {
+.footer-links a:hover,
+.footer-links a[aria-current] {
     text-decoration-color: var(--paper);
 }
 

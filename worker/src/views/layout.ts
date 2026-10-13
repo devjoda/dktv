@@ -29,17 +29,28 @@ export const LIBRARIES = {
 	plyrStyle: {href: "/static/vendor/plyr-3.8.4.css", integrity: "sha384-VqqE0KSv00qfHvKpRa8aov+g3xtUu2Rw0NsEmtjTOPGn/JDKVghgd56iw/VObHa7"},
 };
 
-const MAIN_CATEGORIES = ["/kategorier/fiktionsserier/", "/kategorier/film/", "/kategorier/dokumentar/"];
+export const MAIN_CATEGORIES = ["/kategorier/fiktionsserier/", "/kategorier/film/", "/kategorier/dokumentar/"];
 
+/** The header's sections; the logo leads to the front page */
 function sections(path: string): [string, string, boolean][] {
 	return [
-		["/", "Forside", path == "/"],
 		["/live/", "Direkte", path.startsWith("/live/")],
 		["/kategorier/fiktionsserier/", "Serier", path == "/kategorier/fiktionsserier/"],
 		["/kategorier/film/", "Film", path == "/kategorier/film/"],
 		["/kategorier/dokumentar/", "Dokumentar", path == "/kategorier/dokumentar/"],
 		["/kategorier/", "Kategorier", path.startsWith("/kategorier/") && !MAIN_CATEGORIES.includes(path)],
 		["/favoritter/", "Favoritter", path.startsWith("/favoritter/")],
+	];
+}
+
+/** The tabs at the bottom of small screens, instead of the header's sections: [url, name, icon, current] */
+function tabs(path: string): [string, string, string, boolean][] {
+	return [
+		["/", "Forside", "home", path == "/"],
+		["/live/", "Direkte", "tv", path.startsWith("/live/")],
+		["/kategorier/", "Kategorier", "grid", path.startsWith("/kategorier/")],
+		["/search/", "Søg", "search", path.startsWith("/search/")],
+		["/favoritter/", "Favoritter", "heart", path.startsWith("/favoritter/")],
 	];
 }
 
@@ -77,6 +88,8 @@ ${head}
 <link href="${LIBRARIES.bootstrap.href}" rel="stylesheet" integrity="${LIBRARIES.bootstrap.integrity}">
 <link href="/static/vendor/schibsted-grotesk-5.3.0-latin.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
 <link href="${staticURL("style.css")}" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="${staticURL("manifest.webmanifest")}">
 <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
 <script src="${staticURL("progress.js")}"></script>
@@ -92,6 +105,7 @@ ${ICONS}
 ${site.birthday ? html`<div class="birthday">🇩🇰 Tillykke til DR med de ${site.birthday} år! 🇩🇰</div>` : ""}
 <header class="site-header">
 <div class="wrap header-bar">
+<a class="logo" href="/" aria-label="${site.serviceName}, forsiden"${attr("aria-current", site.path == "/" && "page")}>${site.serviceName}</a>
 <nav class="site-nav" aria-label="Hovedmenu">
 <ul>
 ${each(sections(site.path), ([url, name, current]) =>
@@ -102,7 +116,7 @@ ${each(sections(site.path), ([url, name, current]) =>
 <input type="search" name="query" placeholder="Søg i DRTV" aria-label="Søg" value="${site.query || ""}" enterkeyhint="search">
 <button type="submit" class="search-submit" aria-label="Søg">${icon("search")}</button>
 </form>
-<a class="search-link" href="/search/" aria-label="Søg">${icon("search")}</a>
+<a class="search-link" href="/search/" aria-label="Søg"${attr("aria-current", site.path.startsWith("/search/") && "page")}>${icon("search")}</a>
 <a class="account-link" href="/sync/" aria-label="Din konto"${attr("aria-current", site.path.startsWith("/sync/") && "page")}>${icon("user")}</a>
 </div>
 </header>
@@ -111,10 +125,18 @@ ${content}
 </main>
 <div id="toast" class="toast-message" role="status" aria-live="polite"></div>
 <footer class="site-footer">
-<p>Uofficiel brugerflade til DRTV. Ikke tilknyttet DR. Udsendelserne kommer direkte fra DR.</p>
-<a href="/sync/">Din konto og synkronisering mellem dine enheder</a>
+<a class="logo" href="/" aria-label="${site.serviceName}, forsiden">${site.serviceName}</a>
+<p>${site.serviceName} er et uofficielt, uafhængigt projekt og er hverken tilknyttet, godkendt af eller sponsoreret af DR. DR og DRTV er DR's varemærker.</p>
+<nav class="footer-links" aria-label="Om siden">
+<a href="/privatliv/"${attr("aria-current", site.path.startsWith("/privatliv/") && "page")}>Privatliv</a>
+<a href="/sync/">Din konto</a>
 <a href="${site.sourceURL}">Kildekode</a>
+</nav>
 </footer>
+<nav class="tab-bar" aria-label="Hovedmenu">
+${each(tabs(site.path), ([url, name, symbol, current]) =>
+	html`<a href="${url}" class="tab"${attr("aria-current", current && "page")}><span class="tab-icon">${icon(symbol)}${url == "/live/" ? html`<span class="live-dot"></span>` : ""}</span>${name}</a>\n`)}
+</nav>
 <script>
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/sw.js").catch(() => {});

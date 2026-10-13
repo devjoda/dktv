@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Privatliv - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block content %}
+{# Like the Worker's privacyPage(), without what only the Worker has: passkeys, notifications, Se sammen and marking intros #}
+<article class="prose wrap">
+    <h1>Privatliv</h1>
+    <p class="prose-lead">{{ SERVICE_NAME }} har ingen reklamer, ingen cookies og ingen sporing. Siden bruger ingen analyseværktøjer, og den sælger eller deler ikke noget om dig. Her er alt, hvad den gemmer, og hvor.</p>
+
+    <h2>I din browser</h2>
+    <p>Det meste gemmes kun på din egen enhed, i browserens lager. Det forlader ikke enheden, medmindre du opretter en konto.</p>
+    <ul>
+        <li>Dine favoritter, og hvor langt du er nået i det, du ser.</li>
+        <li>Dine valg: undertekster til direkte TV, om sete afsnit skjules, og afspillerens lydstyrke, hastighed og undertekster.</li>
+        <li>Din kode, hvis du har en konto.</li>
+        <li>Programmernes billeder, så siderne åbner hurtigere.</li>
+    </ul>
+    <p>Du sletter det hele ved at slette sidens data i din browser.</p>
+
+    <h2>Hvis du har en konto</h2>
+    <p>En konto er en kode. Den kræver hverken e-mail, navn eller adgangskode. Under koden gemmes på serveren dine favoritter, og hvor langt du er nået, så dine enheder kan dele dem.</p>
+    <p>Det gemmes, indtil du sletter kontoen. Det kan du gøre under <a href="/sync/">Din konto</a>, og så slettes alt, der hører til koden.</p>
+
+    <h2>DR</h2>
+    <p>Videoerne, underteksterne og billederne kommer direkte fra DR's servere til din browser, ligesom på DRTV. DR får derfor din IP-adresse og oplysninger om din browser, og DR's egne regler for privatliv gælder for det. Din browser fortæller ikke DR, at du kom fra {{ SERVICE_NAME }}.</p>
+
+    <h2>Driften</h2>
+    <p>Som enhver webserver ser serveren, siden kører på, din IP-adresse og browser, når den sender dig siderne.</p>
+    <p>Skrifttyper og biblioteker kommer fra siden selv, ikke fra andre.</p>
+
+    <h2>Spørgsmål</h2>
+    <p>Koden bag siden er åben, så du kan se præcis, hvad den gør. Spørgsmål kan stilles på <a href="{{ source_url }}">siden med kildekoden</a>.</p>
+</article>
+{% endblock %}

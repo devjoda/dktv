@@ -57,7 +57,7 @@ function birthday(): number | undefined {
 
 function site(c: Context<App>, query?: string): Site {
 	return {
-		serviceName: c.env.SERVICE_NAME || "dktv",
+		serviceName: c.env.SERVICE_NAME || "DKTV",
 		sourceURL: c.env.SOURCE_URL || DEFAULT_SOURCE_URL,
 		path: c.req.path,
 		query,
@@ -207,6 +207,8 @@ app.get("/live/:channel", edgeCached(2 * MINUTE), async c => {
 app.get("/favoritter/", edgeCached(60 * MINUTE), c => render(c, pages.favoritesPage(site(c))));
 
 app.get("/sync/", edgeCached(60 * MINUTE), c => render(c, pages.syncPage(site(c))));
+
+app.get("/privatliv/", edgeCached(60 * MINUTE), c => render(c, pages.privacyPage(site(c))));
 
 /** Each of ids described, until a visit can't ask DR about more. What's left is for the next visit. */
 async function describeAll<T>(ids: string[], describe: (id: string) => Promise<T>): Promise<[Record<string, T>, string[]]> {
@@ -489,7 +491,7 @@ app.delete("/push/:code", async c => {
 /** Where passkeys are made for: this site */
 function passkeySite(c: Context<App>): passkeys.Site {
 	const url = new URL(c.req.url);
-	return {origin: url.origin, rpId: url.hostname, name: c.env.SERVICE_NAME || "dktv"};
+	return {origin: url.origin, rpId: url.hostname, name: c.env.SERVICE_NAME || "DKTV"};
 }
 
 app.post("/passkeys/:code/options", async c => {

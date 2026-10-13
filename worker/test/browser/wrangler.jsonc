@@ -26,7 +26,7 @@
 		}
 	],
 	"vars": {
-		"SERVICE_NAME": "dktv",
+		"SERVICE_NAME": "DKTV",
 		"SOURCE_URL": "https://github.com/devjoda/dktv",
 		"RECOMMENDED_SHOWS": ""
 	},
