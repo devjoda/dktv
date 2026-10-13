@@ -167,7 +167,7 @@ ${tile({href: n.url, image: n.wallpaper, title: n.title, minutes: n.minutes, vid
 export function videoPage(site: Site, {show, e, description, previous, next}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour}): Html {
 	const film = show === undefined ? (e as Program) : undefined;
 	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title, head: show ? feedLink(show) : undefined, scripts: PLAYER_SCRIPTS}, html`<div class="stage">
-<video id="video" controls crossorigin="anonymous"${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}></video>
+<video id="video" controls crossorigin="anonymous"${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)}${attr("data-previous-url", previous?.url)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}></video>
 </div>
 <div class="watch">
 <div>

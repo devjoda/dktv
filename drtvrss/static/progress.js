@@ -157,6 +157,7 @@ function markProgress() {
             : all ? "Alle afsnit set"
             : `${seen} af ${ids.length} afsnit set`;
     }
+    updateSeenButtons();
 }
 
 // Where the play button for a show should take the viewer:
@@ -165,7 +166,9 @@ function playTarget(episodes) {
     let latest = null;
     episodes.forEach((episode, index) => {
         const progress = loadProgress(episode.id);
-        if (progress && progress.updated && (latest == null || progress.updated > latest.progress.updated)) {
+        // Not those marked as not seen, which say nothing about where the viewer is
+        const meaningful = progress && (progress.time > 0 || progress.watched);
+        if (meaningful && progress.updated && (latest == null || progress.updated > latest.progress.updated)) {
             latest = {index, progress};
         }
     });
@@ -196,6 +199,70 @@ function updatePlayButtons() {
         button.dataset.targetId = target.episode.id;
     }
 }
+
+// Marks a video as seen, or not, like one the viewer watched somewhere else, like on their TV
+function setSeen(videoID, seen, at = Date.now()) {
+    const previous = loadProgress(videoID) || {};
+    storeProgress(videoID, {...previous, time: 0, duration: previous.duration || null, watched: seen, updated: at});
+}
+
+// Buttons to mark an episode, or all of a season's, as seen: one on each episode, and one above each season
+function setupSeenButtons() {
+    for (const link of document.querySelectorAll(".episodes a.episode[data-video-id]")) {
+        const item = link.closest("li");
+        if (item.querySelector(".js-seen-toggle")) {
+            continue;
+        }
+        const title = link.querySelector(".episode-title").textContent;
+        item.classList.add("has-seen-toggle");
+        item.append(element("button", {type: "button", class: "seen-toggle js-seen-toggle", "data-seen-ids": link.dataset.videoId, "data-title": title}, icon("check")));
+    }
+    const panels = document.querySelectorAll(".season-panel");
+    for (const panel of panels) {
+        if (panel.querySelector(".season-actions")) {
+            continue;
+        }
+        const ids = [...panel.querySelectorAll("a.episode[data-video-id]")].map(link => link.dataset.videoId);
+        if (ids.length < 2) {
+            continue;
+        }
+        const button = element("button", {type: "button", class: "button button-quiet js-seen-toggle", "data-seen-ids": ids.join(" "), "data-whole": panels.length > 1 ? "sæsonen" : "alle afsnit"}, icon("check"), element("span"));
+        panel.querySelector(".episodes").before(element("div", {class: "season-actions"}, button));
+    }
+    updateSeenButtons();
+}
+
+function updateSeenButtons() {
+    for (const button of document.querySelectorAll(".js-seen-toggle")) {
+        const all = button.dataset.seenIds.split(" ").every(id => (loadProgress(id) || {}).watched);
+        button.setAttribute("aria-pressed", String(all));
+        if (button.dataset.whole) {
+            button.querySelector("span").textContent = all ? `Markér ${button.dataset.whole} som ikke set` : `Markér ${button.dataset.whole} som set`;
+        } else {
+            const label = all ? `Set. Markér ${button.dataset.title} som ikke set` : `Markér ${button.dataset.title} som set`;
+            button.setAttribute("aria-label", label);
+            button.title = all ? "Markér som ikke set" : "Markér som set";
+        }
+    }
+}
+
+document.addEventListener("click", function (event) {
+    const button = event.target.closest(".js-seen-toggle");
+    if (button == null) {
+        return;
+    }
+    const ids = button.dataset.seenIds.split(" ");
+    const seen = !ids.every(id => (loadProgress(id) || {}).watched);
+    // In order, so the last one counts as where the viewer got to
+    const now = Date.now();
+    ids.forEach((id, i) => setSeen(id, seen, now + i));
+    scheduleSync();
+    markProgress();
+    updatePlayButtons();
+    showContinueWatching();
+    const what = button.dataset.whole ? button.dataset.whole[0].toUpperCase() + button.dataset.whole.slice(1) : button.dataset.title;
+    announce(seen ? `${what} er markeret som set` : `${what} er markeret som ikke set`);
+});
 
 // The videos the viewer started but didn't finish, most recently watched first
 function startedVideos() {

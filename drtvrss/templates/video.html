@@ -17,6 +17,7 @@
     <video id="video" controls crossorigin="anonymous"
         {%- if e.wallpaper %} poster="{{ e.wallpaper|thumbnail(1280) }}"{% endif %}
         {%- if next %} data-next-url="{{ next.url }}" data-next-title="{{ next.title }}"{% endif %}
+        {%- if previous %} data-previous-url="{{ previous.url }}"{% endif %}
         data-title="{{ e.title }}"
         {%- if s %} data-show="{{ s.title }}"{% endif %}
         {%- if e.wallpaper %} data-image="{{ e.wallpaper|thumbnail }}"{% endif %}></video>

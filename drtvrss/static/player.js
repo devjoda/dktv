@@ -60,7 +60,7 @@ function setupControls(video, live = false) {
         // Off until the viewer turns them on; Plyr remembers that for the next video
         captions: {active: false, language: "da", update: true},
         speed: {selected: 1, options: [0.75, 1, 1.25, 1.5, 2]},
-        seekTime: 15,
+        seekTime: SKIP_SECONDS,
         invertTime: false,
         keyboard: {focused: true, global: true},
         tooltips: {controls: true, seek: true},
@@ -272,9 +272,112 @@ function liveSubtitlesButton(video) {
 }
 
 // Plays a live channel, with or without subtitles, as the viewer last chose
+// How far the skip buttons, and those on headphones and lock screens, skip, in seconds
+const SKIP_SECONDS = 15;
+
+// Shows what plays on the phone's lock screen, and in the system's media controls,
+// with the buttons there, and on headphones, working too
+function setupMediaSession(video, {title, show, live = false}) {
+    if (!("mediaSession" in navigator) || typeof MediaMetadata == "undefined") {
+        return;
+    }
+    const artwork = [video.dataset.image && {src: video.dataset.image, sizes: "640x360", type: "image/jpeg"},
+        video.poster && {src: video.poster, sizes: "1280x720", type: "image/jpeg"}].filter(Boolean);
+    navigator.mediaSession.metadata = new MediaMetadata({title, artist: show || "DRTV", album: live ? "Direkte" : "", artwork});
+    const handle = function (action, handler) {
+        try {
+            navigator.mediaSession.setActionHandler(action, handler);
+        } catch (error) {
+            // Not every browser has every action
+        }
+    };
+    handle("play", () => video.play());
+    handle("pause", () => video.pause());
+    if (live) {
+        return;
+    }
+    const skip = function (seconds) {
+        video.currentTime = Math.min(Math.max(video.currentTime + seconds, 0), video.duration || Infinity);
+    };
+    handle("seekbackward", details => skip(-(details.seekOffset || SKIP_SECONDS)));
+    handle("seekforward", details => skip(details.seekOffset || SKIP_SECONDS));
+    handle("seekto", details => { video.currentTime = details.seekTime; });
+    handle("nexttrack", video.dataset.nextUrl ? () => location.assign(video.dataset.nextUrl) : null);
+    handle("previoustrack", video.dataset.previousUrl ? () => location.assign(video.dataset.previousUrl) : null);
+    // Where it's got to, for the lock screen's progress bar
+    const position = function () {
+        if (isFinite(video.duration) && video.duration > 0 && navigator.mediaSession.setPositionState) {
+            try {
+                navigator.mediaSession.setPositionState({duration: video.duration, playbackRate: video.playbackRate, position: Math.min(video.currentTime, video.duration)});
+            } catch (error) {
+                console.error("Could not show the position:", error);
+            }
+        }
+    };
+    for (const event of ["loadedmetadata", "seeked", "ratechange", "pause", "play"]) {
+        video.addEventListener(event, position);
+    }
+}
+
+// Like 12:34, or 1:02:03
+function clockOf(seconds) {
+    const s = Math.floor(seconds);
+    const parts = [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60];
+    const [hours, minutes, rest] = parts;
+    return (hours ? `${hours}:${String(minutes).padStart(2, "0")}` : String(minutes)) + ":" + String(rest).padStart(2, "0");
+}
+
+// Where a link said to start, like ?t=754, in seconds, or null
+function startFromLink() {
+    const t = Number(new URLSearchParams(location.search).get("t"));
+    return Number.isFinite(t) && t > 0 ? t : null;
+}
+
+// A button to share the video from where it's got to, like a link to /…?t=754
+function setupSharing(video) {
+    const actions = document.querySelector(".watch .actions");
+    if (actions == null || actions.querySelector(".js-share")) {
+        return;
+    }
+    const label = element("span", {}, "Del");
+    const button = element("button", {type: "button", class: "button button-secondary js-share"}, icon("share"), label);
+    const from = () => Math.floor(video.currentTime) >= 5 ? Math.floor(video.currentTime) : 0;
+    let shown = -1;
+    video.addEventListener("timeupdate", function () {
+        if (from() != shown) {
+            shown = from();
+            label.textContent = shown ? `Del fra ${clockOf(shown)}` : "Del";
+        }
+    });
+    button.addEventListener("click", async function () {
+        const url = location.origin + location.pathname + (from() ? `?t=${from()}` : "");
+        const title = [video.dataset.show, video.dataset.title].filter(Boolean).join(": ");
+        if (navigator.share && matchMedia("(pointer: coarse)").matches) {
+            try {
+                await navigator.share({title, url});
+                return;
+            } catch (error) {
+                if (error.name == "AbortError") {
+                    return;
+                }
+            }
+        }
+        try {
+            await navigator.clipboard.writeText(url);
+            announce(from() ? `Linket til ${clockOf(from())} er kopieret` : "Linket er kopieret");
+        } catch (error) {
+            prompt("Kopiér linket:", url);
+        }
+    });
+    actions.prepend(button);
+}
+
 function setupLive(video, url, subtitlesURL) {
     setupControls(video, true);
     showLoading(video);
+    const channel = document.querySelector(".watch-title");
+    const onNow = document.querySelector(".programme.is-now .programme-title");
+    setupMediaSession(video, {title: onNow ? onNow.textContent : channel.textContent, show: channel.textContent, live: true});
     const button = liveSubtitlesButton(video);
     let withSubtitles = false;
     try {
@@ -342,6 +445,8 @@ function attachStream(video, src) {
 async function playVideo(video, videoID) {
     setupControls(video);
     showLoading(video);
+    setupMediaSession(video, {title: video.dataset.title, show: video.dataset.show});
+    setupSharing(video);
     let stream;
     try {
         stream = await getStream(videoID);
@@ -352,7 +457,11 @@ async function playVideo(video, videoID) {
     }
     const progress = loadProgress(videoID);
     video.addEventListener("loadedmetadata", function () {
-        if (progress != null && progress.time > 0 && !isFinished(progress.time, video.duration)) {
+        // Where a shared link says, or where the viewer got to
+        const start = startFromLink();
+        if (start != null && start < video.duration) {
+            video.currentTime = start;
+        } else if (progress != null && progress.time > 0 && !isFinished(progress.time, video.duration)) {
             video.currentTime = Math.max(0, progress.time - RESUME_REWIND);
         }
         // Only now, so the start of the video doesn't overwrite where the viewer got to

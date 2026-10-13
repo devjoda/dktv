@@ -350,12 +350,66 @@ window.addEventListener("scroll", updateHeader, {passive: true});
 document.addEventListener("DOMContentLoaded", setupFeatured);
 
 // Also when coming back to a page, which the browser may have kept as it was
+// How many tiles a list has before it gets a field to find among them
+const FILTER_FROM = 20;
+
+// Like "aeroe" for "Ærø", to find titles however they're typed
+function plain(text) {
+    return text.toLowerCase().replace(/æ/g, "ae").replace(/ø/g, "oe").replace(/å/g, "aa")
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+// A field to find among a long list's tiles, like all films from A to Å, and a choice to hide what's seen
+function setupListFilters() {
+    for (const grid of document.querySelectorAll(".tile-grid.results")) {
+        const tiles = [...grid.querySelectorAll(":scope > .tile")];
+        if (tiles.length < FILTER_FROM || grid.dataset.filtered) {
+            continue;
+        }
+        grid.dataset.filtered = "true";
+        const field = element("input", {type: "search", class: "list-filter-field", placeholder: "Find i listen", "aria-label": "Find i listen", enterkeyhint: "search"});
+        const hideSeen = element("input", {type: "checkbox", class: "form-check-input"});
+        const count = element("p", {class: "meta list-filter-count", role: "status"});
+        try {
+            hideSeen.checked = localStorage.getItem("hideSeen") == "true";
+        } catch (error) {
+            // Shown, then
+        }
+        const titles = tiles.map(tile => plain(tile.querySelector(".tile-title").textContent));
+        const apply = function () {
+            const wanted = plain(field.value.trim());
+            let shown = 0;
+            tiles.forEach(function (tile, i) {
+                tile.hidden = !titles[i].includes(wanted) || (hideSeen.checked && tile.classList.contains("is-seen"));
+                shown += tile.hidden ? 0 : 1;
+            });
+            count.textContent = shown == tiles.length ? `${tiles.length} titler` : `${shown} af ${tiles.length} titler`;
+        };
+        field.addEventListener("input", apply);
+        hideSeen.addEventListener("change", function () {
+            try {
+                localStorage.setItem("hideSeen", hideSeen.checked);
+            } catch (error) {
+                // Only for now, then
+            }
+            apply();
+        });
+        grid.before(element("div", {class: "list-filter"},
+            element("div", {class: "list-filter-search"}, icon("search"), field),
+            element("label", {class: "list-filter-seen"}, hideSeen, " Skjul det, du har set"),
+            count));
+        apply();
+    }
+}
+
 window.addEventListener("pageshow", function () {
     updateHeader();
     updateSchedule();
     syncOnVisit();
     setupSyncPage();
+    setupSeenButtons();
     markProgress();
+    setupListFilters();
     showContinueWatching();
     showFavorites();
     updateFavoriteButtons();

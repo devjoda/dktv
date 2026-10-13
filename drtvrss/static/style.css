@@ -1215,6 +1215,115 @@ a:hover .channel-art {
     color: var(--muted);
 }
 
+/* Marking an episode, or a whole season, as seen, for what the viewer watched elsewhere */
+.has-seen-toggle {
+    position: relative;
+}
+
+.has-seen-toggle .episode {
+    padding-right: 64px;
+}
+
+.seen-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: none;
+    color: var(--muted);
+    transform: translateY(-50%);
+    transition: background-color .15s, color .15s, border-color .15s;
+}
+
+.seen-toggle:hover {
+    border-color: rgba(242, 239, 233, .4);
+    color: var(--paper);
+}
+
+.seen-toggle[aria-pressed=true] {
+    border-color: transparent;
+    background: rgba(91, 214, 155, .16);
+    color: var(--seen);
+}
+
+.season-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-inline: var(--gutter);
+}
+
+.season-actions .button[aria-pressed=true] .icon {
+    color: var(--seen);
+}
+
+@media (max-width: 575px) {
+    .has-seen-toggle .episode {
+        padding-right: 48px;
+    }
+
+    .seen-toggle {
+        right: 4px;
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* Finding something in a long list, like all films from A to Å */
+.list-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    margin: 24px var(--gutter) 28px;
+}
+
+.list-filter-search {
+    position: relative;
+    flex: 0 1 360px;
+}
+
+.list-filter-search .icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    color: var(--muted);
+    transform: translateY(-50%);
+}
+
+.list-filter-field {
+    width: 100%;
+    padding: 9px 16px 9px 42px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .06);
+    color: var(--paper);
+}
+
+.list-filter-field:focus {
+    outline: none;
+    border-color: rgba(242, 239, 233, .5);
+}
+
+.list-filter-seen {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+}
+
+.list-filter-count {
+    margin-left: auto;
+}
+
+.list-filter + .tile-grid.results {
+    margin-top: 0;
+}
+
 @media (max-width: 575px) {
     .episode {
         grid-template-columns: 42% 1fr;
