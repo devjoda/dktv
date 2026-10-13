@@ -45,3 +45,10 @@ The site must stay on the free plan, which allows 10 ms of CPU per request (and 
 `.claude/hooks/cloud-setup.sh` installs the dependencies when a cloud session starts.
 The cloud machine isn't in Denmark, and DR only streams video to Denmark, so videos don't play there.
 DR's API and pictures may answer from abroad; the tests don't need them.
+
+- Don't take a refused stream, or an error from DR, for a bug in the site.
+- Pages, layout and anything without video can be checked in a headless browser in the cloud.
+- What needs a playing video (the player, skipping intros, Se sammen, progress) can only be checked in Denmark:
+  cover it with tests where you can, and end the session with a short list, in Danish, of what the user should
+  try on their own machine.
+- Don't deploy from a cloud session.
