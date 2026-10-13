@@ -36,6 +36,11 @@ $ npm run dev
 `npm test` runs its tests, and `npm run deploy` puts it on Cloudflare. Notifications need a key pair:
 the public key in `wrangler.jsonc`, and the private one as the secret `VAPID_PRIVATE_KEY`.
 
+DR only streams to Denmark. `npm run dev:test` runs the site on your own computer with a test video instead of
+DR's streams, and DR's answers from the tests' fixtures, so the player can be tried anywhere; it only answers on
+localhost, and is never deployed. `npm run test:browser` tests the player, skipping intros and watching together
+with it, in Playwright's Chromium.
+
 It also runs as a Python app, with `uv run hypercorn drtvrss:app`, or with Nix, `nix develop` and then
 `hypercorn drtvrss:app`, though without passkeys and notifications. Its tests run with `pytest`. Both use
 the same scripts and styles in the browser, from [`drtvrss/static`](drtvrss/static).

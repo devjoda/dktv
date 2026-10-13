@@ -3,5 +3,5 @@
 	"compilerOptions": {
 		"types": ["@cloudflare/workers-types", "node"]
 	},
-	"include": [".", "../src", "../bench", "../vitest.config.ts"]
+	"include": [".", "../src", "../bench", "../vitest.config.ts", "../playwright.config.ts"]
 }

@@ -243,6 +243,15 @@ async function getStream(videoID) {
     return j.find(e => e["accessService"] == "StandardVideo");
 }
 
+// The test video, like {url, subtitles}, which the pages of the local test server, the Worker's
+// test/browser, play instead of DR's streams. Never anywhere but on this computer.
+function testStream(video) {
+    if (!video.dataset.testStream || !["localhost", "127.0.0.1"].includes(location.hostname)) {
+        return null;
+    }
+    return JSON.parse(video.dataset.testStream);
+}
+
 // DR's subtitles, as tracks the viewer can turn on
 function addSubtitles(video, subtitles) {
     for (const s of subtitles || []) {
@@ -457,7 +466,7 @@ async function playVideo(video, videoID) {
     }
     let stream;
     try {
-        stream = await getStream(videoID);
+        stream = testStream(video) || await getStream(videoID);
     } catch (error) {
         console.error("Could not get the stream:", error);
         showError(video, COULD_NOT_LOAD);

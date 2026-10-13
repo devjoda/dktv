@@ -8,6 +8,7 @@ import {app} from "../src/index";
 import {forgetAll} from "../src/cache";
 import {Budget, type Ctx, forgetToken} from "../src/dr";
 import {clock} from "../src/time";
+import {fixtureName} from "./fixtures";
 
 const FIXTURES = join(__dirname, "..", "..", "tests", "fixtures");
 const MIGRATIONS = join(__dirname, "..", "migrations");
@@ -16,14 +17,6 @@ const STANDARD = new Set(["device", "ff", "lang", "segments", "sub"]);
 
 export function load(name: string): any {
 	return JSON.parse(readFileSync(join(FIXTURES, name), "utf8"));
-}
-
-/** Named after its path in the API, as tests/update_fixtures.py saves them */
-function fixtureName(path: string, params: URLSearchParams): string {
-	if (path == "/page") {
-		return "page_" + (params.get("path")!.replace(/^\/+|\/+$/g, "").replaceAll("/", "_") || "front") + ".json";
-	}
-	return path.replace(/^\/+|\/+$/g, "").replaceAll("/", "_") + ".json";
 }
 
 /** The rows' lists, which the pages' fixtures have the start of */

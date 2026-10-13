@@ -1,0 +1,41 @@
+{
+	// The site on this computer, with DR's answers from the fixtures and the test video instead of DR's
+	// streams, for `npm run dev:test` and the browser tests. Never deployed: it has no account and no
+	// workers.dev address, and its Worker only answers on localhost.
+	"$schema": "../../node_modules/wrangler/config-schema.json",
+	"name": "dktv-test",
+	"main": "worker.ts",
+	"compatibility_date": "2026-10-01",
+	"workers_dev": false,
+	"assets": {
+		"directory": "../../public"
+	},
+	"build": {
+		"command": "npm run build"
+	},
+	"rules": [
+		{"type": "Text", "globs": ["**/*.m3u8", "**/*.vtt"]},
+		{"type": "Data", "globs": ["**/*.mp4"]}
+	],
+	"d1_databases": [
+		{
+			"binding": "SYNC",
+			"database_name": "dktv-test",
+			"database_id": "00000000-0000-0000-0000-000000000000",
+			"migrations_dir": "../../migrations"
+		}
+	],
+	"vars": {
+		"SERVICE_NAME": "dktv",
+		"SOURCE_URL": "https://github.com/devjoda/dktv",
+		"RECOMMENDED_SHOWS": ""
+	},
+	"durable_objects": {
+		"bindings": [
+			{"name": "ROOMS", "class_name": "Room"}
+		]
+	},
+	"migrations": [
+		{"tag": "v1", "new_sqlite_classes": ["Room"]}
+	]
+}

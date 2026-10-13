@@ -6,3 +6,5 @@ src/kept-version.json
 .wrangler/
 .dev.vars
 .bench/
+test-results/
+playwright-report/

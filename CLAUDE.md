@@ -14,6 +14,11 @@ An unofficial frontend for DRTV. The interface is in Danish; reply in Danish whe
 
 - Worker: `cd worker && npm test`, and `npm run check` for types. They use a fake D1 on `node:sqlite` and
   fixtures of DR's answers, so they need no network.
+- Browser: `npm run test:browser` runs `test/browser/*.spec.ts` in Playwright's Chromium against `wrangler dev`
+  with `test/browser/wrangler.jsonc`: DR's answers from the fixtures, and the test video in `test/browser/video`
+  instead of DR's streams (`npm run dev:test` for trying it by hand). That server only answers on localhost,
+  and `player.js` only plays the test video there; keep it so, and never deploy that config.
+  `npm run test-video` makes the video again, with ffmpeg; it's VP9, since Playwright's Chromium has no H.264.
 - Python: `uv run pytest` (or `nix develop --command pytest`). Tests against DR itself need `DRTV_LIVE_TESTS=1`.
 - Run both before committing a change to `drtvrss/static`.
 
@@ -60,7 +65,7 @@ DR's API and pictures may answer from abroad; the tests don't need them.
 
 - Don't take a refused stream, or an error from DR, for a bug in the site.
 - Pages, layout and anything without video can be checked in a headless browser in the cloud.
-- What needs a playing video (the player, skipping intros, Se sammen, progress) can only be checked in Denmark:
-  cover it with tests where you can, and end the session with a short list, in Danish, of what the user should
-  try on their own machine.
+- The player, skipping intros, Se sammen and progress can be checked with the test video: cover them with
+  browser tests. What needs DR's own streams (their quality, subtitles and live channels) can only be checked in
+  Denmark: end the session with a short list, in Danish, of what the user should try on their own machine.
 - Don't run `npm run deploy` or other `wrangler` commands that need an account: there's no token, and pushing deploys.
