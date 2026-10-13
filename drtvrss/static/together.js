@@ -2,6 +2,7 @@
 // skipped at once. The server's room, room.ts, passes on what changes, and where the room has got
 // to; each viewer's player follows it, and tells it what its viewer does.
 // The room is kept for the browser tab, so it goes along to the next episode.
+// Those in the room can write to each other: below the video, and over the picture in full screen.
 // Needs progress.js, favorites.js, account.js and player.js.
 
 const TOGETHER_REACTIONS = ["👏", "😂", "😮", "😢", "❤️"];
@@ -9,6 +10,13 @@ const TOGETHER_REACTIONS = ["👏", "😂", "😮", "😢", "❤️"];
 const TOGETHER_DRIFT = 2.5;
 // How often to check for drifting, in milliseconds
 const TOGETHER_CHECK = 10 * 1000;
+// What a chat message may be, at most, in characters, like the room's MAX_CHAT
+const CHAT_MAX = 300;
+// How long a message stays on the picture in full screen, in milliseconds, and how many at once
+const CHAT_ON_PICTURE_FOR = 6000;
+const CHAT_ON_PICTURE = 3;
+// Where the chat is always open, below the video: a phone held upright
+const CHAT_ALWAYS_OPEN = "(max-width: 699.98px) and (orientation: portrait)";
 
 const together = {
     id: null,
@@ -26,6 +34,10 @@ const together = {
     retries: 0,
     people: [],
     panel: null,
+    // The chat: its parts, whether it's folded away, and how many messages came while it was
+    chat: null,
+    chatFolded: false,
+    unread: 0,
 };
 
 // The room this browser tab watches in, if any
@@ -127,7 +139,29 @@ function namesOf(names) {
     return names.length <= 1 ? names.join("") : names.slice(0, -1).join(", ") + " og " + names.at(-1);
 }
 
+// The ids this tab has had in the room, one for each page, so its own messages are known as its own
+function ownIds() {
+    try {
+        return JSON.parse(sessionStorage.getItem("togetherIds")) || [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function addOwnId(id) {
+    const ids = ownIds();
+    if (ids.includes(id)) {
+        return;
+    }
+    try {
+        sessionStorage.setItem("togetherIds", JSON.stringify([...ids, id].slice(-50)));
+    } catch (error) {
+        // Then only this page's messages look like the viewer's own
+    }
+}
+
 function showPeople(message) {
+    addOwnId(message.you);
     const others = message.people.filter((name, i) => message.ids[i] != message.you);
     const otherIds = message.ids.filter(id => id != message.you);
     const joined = message.people.filter((name, i) => message.ids[i] != message.you && !together.people.includes(message.ids[i]));
@@ -149,6 +183,261 @@ function showReaction(emoji, by) {
     reaction.style.left = `${10 + Math.random() * 70}%`;
     playerOf(together.video).append(reaction);
     setTimeout(() => reaction.remove(), 2600);
+}
+
+// Whether the viewer chose not to see the chat on the picture
+function chatOffPicture() {
+    try {
+        return localStorage.getItem("togetherChatOnPicture") == "off";
+    } catch (error) {
+        return false;
+    }
+}
+
+function isFullscreen() {
+    const plyr = together.video && together.video.closest(".plyr");
+    return Boolean(document.fullscreenElement || (plyr && plyr.classList.contains("plyr--fullscreen-active")));
+}
+
+// Whether the viewer sees new messages as they come: below the video, or on the picture in full screen
+function chatSeen() {
+    const chat = together.chat;
+    if (chat == null) {
+        return true;
+    }
+    if (isFullscreen()) {
+        return !chatOffPicture() || !chat.pictureForm.hidden;
+    }
+    return !together.chatFolded || matchMedia(CHAT_ALWAYS_OPEN).matches;
+}
+
+// How many messages came while the chat was closed, on its buttons
+function showUnread() {
+    const chat = together.chat;
+    if (chat == null) {
+        return;
+    }
+    if (chatSeen()) {
+        together.unread = 0;
+    }
+    for (const badge of [chat.toggleUnread, chat.pictureUnread]) {
+        badge.textContent = String(together.unread);
+        badge.hidden = together.unread == 0;
+    }
+    chat.toggle.setAttribute("aria-label", together.chatFolded
+        ? (together.unread ? `Vis chat, ${together.unread} ulæste` : "Vis chat")
+        : "Skjul chat");
+}
+
+// A line in the chat: a message, with who wrote it and where the video was, or that someone came or went
+function chatLine(message) {
+    if (message.system) {
+        return element("li", {class: "chat-line is-system"}, message.text);
+    }
+    const mine = ownIds().includes(message.viewer);
+    const meta = element("span", {class: "chat-meta"}, element("span", {class: "chat-name"}, mine ? "Dig" : message.by));
+    if (typeof message.position == "number") {
+        meta.append(element("span", {class: "chat-time"}, clockOf(message.position)));
+    }
+    return element("li", {class: "chat-line" + (mine ? " is-mine" : "")}, meta, element("span", {class: "chat-text"}, message.text));
+}
+
+function addChatLine(message) {
+    const chat = together.chat;
+    if (chat == null) {
+        return;
+    }
+    const list = chat.messages;
+    const atEnd = list.scrollHeight - list.scrollTop - list.clientHeight < 40;
+    list.append(chatLine(message));
+    while (list.children.length > 100) {
+        list.firstElementChild.remove();
+    }
+    chat.empty.hidden = true;
+    if (atEnd) {
+        list.scrollTop = list.scrollHeight;
+    }
+}
+
+// A new message, floating over the picture for a moment in full screen, like the reactions
+function chatOnPicture(message) {
+    const chat = together.chat;
+    if (chat == null || !isFullscreen() || chatOffPicture()) {
+        return;
+    }
+    const line = element("div", {class: "chat-float-line"}, element("span", {class: "chat-name"}, message.system ? "" : (ownIds().includes(message.viewer) ? "Dig" : message.by)), message.text);
+    chat.float.append(line);
+    while (chat.float.children.length > CHAT_ON_PICTURE) {
+        chat.float.firstElementChild.remove();
+    }
+    setTimeout(() => line.remove(), CHAT_ON_PICTURE_FOR);
+}
+
+function receiveChat(message) {
+    addChatLine(message);
+    chatOnPicture(message);
+    // Only messages count, not who came or went
+    if (!chatSeen() && !message.system) {
+        together.unread++;
+    }
+    showUnread();
+}
+
+// Keeps the player's keyboard shortcuts, like space and the arrows, out of what's written
+function typing(input, onEscape) {
+    input.addEventListener("keydown", function (event) {
+        event.stopPropagation();
+        if (event.key == "Escape") {
+            event.preventDefault();
+            onEscape();
+        }
+    });
+    input.addEventListener("keyup", event => event.stopPropagation());
+    input.addEventListener("keypress", event => event.stopPropagation());
+}
+
+function sendChat(input) {
+    const text = input.value.replace(/\s+/g, " ").trim().slice(0, CHAT_MAX);
+    if (!text) {
+        return;
+    }
+    sendTogether({type: "chat", text});
+    input.value = "";
+}
+
+// Whether the viewer still goes by "Gæst", whom the chat asks for a name
+function updateNameHint() {
+    const chat = together.chat;
+    if (chat == null) {
+        return;
+    }
+    const nameless = !togetherName();
+    chat.nameHint.hidden = !nameless;
+    chat.pictureInput.placeholder = nameless ? "Skriv en besked som Gæst" : "Skriv en besked";
+}
+
+// The chat in the room's panel, and its button and field on the picture, for full screen
+function setupChat(panel) {
+    const messages = element("ol", {class: "chat-messages", "aria-live": "polite", "aria-label": "Beskeder"});
+    const empty = element("p", {class: "chat-empty"}, "Ingen beskeder endnu. Skriv den første.");
+    const input = element("input", {class: "chat-input", maxlength: String(CHAT_MAX), placeholder: "Skriv en besked", "aria-label": "Skriv en besked", autocomplete: "off", enterkeyhint: "send"});
+    const form = element("form", {class: "chat-form"}, input, element("button", {type: "submit", class: "button button-primary"}, "Send"));
+    const nameButton = element("button", {type: "button", class: "chat-name-button"}, "Skriv dit navn");
+    const nameHint = element("p", {class: "chat-hint"}, "Du hedder Gæst. ", nameButton, ", så de andre kan se, hvem der skriver.");
+    const offPicture = element("input", {type: "checkbox", class: "js-chat-off-picture"});
+    offPicture.checked = chatOffPicture();
+    const toggleUnread = element("span", {class: "chat-unread", "aria-hidden": "true"});
+    const toggle = element("button", {type: "button", class: "chat-toggle", "aria-expanded": "true", "aria-controls": "together-chat-body"},
+        element("span", {class: "chat-toggle-label"}, "Skjul"), toggleUnread);
+    const body = element("div", {class: "chat-body", id: "together-chat-body"},
+        messages, empty, form, nameHint,
+        element("div", {class: "chat-foot"},
+            element("p", {}, "Beskederne gemmes ikke, når rummet lukker."),
+            element("label", {class: "chat-choice"}, offPicture, "Skjul chat på billedet")));
+    const section = element("section", {class: "together-chat", "aria-label": "Chat"},
+        element("div", {class: "chat-head"}, element("h3", {class: "chat-title"}, icon("chat"), "Chat"), toggle), body);
+    panel.append(section);
+
+    // On the picture, for full screen: the messages, a button, and a small field to write in
+    const player = playerOf(together.video);
+    const float = element("div", {class: "chat-float", "aria-hidden": "true"});
+    const pictureUnread = element("span", {class: "chat-unread", "aria-hidden": "true"});
+    const pictureButton = element("button", {type: "button", class: "chat-picture-button", "aria-label": "Skriv i chatten"}, icon("chat"), pictureUnread);
+    const pictureInput = element("input", {class: "chat-input", maxlength: String(CHAT_MAX), "aria-label": "Skriv en besked", autocomplete: "off", enterkeyhint: "send"});
+    const pictureForm = element("form", {class: "chat-picture-form"}, pictureInput, element("button", {type: "submit", class: "button button-primary"}, "Send"));
+    pictureForm.hidden = true;
+    player.append(float, pictureButton, pictureForm);
+
+    together.chat = {section, messages, empty, input, nameHint, toggle, toggleUnread, float, pictureButton, pictureUnread, pictureForm, pictureInput};
+    updateNameHint();
+    showUnread();
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        sendChat(input);
+    });
+    typing(input, () => input.blur());
+    pictureForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        sendChat(pictureInput);
+    });
+    const closePicture = function () {
+        pictureForm.hidden = true;
+        pictureButton.focus();
+        showUnread();
+    };
+    typing(pictureInput, closePicture);
+    pictureButton.addEventListener("click", function () {
+        pictureForm.hidden = !pictureForm.hidden;
+        if (!pictureForm.hidden) {
+            pictureInput.focus();
+        }
+        showUnread();
+    });
+    nameButton.addEventListener("click", () => panel.querySelector(".together-name-field").focus());
+    toggle.addEventListener("click", function () {
+        together.chatFolded = !together.chatFolded;
+        section.classList.toggle("is-folded", together.chatFolded);
+        toggle.setAttribute("aria-expanded", String(!together.chatFolded));
+        toggle.querySelector(".chat-toggle-label").textContent = together.chatFolded ? "Vis" : "Skjul";
+        if (!together.chatFolded) {
+            messages.scrollTop = messages.scrollHeight;
+        }
+        showUnread();
+    });
+    offPicture.addEventListener("change", function () {
+        try {
+            if (offPicture.checked) {
+                localStorage.setItem("togetherChatOnPicture", "off");
+            } else {
+                localStorage.removeItem("togetherChatOnPicture");
+            }
+        } catch (error) {
+            // Only for now, then
+        }
+        float.replaceChildren();
+        showUnread();
+    });
+}
+
+// Out of full screen, the field on the picture closes, and what floated there goes
+function chatFullscreenChanged() {
+    const chat = together.chat;
+    if (chat == null) {
+        return;
+    }
+    if (!isFullscreen()) {
+        chat.pictureForm.hidden = true;
+        chat.float.replaceChildren();
+    }
+    showUnread();
+}
+
+function removeChat() {
+    const chat = together.chat;
+    if (chat == null) {
+        return;
+    }
+    chat.float.remove();
+    chat.pictureButton.remove();
+    chat.pictureForm.remove();
+    together.chat = null;
+    together.chatFolded = false;
+    together.unread = 0;
+}
+
+// The room's last messages, which it sends to those who join, instead of what this page had
+function showHistory(messages) {
+    const chat = together.chat;
+    if (chat == null) {
+        return;
+    }
+    // Without reading them all out again
+    chat.messages.removeAttribute("aria-live");
+    chat.messages.replaceChildren(...messages.map(chatLine));
+    chat.empty.hidden = messages.length > 0;
+    chat.messages.scrollTop = chat.messages.scrollHeight;
+    requestAnimationFrame(() => chat.messages.setAttribute("aria-live", "polite"));
 }
 
 function receive(message) {
@@ -207,6 +496,18 @@ function receive(message) {
     case "react":
         showReaction(message.emoji, message.by);
         return;
+    case "history":
+        showHistory(Array.isArray(message.messages) ? message.messages : []);
+        return;
+    case "chat":
+        receiveChat(message);
+        return;
+    case "joined":
+        receiveChat({system: true, text: `${message.by} kom ind`});
+        return;
+    case "left":
+        receiveChat({system: true, text: `${message.by} gik`});
+        return;
     }
 }
 
@@ -263,6 +564,7 @@ function leaveRoom() {
     together.state = null;
     together.ready = false;
     together.people = [];
+    removeChat();
     together.panel.remove();
     together.panel = null;
     document.querySelector(".js-together").hidden = false;
@@ -326,11 +628,14 @@ function showTogetherPanel() {
                 // Only for now, then
             }
             sendTogether({type: "name", name: name.value});
+            updateNameHint();
         }, 600);
     });
+    typing(name, () => name.blur());
     leave.addEventListener("click", leaveRoom);
     document.querySelector(".watch .actions").after(panel);
     together.panel = panel;
+    setupChat(panel);
 }
 
 // Says goodbye to the room when leaving the page, so it doesn't count this page among the viewers,
@@ -378,6 +683,10 @@ async function setupTogether(video) {
         video.addEventListener(event, reportToRoom);
     }
     video.addEventListener("loadedmetadata", followRoom);
+    // Plyr's own, and the browser's
+    video.addEventListener("enterfullscreen", chatFullscreenChanged);
+    video.addEventListener("exitfullscreen", chatFullscreenChanged);
+    document.addEventListener("fullscreenchange", chatFullscreenChanged);
     setInterval(function () {
         const state = together.state;
         if (together.ready && state && state.playing && !together.video.paused && Math.abs(together.video.currentTime - roomPosition()) > TOGETHER_DRIFT) {

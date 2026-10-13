@@ -1543,6 +1543,320 @@ a:hover .channel-art {
     font-weight: 650;
 }
 
+/* The room's chat: in its panel below the video, always open on a phone held upright, and able to be folded
+   away on larger screens */
+.together > *,
+.watch > * {
+    min-width: 0;
+}
+
+.together-chat {
+    display: grid;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.chat-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.chat-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.chat-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 14px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .1);
+    color: var(--paper);
+    font-size: .875rem;
+    font-weight: 650;
+}
+
+.chat-toggle:hover {
+    background: rgba(242, 239, 233, .18);
+}
+
+.chat-unread {
+    display: inline-grid;
+    place-items: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: .75rem;
+    font-weight: 750;
+    line-height: 1;
+}
+
+.chat-unread[hidden] {
+    display: none;
+}
+
+.chat-body {
+    display: grid;
+    gap: 12px;
+}
+
+.together-chat.is-folded .chat-body {
+    display: none;
+}
+
+.chat-messages {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    max-height: 280px;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+    overscroll-behavior: contain;
+}
+
+.chat-messages:empty {
+    display: none;
+}
+
+.chat-line {
+    justify-self: start;
+    display: grid;
+    gap: 1px;
+    max-width: 85%;
+    padding: 7px 12px;
+    border-radius: 12px 12px 12px 4px;
+    background: rgba(242, 239, 233, .07);
+    overflow-wrap: anywhere;
+}
+
+/* The viewer's own, on the other side, a little lighter */
+.chat-line.is-mine {
+    justify-self: end;
+    border-radius: 12px 12px 4px 12px;
+    background: rgba(242, 239, 233, .16);
+}
+
+.chat-line.is-system {
+    justify-self: center;
+    padding: 2px 0;
+    background: none;
+    color: var(--muted);
+    font-size: var(--text-small);
+}
+
+.chat-meta {
+    display: flex;
+    gap: 8px;
+    color: var(--muted);
+    font-size: .75rem;
+    font-weight: 650;
+}
+
+.chat-name {
+    color: var(--paper);
+}
+
+.chat-time {
+    font-variant-numeric: tabular-nums;
+}
+
+.chat-text {
+    color: var(--paper);
+    font-size: .9375rem;
+}
+
+.chat-empty,
+.chat-hint,
+.chat-foot {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-small);
+}
+
+.chat-form,
+.chat-picture-form {
+    display: flex;
+    gap: 8px;
+}
+
+.chat-input {
+    flex: 1 1 auto;
+    /* From nothing, so a narrow screen doesn't make the panel wider than itself */
+    width: 0;
+    min-width: 0;
+    padding: 9px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .06);
+    color: var(--paper);
+}
+
+.chat-input:focus {
+    outline: none;
+    border-color: rgba(242, 239, 233, .5);
+}
+
+.chat-input::placeholder {
+    color: var(--muted);
+}
+
+.chat-form .button,
+.chat-picture-form .button {
+    min-height: 0;
+    padding: 8px 18px;
+}
+
+.chat-name-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--paper);
+    font-weight: 650;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.chat-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 16px;
+}
+
+.chat-foot p {
+    flex: 1 1 14em;
+    min-width: 0;
+    margin: 0;
+}
+
+.chat-choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--paper);
+    cursor: pointer;
+}
+
+.chat-choice input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--paper);
+}
+
+@media (max-width: 699.98px) and (orientation: portrait) {
+    .chat-toggle {
+        display: none;
+    }
+
+    .together-chat.is-folded .chat-body {
+        display: grid;
+    }
+}
+
+/* In full screen: new messages over the picture for a moment, and a button that opens a small field to write in */
+.chat-float {
+    position: absolute;
+    left: 20px;
+    bottom: 84px;
+    z-index: 30;
+    display: grid;
+    justify-items: start;
+    gap: 6px;
+    max-width: min(440px, 60%);
+    pointer-events: none;
+}
+
+.chat-float-line {
+    display: flex;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 12px;
+    background: rgba(15, 16, 19, .8);
+    color: var(--paper);
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+    animation: chat-float 6s ease forwards;
+}
+
+.chat-float-line .chat-name:empty {
+    display: none;
+}
+
+.chat-float-line .chat-name {
+    flex: none;
+    font-weight: 750;
+}
+
+@keyframes chat-float {
+    0% { opacity: 0; transform: translateX(-16px); }
+    5%, 85% { opacity: 1; transform: none; }
+    100% { opacity: 0; }
+}
+
+.chat-picture-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 31;
+    display: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(15, 16, 19, .75);
+    box-shadow: 0 0 0 1px rgba(242, 239, 233, .25);
+    color: var(--paper);
+}
+
+.chat-picture-button .icon {
+    width: 22px;
+    height: 22px;
+}
+
+.chat-picture-button .chat-unread {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+}
+
+.plyr--fullscreen-active .chat-picture-button,
+.plyr:fullscreen .chat-picture-button {
+    display: grid;
+}
+
+.chat-picture-form {
+    position: absolute;
+    top: 70px;
+    right: 16px;
+    z-index: 31;
+    width: min(380px, calc(100% - 32px));
+    padding: 8px;
+    border-radius: 999px;
+    background: rgba(15, 16, 19, .9);
+}
+
+.chat-picture-form[hidden] {
+    display: none;
+}
+
 @keyframes float-up {
     0% { opacity: 0; transform: translateY(16px) scale(.8); }
     15% { opacity: 1; transform: translateY(0) scale(1); }

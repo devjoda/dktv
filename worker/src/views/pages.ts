@@ -461,7 +461,7 @@ export function privacyPage(site: Site): Html {
 <p>Det gemmes, indtil du sletter kontoen. Det kan du gøre under <a href="/sync/">Din konto</a>, og så slettes alt, der hører til koden.</p>
 
 <h2>Se sammen</h2>
-<p>Et rum kender kun det, der ses, hvor langt det er nået, og om det spiller, og så længe I er forbundet de navne, I selv skriver. Rummet slettes seks timer efter, at den sidste har forladt det.</p>
+<p>Et rum kender kun det, der ses, hvor langt det er nået, og om det spiller, og så længe I er forbundet de navne, I selv skriver. I chatten husker rummet de sidste 20 beskeder med navn og tidspunkt, så de, der kommer til, kan læse med. Rummet slettes med sine beskeder seks timer efter, at den sidste har forladt det.</p>
 
 <h2>DR</h2>
 <p>Videoerne, underteksterne og billederne kommer direkte fra DR's servere til din browser, ligesom på DRTV. DR får derfor din IP-adresse og oplysninger om din browser, og DR's egne regler for privatliv gælder for det. Din browser fortæller ikke DR, at du kom fra ${site.serviceName}.</p>
