@@ -54,8 +54,8 @@ jobs:
 
   deploy:
     name: Deploy
-    # Only what reaches the workers branch, once the tests pass
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/workers'
+    # Only what reaches main, once the tests pass
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: [test, browser]
     runs-on: ubuntu-latest
     timeout-minutes: 10

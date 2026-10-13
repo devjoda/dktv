@@ -4,9 +4,9 @@ An unofficial frontend for DRTV. The interface is in Danish; reply in Danish whe
 
 ## Layout
 
-- `worker/`: the site, a Cloudflare Worker (Hono, TypeScript) on the `workers` branch, deployed as `dktv` at
+- `worker/`: the site, a Cloudflare Worker (Hono, TypeScript), deployed as `dktv` at
   https://dktv.joachim-144.workers.dev. New work happens here.
-- `drtvrss/`: the original Python app (Quart), with its tests in `tests/`. It stays the app on `main`.
+- `drtvrss/`: the original Python app (Quart), with its tests in `tests/`.
 - Both use the browser files in `drtvrss/static`, which `npm run build` copies to `worker/public`.
   When a page changes, change `worker/src/views` and `drtvrss/templates` alike, so both stay the same.
 
@@ -36,13 +36,13 @@ The site must stay on the free plan, which allows 10 ms of CPU per request (and 
 
 ## Deploying
 
-Pushing to `workers` deploys the site: `.github/workflows/worker.yml` runs the Worker's tests, then
+What reaches `main` deploys the site: `.github/workflows/worker.yml` runs the Worker's tests, then
 `npm run deploy`, which applies new D1 migrations in `worker/migrations` and deploys. Only GitHub has the Cloudflare
 token, so nothing else needs it.
 
-- Push to `workers` when the user has asked for a change to go live; otherwise work on a branch of your own,
-  where the same tests run without deploying.
-- After pushing, follow the run with `gh api "repos/devjoda/dktv/actions/runs?branch=workers&per_page=3"`,
+- Work on a branch of your own, where the same tests run without deploying, and open a pull request to `main`.
+  The user merges it.
+- After a merge, follow the run with `gh api "repos/devjoda/dktv/actions/runs?branch=main&per_page=3"`,
   and when it's done, check the change on https://dktv.joachim-144.workers.dev.
 - A migration can't be undone by deploying again: make them only add tables and columns.
 
