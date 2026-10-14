@@ -11,10 +11,12 @@
 <script src="/static/vendor/plyr-3.8.4.min.js" integrity="sha384-I+WOYmeHMpGhifL4sNlgOjvE/aIyNeReJ8GmAHzi4hy38rtVS/eav1hVJKvMvHrY"></script>
 <script src="/static/vendor/hls-1.7.3.min.js" integrity="sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX"></script>
 <script src="{{ static_url('player.js') }}"></script>
+<script src="{{ static_url('next.js') }}"></script>
 {% endblock %}
 {% block content %}
 <div class="stage">
-    <video id="video" controls crossorigin="anonymous"
+    <video id="video" controls crossorigin="anonymous" data-episode-id="{{ e.video_id }}"
+        {%- if s %} data-suggest="/forslag/serie/{{ s.url }}"{% elif e.url %} data-suggest="/forslag/program/{{ e.url.split('/')[-1] }}"{% endif %}
         {%- if e.wallpaper %} poster="{{ e.wallpaper|thumbnail(1280) }}"{% endif %}
         {%- if next %} data-next-url="{{ next.url }}" data-next-title="{{ next.title }}"{% endif %}
         {%- if previous %} data-previous-url="{{ previous.url }}"{% endif %}

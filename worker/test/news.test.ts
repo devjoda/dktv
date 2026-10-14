@@ -7,7 +7,7 @@ import {createContext, runInContext} from "node:vm";
 import {beforeEach, describe, expect, test} from "vitest";
 
 const STATIC = join(__dirname, "..", "..", "drtvrss", "static");
-const SCRIPTS = ["progress.js", "favorites.js", "sync.js", "account.js", "news.js"];
+const SCRIPTS = ["progress.js", "favorites.js", "sync.js", "account.js", "news.js", "next.js"];
 const DAY = 24 * 60 * 60 * 1000;
 const NOW = Date.UTC(2026, 9, 14, 12);
 
@@ -45,8 +45,9 @@ function browser(): Browser {
 	const listeners = {addEventListener() {}, removeEventListener() {}, dispatchEvent() {}};
 	const sandbox: Record<string, unknown> = {
 		// The context's own Date and the rest, which tests may change
-		console, Event, structuredClone, setTimeout, clearTimeout, URL, URLSearchParams,
+		console, Event, structuredClone, setTimeout, clearTimeout, setInterval, clearInterval, URL, URLSearchParams,
 		localStorage: storage,
+		sessionStorage: new Storage(),
 		navigator: {userAgent: "Node"},
 		document: {...listeners, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null},
 		fetch: async (url: string) => {
@@ -374,5 +375,90 @@ describe("the favourites page's filters", () => {
 		expect(b.run(`chosenFilter("?vis=noget")`)).toBe("alle");
 		expect(b.run(`chosenFilter("")`)).toBe("alle");
 		expect([...b.storage.items.keys()].filter(key => key.includes("vis") || key.includes("filter"))).toEqual([]);
+	});
+});
+
+describe("what to watch next", () => {
+	const show = (id: string, title: string, extra: Record<string, unknown> = {}) => ({title, url: `/${id}/`, image: `https://example.com/${id}.jpg`, seasons: 1, episodes: 3, episode_ids: [], new: false, new_episodes: [], expires: null, ...extra});
+	const started = (videoID: string, url: string, extra: Record<string, unknown> = {}) => ({videoID, time: 600, duration: 3600, watched: false, title: `Afsnit ${videoID}`, show: "Serie", url, image: null, updated: NOW - 1000, ...extra});
+	const seen = (videoID: string, updated = NOW - 5000) => ({videoID, time: 0, duration: 3600, watched: true, updated});
+
+	/** The suggestions after what plays at `current`, with the browser's favourites, progress and kept details */
+	function suggest({current = "/badehotellet_1/afsnit_9", favorites = [] as any[], shows = {} as Record<string, unknown>, progress = [] as any[], related = null as unknown}) {
+		return b.run(`whatNextSuggestions(${JSON.stringify({current, favorites, details: {at: NOW, shows, films: {}, pending: {shows: [], films: []}}, progress, related, now: NOW})})`);
+	}
+
+	test("come in order: halfway through, the next of what's being watched, new episodes, and DR's own", () => {
+		const found = suggest({
+			favorites: [favorite(1, "matador_2"), favorite(1, "rejseholdet_3"), favorite(1, "hoest_4"), favorite(1, "en-film_5", "film")],
+			shows: {
+				matador_2: show("matador_2", "Matador", {episode_ids: ["21", "22", "23"]}),
+				rejseholdet_3: show("rejseholdet_3", "Rejseholdet", {new_episodes: [episode("31", NOW - DAY, {url: "/rejseholdet_3/afsnit_31"})]}),
+				hoest_4: show("hoest_4", "Høst"),
+			},
+			progress: [seen("21"), started("51", "/program/en-film_5", {show: null, title: "En film"})],
+			related: {label: "Krimi", cards: [{title: "Bron", url: "/bron_6/", image: null}, {title: "Forbrydelsen", url: "/forbrydelsen_7/", image: null}]},
+		});
+		expect(found.map((f: any) => [f.label, f.title, f.url])).toEqual([
+			["Fortsæt", "En film", "/program/en-film_5"],
+			// Its next episode's address isn't known, so the series'
+			["Næste afsnit", "Matador", "/matador_2/"],
+			["Nyt afsnit", "Rejseholdet: S11 A31", "/rejseholdet_3/afsnit_31"],
+			["Krimi", "Bron", "/bron_6/"],
+		]);
+	});
+
+	test("leave out the series just watched, what's seen to the end, and what leaves within a day", () => {
+		const found = suggest({
+			current: "/badehotellet_1/afsnit_9",
+			favorites: [favorite(1, "badehotellet_1"), favorite(1, "matador_2"), favorite(1, "rejseholdet_3")],
+			shows: {
+				badehotellet_1: show("badehotellet_1", "Badehotellet", {new_episodes: [episode("10", NOW - DAY)]}),
+				matador_2: show("matador_2", "Matador", {episode_ids: ["21", "22"], expires: NOW + 12 * 60 * 60 * 1000}),
+				rejseholdet_3: show("rejseholdet_3", "Rejseholdet", {episode_ids: ["31", "32"], new_episodes: [episode("32", NOW - DAY, {url: "/rejseholdet_3/afsnit_32"})]}),
+			},
+			progress: [started("8", "/badehotellet_1/afsnit_8"), seen("21"), seen("31"), seen("32"), seen("9")],
+			related: {label: "Krimi", cards: [{title: "Seen", url: "/program/en-film_9", image: null}]},
+		});
+		// Badehotellet was just watched, Matador leaves within a day, Rejseholdet is all seen, and so is the film
+		expect(found).toEqual([]);
+	});
+
+	test("have each series only once, at most 4", () => {
+		const found = suggest({
+			favorites: [favorite(1, "rejseholdet_3")],
+			shows: {rejseholdet_3: show("rejseholdet_3", "Rejseholdet", {new_episodes: [episode("33", NOW - DAY, {url: "/rejseholdet_3/afsnit_33"}), episode("32", NOW - 2 * DAY, {url: "/rejseholdet_3/afsnit_32"})]})},
+			related: {label: "Krimi", cards: ["a_11", "b_12", "c_13", "d_14", "rejseholdet_3"].map(id => ({title: id, url: `/${id}/`, image: null}))},
+		});
+		expect(found.map((f: any) => f.url)).toEqual(["/rejseholdet_3/afsnit_33", "/a_11/", "/b_12/", "/c_13/"]);
+	});
+
+	test("are none, with nothing to suggest", () => {
+		expect(suggest({})).toEqual([]);
+	});
+});
+
+describe("asking whether the viewer still watches", () => {
+	const due = (streak: number, idle: number, together = false) => b.run(`stillWatchingDue(${JSON.stringify({streak, lastInteraction: NOW - idle, now: NOW, together})})`);
+
+	test("is after 3 episodes in a row that started by themselves, and an hour and a half without the viewer doing anything", () => {
+		expect(due(3, 90 * 60 * 1000)).toBe(true);
+		expect(due(5, 3 * 60 * 60 * 1000)).toBe(true);
+		expect(due(2, 3 * 60 * 60 * 1000)).toBe(false);
+		expect(due(3, 89 * 60 * 1000)).toBe(false);
+	});
+
+	test("is never when watching together", () => {
+		expect(due(9, 9 * 60 * 60 * 1000, true)).toBe(false);
+	});
+
+	test("counts episodes that started by themselves, which one the viewer chose starts over, and notes clicks, keys and touches", () => {
+		b.run(`next.video = {dataset: {}}; setSessionNumber("autoStreak", 2)`);
+		expect(b.run(`sessionNumber("autoStreak")`)).toBe(2);
+		// Without a browser to play it in, the next one is only asked for
+		b.run(`switchEpisode = () => {}; playNext("/x_1/y_2", false)`);
+		expect(b.run(`sessionNumber("autoStreak")`)).toBe(0);
+		b.run(`Date.now = () => ${NOW}; setSessionNumber("lastInteraction", ${NOW - 60 * 60 * 1000}); noteInteraction()`);
+		expect(b.run(`sessionNumber("lastInteraction")`)).toBe(NOW);
 	});
 });

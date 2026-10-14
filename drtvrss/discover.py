@@ -12,6 +12,7 @@ from pydantic import ValidationError
 from . import models as dr
 from .drtv import get_api
 from .live import get_channels
+from .show import thumbnail
 
 PAGE_CACHE_TIME = 30 * 60
 ROW_SIZE = 24
@@ -272,6 +273,52 @@ async def get_list(list_id: str) -> Optional[FullList]:
 
 
 categories_cache: tuple[float, list[Category]] = (0, [])
+
+
+# DR's widest categories, which a programme's narrower ones, like Krimi, say more about
+MAIN_CATEGORIES = ["fiktionsserie", "film", "dokumentar"]
+# News, whose page is mostly the day's news, not something to watch next
+NOT_SIMILAR = ["nyheder"]
+# How many programmes to suggest from a category, at most, and how few make it worth trying a wider one
+SIMILAR = 8
+SIMILAR_ENOUGH = 4
+
+
+async def similar_to(categories: list[str], exclude: str) -> dict:
+    """Programmes like one with DR's categories, like ["fiktionsserie", "krimi"], for after it: from the page of
+    its narrowest category that DR has a page for, without the programme itself, whose DR id `exclude` is:
+    the next one, when a category's page has fewer than 4 others.
+    Like the Worker's similarTo()."""
+    pages = await get_categories()
+
+    def page_of(category: str) -> Optional[Category]:
+        for p in pages:
+            slug = p.url.rstrip("/").split("/")[-1]
+            if slug in (category, category + "r") or (len(category) > 4 and slug.startswith(category)):
+                return p
+        return None
+
+    narrow = [c for c in categories if c not in MAIN_CATEGORIES and c not in NOT_SIMILAR]
+    ordered = narrow + [c for c in categories if c in MAIN_CATEGORIES]
+    best = {"label": "", "cards": []}
+    for category in ordered:
+        found = page_of(category)
+        if found is None:
+            continue
+        page = await get_page(found.url.rstrip("/"), max_rows=12)
+        seen = {exclude}
+        cards = []
+        for c in [*(page.featured if page else []), *(card for row in (page.rows if page else []) for card in row.cards)]:
+            card_id = (c.show_id or c.film_id or "").split("_")[-1]
+            if c.live or not card_id or card_id in seen or len(cards) >= SIMILAR:
+                continue
+            seen.add(card_id)
+            cards.append({"title": c.title, "url": c.url, "image": thumbnail(c.image)})
+        if len(cards) >= SIMILAR_ENOUGH:
+            return {"label": found.title, "cards": cards}
+        if len(cards) > len(best["cards"]):
+            best = {"label": found.title, "cards": cards}
+    return best
 
 
 async def get_categories() -> list[Category]:

@@ -178,7 +178,7 @@ function neighbourLink(kind: "previous" | "next", n: Neighbour | undefined): Htm
 export function videoPage(site: Site, {show, e, description, previous, next, segments}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour; segments?: Segments}): Html {
 	const film = show === undefined ? (e as Program) : undefined;
 	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title, head: show ? feedLink(show) : undefined, scripts: VIDEO_SCRIPTS}, html`<div class="stage">
-<video id="video" controls crossorigin="anonymous"${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)}${attr("data-previous-url", previous?.url)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}${attr("data-segments", segments ? JSON.stringify(segments) : undefined)}></video>
+<video id="video" controls crossorigin="anonymous" data-episode-id="${e.videoId}"${attr("data-suggest", show ? `/forslag/serie/${show.url}` : `/forslag/program/${(e as Program).url.split("/").at(-1)}`)}${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)}${attr("data-previous-url", previous?.url)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}${attr("data-segments", segments ? JSON.stringify(segments) : undefined)}></video>
 </div>
 <div class="watch">
 <div>
@@ -473,6 +473,11 @@ export function syncPage(site: Site): Html {
 </div>
 </section>
 </div>
+<section class="account-section" aria-labelledby="playback-title">
+<h2 id="playback-title">Afspilning</h2>
+<p>Når et afsnit slutter, starter det næste efter en nedtælling. Slået fra, tilbydes det næste afsnit stadig, men uden nedtælling. Valget gemmes på denne enhed.</p>
+<label class="switch"><input type="checkbox" class="js-autoplay-toggle" checked><span>Afspil næste afsnit automatisk</span></label>
+</section>
 <p class="sync-error js-sync-error" role="alert" hidden></p>
 <p class="sync-privacy">Din konto er koden. Under den gemmes dine favoritter, hvor langt du er nået i hvert afsnit, og hvilke af dine enheder der får beskeder. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en konto gemmes de kun i din browser.</p>
 <noscript><p>Din konto kræver JavaScript.</p></noscript>
@@ -490,7 +495,7 @@ export function privacyPage(site: Site): Html {
 <ul>
 <li>Dine favoritter, og hvor langt du er nået i det, du ser, og hvad serverens svar om dine favoritter sidst var, som nye afsnit, så det ikke skal hentes på hver side.</li>
 <li>Hvornår du sidst åbnede klokken, Nyt til dig, så den kun tæller det, der er kommet siden.</li>
-<li>Dine valg: undertekster til direkte TV, om sete afsnit skjules, afspillerens lydstyrke, hastighed og undertekster, og dit navn i Se sammen.</li>
+<li>Dine valg: om næste afsnit afspilles automatisk, undertekster til direkte TV, om sete afsnit skjules, afspillerens lydstyrke, hastighed og undertekster, og dit navn i Se sammen.</li>
 <li>Om du har valgt at markere intro og rulletekster, og dem, du selv har markeret.</li>
 <li>Din kode, hvis du har en konto.</li>
 <li>Så længe fanen er åben: det rum, du ser sammen med andre i.</li>

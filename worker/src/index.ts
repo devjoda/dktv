@@ -5,7 +5,7 @@ import {getCookie} from "hono/cookie";
 import * as alerts from "./alerts";
 import {vapidKeys} from "./alerts";
 import {peek, REFRESHES_PER_VISIT} from "./cache";
-import {getCategories, getList, getPage} from "./discover";
+import {getCategories, getList, getPage, similarTo} from "./discover";
 import {Budget, type Ctx, DRUnavailable, type Env, NotFound, OverBudget} from "./dr";
 import {channelNamed, getChannels, getSchedules, planFrom} from "./live";
 import {search} from "./search";
@@ -227,6 +227,15 @@ app.get("/live/:channel", edgeCached(2 * MINUTE), async c => {
 	return render(c, pages.livePage(site(c), {slug, channels, schedules}));
 });
 
+// What to watch after a series or a film, once it's over: DR's own programmes from its narrowest category, as the
+// category's page here has them. Only asked for at the end of one, and kept for everyone who watches it.
+app.get("/forslag/:kind{serie|program}/:slug", edgeCached(60 * MINUTE), async c => {
+	const ctx = c.get("ctx");
+	const slug = c.req.param("slug");
+	const item = c.req.param("kind") == "serie" ? await getShow(ctx, slug) : await getProgram(ctx, slug);
+	return c.json(await similarTo(ctx, item.categories ?? [], itemId(slug)));
+});
+
 // Its filter, like ?vis=dokumentar, is read by favorites.js
 app.get("/favoritter/", edgeCached(60 * MINUTE, {withoutQuery: true}), c => render(c, pages.favoritesPage(site(c))));
 
@@ -313,8 +322,14 @@ app.get("/favorites.json", async c => {
 });
 
 app.get("/program/:id", edgeCached(10 * MINUTE), async c => {
-	const program = await getProgram(c.get("ctx"), c.req.param("id"));
-	return render(c, pages.videoPage(site(c), {e: program, description: program.description}));
+	const ctx = c.get("ctx");
+	const program = await getProgram(ctx, c.req.param("id"));
+	// A film's credits, for "Hvad nu?" as they start
+	const skips = await segments.getSegments(ctx, program.videoId, []).catch(error => {
+		console.log("Could not get the intro and credits of", program.videoId, String(error));
+		return {};
+	});
+	return render(c, pages.videoPage(site(c), {e: program, description: program.description, segments: skips}));
 });
 
 app.get("/serie/:showid", c => redirectTo(c, "/", c.req.param("showid"), 302));

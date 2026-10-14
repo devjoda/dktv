@@ -691,6 +691,39 @@ describe("favourites", () => {
 	});
 });
 
+describe("what to watch next", () => {
+	test("is DR's own programmes from the narrowest category it has a page for, without the series itself", async () => {
+		const r = await get("/forslag/serie/rejseholdet_503605");
+		expect(r.status).toBe(200);
+		const similar = JSON.parse(r.text);
+		// Rejseholdet is Krimi and Gensyn too, which the fixtures have no page for
+		expect(similar.label).toBe("Serier");
+		expect(similar.cards.length).toBeGreaterThan(0);
+		expect(similar.cards.length).toBeLessThanOrEqual(8);
+		expect(similar.cards.every((c: any) => !c.url.includes("503605") && c.title && c.url.startsWith("/"))).toBe(true);
+		expect(new Set(similar.cards.map((c: any) => c.url)).size).toBe(similar.cards.length);
+		// From what the category's page is made of, which is kept for both
+		expect(dr.requested.some(p => p.startsWith("/page") && p.includes("fiktionsserier"))).toBe(true);
+	});
+
+	test("is nothing when DR has no page for its categories", async () => {
+		const similar = JSON.parse((await get("/forslag/program/lise-noergaard_-ikke-kun-en-pige_362031")).text);
+		expect(similar).toEqual({label: "", cards: []});
+	});
+
+	test("is only for series and programmes", async () => {
+		expect((await get("/forslag/noget/rejseholdet_503605")).status).toBe(404);
+		expect((await get("/forslag/serie/findes-ikke_1")).status).toBe(404);
+	});
+
+	test("is known by the page that plays one", async () => {
+		const episode = await get("/rejseholdet_503605/rejseholdet_503615");
+		expect(episode.text).toContain('<video id="video" controls crossorigin="anonymous" data-episode-id="503615" data-suggest="/forslag/serie/rejseholdet_503605"');
+		const film = await get("/program/lise-noergaard_-ikke-kun-en-pige_362031");
+		expect(film.text).toContain('data-episode-id="362031" data-suggest="/forslag/program/lise-noergaard_-ikke-kun-en-pige_362031"');
+	});
+});
+
 describe("links to DR", () => {
 	test("aren't on series', episodes' or films' pages, only in the footer", async () => {
 		for (const path of ["/rejseholdet_503605/", "/rejseholdet_503605/rejseholdet_503615", "/program/lise-noergaard_-ikke-kun-en-pige_362031"]) {

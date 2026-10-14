@@ -65,6 +65,7 @@ export const LIVE_SCRIPTS = html`${PLAYER_SCRIPTS}
 
 /** The scripts a video's page needs: the player's, watching together's, and skipping's */
 export const VIDEO_SCRIPTS = html`${PLAYER_SCRIPTS}
+<script src="${staticURL("next.js")}"></script>
 <script src="${staticURL("together.js")}"></script>
 <script src="${staticURL("skip.js")}"></script>`;
 

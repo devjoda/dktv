@@ -713,3 +713,24 @@ def test_responses_are_compressed(fake_dr):
     assert get("/rejseholdet_503605.xml", **{"Accept-Encoding": "gzip"})[0].headers["Content-Encoding"] == "gzip"
     assert "Content-Encoding" not in get("/static/vendor/schibsted-grotesk-5.3.0-latin.woff2", **{"Accept-Encoding": "gzip"})[0].headers
     assert "Content-Encoding" not in get("/favorites.json", **{"Accept-Encoding": "gzip"})[0].headers
+
+
+def test_what_to_watch_next_is_from_the_narrowest_category_dr_has_a_page_for(get):
+    r = get("/forslag/serie/rejseholdet_503605")
+    assert r.status_code == 200
+    similar = json.loads(r.text)
+    # Rejseholdet is Krimi and Gensyn too, which the fixtures have no page for
+    assert similar["label"] == "Serier"
+    assert 0 < len(similar["cards"]) <= 8
+    assert all("503605" not in c["url"] and c["title"] and c["url"].startswith("/") for c in similar["cards"])
+    assert len({c["url"] for c in similar["cards"]}) == len(similar["cards"])
+    assert json.loads(get("/forslag/program/lise-noergaard_-ikke-kun-en-pige_362031").text) == {"label": "", "cards": []}
+    assert get("/forslag/noget/rejseholdet_503605").status_code == 404
+
+
+def test_the_page_that_plays_one_knows_where_to_ask(get):
+    episode = get("/rejseholdet_503605/rejseholdet_503615").text
+    assert '<video id="video" controls crossorigin="anonymous" data-episode-id="503615" data-suggest="/forslag/serie/rejseholdet_503605"' in episode
+    film = get("/program/lise-noergaard_-ikke-kun-en-pige_362031").text
+    assert 'data-episode-id="362031" data-suggest="/forslag/program/lise-noergaard_-ikke-kun-en-pige_362031"' in film
+    assert "/static/next.js?v=" in episode
