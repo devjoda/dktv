@@ -187,13 +187,119 @@ function renderFavorites(details = keptDetails()) {
         }
         const tiles = section.querySelector(".js-tiles");
         tiles.hidden = shown.length == 0;
-        tiles.replaceChildren(...shown.map(favorite => favoriteTile(favorite, detailsOf(details, favorite))));
+        tiles.replaceChildren(...shown.map(function (favorite) {
+            const found = detailsOf(details, favorite);
+            const tile = favoriteTile(favorite, found);
+            // For the favourites page's filter
+            tile.dataset.favoriteFilters = favoriteFiltersOf(favorite, found).join(" ");
+            return tile;
+        }));
         section.hidden = false;
         section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
     }
     showLeavingSoon(details);
     markProgress();
+    applyFavoriteFilter(favorites, details);
 }
+
+// The favourites page's filters, which are only in its address, like ?vis=dokumentar, so going back goes back to
+// the one before; "alle" has none. A filter hides what isn't in it, without moving anything.
+const FAVORITE_FILTERS = ["alle", "serier", "film", "dokumentar"];
+// How many favourites there must be, of more than one kind, for the filters to be worth showing
+const FILTERS_FROM = 8;
+
+// The filters a favourite is under: a documentary series is under both "serier" and "dokumentar", and
+// one whose category isn't known yet, while the server hasn't said, only under "alle" and its kind
+function favoriteFiltersOf(favorite, details) {
+    const filters = ["alle", favorite.kind == "film" ? "film" : "serier"];
+    if (details && details.documentary === true) {
+        filters.push("dokumentar");
+    }
+    return filters;
+}
+
+// How many favourites each filter has, like {alle: 12, serier: 8, film: 4, dokumentar: 5}
+function filterCounts(favorites, details) {
+    const counts = Object.fromEntries(FAVORITE_FILTERS.map(filter => [filter, 0]));
+    for (const favorite of favorites) {
+        for (const filter of favoriteFiltersOf(favorite, detailsOf(details, favorite))) {
+            counts[filter]++;
+        }
+    }
+    return counts;
+}
+
+// Whether the filters are worth showing: with enough favourites, and something in more than one of them
+function filtersWorthShowing(counts) {
+    return counts.alle >= FILTERS_FROM && ["serier", "film", "dokumentar"].filter(filter => counts[filter] > 0).length >= 2;
+}
+
+// The filter the address asks for
+function chosenFilter(search = location.search) {
+    const asked = new URLSearchParams(search).get("vis");
+    return FAVORITE_FILTERS.includes(asked) ? asked : "alle";
+}
+
+const FILTER_EMPTY = {
+    serier: "Ingen serier blandt dine favoritter endnu.",
+    film: "Ingen film eller programmer blandt dine favoritter endnu.",
+    dokumentar: "Ingen dokumentarer blandt dine favoritter endnu.",
+};
+
+// Shows the favourites page's filters, with how many each has, and only what the chosen one has
+function applyFavoriteFilter(favorites = loadFavorites(), details = keptDetails()) {
+    const bar = document.querySelector(".js-favorite-filters");
+    if (bar == null) {
+        return;
+    }
+    const counts = filterCounts(favorites, details);
+    bar.hidden = !filtersWorthShowing(counts);
+    // Without the buttons, all of them, whatever the address says
+    const filter = bar.hidden ? "alle" : chosenFilter();
+    for (const button of bar.querySelectorAll("[data-filter]")) {
+        button.querySelector(".filter-count").textContent = counts[button.dataset.filter];
+        button.setAttribute("aria-pressed", String(button.dataset.filter == filter));
+    }
+    let shown = 0;
+    for (const section of document.querySelectorAll("[data-favorites]")) {
+        let inSection = 0;
+        for (const tile of section.querySelectorAll(".js-tiles > .tile")) {
+            tile.hidden = !(tile.dataset.favoriteFilters || "alle").split(" ").includes(filter);
+            inSection += tile.hidden ? 0 : 1;
+        }
+        shown += inSection;
+        // With all of them, a section without any says how to add some
+        section.hidden = filter != "alle" && inSection == 0;
+    }
+    const continueWatching = document.getElementById("continue-watching");
+    if (continueWatching && filter != "alle") {
+        continueWatching.hidden = true;
+    } else if (continueWatching) {
+        continueWatching.hidden = continueWatching.querySelector(".js-tiles").children.length == 0;
+    }
+    const empty = document.querySelector(".js-filter-empty");
+    empty.hidden = filter == "alle" || shown > 0;
+    empty.querySelector(".js-filter-empty-text").textContent = FILTER_EMPTY[filter] || "";
+}
+
+// Choosing a filter goes in the address, and back goes back to the one before
+document.addEventListener("click", function (event) {
+    const button = event.target.closest(".js-favorite-filters [data-filter]");
+    if (button == null) {
+        return;
+    }
+    const url = new URL(location.href);
+    if (button.dataset.filter == "alle") {
+        url.searchParams.delete("vis");
+    } else {
+        url.searchParams.set("vis", button.dataset.filter);
+    }
+    if (url.href != location.href) {
+        history.pushState(history.state, "", url);
+    }
+    applyFavoriteFilter();
+});
+window.addEventListener("popstate", () => applyFavoriteFilter());
 
 // Fills in the #leaving-soon row: what the viewer started or made a favourite, which leaves DR
 // within a month, soonest first. Only DR's single programmes say when they leave, not its lists,

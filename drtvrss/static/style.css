@@ -1292,6 +1292,56 @@ h1, h2, h3 {
     color: var(--paper);
 }
 
+/* The favourites page's filters, on more lines where there isn't room for them on one */
+.favorite-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 24px 0 8px;
+}
+
+.favorite-filters[hidden] {
+    display: none;
+}
+
+.filter-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(242, 239, 233, .06);
+    color: var(--paper);
+    font-size: .9375rem;
+    font-weight: 650;
+    transition: background-color .15s, border-color .15s;
+}
+
+.filter-button:hover {
+    border-color: rgba(242, 239, 233, .3);
+}
+
+.filter-button[aria-pressed=true] {
+    border-color: var(--paper);
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.filter-count {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.filter-button[aria-pressed=true] .filter-count {
+    color: rgba(15, 16, 19, .6);
+}
+
+.js-filter-empty {
+    margin-bottom: 32px;
+}
+
 .tile-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));

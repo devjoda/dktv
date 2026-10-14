@@ -45,7 +45,7 @@ function browser(): Browser {
 	const listeners = {addEventListener() {}, removeEventListener() {}, dispatchEvent() {}};
 	const sandbox: Record<string, unknown> = {
 		// The context's own Date and the rest, which tests may change
-		console, Event, structuredClone, setTimeout, clearTimeout,
+		console, Event, structuredClone, setTimeout, clearTimeout, URL, URLSearchParams,
 		localStorage: storage,
 		navigator: {userAgent: "Node"},
 		document: {...listeners, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null},
@@ -315,5 +315,53 @@ describe("favourites", () => {
 	test("both, as kept from before, or from another device, are shown once", () => {
 		b.storage.setItem("favorites", JSON.stringify([favorite(2, "503605"), favorite(1, "rejseholdet_503605"), favorite(1, "matador_2")]));
 		expect(b.run("loadFavorites()").map((f: any) => [f.id, f.added])).toEqual([["rejseholdet_503605", 2], ["matador_2", 1]]);
+	});
+});
+
+describe("the favourites page's filters", () => {
+	const shows = (n: number, documentary: boolean | null = false) => Array.from({length: n}, (_, i) => [favorite(1, `serie_${documentary}_${i}`), series([], {documentary})] as const);
+	const films = (n: number, documentary: boolean | null = false) => Array.from({length: n}, (_, i) => [favorite(1, `film_${documentary}_${i}`, "film"), {title: "En film", url: "/program/x", image: null, minutes: 90, documentary}] as const);
+
+	/** The counts, and whether the filters show, for favourites with what the server said about them */
+	function filters(...groups: (readonly (readonly [any, any])[])[]) {
+		const all = groups.flat();
+		const details = {at: NOW, pending: {shows: [], films: []}, shows: {} as Record<string, unknown>, films: {} as Record<string, unknown>};
+		for (const [f, d] of all) {
+			(f.kind == "film" ? details.films : details.shows)[f.id] = d;
+		}
+		const counts = b.run(`filterCounts(${JSON.stringify(all.map(([f]) => f))}, ${JSON.stringify(details)})`);
+		return {counts, shown: b.run(`filtersWorthShowing(${JSON.stringify(counts)})`)};
+	}
+
+	test("a documentary series is under both Serier and Dokumentar", () => {
+		expect(b.run(`favoriteFiltersOf(${JSON.stringify(favorite(1))}, {documentary: true})`)).toEqual(["alle", "serier", "dokumentar"]);
+		expect(b.run(`favoriteFiltersOf(${JSON.stringify(favorite(1, "en-film_2", "film"))}, {documentary: true})`)).toEqual(["alle", "film", "dokumentar"]);
+		expect(b.run(`favoriteFiltersOf(${JSON.stringify(favorite(1))}, {documentary: false})`)).toEqual(["alle", "serier"]);
+	});
+
+	test("count each", () => {
+		expect(filters(shows(5), shows(2, true), films(3, true)).counts).toEqual({alle: 10, serier: 7, film: 3, dokumentar: 5});
+	});
+
+	test("show from 8 favourites, of more than one kind", () => {
+		expect(filters(shows(5), films(3)).shown).toBe(true);
+		expect(filters(shows(4), films(3)).shown).toBe(false);
+		// Only series, of which none are documentaries, is one kind
+		expect(filters(shows(12)).shown).toBe(false);
+		// Series, some of them documentaries, are two
+		expect(filters(shows(10), shows(1, true)).shown).toBe(true);
+	});
+
+	test("a favourite whose category isn't known yet is only under Alle and its kind, until it is", () => {
+		// Not described yet, or kept from before DR's categories were
+		expect(b.run(`favoriteFiltersOf(${JSON.stringify(favorite(1))}, undefined)`)).toEqual(["alle", "serier"]);
+		expect(filters(shows(6, null), films(2, null)).counts).toEqual({alle: 8, serier: 6, film: 2, dokumentar: 0});
+	});
+
+	test("are only in the address", () => {
+		expect(b.run(`chosenFilter("?vis=dokumentar")`)).toBe("dokumentar");
+		expect(b.run(`chosenFilter("?vis=noget")`)).toBe("alle");
+		expect(b.run(`chosenFilter("")`)).toBe("alle");
+		expect([...b.storage.items.keys()].filter(key => key.includes("vis") || key.includes("filter"))).toEqual([]);
 	});
 });

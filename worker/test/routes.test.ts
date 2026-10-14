@@ -611,6 +611,16 @@ describe("favourites", () => {
 		expect(shows).toBeGreaterThan(0);
 		expect(shows).toBeLessThan(films);
 		expect(r.text).toContain('<section class="results" id="continue-watching" aria-labelledby="continue-title" hidden>');
+		// Films and single programmes, like a documentary or a concert, which don't get new episodes
+		expect(r.text).toContain('<h2 class="section-title" id="favorite-films-title">Film og programmer</h2>');
+		// The filters, which favorites.js shows when there are enough of more than one kind, before the favourites
+		const filters = between(r.text, '<div class="favorite-filters wrap js-favorite-filters" role="group" aria-label="Vis" hidden>', "</div>");
+		expect([...filters.matchAll(/data-filter="(\w+)" aria-pressed="(\w+)">([^<]+)</g)].map(m => [m[1], m[2], m[3].trim()])).toEqual([
+			["alle", "true", "Alle"], ["serier", "false", "Serier"], ["film", "false", "Film og programmer"], ["dokumentar", "false", "Dokumentar"],
+		]);
+		expect(r.text.indexOf("js-favorite-filters")).toBeLessThan(shows);
+		// The same page, whatever filter the address has, which only the browser reads
+		expect((await get("/favoritter/?vis=dokumentar")).text).toBe(r.text);
 	});
 
 	test("are described", async () => {
@@ -629,6 +639,9 @@ describe("favourites", () => {
 		expect(rejseholdet.image).toContain("Width=640");
 		expect(rejseholdet.episode_ids).toHaveLength(32);
 		expect(rejseholdet.episode_ids[0]).toBe("503615");
+		// Whether each is a documentary, from DR's categories in what's kept, as on the page Dokumentar
+		expect(rejseholdet.documentary).toBe(false);
+		expect(film.documentary).toBe(true);
 	});
 
 	test("tells of each series' new episodes, from the series as it's kept, without asking DR again", async () => {

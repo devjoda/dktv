@@ -86,8 +86,11 @@ class Show:
         wallpaper: Optional[str] = None,
         geo_restricted: bool = False,
         next_episode: Optional[datetime] = None,
+        categories: Optional[list[str]] = None,
     ):
         self.title = title
+        # DR's categories for it, like ["dokumentar", "kultur"]
+        self.categories = categories
         self.description = description
         self.url = url
         self.seasons = []
@@ -170,6 +173,7 @@ class Program:
         pubdate: Optional[datetime] = None,
         wallpaper: Optional[str] = None,
         len_minutes: Optional[int] = None,
+        categories: Optional[list[str]] = None,
     ):
         self.title = title
         self.description = description
@@ -177,6 +181,8 @@ class Program:
         self.pubdate = pubdate
         self.wallpaper = wallpaper
         self.len_minutes = len_minutes
+        # DR's categories for it, like ["dokumentar", "kultur"]
+        self.categories = categories
         self.video_id = video_id(url) if url is not None else None
         self.age = time()
 
@@ -220,6 +226,17 @@ def is_new(d: Optional[datetime]) -> bool:
         return False
     now = current_time(COPENHAGEN) if d.tzinfo is not None else current_time()
     return timedelta(0) <= now - d <= NEW_FOR
+
+
+def is_documentary(item) -> Optional[bool]:
+    """Whether a Show or Program is a documentary, as on the page Dokumentar, whose programmes DR gives the
+    category "dokumentar", or None if it doesn't say"""
+    return "dokumentar" in item.categories if item.categories is not None else None
+
+
+def categories_of(item) -> Optional[list[str]]:
+    """DR's categories for an item, in small letters"""
+    return [c.lower() for c in item.categories] if item.categories is not None else None
 
 
 # How many of a series' newest episodes /favorites.json tells of

@@ -9,7 +9,7 @@ import {getCategories, getList, getPage} from "./discover";
 import {Budget, type Ctx, DRUnavailable, type Env, NotFound, OverBudget} from "./dr";
 import {channelNamed, getChannels, getSchedules, planFrom} from "./live";
 import {search} from "./search";
-import {allEpisodes, getLongDescription, getProgram, getShow, itemId, newEpisodes, rssFeed, type Show, thumbnail} from "./show";
+import {allEpisodes, getLongDescription, getProgram, getShow, isDocumentary, itemId, newEpisodes, rssFeed, type Show, thumbnail} from "./show";
 import * as passkeys from "./passkeys";
 import * as segments from "./segments";
 import {isRoomId, newRoomId} from "./room";
@@ -67,7 +67,11 @@ function render(c: Context<App>, page: Html, status: 200 | 404 | 500 | 503 = 200
  * Keeps the pages a visit gets in Cloudflare's cache for some seconds, since they're the
  * same for everyone: what's personal is filled in by the browser. Browsers keep them a minute.
  */
-function edgeCached(seconds: number): MiddlewareHandler<App> {
+/**
+ * Keeps the page in Cloudflare's cache for everyone. With withoutQuery, the same page is kept whatever comes
+ * after ?, for pages whose query only the browser reads, like the favourites' filter, so it isn't kept once for each.
+ */
+function edgeCached(seconds: number, {withoutQuery = false}: {withoutQuery?: boolean} = {}): MiddlewareHandler<App> {
 	return async (c, next) => {
 		const ctx = c.get("ctx");
 		const cache = typeof caches != "undefined" ? caches.default : null;
@@ -79,6 +83,9 @@ function edgeCached(seconds: number): MiddlewareHandler<App> {
 		}
 		// A new version of the Worker has new pages
 		const url = new URL(c.req.url);
+		if (withoutQuery) {
+			url.search = "";
+		}
 		url.searchParams.set("_version", c.env.VERSION?.id ?? "dev");
 		const key = new Request(url.toString());
 		ctx.budget.spend();
@@ -220,7 +227,8 @@ app.get("/live/:channel", edgeCached(2 * MINUTE), async c => {
 	return render(c, pages.livePage(site(c), {slug, channels, schedules}));
 });
 
-app.get("/favoritter/", edgeCached(60 * MINUTE), c => render(c, pages.favoritesPage(site(c))));
+// Its filter, like ?vis=dokumentar, is read by favorites.js
+app.get("/favoritter/", edgeCached(60 * MINUTE, {withoutQuery: true}), c => render(c, pages.favoritesPage(site(c))));
 
 app.get("/nyt/", edgeCached(60 * MINUTE), c => render(c, pages.newsPage(site(c))));
 
@@ -290,12 +298,14 @@ app.get("/favorites.json", async c => {
 				new: episodes.length > 0 && isNew(episodes.at(-1)!.pubdate),
 				// For "Nyt til dig", from the series as it's kept, without asking DR for more
 				new_episodes: newEpisodes(show),
+				// For the favourites page's filter, like the page Dokumentar; null where what's kept doesn't say
+				documentary: isDocumentary(show),
 				expires: show.expires ?? null,
 			};
 		}),
 		describeAll(ids("films"), async slug => {
 			const program = await getProgram(ctx, slug);
-			return {title: program.title, url: `/program/${slug}`, image: thumbnail(program.wallpaper) ?? null, minutes: program.minutes ?? null, expires: program.expires ?? null};
+			return {title: program.title, url: `/program/${slug}`, image: thumbnail(program.wallpaper) ?? null, minutes: program.minutes ?? null, documentary: isDocumentary(program), expires: program.expires ?? null};
 		}),
 	]);
 	const more = moreShows.length || moreFilms.length ? {more: {shows: moreShows, films: moreFilms}} : {};

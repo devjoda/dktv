@@ -56,6 +56,14 @@ describe("Cloudflare's cache", () => {
 		expect(dr.requested.filter(p => p.includes("expand=all"))).toEqual([]);
 	});
 
+	test("keeps the favourites page once, whatever filter its address has", async () => {
+		const plain = await get("/favoritter/");
+		const filtered = await get("/favoritter/?vis=dokumentar");
+		await get("/favoritter/?vis=serier");
+		expect(filtered.text).toBe(plain.text);
+		expect(pages()).toEqual(["https://dktv.example/favoritter/?_version=dev"]);
+	});
+
 	test("doesn't keep errors", async () => {
 		expect((await get("/findes-ikke_1/")).status).toBe(404);
 		dr.down = true;

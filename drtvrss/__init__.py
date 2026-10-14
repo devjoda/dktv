@@ -30,7 +30,7 @@ from .drtv import (
 )
 from . import live as live_tv
 from .live import channel_named, channel_style, get_channels, get_schedules, plan_from, whats_on
-from .show import Show, clock, danish_date, danish_datetime, duration, is_new, new_episodes, thumbnail
+from .show import Show, clock, is_documentary, danish_date, danish_datetime, duration, is_new, new_episodes, thumbnail
 
 app = Quart(__name__)
 app.add_template_filter(thumbnail)
@@ -389,6 +389,8 @@ def describe_show(show: Show) -> dict:
         "new": bool(episodes) and is_new(episodes[-1].pubdate),
         # For "Nyt til dig", from the series as it's kept, without asking DR for more
         "new_episodes": new_episodes(show),
+        # For the favourites page's filter, like the page Dokumentar
+        "documentary": is_documentary(show),
     }
 
 
@@ -400,6 +402,7 @@ async def describe_film(film_id: str) -> dict:
         "url": f"/program/{film_id}",
         "image": thumbnail(program.wallpaper),
         "minutes": program.len_minutes,
+        "documentary": is_documentary(program),
     }
 
 

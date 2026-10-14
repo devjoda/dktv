@@ -15,7 +15,7 @@ from pydantic import TypeAdapter
 from quart import abort
 
 from . import models as dr
-from .show import Episode, Season, Show, Program
+from .show import Episode, Season, Show, Program, categories_of
 
 shows: dict[int, Show] = {}
 programs: dict[int, Program] = {}
@@ -124,6 +124,7 @@ def build_show(latest: dr.Season, seasons: dict[str, dr.Season]) -> Show:
         wallpaper=latest.images.wallpaper,
         geo_restricted=latest.custom_fields.is_geo_restricted,
         next_episode=next_episode,
+        categories=categories_of(latest) or categories_of(latest.show),
     )
 
     for s in latest.show.seasons.items:
@@ -216,6 +217,7 @@ async def get_program(prog: str) -> Program:
             pubdate=item.custom_fields.available_from,
             wallpaper=item.images.wallpaper,
             len_minutes=item.len_minutes,
+            categories=categories_of(item),
         )
     return programs[progid]
 

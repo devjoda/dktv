@@ -282,6 +282,16 @@ def test_favorites_page(get):
     films = r.text.index('<section class="results" id="favorite-films" data-favorites="film"')
     assert shows < films
     assert '<section class="results" id="continue-watching" aria-labelledby="continue-title" hidden>' in r.text
+    # Films and single programmes, like a documentary or a concert, which don't get new episodes
+    assert '<h2 class="section-title" id="favorite-films-title">Film og programmer</h2>' in r.text
+    # The filters, which favorites.js shows when there are enough of more than one kind, before the favourites
+    filters = r.text.split('<div class="favorite-filters wrap js-favorite-filters" role="group" aria-label="Vis" hidden>')[1].split("</div>")[0]
+    assert re.findall(r'data-filter="(\w+)" aria-pressed="(\w+)">([^<]+)<', filters) == [
+        ("alle", "true", "Alle "), ("serier", "false", "Serier "), ("film", "false", "Film og programmer "), ("dokumentar", "false", "Dokumentar "),
+    ]
+    assert r.text.index("js-favorite-filters") < shows
+    # The same page, whatever filter the address has, which only the browser reads
+    assert get("/favoritter/?vis=dokumentar").text == r.text
 
 
 def test_unknown_show(get):
@@ -525,6 +535,9 @@ def test_favorites_are_described(get):
     assert rejseholdet["episodes"] == 32 == len(rejseholdet["episode_ids"])
     assert rejseholdet["episode_ids"][0] == "503615"
     assert rejseholdet["new"] is False
+    # Whether each is a documentary, from DR's categories in what's kept, as on the page Dokumentar
+    assert rejseholdet["documentary"] is False
+    assert film["documentary"] is True
 
 
 def test_favorites_tell_of_new_episodes_from_the_series_as_its_kept(get, fake_dr, monkeypatch):
