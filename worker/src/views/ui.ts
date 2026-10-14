@@ -1,7 +1,7 @@
 // The building blocks of the pages
 
 import type {Card} from "../discover";
-import {type LiveChannel, percentDone, type Programme, whatsOn} from "../live";
+import {channelStyle, type LiveChannel, percentDone, type Programme, whatsOn} from "../live";
 import {allEpisodes, playlist, type Show, thumbnail} from "../show";
 import {clockTime, danishDate, duration, isNew, leavingLabel} from "../time";
 import {attr, each, html, type Html} from "./html";
@@ -83,7 +83,7 @@ export function channelTile(slug: string, channel: LiveChannel, programmes: Prog
 	const [onNow, later] = whatsOn(programmes);
 	const done = onNow ? percentDone(onNow) : 0;
 	return html`<article class="tile channel-tile">
-<a class="tile-link" href="/live/${slug}"${attr("style", channel.colour ? `--channel: ${channel.colour};` : undefined)}><div class="tile-media">${
+<a class="tile-link" href="/live/${slug}"${attr("style", channelStyle(slug, channel))}><div class="tile-media">${
 	onNow?.image
 		? html`<img src="${thumbnail(onNow.image)}" alt="" loading="lazy"><div class="tile-badges"><span class="tag tag-channel">${channel.title}</span></div>`
 		: html`<div class="channel-art">${channel.title}</div>`

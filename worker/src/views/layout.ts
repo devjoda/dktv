@@ -123,7 +123,7 @@ ${each(sections(site.path), ([url, name, current]) =>
 </ul>
 </nav>
 <form class="header-search" role="search" action="/search/">
-<input type="search" name="query" placeholder="Søg efter programmer" aria-label="Søg" value="${site.query || ""}" enterkeyhint="search">
+<input type="search" name="query" placeholder="Søg efter serier, film og afsnit" aria-label="Søg" value="${site.query || ""}" enterkeyhint="search">
 <button type="submit" class="search-submit" aria-label="Søg">${icon("search")}</button>
 </form>
 <a class="search-link" href="/search/" aria-label="Søg"${attr("aria-current", site.path.startsWith("/search/") && "page")}>${icon("search")}</a>

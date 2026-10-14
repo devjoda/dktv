@@ -16,6 +16,13 @@ SCHEDULE_HOURS = 24
 SCHEDULE_CACHE_TIME = 5 * 60
 
 
+# Our own colours for the channels whose own are too like another's: TV A's red is DR1's, and Ramasjang's
+# turquoise is too like DR2's blue
+CHANNEL_COLOURS = {"EVA": "#f2efe9", "TVR": "#9b6cff"}
+# The ink the site is written in, for a bar in a colour nearly as light as the chosen channel's warm white
+INK = "#0f1013"
+
+
 class LiveChannel:
     def __init__(self, id, title, stream_url, subtitles_url=None, colour=None):
         self.id = id
@@ -23,6 +30,16 @@ class LiveChannel:
         self.stream_url = stream_url
         self.subtitles_url = subtitles_url
         self.colour = colour
+
+
+def channel_style(slug: str, channel: LiveChannel) -> Optional[str]:
+    """The channel's colour, as a style for what's marked with it, like its progress bars, or None"""
+    colour = CHANNEL_COLOURS.get(slug) or channel.colour
+    if colour is None:
+        return None
+    r, g, b = (int(colour[i : i + 2], 16) for i in (1, 3, 5))
+    light = 0.2126 * r + 0.7152 * g + 0.0722 * b > 200
+    return f"--channel: {colour};" + (f" --channel-on-paper: {INK};" if light else "")
 
 
 @dataclass

@@ -40,6 +40,16 @@ describe("DR's rows", () => {
 		expect(cards([show, {type: "show"}, other, show], CHANNELS).map(c => c.title)).toEqual(["Mors dreng", "Høst"]);
 	});
 
+	test("a show and its season are the same, though DR only gives the season the show's number", () => {
+		const season = {id: "2", type: "season", title: "Mors dreng", path: "/saeson/mors-dreng_2", showId: "1"};
+		const show = {id: "1", type: "show", title: "Mors dreng", path: "/serie/mors-dreng_1"};
+		const found = cards([season, show], CHANNELS);
+		expect(found).toHaveLength(1);
+		// Where the season was, with the show's name in the address, for favourites to know it by
+		expect(found[0]).toMatchObject({url: "/mors-dreng_1/", showId: "mors-dreng_1"});
+		expect(cards([show, season], CHANNELS).map(c => c.url)).toEqual(["/mors-dreng_1/"]);
+	});
+
 	test("DR's front page, a couple of rows at a time while nothing's kept", async () => {
 		const first = ctx();
 		const start = (await getPage(first, "/", 8))!;

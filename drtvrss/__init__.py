@@ -29,7 +29,7 @@ from .drtv import (
     search,
 )
 from . import live as live_tv
-from .live import channel_named, get_channels, get_schedules, plan_from, whats_on
+from .live import channel_named, channel_style, get_channels, get_schedules, plan_from, whats_on
 from .show import Show, clock, danish_date, danish_datetime, duration, is_new, new_episodes, thumbnail
 
 app = Quart(__name__)
@@ -39,6 +39,7 @@ app.add_template_filter(danish_datetime)
 app.add_template_filter(duration)
 app.add_template_filter(clock)
 app.add_template_global(whats_on)
+app.add_template_global(channel_style)
 app.add_template_test(is_new, "new")
 
 SERVICE_NAME = os.getenv("SERVICE_NAME", "GLOTV")
@@ -512,6 +513,7 @@ async def live_channel(channel):
         guide.append({
             "slug": other,
             "title": c.title,
+            "style": channel_style(other, c),
             "number": number,
             "current": other == slug,
             "now": on_now["title"] if on_now else (f"Sender igen kl. {clock_at(following['start'])}" if following else ""),
@@ -534,12 +536,16 @@ async def live_channel(channel):
     return await render_template(
         "live.html",
         channel=channels[slug],
+        channel_style=channel_style(slug, channels[slug]),
         current_channel=slug,
         guide=guide,
         programmes=programmes,
         data={
             "channel": slug,
-            "channels": [{"slug": s, "title": c.title, "stream": c.stream_url, "subtitles": c.subtitles_url} for s, c in channels.items()],
+            "channels": [
+                {"slug": s, "title": c.title, "stream": c.stream_url, "subtitles": c.subtitles_url, "style": channel_style(s, c)}
+                for s, c in channels.items()
+            ],
             "plan": plan,
         },
         SERVICE_NAME=SERVICE_NAME,

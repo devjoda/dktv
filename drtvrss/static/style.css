@@ -1033,11 +1033,17 @@ h1, h2, h3 {
     padding-bottom: 32px;
 }
 
-/* Which featured programme is shown, and how far it's got */
+/* Which featured programme is shown, and how far it's got. Until ui.js has them work, they keep their room,
+   so the programme's title doesn't move up when they come */
 .featured-bars {
     display: flex;
     gap: 6px;
     max-width: min(100%, 640px);
+}
+
+.featured-bars[hidden] {
+    display: flex;
+    visibility: hidden;
 }
 
 /* Sharing the room, however many there are */
@@ -2160,10 +2166,15 @@ a:hover .channel-art {
     display: none;
 }
 
+/* In the channel's colour, as on the front page, and dark where it's too light for the chosen channel's warm white */
 .guide-progress > span {
     display: block;
     height: 100%;
-    background: var(--on-air);
+    background: var(--channel, var(--on-air));
+}
+
+.guide-channel[aria-current] .guide-progress > span {
+    background: var(--channel-on-paper, var(--channel, var(--on-air)));
 }
 
 /* Which number on the keyboard chooses it, for those with one */
@@ -2949,6 +2960,11 @@ a:hover .channel-art {
     border-color: rgba(242, 239, 233, .18);
 }
 
+/* Alone, like the first episode's next, across the row, instead of beside an empty space */
+.episode-link:only-child {
+    grid-column: 1 / -1;
+}
+
 .episode-link:hover {
     background: var(--raised-hover);
     border-color: rgba(242, 239, 233, .3);
@@ -3100,7 +3116,7 @@ a:hover .channel-art {
 .programme-progress > span {
     display: block;
     height: 100%;
-    background: var(--on-air);
+    background: var(--channel, var(--on-air));
 }
 
 .programme-ends {

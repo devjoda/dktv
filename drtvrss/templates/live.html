@@ -21,7 +21,7 @@
     <div class="guide-head"><h2 class="guide-title">Kanaler</h2></div>
     <ol class="guide-list">
         {% for g in guide %}
-        <li><a class="guide-channel" href="/live/{{ g.slug }}" data-channel="{{ g.slug }}"{% if g.current %} aria-current="page"{% endif %}>
+        <li><a class="guide-channel" href="/live/{{ g.slug }}" data-channel="{{ g.slug }}"{% if g.current %} aria-current="page"{% endif %}{% if g.style %} style="{{ g.style }}"{% endif %}>
             <span class="guide-key" aria-hidden="true">{{ g.number }}</span>
             <span class="guide-name">{{ g.title }}</span>
             <span class="guide-now">{{ g.now }}</span>
@@ -39,7 +39,7 @@
             <button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false"{% if not channel.subtitles_url %} hidden{% endif %}>{{ icon("captions") }} Undertekster</button>
         </div>
     </div>
-    <section class="schedule" aria-labelledby="schedule-title"{% if not programmes %} hidden{% endif %}>
+    <section class="schedule" aria-labelledby="schedule-title"{% if channel_style %} style="{{ channel_style }}"{% endif %}{% if not programmes %} hidden{% endif %}>
         <h2 class="side-title" id="schedule-title">Programoversigt</h2>
         <ol class="programmes">
             {% for p in programmes %}

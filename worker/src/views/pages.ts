@@ -1,7 +1,7 @@
 // The pages
 
 import type {Card, Category, DiscoverPage, Row} from "../discover";
-import {type Channels, percentDone, planFrom, type PlannedProgramme, type Programme, whatsOn} from "../live";
+import {channelStyle, type Channels, type LiveChannel, percentDone, planFrom, type PlannedProgramme, type Programme, whatsOn} from "../live";
 import type {SearchResult, SearchResultItem} from "../search";
 import type {Segments} from "../segments";
 import {allEpisodes, type Episode, type Program, type Show, thumbnail} from "../show";
@@ -80,6 +80,7 @@ ${icon("heart")}
 </p>
 <div class="shelf-track js-tiles"></div>
 </section>
+<script>showKeptRows();</script>
 ${Object.keys(channels).length ? html`<section class="shelf" aria-labelledby="live-title">
 ${shelfHead("Direkte TV", "live-title")}
 <div class="shelf-track">${channelTiles(channels, schedules)}</div>
@@ -135,7 +136,6 @@ ${show.nextEpisode ? html`<p class="hero-note">${icon("calendar")} Nyt afsnit ${
 <div class="actions">
 ${playButton(show)}
 ${favoriteButton(show.url, show.title, show.wallpaper)}
-<a href="https://www.dr.dk/drtv/serie/${show.url}" class="button button-quiet">Se originalen ${icon("external")}</a>
 </div>
 </div>
 </section>
@@ -189,7 +189,6 @@ ${show ? html`<a class="eyebrow" href="/${show.url}/">${icon("chevron-left")} ${
 <p class="description">${description}</p>
 <div class="actions">
 ${film ? favoriteButton(film.url.split("/").at(-1)!, e.title, e.wallpaper, {kind: "film"}) : ""}
-<a class="button button-quiet" href="https://www.dr.dk/drtv${e.url}">Se originalen ${icon("external")}</a>
 </div>
 ${previous || next ? html`<nav class="episode-nav" aria-label="Flere afsnit">
 ${neighbourLink("previous", previous)}
@@ -203,10 +202,11 @@ playVideo(document.getElementById('video'), ${scriptJSON(e.videoId)});
 }
 
 /** One of the channels in the channel guide: what's on it now, how far it's got, and what's next */
-function guideChannel(slug: string, title: string, programmes: PlannedProgramme[], current: boolean, number: number): Html {
+function guideChannel(slug: string, channel: LiveChannel, programmes: PlannedProgramme[], current: boolean, number: number): Html {
 	const [onNow, later] = whatsOn(programmes);
 	const next = later[0];
-	return html`<li><a class="guide-channel" href="/live/${slug}" data-channel="${slug}"${attr("aria-current", current && "page")}>
+	const title = channel.title;
+	return html`<li><a class="guide-channel" href="/live/${slug}" data-channel="${slug}"${attr("aria-current", current && "page")}${attr("style", channelStyle(slug, channel))}>
 <span class="guide-key" aria-hidden="true">${number}</span>
 <span class="guide-name">${title}</span>
 <span class="guide-now">${onNow ? onNow.title : next ? `Sender igen kl. ${clockTime(next.start)}` : ""}</span>
@@ -247,7 +247,7 @@ export function livePage(site: Site, {slug, channels, schedules}: {slug: string;
 	const plan = planFrom(channels, schedules);
 	const data = {
 		channel: slug,
-		channels: Object.entries(channels).map(([s, c]) => ({slug: s, title: c.title, stream: c.streamURL, subtitles: c.subtitlesURL ?? null})),
+		channels: Object.entries(channels).map(([s, c]) => ({slug: s, title: c.title, stream: c.streamURL, subtitles: c.subtitlesURL ?? null, style: channelStyle(s, c) ?? null})),
 		plan,
 	};
 	const programmes = plan[slug];
@@ -257,7 +257,7 @@ export function livePage(site: Site, {slug, channels, schedules}: {slug: string;
 <nav class="channel-guide" id="channel-guide" aria-label="Kanaler">
 <div class="guide-head"><h2 class="guide-title">Kanaler</h2></div>
 <ol class="guide-list">
-${each(Object.entries(channels), ([other, c], i) => guideChannel(other, c.title, plan[other], other == slug, i + 1))}
+${each(Object.entries(channels), ([other, c], i) => guideChannel(other, c, plan[other], other == slug, i + 1))}
 </ol>
 </nav>
 <div class="watch">
@@ -268,7 +268,7 @@ ${each(Object.entries(channels), ([other, c], i) => guideChannel(other, c.title,
 <button type="button" class="button button-secondary js-live-subtitles" aria-pressed="false"${channel.subtitlesURL ? "" : html` hidden`}>${icon("captions")} Undertekster</button>
 </div>
 </div>
-<section class="schedule" aria-labelledby="schedule-title"${programmes.length ? "" : html` hidden`}>
+<section class="schedule" aria-labelledby="schedule-title"${attr("style", channelStyle(slug, channel))}${programmes.length ? "" : html` hidden`}>
 <h2 class="side-title" id="schedule-title">Programoversigt</h2>
 <ol class="programmes">
 ${programmeItems(programmes)}</ol>
@@ -445,9 +445,9 @@ export function syncPage(site: Site): Html {
 </div>
 </section>
 <section class="account-section js-contribute" aria-labelledby="contribute-title" hidden>
-<h2 id="contribute-title">Intro og rulletekster</h2>
-<p>Vil du hjælpe andre med at springe introer over? Slå det til, så kan du markere, hvor intro og rulletekster starter og slutter, når du ser noget på en computer. En markering bruges, når flere er enige om den.</p>
-<label class="switch"><input type="checkbox" class="js-contribute-toggle"><span>Bidrag med intro og rulletekster</span></label>
+<h2 id="contribute-title">Spring intro og rulletekster over</h2>
+<p>Knapperne Spring intro over og Næste afsnit findes, fordi seerne selv markerer, hvor intro og rulletekster er. Slå det til, så kan du også markere dem, når du ser noget på en computer. En markering bruges, når flere er enige om den.</p>
+<label class="switch"><input type="checkbox" class="js-contribute-toggle"><span>Hjælp med at markere intro og rulletekster</span></label>
 </section>
 <div class="actions account-end">
 <button type="button" class="button button-quiet js-sync-stop">Log ud på denne enhed</button>

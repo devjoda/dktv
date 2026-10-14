@@ -133,7 +133,7 @@ export function card(item: Json, channelSlugs: Record<string, string>): Card | u
 
 export function cards(items: Json[], channelSlugs: Record<string, string>): Card[] {
 	const result: Card[] = [];
-	const seen = new Set<string>();
+	const seen = new Map<string, Card>();
 	for (const item of items) {
 		let c: Card | undefined;
 		try {
@@ -141,10 +141,20 @@ export function cards(items: Json[], channelSlugs: Record<string, string>): Card
 		} catch {
 			continue;
 		}
-		// DR sometimes has a show twice in a row, like two of its seasons
-		if (c !== undefined && !seen.has(c.url)) {
-			seen.add(c.url);
+		if (c === undefined) {
+			continue;
+		}
+		// DR sometimes has a show twice, like two of its seasons, or the show and one of its seasons,
+		// which lead to /mors-dreng_622934/ and /622934/: the same, by DR's id for the show
+		const key = c.showId ? `show:${c.showId.split("_").at(-1)}` : c.url;
+		const found = seen.get(key);
+		if (found === undefined) {
+			seen.set(key, c);
 			result.push(c);
+		} else if (c.showId?.includes("_") && !found.showId?.includes("_")) {
+			// With the show's name in its address
+			found.url = c.url;
+			found.showId = c.showId;
 		}
 	}
 	return result;

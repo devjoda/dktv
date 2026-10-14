@@ -294,3 +294,26 @@ describe("what's kept of /favorites.json", () => {
 		expect(b.asked).toEqual([]);
 	});
 });
+
+describe("favourites", () => {
+	test("a series made a favourite as both 503605 and rejseholdet_503605 is there once, by its name", () => {
+		b.run(`scheduleSync = () => {}`);
+		// From the front page's big picture, which has the series' number, and then from a row
+		b.run(`setFavorite({id: "503605", kind: "show", title: "Rejseholdet", image: null}, true)`);
+		expect(b.run(`isFavorite("rejseholdet_503605")`)).toBe(true);
+		b.run(`setFavorite({id: "rejseholdet_503605", kind: "show", title: "Rejseholdet", image: null}, true)`);
+		expect(b.run("loadFavorites()").map((f: any) => f.id)).toEqual(["rejseholdet_503605"]);
+		// And the other way around, keeping the name
+		b.run(`setFavorite({id: "503605", kind: "show", title: "Rejseholdet", image: null}, true)`);
+		expect(b.run("loadFavorites()").map((f: any) => f.id)).toEqual(["rejseholdet_503605"]);
+		// Removing it by either takes it away, on the other devices too
+		b.run(`setFavorite({id: "503605", kind: "show", title: "Rejseholdet", image: null}, false)`);
+		expect(b.run("loadFavorites()")).toEqual([]);
+		expect(Object.keys(JSON.parse(b.storage.getItem("favoritesRemoved")!)).sort()).toEqual(["503605", "rejseholdet_503605"]);
+	});
+
+	test("both, as kept from before, or from another device, are shown once", () => {
+		b.storage.setItem("favorites", JSON.stringify([favorite(2, "503605"), favorite(1, "rejseholdet_503605"), favorite(1, "matador_2")]));
+		expect(b.run("loadFavorites()").map((f: any) => [f.id, f.added])).toEqual([["rejseholdet_503605", 2], ["matador_2", 1]]);
+	});
+});

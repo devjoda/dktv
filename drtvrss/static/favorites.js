@@ -3,15 +3,36 @@
 // What the server says about them, like new episodes, is kept in the browser too, for every page to use.
 // Needs progress.js and sync.js.
 
-// Like [{id: "rejseholdet_503605", kind: "show", title, image, added}], the newest first.
+// DR's id for a favourite: the same for rejseholdet_503605 and 503605, which the front page's big pictures have
+// for a series when DR features one of its seasons
+function favoriteKey(id) {
+    return String(id).split("_").pop();
+}
+
+// Like [{id: "rejseholdet_503605", kind: "show", title, image, added}], the newest first, and each only once,
+// though it was made a favourite as both rejseholdet_503605 and 503605: as the newest, with the id with its name.
 // Films have kind "film", and older favourites, from before films could be, no kind.
 function loadFavorites() {
+    let favorites = [];
     try {
-        const favorites = JSON.parse(localStorage.getItem("favorites"));
-        return Array.isArray(favorites) ? favorites : [];
+        favorites = JSON.parse(localStorage.getItem("favorites"));
     } catch (error) {
         return [];
     }
+    if (!Array.isArray(favorites)) {
+        return [];
+    }
+    const once = new Map();
+    for (const favorite of favorites) {
+        const key = favoriteKey(favorite.id);
+        const found = once.get(key);
+        if (found === undefined) {
+            once.set(key, favorite);
+        } else if (!found.id.includes("_") && favorite.id.includes("_")) {
+            once.set(key, {...found, id: favorite.id});
+        }
+    }
+    return [...once.values()];
 }
 
 function storeFavorites(favorites) {
@@ -41,17 +62,25 @@ function storeRemovedFavorites(removed) {
 }
 
 function isFavorite(showID) {
-    return loadFavorites().some(favorite => favorite.id == showID);
+    return loadFavorites().some(favorite => favoriteKey(favorite.id) == favoriteKey(showID));
 }
 
+// Adds or removes a favourite, by whichever of its ids it has, which reaches the viewer's other devices too
 function setFavorite({id, kind, title, image}, favorite) {
-    const others = loadFavorites().filter(f => f.id != id);
-    storeFavorites(favorite ? [{id, kind, title, image, added: Date.now()}, ...others] : others);
+    const key = favoriteKey(id);
+    const same = loadFavorites().filter(f => favoriteKey(f.id) == key);
+    const others = loadFavorites().filter(f => favoriteKey(f.id) != key);
+    // The id with the series' name, if it had one before
+    const kept = same.find(f => f.id.includes("_")) && !id.includes("_") ? same.find(f => f.id.includes("_")).id : id;
+    storeFavorites(favorite ? [{id: kept, kind, title, image, added: Date.now()}, ...others] : others);
     const removed = loadRemovedFavorites();
-    if (favorite) {
-        delete removed[id];
-    } else {
-        removed[id] = Date.now();
+    const now = Date.now();
+    for (const each of new Set([id, kept, ...same.map(f => f.id)])) {
+        if (favorite && each == kept) {
+            delete removed[each];
+        } else {
+            removed[each] = now;
+        }
     }
     storeRemovedFavorites(removed);
     scheduleSync(0);
