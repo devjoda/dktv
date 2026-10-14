@@ -547,9 +547,10 @@ describe("live", () => {
 				// Only what isn't over
 				expect(p.end).toBeGreaterThan(Date.UTC(2026, 9, 12, 15, 0));
 				expect(Object.keys(p).sort()).toEqual(["description", "end", "start", "title"]);
-				expect(p.description.length).toBeLessThanOrEqual(280);
 			}
 		}
+		// All of each description, as in the programme list
+		expect(Object.values(plan).flat().some((p: any) => p.description.length > 280 && !p.description.endsWith("…"))).toBe(true);
 		// The whole day is asked for
 		expect(dr.requested.find(path => path.startsWith("/schedules"))).toContain("duration=24");
 	});

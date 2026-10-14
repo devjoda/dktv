@@ -66,6 +66,27 @@ const SHOW_CACHE_TIME = 60 * 60;
 // Each season is a request to DR, of the 50 a visit may make. Few shows have more.
 export const MAX_SEASONS = 38;
 
+// How much of a cut-off text must be left, to end it at its last whole sentence instead
+const WHOLE_SENTENCES_FROM = 60;
+
+/**
+ * DR's short descriptions are cut off, like "… og meget...". Ends one at its last whole sentence instead,
+ * where that leaves enough of it; the episode's own page has all of it.
+ */
+export function wholeSentences(text: string): string {
+	const cut = /(\.\.\.|…)\s*$/.exec(text);
+	if (cut === null) {
+		return text;
+	}
+	const before = text.slice(0, cut.index);
+	const ends = [...before.matchAll(/[.!?]["'”»)]?(?=\s)/g)];
+	const last = ends.at(-1);
+	if (last === undefined || last.index + last[0].length < WHOLE_SENTENCES_FROM) {
+		return `${before.trimEnd()}…`;
+	}
+	return before.slice(0, last.index + last[0].length);
+}
+
 /** DR's id for a video, from its URL, which ends in it */
 export function videoId(url: string): string {
 	return url.split("_").at(-1)!;

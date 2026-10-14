@@ -4,7 +4,7 @@ import type {Card, Category, DiscoverPage, Row} from "../discover";
 import {channelStyle, type Channels, type LiveChannel, percentDone, planFrom, type PlannedProgramme, type Programme, whatsOn} from "../live";
 import type {SearchResult, SearchResultItem} from "../search";
 import type {Segments} from "../segments";
-import {allEpisodes, type Episode, type Program, type Show, thumbnail} from "../show";
+import {allEpisodes, type Episode, type Program, type Show, thumbnail, wholeSentences} from "../show";
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
 import {layout, LIBRARIES, LIVE_SCRIPTS, MAIN_CATEGORIES, type Site, VIDEO_SCRIPTS} from "./layout";
@@ -113,7 +113,7 @@ function episodeItem(e: Episode, show: Show): Html {
 	isNew(e.pubdate) ? html`<span class="tag tag-new">Ny</span>` : ""}${
 	// When its season leaves before the rest of the series
 	e.expires != show.expires ? leaving(e.expires, true) : ""}${e.geoRestricted ? html`<span class="tag tag-geo">Kun i Danmark</span>` : ""}</p>
-<p class="episode-desc">${e.shortDescription}</p></div>
+<p class="episode-desc">${wholeSentences(e.shortDescription)}</p></div>
 </a></li>
 `;
 }
@@ -186,7 +186,7 @@ ${show ? html`<a class="eyebrow" href="/${show.url}/">${icon("chevron-left")} ${
 <h1 class="watch-title">${e.title}</h1>
 <p class="meta">${e.pubdate ? html`<span>${danishDate(e.pubdate)}</span>` : ""}${e.minutes ? html`<span>${duration(e.minutes)}</span>` : ""}${
 	isNew(e.pubdate) ? html`<span class="tag tag-new">Ny</span>` : ""}${leaving(e.expires)}${e.geoRestricted ? html`<span class="tag tag-geo">Kun i Danmark</span>` : ""}</p>
-<p class="description">${description}</p>
+<p class="description">${wholeSentences(description)}</p>
 <div class="actions">
 ${film ? favoriteButton(film.url.split("/").at(-1)!, e.title, e.wallpaper, {kind: "film"}) : ""}
 </div>
@@ -315,7 +315,7 @@ ${each(found, ([heading, kind, items], i) => html`<section class="results" aria-
 			tags.push(["geo", "Kun i DK"]);
 		}
 		return tile({
-			href: item.url, image: item.wallpaper, title: item.title, tags, description: item.description,
+			href: item.url, image: item.wallpaper, title: item.title, tags, description: item.description && wholeSentences(item.description),
 			// Films and episodes can be marked as seen; series can't from here
 			videoId: kind != "Serie" ? item.url.split("_").at(-1) : undefined,
 			showId: kind == "Serie" ? item.url.replace(/^\/+|\/+$/g, "") : undefined,

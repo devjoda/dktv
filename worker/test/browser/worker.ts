@@ -53,6 +53,16 @@ export const TEST_STREAM = {
 
 const json = (blob: unknown, status = 200) => new Response(JSON.stringify(blob), {status, headers: {"Content-Type": "application/json"}});
 
+/** DR's rows, like the featured programmes, which its pages have with them, as the unit tests have them too */
+const LISTS_IN_PAGES = new Map<string, unknown>();
+for (const page of [page_front, page_kategorier_fiktionsserier] as any[]) {
+	for (const entry of page.entries ?? []) {
+		if (entry.list?.id && entry.list.items?.length) {
+			LISTS_IN_PAGES.set(String(entry.list.id), entry.list);
+		}
+	}
+}
+
 /** DR, as the fixtures have it, and as the unit tests' stand-in answers */
 const realFetch = globalThis.fetch;
 globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -69,7 +79,8 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
 	if (url.hostname == "production-cdn.dr-massive.com") {
 		const path = url.pathname.replace(/^\/api/, "");
 		const name = fixtureName(path, url.searchParams);
-		const found = FIXTURES[name];
+		const list = /^\/lists\/(\d+)$/.exec(path);
+		const found = FIXTURES[name] ?? (list ? LISTS_IN_PAGES.get(list[1]) : undefined);
 		if (found === undefined) {
 			return json({message: `Item '${path}' not found`}, 404);
 		}
