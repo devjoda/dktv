@@ -52,7 +52,7 @@
                     </ul>
                 </nav>
                 <form class="header-search" role="search" action="/search/">
-                    <input type="search" name="query" placeholder="Søg efter programmer" aria-label="Søg" value="{{ query or '' }}" enterkeyhint="search">
+                    <input type="search" name="query" placeholder="Søg efter serier, film og afsnit" aria-label="Søg" value="{{ query or '' }}" enterkeyhint="search">
                     <button type="submit" class="search-submit" aria-label="Søg">{{ icon("search") }}</button>
                 </form>
                 <a class="search-link" href="/search/" aria-label="Søg"{% if path.startswith("/search/") %} aria-current="page"{% endif %}>{{ icon("search") }}</a>

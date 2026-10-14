@@ -34,12 +34,12 @@ test("asks twice before deleting the account, and can be cancelled", async ({pag
 
 test("lets the viewer choose to mark intros and credits", async ({page}) => {
 	await page.goto("/sync/");
-	const toggle = page.getByLabel("Bidrag med intro og rulletekster");
+	const toggle = page.getByLabel("Hjælp med at markere intro og rulletekster");
 	await expect(toggle).not.toBeChecked();
 	await toggle.check();
 	expect(await page.evaluate(() => localStorage.getItem("contribute"))).toBe("true");
 	await page.reload();
-	await expect(page.getByLabel("Bidrag med intro og rulletekster")).toBeChecked();
-	await page.getByLabel("Bidrag med intro og rulletekster").uncheck();
+	await expect(page.getByLabel("Hjælp med at markere intro og rulletekster")).toBeChecked();
+	await page.getByLabel("Hjælp med at markere intro og rulletekster").uncheck();
 	expect(await page.evaluate(() => localStorage.getItem("contribute"))).toBeNull();
 });

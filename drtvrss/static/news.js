@@ -157,6 +157,10 @@ function updateBell() {
         badge.textContent = shown;
         bell.setAttribute("aria-label", count == 0 ? "Nyt til dig" : count > NEWS_COUNTED ? `Nyt til dig, mere end ${NEWS_COUNTED} nye` : `Nyt til dig, ${count} nye`);
     }
+    // On the app's icon too, where the site is installed as an app, like on the home screen
+    if (typeof navigator != "undefined" && "setAppBadge" in navigator) {
+        (count ? navigator.setAppBadge(count) : navigator.clearAppBadge()).catch(() => {});
+    }
 }
 
 function newsItem({title, url, image, meta, seen}) {
@@ -205,7 +209,7 @@ async function renderNewsAlerts(footer, hasShows) {
     const button = element("button", {type: "button", class: on ? "button button-quiet" : "button button-primary"}, ...(on ? ["Slå fra"] : [icon("bell"), " Få besked på denne enhed"]));
     const text = on
         ? element("p", {}, element("strong", {}, "Notifikationer er slået til"), " på denne enhed, når en favoritserie får et nyt afsnit.")
-        : element("p", {}, "Når en favoritserie får et nyt afsnit. Dine favoritter gemmes da på serveren, under en konto uden e-mail og adgangskode.");
+        : element("p", {}, alertsExplained());
     button.addEventListener("click", async function () {
         button.disabled = true;
         try {

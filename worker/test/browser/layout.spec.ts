@@ -62,6 +62,39 @@ test("puts the episode before on the left, and the one after on the right", asyn
 	expect(Math.abs(previous.x - title.x)).toBeLessThan(2);
 });
 
+test("has the next episode across the row, when there's no episode before", async ({page}) => {
+	await page.setViewportSize({width: 1280, height: 800});
+	await page.goto("/rejseholdet_503605/rejseholdet_503615");
+	await expect(page.getByRole("link", {name: /Forrige afsnit/})).toHaveCount(0);
+	const nav = (await page.locator(".episode-nav").boundingBox())!;
+	const next = (await page.getByRole("link", {name: /Næste afsnit/}).boundingBox())!;
+	expect(Math.abs(next.x - nav.x)).toBeLessThan(2);
+	expect(Math.abs(next.width - nav.width)).toBeLessThan(2);
+});
+
+test("the front page doesn't move as the viewer's own rows come", async ({page}) => {
+	await page.setViewportSize({width: 1366, height: 768});
+	await page.addInitScript(`
+		if (!localStorage.getItem("favorites")) {
+			localStorage.setItem("favorites", JSON.stringify([{id: "rejseholdet_503605", kind: "show", title: "Rejseholdet", image: null, added: 1}]));
+			localStorage.setItem("progress_503615", JSON.stringify({time: 600, duration: 3600, watched: false, title: "1. episode", show: "Rejseholdet", url: "/rejseholdet_503605/rejseholdet_503615", image: null, updated: Date.now()}));
+		}
+		window.shifted = 0;
+		new PerformanceObserver(list => {
+			for (const entry of list.getEntries()) {
+				if (!entry.hadRecentInput) {
+					window.shifted += entry.value;
+				}
+			}
+		}).observe({type: "layout-shift", buffered: true});
+	`);
+	await page.goto("/");
+	await expect(page.locator("#favorites .tile")).toHaveCount(1);
+	await expect(page.locator("#continue-watching .tile")).toHaveCount(1);
+	await page.waitForTimeout(1500);
+	expect(await page.evaluate("window.shifted")).toBeLessThan(0.01);
+});
+
 test.describe("an episode on a phone", () => {
 	test.use({viewport: {width: 384, height: 830}, isMobile: true, hasTouch: true});
 

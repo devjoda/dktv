@@ -68,6 +68,8 @@
     </p>
     <div class="shelf-track js-tiles"></div>
 </section>
+{# Drawn before the page is first shown, so the rows below don't move down #}
+<script>showKeptRows();</script>
 
 {% if channels %}
 <section class="shelf" aria-labelledby="live-title">

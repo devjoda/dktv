@@ -74,3 +74,13 @@ def test_a_row_has_each_programme_once():
     assert len(discover.cards([show, season, show], CHANNELS)) == 1
     other = {"id": "3", "type": "show", "title": "Høst", "path": "/serie/hoest_3"}
     assert [c.title for c in discover.cards([show, other, show], CHANNELS)] == ["Mors dreng", "Høst"]
+
+
+def test_a_show_and_its_season_are_the_same_though_dr_only_gives_the_season_the_shows_number():
+    season = {"id": "2", "type": "season", "title": "Mors dreng", "path": "/saeson/mors-dreng_2", "showId": "1"}
+    show = {"id": "1", "type": "show", "title": "Mors dreng", "path": "/serie/mors-dreng_1"}
+    found = discover.cards([season, show], CHANNELS)
+    assert len(found) == 1
+    # Where the season was, with the show's name in the address, for favourites to know it by
+    assert (found[0].url, found[0].show_id) == ("/mors-dreng_1/", "mors-dreng_1")
+    assert [c.url for c in discover.cards([show, season], CHANNELS)] == ["/mors-dreng_1/"]

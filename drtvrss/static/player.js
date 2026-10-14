@@ -310,14 +310,19 @@ function liveSubtitlesButton(video) {
     return button;
 }
 
-// A message on the picture, like "Skifter til DR2 …", or what went wrong, with a button to try again
+// A message on the picture, like what went wrong, with a button to try again, or only for screen readers,
+// like "Skifter til DR2", while the picture has the spinner films have
 function playerMessage(video) {
     const text = element("p", {class: "player-message-text"});
     const retry = element("button", {type: "button", class: "button button-primary"}, "Prøv igen");
     const box = element("div", {class: "player-message", role: "status"}, text, retry);
     box.hidden = true;
-    playerOf(video).append(box);
+    const spoken = element("p", {class: "visually-hidden", role: "status"});
+    playerOf(video).append(box, spoken);
     return {
+        say(message) {
+            spoken.textContent = message;
+        },
         show(message, onRetry) {
             text.textContent = message;
             retry.hidden = !onRetry;
@@ -501,7 +506,10 @@ function setupLive(video, url, subtitlesURL, title) {
         // To another channel, with its subtitles if the viewer has them on and it has them
         change(next) {
             current = next;
-            message.show(`Skifter til ${next.title} …`);
+            // Like a film that loads
+            message.hide();
+            message.say(`Skifter til ${next.title}`);
+            playerOf(video).classList.add("is-loading");
             play();
             setupMediaSession(video, {title: next.now || next.title, show: next.title, live: true});
         },

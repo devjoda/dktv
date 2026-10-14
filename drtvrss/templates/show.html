@@ -19,9 +19,6 @@
             {{ play_button(s) }}
             {{ favorite_button(s.url, s.title, s.wallpaper) }}
             {# The feed is still linked in the head, for feed readers to find; a button for it can come back as a setting #}
-            {% if s.url %}
-            <a href="https://www.dr.dk/drtv/serie/{{ s.url }}" class="button button-quiet">Se originalen {{ icon("external") }}</a>
-            {% endif %}
         </div>
     </div>
 </section>

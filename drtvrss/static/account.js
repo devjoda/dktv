@@ -174,6 +174,13 @@ async function refreshAlerts() {
     }
 }
 
+// What turning notifications on means, in the viewer's words: without an account, it makes one, since the site
+// needs to know which series to tell them about
+function alertsExplained() {
+    const what = "Få en besked, når en af dine favoritserier får et nyt afsnit, også når siden er lukket.";
+    return syncCode() == null ? `${what} Det opretter en konto til dig, uden e-mail og adgangskode, så siden ved, hvilke serier du følger.` : what;
+}
+
 // Offers notifications once, after the viewer makes a series a favourite, or on the favourites page.
 // Says what turning them on means: the favourites are kept on the server.
 async function offerAlerts(after) {
@@ -189,7 +196,7 @@ async function offerAlerts(after) {
     const offer = element("section", {class: "alerts-offer", "aria-label": "Beskeder om nye afsnit"},
         element("div", {class: "alerts-offer-text"},
             element("h2", {}, "Vil du have besked om nye afsnit?"),
-            element("p", {}, "Så får du en besked, når en af dine favoritserier får et nyt afsnit. Dine favoritter gemmes da på serveren, under en konto uden e-mail og adgangskode.")),
+            element("p", {}, alertsExplained())),
         element("div", {class: "actions"}, enable, dismiss));
     const close = function () {
         store("alertsOffered", String(Date.now()));

@@ -131,14 +131,25 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
 
 def cards(items: list[dict], channel_slugs: dict[str, str]) -> list[Card]:
     result = []
+    seen: dict[str, Card] = {}
     for blob in items:
         try:
             c = card(dr.DiscoverItem.model_validate(blob), channel_slugs)
         except ValidationError:
             continue
-        # DR sometimes has a show twice in a row, like two of its seasons
-        if c is not None and c.url not in (r.url for r in result):
+        if c is None:
+            continue
+        # DR sometimes has a show twice, like two of its seasons, or the show and one of its seasons,
+        # which lead to /mors-dreng_622934/ and /622934/: the same, by DR's id for the show
+        key = f"show:{c.show_id.split('_')[-1]}" if c.show_id else c.url
+        found = seen.get(key)
+        if found is None:
+            seen[key] = c
             result.append(c)
+        elif "_" in c.show_id and "_" not in (found.show_id or ""):
+            # With the show's name in its address
+            found.url = c.url
+            found.show_id = c.show_id
     return result
 
 

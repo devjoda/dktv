@@ -70,6 +70,9 @@ describe("the front page", () => {
 		const r = await get("/");
 		expect(r.text).toContain('<h2 class="shelf-title" id="live-title">Direkte TV</h2>');
 		expect(r.text).toContain('<a class="tile-link" href="/live/DR1" style="--channel: #FF001E;">');
+		// TV A in warm white, and Ramasjang in purple, instead of DR's red and turquoise, too like DR1's and DR2's
+		expect(r.text).toContain('<a class="tile-link" href="/live/EVA" style="--channel: #f2efe9; --channel-on-paper: #0f1013;">');
+		expect(r.text).toContain('<a class="tile-link" href="/live/TVR" style="--channel: #9b6cff;">');
 		expect(r.text).toContain('<span class="visually-hidden">DR1: </span>Hammerslag 2022 - Lejlighed i storbyen</h3>');
 		// In Danish time
 		expect(r.text).toContain("Til 14.10, derefter");
@@ -82,7 +85,7 @@ describe("the front page", () => {
 		expect((await get("/")).text).toContain('<div class="channel-art">DR1</div>');
 		const r = await get("/live/DR1");
 		expect(r.status).toBe(200);
-		expect(r.text).toContain('<section class="schedule" aria-labelledby="schedule-title" hidden>');
+		expect(r.text).toContain('<section class="schedule" aria-labelledby="schedule-title" style="--channel: #FF001E;" hidden>');
 		expect(between(r.text, '<a class="guide-channel" href="/live/DR1"', "</a>")).toContain('<span class="guide-now"></span>');
 	});
 
@@ -470,14 +473,19 @@ describe("live", () => {
 		expect(r.text).toContain('<a href="/live/" class="tab" aria-current="page">');
 		const guide = between(r.text, '<nav class="channel-guide" id="channel-guide" aria-label="Kanaler">', "</nav>");
 		expect([...guide.matchAll(/<a class="guide-channel" href="(\/live\/\w+)" data-channel="(\w+)"/g)].map(m => m[1])).toEqual(["/live/DR1", "/live/DR2", "/live/EVA", "/live/TVR"]);
-		expect(guide).toContain('<a class="guide-channel" href="/live/DR1" data-channel="DR1" aria-current="page">');
+		expect(guide).toContain('<a class="guide-channel" href="/live/DR1" data-channel="DR1" aria-current="page" style="--channel: #FF001E;">');
 		expect(count(guide, "aria-current")).toBe(1);
+		// In the channels' colours, as on the front page: TV A's warm white, dark on the chosen channel, and Ramasjang's purple
+		expect(guide).toContain('<a class="guide-channel" href="/live/EVA" data-channel="EVA" style="--channel: #f2efe9; --channel-on-paper: #0f1013;">');
+		expect(guide).toContain('<a class="guide-channel" href="/live/TVR" data-channel="TVR" style="--channel: #9b6cff;">');
+		expect(r.text).toMatch(/<section class="schedule" aria-labelledby="schedule-title" style="--channel: #FF001E;"( hidden)?>/);
 		expect(guide).toContain('<span class="guide-key" aria-hidden="true">4</span>');
 		// What the browser needs to change channels by itself
 		const data = JSON.parse(between(r.text, '<script type="application/json" id="live-data">', "</script>"));
 		expect(data.channel).toBe("DR1");
 		expect(data.channels.map((c: any) => c.slug)).toEqual(["DR1", "DR2", "EVA", "TVR"]);
-		expect(data.channels[0]).toMatchObject({title: "DR1", stream: expect.stringContaining("https://drlivedr1hls.akamaized.net/"), subtitles: expect.stringContaining("drlivedr1texthls")});
+		expect(data.channels[0]).toMatchObject({title: "DR1", stream: expect.stringContaining("https://drlivedr1hls.akamaized.net/"), subtitles: expect.stringContaining("drlivedr1texthls"), style: "--channel: #FF001E;"});
+		expect(data.channels[3].style).toBe("--channel: #9b6cff;");
 		expect(r.text).toContain("setupChannels(document.getElementById('video'), ");
 		expect(r.text).toContain('<script src="/static/live.js?v=');
 		// The overview of the channels is the guide now
@@ -669,6 +677,17 @@ describe("favourites", () => {
 	});
 });
 
+describe("links to DR", () => {
+	test("aren't on series', episodes' or films' pages, only in the footer", async () => {
+		for (const path of ["/rejseholdet_503605/", "/rejseholdet_503605/rejseholdet_503615", "/program/lise-noergaard_-ikke-kun-en-pige_362031"]) {
+			const r = await get(path);
+			expect(r.status).toBe(200);
+			expect(r.text).not.toContain("Se originalen");
+			expect(r.text).not.toContain("www.dr.dk/drtv");
+		}
+	});
+});
+
 describe("what's new", () => {
 	test("has a bell in every page's header, which leads to /nyt/", async () => {
 		for (const path of ["/", "/favoritter/", "/rejseholdet_503605/"]) {
@@ -704,7 +723,7 @@ describe("search", () => {
 		expect(r.text).toContain('data-video-id="362031"');
 		expect(r.text).not.toContain('data-video-id="540736"');
 		// What was searched for stays in the header's search box
-		expect(r.text).toContain('placeholder="Søg efter programmer" aria-label="Søg" value="matador"');
+		expect(r.text).toContain('placeholder="Søg efter serier, film og afsnit" aria-label="Søg" value="matador"');
 	});
 
 	test("without a query asks for one", async () => {

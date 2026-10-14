@@ -153,8 +153,11 @@ test("says what it changes to, and what went wrong with a channel, with a way to
 		await route.continue();
 	});
 	await guideLink(page, "DR2").click();
-	await expect(message.locator(".player-message-text")).toHaveText("Skifter til DR2 …");
-	await expect(message).toBeHidden({timeout: 10_000});
+	// The spinner films have, and the change said to screen readers
+	await expect(page.locator(".player-loading")).toBeVisible();
+	await expect(message).toBeHidden();
+	await expect(page.getByRole("status").filter({hasText: "Skifter til DR2"})).toHaveCount(1);
+	await expect(page.locator(".player-loading")).toBeHidden({timeout: 10_000});
 });
 
 test("plays without sound when the browser won't have it, with a button to turn it on", async ({page}) => {

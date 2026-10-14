@@ -361,8 +361,11 @@ def test_live_channels_are_in_a_guide_of_ordinary_links(get):
     r = get("/live/DR1")
     guide = r.text.split('<nav class="channel-guide" id="channel-guide" aria-label="Kanaler">')[1].split("</nav>")[0]
     assert re.findall(r'<a class="guide-channel" href="(/live/\w+)"', guide) == ["/live/DR1", "/live/DR2", "/live/EVA", "/live/TVR"]
-    assert '<a class="guide-channel" href="/live/DR1" data-channel="DR1" aria-current="page">' in guide
+    assert '<a class="guide-channel" href="/live/DR1" data-channel="DR1" aria-current="page" style="--channel: #FF001E;">' in guide
     assert guide.count("aria-current") == 1
+    assert '<a class="guide-channel" href="/live/EVA" data-channel="EVA" style="--channel: #f2efe9; --channel-on-paper: #0f1013;">' in guide
+    assert '<a class="guide-channel" href="/live/TVR" data-channel="TVR" style="--channel: #9b6cff;">' in guide
+    assert re.search(r'<section class="schedule" aria-labelledby="schedule-title" style="--channel: #FF001E;"( hidden)?>', r.text)
     assert "channel-switcher" not in r.text
 
 
@@ -549,6 +552,14 @@ def test_favorites_without_new_episodes(get):
     assert found["shows"]["rejseholdet_503605"]["new_episodes"] == []
 
 
+def test_no_links_to_dr_on_series_episodes_or_films(get):
+    for path in ["/rejseholdet_503605/", "/rejseholdet_503605/rejseholdet_503615", "/program/lise-noergaard_-ikke-kun-en-pige_362031"]:
+        r = get(path)
+        assert r.status_code == 200
+        assert "Se originalen" not in r.text
+        assert "www.dr.dk/drtv" not in r.text
+
+
 def test_every_page_has_the_bell_and_its_page(get):
     for path in ["/", "/favoritter/", "/sync/"]:
         r = get(path)
@@ -593,6 +604,9 @@ def test_index_lists_the_live_channels(get):
     r = get("/")
     assert '<h2 class="shelf-title" id="live-title">Direkte TV</h2>' in r.text
     assert '<a class="tile-link" href="/live/DR1" style="--channel: #FF001E;">' in r.text
+    # TV A in warm white, and Ramasjang in purple, instead of DR's red and turquoise, too like DR1's and DR2's
+    assert '<a class="tile-link" href="/live/EVA" style="--channel: #f2efe9; --channel-on-paper: #0f1013;">' in r.text
+    assert '<a class="tile-link" href="/live/TVR" style="--channel: #9b6cff;">' in r.text
 
 
 def test_channels_show_whats_on(get, monkeypatch):
@@ -619,7 +633,7 @@ def test_channels_without_a_schedule(get, monkeypatch):
     assert '<div class="channel-art">DR1</div>' in get("/").text
     r = get("/live/DR1")
     assert r.status_code == 200
-    assert '<section class="schedule" aria-labelledby="schedule-title" hidden>' in r.text
+    assert '<section class="schedule" aria-labelledby="schedule-title" style="--channel: #FF001E;" hidden>' in r.text
 
 
 def test_pages_are_dark(get):

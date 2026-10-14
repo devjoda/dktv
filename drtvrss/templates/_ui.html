@@ -78,7 +78,8 @@ show_id and film_id add a button to make the show or film a favourite.
 {% macro channel_tile(slug, channel, programmes) -%}
 {% set on_now, later = whats_on(programmes) %}
 <article class="tile channel-tile">
-    <a class="tile-link" href="/live/{{ slug }}"{% if channel.colour %} style="--channel: {{ channel.colour }};"{% endif %}>
+    {% set style = channel_style(slug, channel) %}
+    <a class="tile-link" href="/live/{{ slug }}"{% if style %} style="{{ style }}"{% endif %}>
         <div class="tile-media">
             {% if on_now and on_now.image %}
             <img src="{{ on_now.image|thumbnail }}" alt="" loading="lazy">

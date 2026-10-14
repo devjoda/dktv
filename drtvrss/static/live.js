@@ -120,6 +120,13 @@ function changeChannel(slug, fromRoom = false) {
     const site = document.querySelector('meta[name="application-name"]');
     document.title = site ? `${channel.title} - ${site.content}` : channel.title;
     document.querySelector(".js-live-title").textContent = channel.title;
+    // The programmes' bars in the channel's colour
+    const schedule = document.querySelector(".schedule");
+    if (schedule && channel.style) {
+        schedule.setAttribute("style", channel.style);
+    } else if (schedule) {
+        schedule.removeAttribute("style");
+    }
     rememberChannel(slug);
     showGuide();
     showProgrammes();

@@ -422,6 +422,13 @@ function setupListFilters() {
     }
 }
 
+// The front page's rows of what's kept in the browser, drawn where they are as the page is read, before it's
+// first shown, so the rows below them don't move down when they come
+function showKeptRows() {
+    showContinueWatching();
+    showFavorites();
+}
+
 window.addEventListener("pageshow", function () {
     updateHeader();
     updateSchedule();

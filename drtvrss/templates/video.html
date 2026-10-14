@@ -35,11 +35,9 @@
             {%- if e.geo_restricted %}<span class="tag tag-geo">Kun i Danmark</span>{% endif -%}
         </p>
         <p class="description">{{ e.description }}</p>
+        {# Se sammen and marking intros come here too, see together.js and skip.js #}
         <div class="actions">
             {% if not s and e.url %}{{ favorite_button(e.url.split("/")[-1], e.title, e.wallpaper, kind="film") }}{% endif %}
-            {% if e.url %}
-            <a class="button button-quiet" href="https://www.dr.dk/drtv{{ e.url }}">Se originalen {{ icon("external") }}</a>
-            {% endif %}
         </div>
         {% if previous or next %}
         {# The episode before on the left and quiet, the one after on the right, to go on to #}

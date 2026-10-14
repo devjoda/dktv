@@ -13,6 +13,23 @@ const CHANNEL_CACHE_TIME = 30 * 60;
 const SCHEDULE_HOURS = 24;
 const SCHEDULE_CACHE_TIME = 5 * 60;
 
+// Our own colours for the channels whose own are too like another's: TV A's red is DR1's, and Ramasjang's
+// turquoise is too like DR2's blue
+const CHANNEL_COLOURS: Record<string, string> = {EVA: "#f2efe9", TVR: "#9b6cff"};
+// The ink the site is written in, for a bar in a colour nearly as light as the chosen channel's warm white
+const INK = "#0f1013";
+
+/** The channel's colour, as a style for what's marked with it, like its progress bars, or undefined */
+export function channelStyle(slug: string, channel: LiveChannel): string | undefined {
+	const colour = CHANNEL_COLOURS[slug] ?? channel.colour;
+	if (colour === undefined) {
+		return undefined;
+	}
+	const [r, g, b] = [1, 3, 5].map(i => parseInt(colour.slice(i, i + 2), 16));
+	const light = 0.2126 * r + 0.7152 * g + 0.0722 * b > 200;
+	return `--channel: ${colour};${light ? ` --channel-on-paper: ${INK};` : ""}`;
+}
+
 export interface LiveChannel {
 	id: string;
 	title: string;
