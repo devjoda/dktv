@@ -1,5 +1,6 @@
 // The viewer's favourite shows and films, kept in their browser like how far they got with each video.
 // Buttons with .js-favorite add and remove one, and sections with data-favorites list them.
+// What the server says about them, like new episodes, is kept in the browser too, for every page to use.
 // Needs progress.js and sync.js.
 
 // Like [{id: "rejseholdet_503605", kind: "show", title, image, added}], the newest first.
@@ -89,6 +90,24 @@ function favoriteToggle(favorite) {
     }, icon("heart"));
 }
 
+// How long an episode counts as new, as on the server
+const NEW_FOR = 14 * 24 * 60 * 60 * 1000;
+
+// Like S11 A3, or the episode's title where DR doesn't number it
+function episodeLabel(episode) {
+    if (episode.number == null) {
+        return episode.title;
+    }
+    return episode.season != null ? `S${episode.season} A${episode.number}` : `A${episode.number}`;
+}
+
+// A series' episodes from the last two weeks that the viewer hasn't seen, oldest first
+function unseenNewEpisodes(details, now = Date.now()) {
+    return ((details && details.new_episodes) || [])
+        .filter(e => now - e.published <= NEW_FOR && !(loadProgress(e.id) || {}).watched)
+        .reverse();
+}
+
 function favoriteTile(favorite, details) {
     const film = favorite.kind == "film";
     let meta = "";
@@ -97,12 +116,15 @@ function favoriteTile(favorite, details) {
     } else if (details) {
         meta = details.seasons > 1 ? `${details.seasons} sæsoner` : `${details.episodes} afsnit`;
     }
+    // What's new and not seen yet, which the tile leads to
+    const unseen = film ? [] : unseenNewEpisodes(details);
+    const news = unseen.length == 1 ? `Nyt: ${episodeLabel(unseen[0])}` : unseen.length > 1 ? `${unseen.length} nye afsnit` : null;
     return buildTile({
-        href: film ? `/program/${favorite.id}` : `/${favorite.id}/`,
+        href: film ? `/program/${favorite.id}` : unseen.length ? unseen[0].url : `/${favorite.id}/`,
         image: favorite.image,
         title: favorite.title,
         meta,
-        tags: [...(!film && details && details.new ? [["new", "Nye afsnit"]] : []), ...leavingTags(details && details.expires)],
+        tags: [...(news ? [["new", news]] : []), ...leavingTags(details && details.expires)],
         episodeIDs: !film && details ? details.episode_ids : null,
         videoID: film ? favorite.id.split("_").pop() : null,
         action: favoriteToggle(favorite),
@@ -114,15 +136,22 @@ function detailsOf(details, favorite) {
     return ((favorite.kind == "film" ? details.films : details.shows) || {})[favorite.id];
 }
 
-// The details from DR last time, so the row can change without asking again
-let favoriteDetails = {};
+// The favourites with something new the viewer hasn't seen first, the newest first, and then the rest as they were
+function newestFirst(favorites, details) {
+    const newest = favorite => Math.max(0, ...unseenNewEpisodes(detailsOf(details, favorite)).map(e => e.published));
+    return favorites.map(f => [f, f.kind == "film" ? 0 : newest(f)]).sort((a, b) => b[1] - a[1]).map(([f]) => f);
+}
 
-// Fills in the sections with data-favorites: "all", or only "show" or "film"
-function renderFavorites(details = favoriteDetails) {
+// Fills in the sections with data-favorites: "all", or only "show" or "film".
+// The front page's row has what's new first.
+function renderFavorites(details = keptDetails()) {
     const favorites = loadFavorites();
     for (const section of document.querySelectorAll("[data-favorites]")) {
         const kind = section.dataset.favorites;
-        const shown = favorites.filter(f => kind == "all" || (f.kind || "show") == kind);
+        let shown = favorites.filter(f => kind == "all" || (f.kind || "show") == kind);
+        if (kind == "all") {
+            shown = newestFirst(shown, details);
+        }
         const empty = section.querySelector(".js-favorites-empty");
         if (empty) {
             empty.hidden = shown.length > 0;
@@ -140,7 +169,7 @@ function renderFavorites(details = favoriteDetails) {
 // Fills in the #leaving-soon row: what the viewer started or made a favourite, which leaves DR
 // within a month, soonest first. Only DR's single programmes say when they leave, not its lists,
 // so it's only what the viewer has.
-function showLeavingSoon(details = favoriteDetails) {
+function showLeavingSoon(details = keptDetails()) {
     const section = document.getElementById("leaving-soon");
     if (section == null) {
         return;
@@ -165,57 +194,199 @@ function showLeavingSoon(details = favoriteDetails) {
     section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
 }
 
+// What /favorites.json said about the favourites, kept in the browser, which the front page, the favourites page and
+// the bell all use: {at, shows: {id: details}, films: {id: details}, pending: {shows: [id], films: [id]}}.
+// at is when it was got, and pending what the server didn't have time for then. Those DR no longer has are null.
+// Each new episode has known: when this browser first heard of it, since DR's date can be from before then.
+const DETAILS_KEY = "favoriteDetails";
+// How long what's kept is used, before it's got again, in milliseconds
+const DETAILS_FOR = 30 * 60 * 1000;
 // How many times to ask about the favourites the server didn't have time for
 const FAVORITE_ROUNDS = 10;
 
-// Fresh details about the favourite shows and films, from the server. It may only have
-// time for some of them at once, and says which are left, to ask about again.
-async function describeFavorites(shows, films) {
-    const details = {shows: {}, films: {}};
-    for (let round = 0; round < FAVORITE_ROUNDS && (shows.length || films.length); round++) {
-        const ids = list => encodeURIComponent(list.join(":"));
-        const response = await fetch(`/favorites.json?shows=${ids(shows)}&films=${ids(films)}`);
-        if (!response.ok) {
-            throw new Error("Status " + response.status);
-        }
-        const found = await response.json();
-        Object.assign(details.shows, found.shows);
-        Object.assign(details.films, found.films);
-        const more = found.more || {shows: [], films: []};
-        // The same ones again would get the same answer
-        if (more.shows.length + more.films.length >= shows.length + films.length) {
-            break;
-        }
-        shows = more.shows;
-        films = more.films;
-    }
-    return details;
+// What was read last, since it's read again and again, and only changes now and then
+let detailsRead = {text: undefined, details: null};
+
+function emptyDetails() {
+    return {at: 0, shows: {}, films: {}, pending: {shows: [], films: []}};
 }
 
-// Fills in the #favorites row: right away from what's kept in the browser,
-// and then with fresh details from DR, like new episodes
-async function showFavorites() {
+function keptDetails() {
+    let text = null;
+    try {
+        text = localStorage.getItem(DETAILS_KEY);
+    } catch (error) {
+        // Then without
+    }
+    if (text !== detailsRead.text) {
+        let found = null;
+        try {
+            found = JSON.parse(text);
+        } catch (error) {
+            // Starts again
+        }
+        const valid = found && typeof found == "object" && found.shows && found.films;
+        detailsRead = {text, details: valid ? {...emptyDetails(), ...found, pending: {shows: [], films: [], ...found.pending}} : null};
+    }
+    // The same for every part of the page, which only reads it
+    return detailsRead.details || emptyDetails();
+}
+
+function storeDetails(details) {
+    try {
+        localStorage.setItem(DETAILS_KEY, JSON.stringify(details));
+    } catch (error) {
+        console.error("Could not save the favourites' details:", error);
+    }
+}
+
+// The favourites' ids of a kind: "show" or "film"
+function favoriteIDs(favorites, kind) {
+    return favorites.filter(f => (f.kind || "show") == kind).map(f => f.id);
+}
+
+// When this browser first heard of each of a series' new episodes: now, for those it hadn't heard of before,
+// unless it never had the series, whose episodes were all there before it
+function knownSince(before, episodes, now) {
+    const known = new Map(((before && before.new_episodes) || []).map(e => [e.id, e.known]));
+    return episodes.map(e => ({...e, known: known.get(e.id) ?? (before && before.new_episodes ? now : e.published)}));
+}
+
+// Asks the server about some of the favourites, and keeps what it says along with what was kept.
+// All of them at once starts again from now. Gives what the server didn't have time for.
+async function askAboutFavorites(shows, films, all) {
+    const ids = list => encodeURIComponent(list.join(":"));
+    const response = await fetch(`/favorites.json?shows=${ids(shows)}&films=${ids(films)}`);
+    if (!response.ok) {
+        throw new Error("Status " + response.status);
+    }
+    const found = await response.json();
+    const more = found.more || {shows: [], films: []};
+    const now = Date.now();
+    // As kept now, which another tab may have changed meanwhile, to change
+    const kept = structuredClone(keptDetails());
+    for (const [kind, asked] of [["shows", shows], ["films", films]]) {
+        for (const id of asked) {
+            if (found[kind] && found[kind][id]) {
+                const details = found[kind][id];
+                kept[kind][id] = kind == "shows" ? {...details, new_episodes: knownSince(kept[kind][id], details.new_episodes || [], now)} : details;
+            } else if (!more[kind].includes(id)) {
+                kept[kind][id] = null;
+            }
+        }
+        kept.pending[kind] = [...new Set([...kept.pending[kind].filter(id => !asked.includes(id)), ...more[kind]])];
+    }
+    if (all) {
+        kept.at = now;
+    }
+    // Only what's still a favourite
+    const favorites = loadFavorites();
+    for (const [kind, wanted] of [["shows", favoriteIDs(favorites, "show")], ["films", favoriteIDs(favorites, "film")]]) {
+        for (const id of Object.keys(kept[kind])) {
+            if (!wanted.includes(id)) {
+                delete kept[kind][id];
+            }
+        }
+        kept.pending[kind] = kept.pending[kind].filter(id => wanted.includes(id));
+    }
+    storeDetails(kept);
+    // Keeps the titles and pictures up to date, in case DR changes them
+    storeFavorites(loadFavorites().map(function (f) {
+        const details = detailsOf(kept, f);
+        return details ? {...f, title: details.title, image: details.image} : f;
+    }));
+    window.dispatchEvent(new Event("favoritedetails"));
+    return more;
+}
+
+// Gets fresh details about the favourites, when what's kept is old: on most pages, only the server's first answer,
+// and with full, also the rest, which it may not have had time for, and those made favourites since
+async function getFavoriteDetails(full) {
+    const favorites = loadFavorites();
+    let kept = keptDetails();
+    const shows = favoriteIDs(favorites, "show");
+    const films = favoriteIDs(favorites, "film");
+    if (shows.length + films.length == 0) {
+        return kept;
+    }
+    let all = Date.now() - kept.at >= DETAILS_FOR;
+    let asking;
+    if (all) {
+        asking = {shows, films};
+    } else if (full) {
+        const left = (ids, kind) => ids.filter(id => !(id in kept[kind]) || kept.pending[kind].includes(id));
+        asking = {shows: left(shows, "shows"), films: left(films, "films")};
+    } else {
+        return kept;
+    }
+    for (let round = 0; round < (full ? FAVORITE_ROUNDS : 1) && asking.shows.length + asking.films.length; round++) {
+        const more = await askAboutFavorites(asking.shows, asking.films, all);
+        all = false;
+        // The same ones again would get the same answer
+        if (more.shows.length + more.films.length >= asking.shows.length + asking.films.length) {
+            break;
+        }
+        asking = more;
+    }
+    return keptDetails();
+}
+
+// What's being got now, which the parts of the page wait for together
+let detailsLoading = null;
+let detailsLoadingFull = false;
+
+// Fresh details about the favourites, as needed; see getFavoriteDetails
+function loadFavoriteDetails(full = false) {
+    if (detailsLoading && (detailsLoadingFull || !full)) {
+        return detailsLoading;
+    }
+    // Done before it says so, so what's asked for after it doesn't wait for it
+    const loading = (detailsLoading || Promise.resolve()).catch(() => {}).then(() => getFavoriteDetails(full)).finally(function () {
+        if (detailsLoading === loading) {
+            detailsLoading = null;
+        }
+    });
+    detailsLoading = loading;
+    detailsLoadingFull = full;
+    return loading;
+}
+
+// When the browser has nothing else to do, so it never holds up the page
+function whenIdle(f) {
+    if (typeof requestIdleCallback == "function") {
+        requestIdleCallback(() => f(), {timeout: 5000});
+    } else {
+        setTimeout(f, 200);
+    }
+}
+
+// The pages that show all of the favourites, which get the details the server didn't have time for too
+function showsAllFavorites() {
+    return document.querySelector("[data-favorites], .js-news[data-full]") != null;
+}
+
+// Gets fresh details in the background, if what's kept is old, or this page shows all of them
+function refreshFavorites() {
+    whenIdle(function () {
+        loadFavoriteDetails(showsAllFavorites()).catch(error => console.error("Could not get details about the favourites:", error));
+    });
+}
+
+// Fills in the #favorites row, from what's kept in the browser; refreshFavorites gets it fresh
+function showFavorites() {
     if (document.querySelector("[data-favorites]") == null) {
         return;
     }
     renderFavorites();
-    const favorites = loadFavorites();
-    if (favorites.length == 0) {
-        return;
-    }
-    try {
-        const ids = kind => favorites.filter(f => (f.kind || "show") == kind).map(f => f.id);
-        const details = favoriteDetails = await describeFavorites(ids("show"), ids("film"));
-        // Keeps the titles and pictures up to date, in case DR changes them
-        storeFavorites(loadFavorites().map(function (f) {
-            const found = detailsOf(details, f);
-            return found ? {...f, title: found.title, image: found.image} : f;
-        }));
-        renderFavorites(details);
-    } catch (error) {
-        console.error("Could not get details about the favourites:", error);
-    }
 }
+
+// What was got, here or in another tab
+window.addEventListener("favoritedetails", showFavorites);
+window.addEventListener("storage", function (event) {
+    if (event.key == DETAILS_KEY || event.key == "favorites") {
+        showFavorites();
+    }
+});
 
 document.addEventListener("click", function (event) {
     const button = event.target.closest(".js-favorite");
@@ -237,5 +408,6 @@ document.addEventListener("click", function (event) {
         renderFavorites();
     } else if (document.querySelector("[data-favorites]")) {
         showFavorites();
+        loadFavoriteDetails(true).catch(error => console.error("Could not get details about the favourites:", error));
     }
 });

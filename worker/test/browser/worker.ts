@@ -1,6 +1,7 @@
 // The site as it runs on this computer for trying the player without DR's streams, which only
 // play in Denmark, and for the browser tests: DR's answers come from the fixtures in
-// ../../../tests/fixtures, with the live channels' schedules moved to now, and every programme and
+// ../../../tests/fixtures, with the live channels' schedules moved to now, Rejseholdet's last season
+// out in the last few days, so it has new episodes, and every programme and
 // live channel plays the test video in ./video, which
 // `node scripts/test-video.mjs` makes. Only with ./wrangler.jsonc, which is never deployed;
 // and even then, it only answers on localhost.
@@ -78,6 +79,9 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
 		if (name == "schedules.json") {
 			return json(scheduledNow(found as any[]));
 		}
+		if (name == "items_503612.json") {
+			return json(outLately(found as any));
+		}
 		return json(found);
 	}
 	return realFetch(input, init);
@@ -106,6 +110,17 @@ function scheduledNow(schedules: any[]): unknown {
 		...channel,
 		schedules: channel.schedules.map((b: any) => ({...b, startDate: move(b.startDate), endDate: move(b.endDate)})),
 	}));
+}
+
+const DAY = 24 * 60 * 60 * 1000;
+
+/** Rejseholdet's last season, with its first episode out three days ago, and its second yesterday */
+function outLately(season: any): unknown {
+	const days = [3, 1];
+	return {...season, episodes: {...season.episodes, items: season.episodes.items.map((e: any, i: number) => ({
+		...e,
+		customFields: {...e.customFields, AvailableFrom: new Date(Date.now() - (days[i] ?? 0) * DAY).toISOString()},
+	}))}};
 }
 
 /** The test video's files, with the parts of the video that the playlist asks for */

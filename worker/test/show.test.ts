@@ -2,7 +2,7 @@ import {describe, expect, test} from "vitest";
 import {NotFound} from "../src/dr";
 import * as dr from "../src/models";
 import {buildSearchResult, search} from "../src/search";
-import {buildShow, getLongDescription, getProgram, getShow, MAX_SEASONS, rssFeed, thumbnail} from "../src/show";
+import {buildShow, getLongDescription, getProgram, getShow, MAX_SEASONS, newEpisodes, rssFeed, thumbnail} from "../src/show";
 import {clock, copenhagen, danishDate, danishDatetime, duration, isNew, isoTime, leavingLabel} from "../src/time";
 import {ctx, dr as fakeDR, load} from "./helpers";
 
@@ -256,5 +256,43 @@ describe("pictures and time", () => {
 		expect(isNew(Date.UTC(2026, 8, 20))).toBe(false);
 		expect(isNew(Date.UTC(2026, 9, 13))).toBe(false);
 		expect(isNew(undefined)).toBe(false);
+	});
+});
+
+describe("a series' new episodes", () => {
+	test("are those of the last two weeks, the newest first, with their season and number", () => {
+		clock.now = () => Date.UTC(2004, 0, 2, 12);
+		const show = buildShow(load("items_503612.json"), seasons());
+		expect(newEpisodes(show)).toEqual([
+			{id: "503636", title: show.seasons[3].episodes[1].title, season: 4, number: 2, url: "/rejseholdet_503605/rejseholdet_503636", published: Date.UTC(2004, 0, 1, 20), image: expect.stringContaining("Width=640")},
+			{id: "503616", title: show.seasons[3].episodes[0].title, season: 4, number: 1, url: "/rejseholdet_503605/rejseholdet_503616", published: Date.UTC(2003, 11, 25, 19, 59, 7), image: expect.stringContaining("Width=640")},
+		]);
+		clock.now = () => Date.UTC(2004, 2, 1);
+		expect(newEpisodes(show)).toEqual([]);
+	});
+
+	test("are at most ten, of those that came out at once in the order they're watched in", () => {
+		clock.now = () => Date.UTC(2004, 0, 2, 12);
+		const show = buildShow(load("items_503612.json"), seasons());
+		for (const e of show.seasons[2].episodes) {
+			e.pubdate = Date.UTC(2004, 0, 1, 21);
+		}
+		const found = newEpisodes(show);
+		expect(found).toHaveLength(10);
+		// The season's last ten, from its last
+		expect(found.map(e => e.id)).toEqual(show.seasons[2].episodes.slice(-10).reverse().map(e => e.videoId));
+		expect(found.map(e => e.number)).toEqual([14, 13, 12, 11, 10, 9, 8, 7, 6, 5]);
+	});
+
+	test("are numbered by their place in the season, in what was kept before DR's numbers were", () => {
+		clock.now = () => Date.UTC(2004, 0, 2, 12);
+		const show = buildShow(load("items_503612.json"), seasons());
+		for (const season of show.seasons) {
+			delete season.number;
+			for (const e of season.episodes) {
+				delete e.number;
+			}
+		}
+		expect(newEpisodes(show).map(e => [e.season, e.number])).toEqual([[4, 2], [4, 1]]);
 	});
 });

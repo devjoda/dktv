@@ -107,6 +107,7 @@ ${head}
 <script src="${staticURL("sync.js")}"></script>
 <script src="${staticURL("ui.js")}"></script>
 <script src="${staticURL("account.js")}"></script>
+<script src="${staticURL("news.js")}"></script>
 ${scripts}
 </head>
 <body class="${bodyClass || ""}">
@@ -126,6 +127,7 @@ ${each(sections(site.path), ([url, name, current]) =>
 <button type="submit" class="search-submit" aria-label="Søg">${icon("search")}</button>
 </form>
 <a class="search-link" href="/search/" aria-label="Søg"${attr("aria-current", site.path.startsWith("/search/") && "page")}>${icon("search")}</a>
+<a class="bell-link js-bell" href="/nyt/" aria-label="Nyt til dig"${attr("aria-current", site.path.startsWith("/nyt/") && "page")}>${icon("bell")}<span class="bell-count" aria-hidden="true" hidden></span></a>
 <a class="account-link" href="/sync/" aria-label="Din konto"${attr("aria-current", site.path.startsWith("/sync/") && "page")}>${icon("user")}</a>
 </div>
 </header>

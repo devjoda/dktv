@@ -88,6 +88,7 @@ class Episode(Item):
     title: Optional[str] = None
     contextual_title: Optional[str] = None
     release_year: Optional[int] = None
+    episode_number: Annotated[Optional[int], Lenient] = None
 
     @property
     def display_title(self) -> str:

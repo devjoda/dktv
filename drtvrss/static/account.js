@@ -86,9 +86,11 @@ function pushSupported() {
     return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
 }
 
-// iPhones and iPads only notify sites added to the home screen, and opened from there
+// iPhones and iPads only notify sites added to the home screen, and opened from there.
+// iPads say they're Macs, but Macs have no touch screen.
 function needsHomeScreen() {
-    return /iPhone|iPad/.test(navigator.userAgent) && !navigator.standalone && !pushSupported();
+    const apple = /iPhone|iPad/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+    return apple && !navigator.standalone && !pushSupported();
 }
 
 // This device's subscription to notifications, made now if it hasn't one

@@ -28,9 +28,14 @@ async function cpu(path: string): Promise<string> {
 	return `${((spent.user + spent.system) / 1000).toFixed(1).padStart(6)} ms`;
 }
 
+// How many visits it takes at most to get all of a page, before it's measured with what's kept
+const WARM_UP = 10;
+
 // Records DR's answers for all of them first
 for (const path of process.argv.slice(2).length ? process.argv.slice(2) : ["/", "/rejseholdet_503605/", "/kategorier/film/", "/liste/355817/", "/search/?query=matador", "/live/DR1"]) {
-	await app.request(path, {}, env, ctx as any);
+	for (let i = 0; i < WARM_UP; i++) {
+		await app.request(path, {}, env, ctx as any);
+	}
 }
 forgetAll();
 console.log = () => {};
@@ -40,8 +45,13 @@ for (const path of paths) {
 	const first = await cpu(path);
 	forgetAll();
 	const again = await cpu(path);
+	// What a visit didn't have time for, like some of many favourites, the next visits get
+	for (let i = 0; i < WARM_UP; i++) {
+		await app.request(path, {}, env, ctx as any);
+	}
 	const kept = await cpu(path);
 	expireAll();
 	const expired = await cpu(path);
-	process.stdout.write(`${path.padEnd(26)} first ${first}   fresh from DR ${again}   kept ${kept}   ran out ${expired}\n`);
+	const shown = path.length > 40 ? `${path.slice(0, 39)}…` : path;
+	process.stdout.write(`${shown.padEnd(26)} first ${first}   fresh from DR ${again}   kept ${kept}   ran out ${expired}\n`);
 }

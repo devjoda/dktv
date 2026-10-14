@@ -524,6 +524,43 @@ def test_favorites_are_described(get):
     assert rejseholdet["new"] is False
 
 
+def test_favorites_tell_of_new_episodes_from_the_series_as_its_kept(get, fake_dr, monkeypatch):
+    from datetime import datetime, timezone
+    from drtvrss import show as show_module
+
+    monkeypatch.setattr(show_module, "current_time", lambda tz=None: datetime(2004, 1, 2, 12, tzinfo=timezone.utc).astimezone(tz))
+    get("/rejseholdet_503605/")
+    asked = len(fake_dr)
+    found = __import__("json").loads(get("/favorites.json?shows=rejseholdet_503605").text)
+    # Without asking DR again
+    assert [p for p in fake_dr[asked:] if p.startswith("/items/")] == []
+    new = found["shows"]["rejseholdet_503605"]["new_episodes"]
+    assert [(e["id"], e["season"], e["number"], e["url"]) for e in new] == [
+        ("503636", 4, 2, "/rejseholdet_503605/rejseholdet_503636"),
+        ("503616", 4, 1, "/rejseholdet_503605/rejseholdet_503616"),
+    ]
+    assert new[0]["published"] == int(datetime(2004, 1, 1, 20, tzinfo=timezone.utc).timestamp() * 1000)
+    assert "Width=640" in new[0]["image"]
+    assert set(new[0]) == {"id", "title", "season", "number", "url", "published", "image"}
+
+
+def test_favorites_without_new_episodes(get):
+    found = __import__("json").loads(get("/favorites.json?shows=rejseholdet_503605").text)
+    assert found["shows"]["rejseholdet_503605"]["new_episodes"] == []
+
+
+def test_every_page_has_the_bell_and_its_page(get):
+    for path in ["/", "/favoritter/", "/sync/"]:
+        r = get(path)
+        assert '<a class="bell-link js-bell" href="/nyt/" aria-label="Nyt til dig">' in r.text
+        assert '<script src="/static/news.js?v=' in r.text
+    r = get("/nyt/")
+    assert r.status_code == 200
+    assert "<title>Nyt til dig - " in r.text
+    assert '<div class="news js-news" id="news-page" data-full></div>' in r.text
+    assert 'aria-label="Nyt til dig" aria-current="page"' in r.text
+
+
 def test_no_favorites(get, fake_dr):
     r = get("/favorites.json")
     assert r.status_code == 200

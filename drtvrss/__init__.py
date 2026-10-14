@@ -30,7 +30,7 @@ from .drtv import (
 )
 from . import live as live_tv
 from .live import channel_named, get_channels, get_schedules, plan_from, whats_on
-from .show import Show, clock, danish_date, danish_datetime, duration, is_new, thumbnail
+from .show import Show, clock, danish_date, danish_datetime, duration, is_new, new_episodes, thumbnail
 
 app = Quart(__name__)
 app.add_template_filter(thumbnail)
@@ -235,6 +235,12 @@ async def favorites_page():
     )
 
 
+@app.route("/nyt/")
+async def news_page():
+    """What's new for the viewer, which the bell in the header opens on phones: filled in by news.js"""
+    return await render_template("news.html")
+
+
 @app.route("/privatliv/")
 async def privacy():
     return await render_template("privacy.html")
@@ -380,6 +386,8 @@ def describe_show(show: Show) -> dict:
         "episodes": len(episodes),
         "episode_ids": [e.video_id for e in episodes],
         "new": bool(episodes) and is_new(episodes[-1].pubdate),
+        # For "Nyt til dig", from the series as it's kept, without asking DR for more
+        "new_episodes": new_episodes(show),
     }
 
 

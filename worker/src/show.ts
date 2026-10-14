@@ -3,7 +3,7 @@
 import {cached, peek} from "./cache";
 import {type Ctx, getApi, type Json, NotFound} from "./dr";
 import * as dr from "./models";
-import {isoTime} from "./time";
+import {isNew, isoTime} from "./time";
 
 export interface Episode {
 	title: string;
@@ -13,6 +13,8 @@ export interface Episode {
 	// The end of the URL, like rejseholdet_503615, which the episode's page here is at
 	link: string;
 	videoId: string;
+	// Its number in its season, as DR has it. What was kept before it was, hasn't.
+	number?: number;
 	pubdate: number;
 	wallpaper?: string;
 	minutes?: number;
@@ -25,6 +27,8 @@ export interface Season {
 	title: string;
 	// DR's id for the season
 	id: string;
+	// Like 11, for "Sæson 11", if DR numbers it. What was kept before it was, hasn't.
+	number?: number;
 	episodes: Episode[];
 	expires?: number;
 }
@@ -121,6 +125,7 @@ function episode(blob: Json, expires?: number): Episode {
 		url,
 		link: url.split("/").at(-1)!,
 		videoId: videoId(url),
+		number: dr.integer(blob.episodeNumber),
 		pubdate: dr.pubdate(blob),
 		wallpaper: dr.wallpaper(blob),
 		minutes: dr.lengthInMinutes(blob),
@@ -153,8 +158,8 @@ export function buildShow(latest: Json, seasons: Map<string, Json>): Show {
 			continue;
 		}
 		let seasonTitle = dr.required(ref, "title");
+		const number = dr.integer(ref.seasonNumber);
 		if (seasonTitle == title) {
-			const number = dr.integer(ref.seasonNumber);
 			const year = dr.integer(ref.releaseYear);
 			if (number !== undefined) {
 				seasonTitle = `Sæson ${number}`;
@@ -169,6 +174,7 @@ export function buildShow(latest: Json, seasons: Map<string, Json>): Show {
 		result.seasons.push({
 			title: seasonTitle,
 			id: dr.required(ref, "id"),
+			number,
 			expires,
 			episodes: dr.items(season, "episodes").flatMap(blob => {
 				try {
@@ -235,6 +241,44 @@ export async function getProgram(ctx: Ctx, slug: string): Promise<Program> {
 			expires: dr.availableUntil(item),
 		};
 	});
+}
+
+// How many of a series' newest episodes /favorites.json tells of
+const NEWEST_EPISODES = 10;
+
+export interface NewEpisode {
+	id: string;
+	title: string;
+	// Like 11 and 3, for S11 A3, or null if DR doesn't number them
+	season: number | null;
+	number: number | null;
+	url: string;
+	published: number;
+	image: string | null;
+}
+
+/** The series' episodes from the last two weeks, the newest first, for the viewer to hear of */
+export function newEpisodes(show: Show): NewEpisode[] {
+	const found: NewEpisode[] = [];
+	for (const season of show.seasons) {
+		// What was kept before seasons had their numbers says it in their title
+		const seasonNumber = season.number ?? Number(/^Sæson (\d+)$/.exec(season.title)?.[1] ?? NaN);
+		season.episodes.forEach((e, i) => {
+			if (isNew(e.pubdate)) {
+				found.push({
+					id: e.videoId,
+					title: e.title,
+					season: Number.isFinite(seasonNumber) ? seasonNumber : null,
+					number: e.number ?? i + 1,
+					url: `/${show.url}/${e.link}`,
+					published: e.pubdate,
+					image: thumbnail(e.wallpaper) ?? null,
+				});
+			}
+		});
+	}
+	// In the order they're watched in, and then the newest first, so those that came out together stay in order
+	return found.reverse().sort((a, b) => b.published - a.published).slice(0, NEWEST_EPISODES);
 }
 
 /** The episodes in the order they're watched in, for the play button to find where the viewer got to */

@@ -623,6 +623,23 @@ describe("favourites", () => {
 		expect(rejseholdet.episode_ids[0]).toBe("503615");
 	});
 
+	test("tells of each series' new episodes, from the series as it's kept, without asking DR again", async () => {
+		clock.now = () => Date.UTC(2004, 0, 2, 12);
+		await get("/rejseholdet_503605/");
+		const asked = dr.requested.length;
+		const r = await get("/favorites.json?shows=rejseholdet_503605");
+		expect(dr.requested.length).toBe(asked);
+		const found = JSON.parse(r.text).shows["rejseholdet_503605"].new_episodes;
+		expect(found.map((e: any) => [e.id, e.season, e.number, e.url])).toEqual([
+			["503636", 4, 2, "/rejseholdet_503605/rejseholdet_503636"],
+			["503616", 4, 1, "/rejseholdet_503605/rejseholdet_503616"],
+		]);
+		expect(found[0]).toEqual({id: "503636", title: expect.any(String), season: 4, number: 2, url: "/rejseholdet_503605/rejseholdet_503636", published: Date.UTC(2004, 0, 1, 20), image: expect.stringContaining("Width=640")});
+		// Without new ones, none
+		clock.now = () => Date.UTC(2026, 9, 12);
+		expect(JSON.parse((await get("/favorites.json?shows=rejseholdet_503605")).text).shows["rejseholdet_503605"].new_episodes).toEqual([]);
+	});
+
 	test("none", async () => {
 		const r = await get("/favorites.json");
 		expect(JSON.parse(r.text)).toEqual({shows: {}, films: {}});
@@ -649,6 +666,25 @@ describe("favourites", () => {
 		expect(r.text).toContain('aria-label="Favorit: Matador" title="Favorit"');
 		expect(r.text).toContain('data-favorite-id="matador_540736" data-kind="show"');
 		expect(r.text).toContain('data-favorite-id="lise-noergaard_-ikke-kun-en-pige_362031" data-kind="film"');
+	});
+});
+
+describe("what's new", () => {
+	test("has a bell in every page's header, which leads to /nyt/", async () => {
+		for (const path of ["/", "/favoritter/", "/rejseholdet_503605/"]) {
+			const r = await get(path);
+			expect(r.text).toContain('<a class="bell-link js-bell" href="/nyt/" aria-label="Nyt til dig">');
+			expect(r.text).toContain(`src="/static/news.js?v=`);
+		}
+	});
+
+	test("has a page of its own, for phones, without asking DR", async () => {
+		const r = await get("/nyt/");
+		expect(r.status).toBe(200);
+		expect(r.text).toContain("<title>Nyt til dig - ");
+		expect(r.text).toContain('<div class="news js-news" id="news-page" data-full>');
+		expect(r.text).toContain('aria-label="Nyt til dig" aria-current="page"');
+		expect(dr.requested).toEqual([]);
 	});
 });
 

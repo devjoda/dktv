@@ -58,7 +58,7 @@ def normalize_code(code: str) -> Optional[str]:
 
 
 def empty() -> dict:
-    return {"favorites": [], "removed_favorites": {}, "progress": {}}
+    return {"favorites": [], "removed_favorites": {}, "progress": {}, "news_seen": 0}
 
 
 def _number(value) -> Optional[float]:
@@ -125,7 +125,13 @@ def clean(data) -> dict:
                 "expires": _number(p.get("expires")),
                 "updated": _number(p.get("updated")) or 0,
             }
-    return {"favorites": favorites, "removed_favorites": removed, "progress": progress}
+    return {
+        "favorites": favorites,
+        "removed_favorites": removed,
+        "progress": progress,
+        # When the viewer last looked at what's new for them, under the bell, in milliseconds
+        "news_seen": max(0, _number(data.get("news_seen")) or 0),
+    }
 
 
 def merge(a: dict, b: dict) -> dict:
@@ -150,7 +156,12 @@ def merge(a: dict, b: dict) -> dict:
         (f for _, f in latest.values() if f is not None), key=lambda f: f["added"], reverse=True
     )[:MAX_FAVORITES]
     removed = {show_id: when for show_id, (when, f) in latest.items() if f is None}
-    return {"favorites": favorites, "removed_favorites": removed, "progress": progress}
+    return {
+        "favorites": favorites,
+        "removed_favorites": removed,
+        "progress": progress,
+        "news_seen": max(a["news_seen"], b["news_seen"]),
+    }
 
 
 def create() -> str:
