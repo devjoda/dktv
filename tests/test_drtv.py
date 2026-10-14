@@ -300,3 +300,15 @@ def test_fetch_search_encodes_the_query(monkeypatch):
     asyncio.run(run())
     assert [q["term"] for q in queries] == ["Matador & co", "Bonderøven #1", "a+b"]
     assert queries[0] == drtv.SEARCH_PARAMS | {"term": "Matador & co"}
+
+
+def test_cut_off_descriptions_end_at_their_last_whole_sentence():
+    from drtvrss.show import whole_sentences
+
+    text = "Britisk portrætserie fra 2024. (From Roger Moore with Love) Han er kendt som Bond - James Bond. Men også som selvglad engelsk playboy i kultkrimiserien 'De uheldige helte' - og meget..."
+    assert whole_sentences(text) == "Britisk portrætserie fra 2024. (From Roger Moore with Love) Han er kendt som Bond - James Bond."
+    # Otherwise as they were, with an ellipsis of one character
+    short = "Kort. Og så en meget lang sætning, der bliver ved og ved, indtil DR klipper den over midt i..."
+    assert whole_sentences(short) == short[:-3] + "…"
+    assert whole_sentences("Hele beskrivelsen. Med to sætninger.") == "Hele beskrivelsen. Med to sætninger."
+    assert whole_sentences(None) is None

@@ -32,6 +32,25 @@ def thumbnail(image_url: Optional[str], width: int = THUMBNAIL_WIDTH) -> Optiona
     return image_url.replace(old_height[0], f"Height={height}")
 
 
+# How much of a cut-off text must be left, to end it at its last whole sentence instead
+WHOLE_SENTENCES_FROM = 60
+
+
+def whole_sentences(text: Optional[str]) -> Optional[str]:
+    """DR's short descriptions are cut off, like "… og meget...". Ends one at its last whole sentence
+    instead, where that leaves enough of it; the episode's own page has all of it. Like the Worker's."""
+    if not text:
+        return text
+    cut = re.search(r"(\.\.\.|…)\s*$", text)
+    if cut is None:
+        return text
+    before = text[: cut.start()]
+    ends = list(re.finditer(r"[.!?][\"'”»)]?(?=\s)", before))
+    if not ends or ends[-1].end() < WHOLE_SENTENCES_FROM:
+        return before.rstrip() + "…"
+    return before[: ends[-1].end()]
+
+
 def video_id(url: str) -> str:
     """DR's id for a video, from its URL, which ends in it"""
     return url.split("_")[-1]

@@ -57,7 +57,7 @@
                             {% if ep.pubdate is new %}<span class="tag tag-new">Ny</span>{% endif %}
                             {% if ep.geo_restricted %}<span class="tag tag-geo">Kun i Danmark</span>{% endif %}
                         </p>
-                        <p class="episode-desc">{{ ep.short_description }}</p>
+                        <p class="episode-desc">{{ ep.short_description | whole_sentences }}</p>
                     </div>
                 </a>
             </li>

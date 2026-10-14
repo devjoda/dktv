@@ -271,7 +271,8 @@ def test_live_plan(get, monkeypatch):
         for p in programmes:
             assert p["end"] > datetime(2026, 10, 12, 15, 0, tzinfo=timezone.utc).timestamp() * 1000
             assert sorted(p) == ["description", "end", "start", "title"]
-            assert len(p["description"]) <= 280
+    # All of each description, as in the programme list
+    assert any(len(p["description"]) > 280 and not p["description"].endswith("…") for p in sum(plan.values(), []))
 
 
 def test_favorites_page(get):
