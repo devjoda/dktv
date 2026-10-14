@@ -109,6 +109,12 @@ function newsCount(lines, leaving, seen, since) {
     return count;
 }
 
+// How many of the lines the viewer hasn't seen yet, whether they're new since the bell was opened or not:
+// episodes not watched, and favourites leaving soon
+function newsUnwatched(lines, leaving) {
+    return lines.filter(line => !line.seen).length + leaving.length;
+}
+
 // When the bell was last opened, and when this browser first used it; both now, the first time,
 // so it doesn't start with everything
 function newsTimes(now = Date.now()) {
@@ -145,17 +151,22 @@ function currentNews() {
     return {favorites, details, lines, leaving};
 }
 
-// The number on the bell, which says how many lines are new, and is read out like "3 nye"
+// The number on the bell, which says how many lines are new since it was opened, and is read out like "3 nye";
+// or, with nothing new since, a dot, as long as there's something in it the viewer hasn't seen
 function updateBell() {
     const {lines, leaving} = currentNews();
     const {seen, since} = newsTimes();
     const count = newsCount(lines, leaving, seen, since);
+    const unwatched = newsUnwatched(lines, leaving);
     const shown = count > NEWS_COUNTED ? `${NEWS_COUNTED}+` : String(count);
     for (const bell of document.querySelectorAll(".js-bell")) {
         const badge = bell.querySelector(".bell-count");
-        badge.hidden = count == 0;
-        badge.textContent = shown;
-        bell.setAttribute("aria-label", count == 0 ? "Nyt til dig" : count > NEWS_COUNTED ? `Nyt til dig, mere end ${NEWS_COUNTED} nye` : `Nyt til dig, ${count} nye`);
+        badge.hidden = count == 0 && unwatched == 0;
+        badge.classList.toggle("is-dot", count == 0);
+        badge.textContent = count ? shown : "";
+        bell.setAttribute("aria-label", count > NEWS_COUNTED ? `Nyt til dig, mere end ${NEWS_COUNTED} nye`
+            : count ? `Nyt til dig, ${count} nye`
+            : unwatched ? "Nyt til dig, med noget du ikke har set" : "Nyt til dig");
     }
     // On the app's icon too, where the site is installed as an app, like on the home screen
     if (typeof navigator != "undefined" && "setAppBadge" in navigator) {

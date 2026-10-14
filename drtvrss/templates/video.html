@@ -34,7 +34,7 @@
             {%- if e.pubdate is new %}<span class="tag tag-new">Ny</span>{% endif %}
             {%- if e.geo_restricted %}<span class="tag tag-geo">Kun i Danmark</span>{% endif -%}
         </p>
-        <p class="description">{{ e.description }}</p>
+        <p class="description">{{ e.description | whole_sentences }}</p>
         {# Se sammen and marking intros come here too, see together.js and skip.js #}
         <div class="actions">
             {% if not s and e.url %}{{ favorite_button(e.url.split("/")[-1], e.title, e.wallpaper, kind="film") }}{% endif %}
