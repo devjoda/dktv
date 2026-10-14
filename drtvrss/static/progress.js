@@ -358,4 +358,8 @@ function showContinueWatching() {
     section.querySelector(".js-tiles").replaceChildren(...started.map(continueWatchingTile));
     section.hidden = started.length == 0;
     section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
+    // On the favourites page, only with all of them
+    if (typeof applyFavoriteFilter == "function") {
+        applyFavoriteFilter();
+    }
 }

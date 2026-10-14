@@ -43,6 +43,8 @@ export interface Show {
 	nextEpisode?: number;
 	// When the series leaves DR
 	expires?: number;
+	// DR's categories for it, like ["dokumentar", "kultur"]. What was kept before they were, hasn't.
+	categories?: string[];
 	seasons: Season[];
 }
 
@@ -56,6 +58,8 @@ export interface Program {
 	minutes?: number;
 	geoRestricted?: boolean;
 	expires?: number;
+	// Like Show's
+	categories?: string[];
 }
 
 const SHOW_CACHE_TIME = 60 * 60;
@@ -171,6 +175,7 @@ export function buildShow(latest: Json, seasons: Map<string, Json>): Show {
 		geoRestricted: dr.geoRestricted(latest),
 		nextEpisode: next !== undefined ? next * 1000 : undefined,
 		expires: dr.availableUntil(show) ?? dr.availableUntil(latest),
+		categories: dr.categories(latest).length ? dr.categories(latest) : dr.categories(show),
 		seasons: [],
 	};
 	for (const ref of dr.items(show, "seasons")) {
@@ -260,6 +265,7 @@ export async function getProgram(ctx: Ctx, slug: string): Promise<Program> {
 			wallpaper: dr.wallpaper(item),
 			minutes: dr.lengthInMinutes(item),
 			expires: dr.availableUntil(item),
+			categories: dr.categories(item),
 		};
 	});
 }
@@ -276,6 +282,14 @@ export interface NewEpisode {
 	url: string;
 	published: number;
 	image: string | null;
+}
+
+/**
+ * Whether it's a documentary, as on the page Dokumentar, whose programmes DR gives the category "dokumentar",
+ * or null if what was kept doesn't say
+ */
+export function isDocumentary(item: Show | Program): boolean | null {
+	return item.categories ? item.categories.includes("dokumentar") : null;
 }
 
 /** The series' episodes from the last two weeks, the newest first, for the viewer to hear of */

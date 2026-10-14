@@ -66,6 +66,8 @@ class Item(DRModel):
     custom_fields: CustomFields = CustomFields()
     # Set on episodes, like in search results
     show_id: Optional[str] = None
+    # Like ["dokumentar", "kultur", "dr1"]
+    categories: Annotated[Optional[list[str]], Lenient] = None
 
 
 class ItemList(DRModel, Generic[T]):

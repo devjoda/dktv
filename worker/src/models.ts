@@ -99,6 +99,11 @@ export function episodeTitle(blob: Json): string {
 	return text(blob?.contextualTitle) || text(blob?.title) || required(blob, "id");
 }
 
+/** DR's categories for an item, like ["dokumentar", "kultur", "dr1"], in small letters */
+export function categories(blob: Json): string[] {
+	return Array.isArray(blob?.categories) ? blob.categories.filter((c: unknown) => typeof c == "string").map((c: string) => c.toLowerCase()) : [];
+}
+
 /** The items of one of DR's lists, like a show's seasons */
 export function items(blob: Json, field: string): Json[] {
 	const found = blob?.[field]?.items;

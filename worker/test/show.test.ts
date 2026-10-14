@@ -2,7 +2,7 @@ import {describe, expect, test} from "vitest";
 import {NotFound} from "../src/dr";
 import * as dr from "../src/models";
 import {buildSearchResult, search} from "../src/search";
-import {buildShow, getLongDescription, getProgram, getShow, MAX_SEASONS, newEpisodes, rssFeed, thumbnail, wholeSentences} from "../src/show";
+import {buildShow, getLongDescription, getProgram, getShow, isDocumentary, MAX_SEASONS, newEpisodes, rssFeed, thumbnail, wholeSentences} from "../src/show";
 import {clock, copenhagen, danishDate, danishDatetime, duration, isNew, isoTime, leavingLabel} from "../src/time";
 import {ctx, dr as fakeDR, load} from "./helpers";
 
@@ -256,6 +256,16 @@ describe("pictures and time", () => {
 		expect(isNew(Date.UTC(2026, 8, 20))).toBe(false);
 		expect(isNew(Date.UTC(2026, 9, 13))).toBe(false);
 		expect(isNew(undefined)).toBe(false);
+	});
+});
+
+describe("documentaries", () => {
+	test("are what DR gives the category dokumentar, as on the page Dokumentar, and unknown in what was kept before", async () => {
+		const show = buildShow(load("items_503612.json"), seasons());
+		expect(show.categories).toContain("fiktionsserie");
+		expect(isDocumentary(show)).toBe(false);
+		expect(isDocumentary(await getProgram(ctx(), "lise-noergaard_-ikke-kun-en-pige_362031"))).toBe(true);
+		expect(isDocumentary({...show, categories: undefined})).toBeNull();
 	});
 });
 

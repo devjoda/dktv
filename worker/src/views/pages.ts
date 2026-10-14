@@ -360,8 +360,18 @@ export function listPage(site: Site, {title, cards}: {title: string; cards: Card
 }
 
 /** Filled in by favorites.js and progress.js, from the viewer's browser */
+/** The favourites page's filter, which favorites.js shows once there are enough favourites of more than one kind */
+function favoriteFilters(): Html {
+	return html`<div class="favorite-filters wrap js-favorite-filters" role="group" aria-label="Vis" hidden>
+${each([["alle", "Alle"], ["serier", "Serier"], ["film", "Film og programmer"], ["dokumentar", "Dokumentar"]], ([filter, name]) =>
+	html`<button type="button" class="filter-button" data-filter="${filter}" aria-pressed="${filter == "alle" ? "true" : "false"}">${name} <span class="filter-count"></span></button>
+`)}</div>
+<p class="shelf-empty js-filter-empty" hidden>${icon("heart")}<span class="js-filter-empty-text"></span></p>`;
+}
+
 export function favoritesPage(site: Site): Html {
 	return layout(site, {title: "Favoritter"}, html`${pageHead("Favoritter")}
+${favoriteFilters()}
 <section class="results" id="favorite-shows" data-favorites="show" aria-labelledby="favorite-shows-title" hidden>
 <h2 class="section-title" id="favorite-shows-title">Serier</h2>
 <p class="shelf-empty js-favorites-empty">
@@ -371,10 +381,10 @@ ${icon("heart")}
 <div class="tile-grid js-tiles"></div>
 </section>
 <section class="results" id="favorite-films" data-favorites="film" aria-labelledby="favorite-films-title" hidden>
-<h2 class="section-title" id="favorite-films-title">Film</h2>
+<h2 class="section-title" id="favorite-films-title">Film og programmer</h2>
 <p class="shelf-empty js-favorites-empty">
 ${icon("heart")}
-<span>Tryk på <strong>Favorit</strong> på en film, så den er her, når du vil se den.</span>
+<span>Tryk på <strong>Favorit</strong> på en film eller et program, som en dokumentar eller en koncert, så den er her, når du vil se den.</span>
 </p>
 <div class="tile-grid js-tiles"></div>
 </section>
