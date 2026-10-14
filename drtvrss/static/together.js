@@ -443,7 +443,12 @@ function receive(message) {
         return;
     }
     case "goto":
+        if (message.path == location.pathname) {
+            return;
+        }
         announce(`${message.by} skiftede videre`);
+        // From the start, playing, as the room has it now
+        together.state = {path: message.path, playing: true, position: 0, at: message.now};
         goTogether(message.path);
         return;
     case "people":
@@ -467,11 +472,16 @@ function receive(message) {
     }
 }
 
-// Goes to the video the room went on to, staying in the room; on live TV, another channel in the same player
+// Goes to the video the room went on to, staying in the room: on live TV, another channel in the same player,
+// and from a video, the next one in the same page too, see next.js, so the room and its chat stay as they are
 function goTogether(path) {
     const channel = /^\/live\/([\w-]+)$/.exec(path);
     if (channel && togetherLive() && typeof changeChannel == "function") {
         changeChannel(channel[1], true);
+        return;
+    }
+    if (!togetherLive() && typeof switchEpisode == "function" && isVideoPath(path)) {
+        switchEpisode(path, {fromRoom: true});
         return;
     }
     try {
@@ -480,6 +490,17 @@ function goTogether(path) {
         // It goes along all the same
     }
     location.assign(path);
+}
+
+// The viewer went on to another video in the same page, see next.js: the others come along, from its start
+function togetherWentTo(path, fromRoom) {
+    if (!togetherRoom() || together.socket == null) {
+        return;
+    }
+    if (!fromRoom) {
+        sendTogether({type: "goto", path});
+        together.state = {path, playing: true, position: 0, at: Date.now() + together.offset};
+    }
 }
 
 function connect() {

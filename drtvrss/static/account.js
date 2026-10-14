@@ -279,6 +279,11 @@ function shortDate(seconds) {
     return new Date(seconds * 1000).toLocaleDateString("da-DK", {day: "numeric", month: "short", year: "numeric"});
 }
 
+// Whether the next episode plays by itself after a countdown, which it does unless the viewer turned it off, see next.js
+function autoplayNextOn() {
+    return stored("autoplayNext") != "false";
+}
+
 // Whether the viewer has chosen to mark intros and credits for others, see skip.js
 function contributes() {
     return stored("contribute") == "true" && syncCode() != null;
@@ -295,6 +300,15 @@ async function setupAccountPage() {
         find(".js-sync-error").textContent = message || "";
         find(".js-sync-error").hidden = !message;
     };
+    // Playing the next episode by itself, for everyone, with an account or not
+    const autoplayToggle = find(".js-autoplay-toggle");
+    if (autoplayToggle) {
+        autoplayToggle.checked = autoplayNextOn();
+        autoplayToggle.addEventListener("change", function () {
+            store("autoplayNext", autoplayToggle.checked ? null : "false");
+            announce(autoplayToggle.checked ? "Næste afsnit afspilles automatisk" : "Næste afsnit afspilles ikke automatisk");
+        });
+    }
     const {push, passkeys, segments} = await features();
 
     // Marking intros and credits, for those who'd like to

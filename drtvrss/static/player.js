@@ -5,9 +5,6 @@
 const NOT_IN_DENMARK = "Kunne ikke indlæse videoen. Formentligt befinder du dig udenfor Danmark, og forsøger at se noget der kun er tilgængeligt hjemme.";
 const COULD_NOT_LOAD = "Kunne ikke indlæse videoen. Prøv igen senere.";
 
-// How long to wait before playing the next episode, in seconds
-const NEXT_EPISODE_DELAY = 10;
-
 // Plyr's texts, in Danish
 const PLYR_DANISH = {
     restart: "Start forfra",
@@ -51,7 +48,7 @@ function setupControls(video, live = false) {
     if (typeof Plyr == "undefined") {
         return;
     }
-    new Plyr(video, {
+    playing.plyr = new Plyr(video, {
         controls: live
             ? ["play-large", "play", "mute", "volume", "pip", "airplay", "fullscreen"]
             : ["play-large", "rewind", "play", "fast-forward", "progress", "current-time", "duration",
@@ -99,13 +96,17 @@ function autoplay(video) {
     video.play().catch(function (error) {
         if (error.name != "NotAllowedError") {
             stopLoading(video);
+            video.dispatchEvent(new Event("autoplayrefused"));
             return;
         }
         // Not the viewer's choice, so not remembered, see keepSound()
         video.dataset.forcedMute = "true";
         video.muted = true;
-        // When it won't play at all, the play button shows instead of the spinner
-        video.play().then(() => offerSound(video)).catch(() => stopLoading(video));
+        // When it won't play at all, the play button shows instead of the spinner, and next.js says so
+        video.play().then(() => offerSound(video)).catch(function () {
+            stopLoading(video);
+            video.dispatchEvent(new Event("autoplayrefused"));
+        });
     });
 }
 
@@ -153,53 +154,6 @@ function offerSound(video) {
 // Where to show messages about the video: below Plyr's controls, if there are any
 function messageAnchor(video) {
     return video.closest(".plyr") || video;
-}
-
-// Plays the next episode after a countdown, once this one has ended, unless the viewer stops it.
-// On the picture, so it's seen in full screen too.
-function offerNext(video) {
-    if (!video.dataset.nextUrl || document.getElementById("up-next")) {
-        return;
-    }
-    const url = video.dataset.nextUrl;
-    let left = NEXT_EPISODE_DELAY;
-    const seconds = element("span", {}, String(left));
-    const countdown = element("p", {class: "up-next-countdown", "aria-hidden": "true"}, "Starter om ", seconds, " sek.");
-    const cancel = element("button", {type: "button", class: "button button-secondary"}, "Annullér");
-    const playNow = element("a", {class: "button button-primary", href: url}, icon("play"), "Afspil nu");
-    const box = element("div", {id: "up-next", class: "up-next"},
-        element("p", {class: "up-next-label"}, "Næste afsnit"),
-        element("p", {class: "up-next-title"}, video.dataset.nextTitle),
-        countdown,
-        element("div", {class: "up-next-actions"}, playNow, cancel));
-    const timer = setInterval(function () {
-        left -= 1;
-        seconds.textContent = String(left);
-        if (left <= 0) {
-            clearInterval(timer);
-            location.href = url;
-        }
-    }, 1000);
-    const stop = function () {
-        clearInterval(timer);
-        countdown.remove();
-        cancel.remove();
-    };
-    const dismiss = function () {
-        stop();
-        box.remove();
-    };
-    cancel.addEventListener("click", dismiss);
-    // Going back in the video means the viewer isn't done with it
-    video.addEventListener("play", dismiss, {once: true});
-    const plyr = video.closest(".plyr");
-    if (plyr) {
-        plyr.append(box);
-    } else {
-        video.after(box);
-    }
-    announce(`Næste afsnit, ${video.dataset.nextTitle}, starter om ${NEXT_EPISODE_DELAY} sekunder`);
-    playNow.focus();
 }
 
 // Shows what went wrong right below the video, once
@@ -542,8 +496,23 @@ function attachStream(video, src, onFatal = message => showError(video, message)
     return null;
 }
 
+// The programme the player plays now, which changes when the next one plays in the same page, see next.js
+const playing = {
+    video: null,
+    videoID: null,
+    plyr: null,
+    // hls.js, which goes on to the next stream; or null where the browser plays them itself
+    hls: null,
+    streaming: false,
+    // While a stream loads, so the start of it isn't saved as how far the viewer got
+    loading: true,
+    lastSaved: 0,
+};
+
 // Plays a program or an episode, continuing where the viewer left off
 async function playVideo(video, videoID) {
+    playing.video = video;
+    playing.videoID = videoID;
     setupControls(video);
     keepSound(video);
     showLoading(video);
@@ -555,8 +524,38 @@ async function playVideo(video, videoID) {
     }
     // Skipping intros and credits that viewers have marked, see skip.js
     if (typeof setupSkipping == "function") {
-        setupSkipping(video, videoID);
+        setupSkipping(video);
     }
+    // The next episode, or what to watch now, see next.js
+    if (typeof setupNext == "function") {
+        setupNext(video);
+    }
+    const save = function (syncDelay) {
+        if (playing.loading) {
+            return;
+        }
+        playing.lastSaved = video.currentTime;
+        saveProgress(playing.videoID, video, syncDelay);
+    };
+    // While it plays, synced now and then, since it changes all the time
+    video.addEventListener("timeupdate", function () {
+        if (Math.abs(video.currentTime - playing.lastSaved) >= SAVE_INTERVAL) {
+            save(PLAYING_SYNC_DELAY);
+        }
+    });
+    video.addEventListener("pause", () => save(SYNC_DELAY));
+    // Sent along when the page is left or hidden, if it got further since it was saved
+    beforeLeaving.push(function () {
+        if (video.currentTime != playing.lastSaved) {
+            save(SYNC_DELAY);
+        }
+    });
+    video.addEventListener("ended", function () {
+        save(SYNC_DELAY);
+        if (typeof episodeEnded == "function") {
+            episodeEnded(video);
+        }
+    });
     let stream;
     try {
         stream = testStream(video) || await getStream(videoID);
@@ -565,10 +564,15 @@ async function playVideo(video, videoID) {
         showError(video, COULD_NOT_LOAD);
         return;
     }
-    const progress = loadProgress(videoID);
+    loadStream(video, stream, startFromLink());
+}
+
+// Plays a stream in the player, from `start`, or where the viewer got to: the page's first, or the next one's
+function loadStream(video, stream, start = null) {
+    playing.loading = true;
+    const progress = loadProgress(playing.videoID);
     video.addEventListener("loadedmetadata", function () {
-        // Where a shared link says, or where the viewer got to; in a room to watch together, where the room is
-        const start = startFromLink();
+        // In a room to watch together, where the room is
         if (typeof togetherRoom == "function" && togetherRoom()) {
             // together.js takes it from there
         } else if (start != null && start < video.duration) {
@@ -577,30 +581,20 @@ async function playVideo(video, videoID) {
             video.currentTime = Math.max(0, progress.time - RESUME_REWIND);
         }
         // Only now, so the start of the video doesn't overwrite where the viewer got to
-        let lastSaved = video.currentTime;
-        const save = function (syncDelay) {
-            lastSaved = video.currentTime;
-            saveProgress(videoID, video, syncDelay);
-        };
-        // While it plays, synced now and then, since it changes all the time
-        video.addEventListener("timeupdate", function () {
-            if (Math.abs(video.currentTime - lastSaved) >= SAVE_INTERVAL) {
-                save(PLAYING_SYNC_DELAY);
-            }
-        });
-        video.addEventListener("pause", () => save(SYNC_DELAY));
-        // Sent along when the page is left or hidden, if it got further since it was saved
-        beforeLeaving.push(function () {
-            if (video.currentTime != lastSaved) {
-                save(SYNC_DELAY);
-            }
-        });
+        playing.lastSaved = video.currentTime;
+        playing.loading = false;
         autoplay(video);
     }, {once: true});
-    video.addEventListener("ended", function () {
-        saveProgress(videoID, video);
-        offerNext(video);
-    });
+    for (const track of video.querySelectorAll("track")) {
+        track.remove();
+    }
     addSubtitles(video, stream.subtitles);
-    attachStream(video, stream.url);
+    if (playing.hls) {
+        playing.hls.loadSource(stream.url);
+    } else if (playing.streaming) {
+        video.src = stream.url;
+    } else {
+        playing.hls = attachStream(video, stream.url);
+        playing.streaming = true;
+    }
 }

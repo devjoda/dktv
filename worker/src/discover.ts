@@ -5,6 +5,7 @@ import {cached, cachedIfTime} from "./cache";
 import {type Ctx, getApi, type Json, NotFound} from "./dr";
 import {type Channels, getChannels} from "./live";
 import * as dr from "./models";
+import {thumbnail} from "./show";
 
 const PAGE_CACHE_TIME = 30 * 60;
 const ROW_SIZE = 24;
@@ -324,6 +325,61 @@ export async function getList(ctx: Ctx, listId: string): Promise<FullList | unde
 }
 
 /** DR's categories, like Serier, Film and Dokumentar */
+// DR's widest categories, which a programme's narrower ones, like Krimi, say more about; and news, whose page is
+// mostly the day's news, not something to watch next
+const MAIN_CATEGORIES = ["fiktionsserie", "film", "dokumentar"];
+const NOT_SIMILAR = ["nyheder"];
+// How many programmes to suggest from a category, at most, and how few make it worth trying a wider one
+const SIMILAR = 8;
+const SIMILAR_ENOUGH = 4;
+
+export interface Similar {
+	// The category's name, like Krimi
+	label: string;
+	cards: {title: string; url: string; image: string | null}[];
+}
+
+/**
+ * Programmes like one with DR's categories, like ["fiktionsserie", "krimi"], for after it: from the page of its
+ * narrowest category that DR has a page for, as the category's own page here has them, without the programme
+ * itself, which `exclude` has DR's id for: the next one, when a category's page has fewer than 4 others.
+ * Empty, when DR has no page for any of them.
+ */
+export async function similarTo(ctx: Ctx, categories: string[], exclude: string): Promise<Similar> {
+	const pages = await getCategories(ctx);
+	const pageOf = (category: string) => pages.find(p => {
+		const slug = p.url.split("/").at(-2) ?? "";
+		return slug == category || slug == category + "r" || (category.length > 4 && slug.startsWith(category));
+	});
+	const narrow = categories.filter(c => !MAIN_CATEGORIES.includes(c) && !NOT_SIMILAR.includes(c));
+	const ordered = [...narrow, ...categories.filter(c => MAIN_CATEGORIES.includes(c))];
+	let best: Similar = {label: "", cards: []};
+	for (const category of ordered) {
+		const found = pageOf(category);
+		if (found === undefined) {
+			continue;
+		}
+		const page = await getPage(ctx, found.url.replace(/\/$/, ""), 12);
+		const seen = new Set([exclude]);
+		const cards: Similar["cards"] = [];
+		for (const c of [...(page?.featured ?? []), ...(page?.rows ?? []).flatMap(row => row.cards)]) {
+			const id = (c.showId ?? c.filmId ?? "").split("_").at(-1);
+			if (c.live || !id || seen.has(id) || cards.length >= SIMILAR) {
+				continue;
+			}
+			seen.add(id);
+			cards.push({title: c.title, url: c.url, image: thumbnail(c.image) ?? null});
+		}
+		if (cards.length >= SIMILAR_ENOUGH) {
+			return {label: found.title, cards};
+		}
+		if (cards.length > best.cards.length) {
+			best = {label: found.title, cards};
+		}
+	}
+	return best;
+}
+
 export async function getCategories(ctx: Ctx): Promise<Category[]> {
 	try {
 		return await cached(ctx, "categories", PAGE_CACHE_TIME, async () => {

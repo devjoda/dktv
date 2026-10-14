@@ -279,6 +279,16 @@ async def service_worker():
     return response
 
 
+@app.route("/forslag/<kind>/<slug>")
+async def suggestions(kind, slug):
+    """What to watch after a series or a film, once it's over: DR's own programmes from its narrowest category,
+    as the category's page here has them"""
+    if kind not in ("serie", "program"):
+        abort(404)
+    item = await get_show(slug) if kind == "serie" else await get_program(slug)
+    return await discover.similar_to(item.categories or [], slug.split("_")[-1])
+
+
 @app.route("/program/<progid>")
 async def view_program(progid):
     return await render_template(

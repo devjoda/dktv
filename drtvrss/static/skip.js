@@ -2,6 +2,7 @@
 // accounts have marked them; and marking them, for viewers with accounts who chose to, on their
 // account's page, and only on a computer, where the marking sits on the video.
 // The server keeps the marks, see the Worker's segments.ts; the page has them in data-segments.
+// When the next episode plays in the same page, see next.js, its own marks count.
 // Needs progress.js, favorites.js, sync.js, account.js and player.js.
 
 // How long "Forkert?" is offered after skipping the intro, in milliseconds
@@ -54,28 +55,41 @@ function sendVote(videoID, kind, vote) {
     }).catch(() => {});
 }
 
-async function setupSkipping(video, videoID) {
-    let known = {};
-    try {
-        known = JSON.parse(video.dataset.segments || "{}");
-    } catch (error) {
-        // Then nothing's known
+// The marks for what plays now, which changes when the next episode plays in the same page
+let knownSegments = {text: null, segments: {}};
+
+function playingSegments(video) {
+    const text = video.dataset.segments || "{}";
+    if (text !== knownSegments.text) {
+        let segments = {};
+        try {
+            segments = JSON.parse(text);
+        } catch (error) {
+            // Then nothing's known
+        }
+        knownSegments = {text, segments};
     }
-    const segments = () => ({...known, ...ownMarks(videoID)});
+    return {...knownSegments.segments, ...ownMarks(playing.videoID)};
+}
+
+async function setupSkipping(video) {
+    const segments = () => playingSegments(video);
     const player = playerOf(video);
 
-    // Going on to the next episode as the credits start, which "Annullér" lets the viewer watch
+    // Going on to the next episode as the credits start, or for a film, offering what to watch now, see next.js
     let offered = false;
     video.addEventListener("timeupdate", function () {
         const credits = segments().credits;
         // Not while the viewer marks them, which they'd be in the middle of
-        if (offered || !credits || !isFinite(video.duration) || video.dataset.marking) {
+        if (offered || !credits || !isFinite(video.duration) || video.dataset.marking || playing.loading) {
             return;
         }
         const start = video.duration - credits.fromEnd;
         if (video.currentTime >= start && video.currentTime < video.duration - 1) {
             offered = true;
-            offerNext(video);
+            if (typeof creditsStarted == "function") {
+                creditsStarted(video);
+            }
         }
     });
 
@@ -86,11 +100,12 @@ async function setupSkipping(video, videoID) {
     player.append(skip);
     video.addEventListener("timeupdate", function () {
         const intro = segments().intro;
-        skip.hidden = dismissed || !intro || video.currentTime < intro.start - .5 || video.currentTime >= intro.end - 2;
+        skip.hidden = dismissed || playing.loading || !intro || video.currentTime < intro.start - .5 || video.currentTime >= intro.end - 2;
     });
     skip.addEventListener("click", function () {
         const intro = segments().intro;
         const from = video.currentTime;
+        const videoID = playing.videoID;
         video.currentTime = intro.end;
         skip.hidden = true;
         dismissed = true;
@@ -106,16 +121,26 @@ async function setupSkipping(video, videoID) {
         setTimeout(() => wrong.remove(), WRONG_FOR);
     });
 
+    // Another episode, in the same page: its own intro and credits, offered again
+    video.addEventListener("episodechange", function () {
+        offered = false;
+        dismissed = false;
+        skip.hidden = true;
+        for (const wrong of player.querySelectorAll(".skip-wrong")) {
+            wrong.remove();
+        }
+    });
+
     const {segments: possible} = await features();
     if (!possible) {
         return;
     }
-    setupMarking(video, videoID, segments);
+    setupMarking(video, segments);
 }
 
 // "Markér intro og rulletekster", for viewers with accounts who chose to mark them, on a computer:
 // a panel on the video, so the times can be set while watching it
-function setupMarking(video, videoID, segments) {
+function setupMarking(video, segments) {
     const actions = document.querySelector(".watch .actions");
     if (actions == null || typeof contributes != "function" || !contributes() || !matchMedia(MARKING_SCREEN).matches) {
         return;
@@ -126,6 +151,8 @@ function setupMarking(video, videoID, segments) {
         open.hidden = true;
         // While marking, skipping around isn't a viewer skipping the intro
         video.dataset.marking = "true";
+        // What's marked is what plays as the panel opens; another episode closes it
+        const videoID = playing.videoID;
         const known = segments();
         const duration = () => video.duration;
         const times = {
@@ -183,6 +210,11 @@ function setupMarking(video, videoID, segments) {
             delete video.dataset.marking;
             open.focus();
         });
+        video.addEventListener("episodechange", function () {
+            panel.remove();
+            open.hidden = false;
+            delete video.dataset.marking;
+        }, {once: true});
         // On the video, which comes into view, so the times can be set while watching it
         const player = playerOf(video);
         player.append(panel);
