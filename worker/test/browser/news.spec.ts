@@ -33,6 +33,14 @@ async function viewer(context: BrowserContext, {favorites = [SHOW, FILM], seen =
 const bell = (page: Page) => page.locator(".js-bell");
 const badge = (page: Page) => page.locator(".js-bell .bell-count");
 
+/** No number on the bell, only the dot that says there's something in it not seen yet */
+async function onlyDot(page: Page) {
+	await expect(badge(page)).toHaveClass(/is-dot/);
+	await expect(badge(page)).toHaveText("");
+	await expect(badge(page)).toBeVisible();
+	await expect(bell(page)).toHaveAttribute("aria-label", "Nyt til dig, med noget du ikke har set");
+}
+
 test.describe("on a computer", () => {
 	test.use({viewport: {width: 1366, height: 768}});
 
@@ -46,12 +54,10 @@ test.describe("on a computer", () => {
 			await expect(bell(page)).toHaveAttribute("aria-label", "Nyt til dig, 2 nye");
 		}
 		await bell(first).click();
-		await expect(badge(first)).toBeHidden();
-		await expect(bell(first)).toHaveAttribute("aria-label", "Nyt til dig");
-		await expect(badge(second)).toBeHidden();
-		await expect(bell(second)).toHaveAttribute("aria-label", "Nyt til dig");
+		await onlyDot(first);
+		await onlyDot(second);
 		await second.reload();
-		await expect(bell(second)).toHaveAttribute("aria-label", "Nyt til dig");
+		await onlyDot(second);
 	});
 
 	test("opens a panel below the bell, with focus in it, which Escape and a click outside close", async ({page, context}) => {
@@ -98,6 +104,16 @@ test.describe("on a computer", () => {
 		await expect(page.locator(".news-line").nth(1).locator(".news-seen")).toHaveCount(0);
 	});
 
+	test("shows nothing, once everything in it is seen", async ({page, context}) => {
+		const watched = JSON.stringify({time: 0, duration: 4000, watched: true, updated: 1});
+		await viewer(context, {extra: {progress_503636: watched, progress_503616: watched}});
+		await page.goto("/");
+		await expect(page.locator("#favorites .tile")).toHaveCount(2);
+		await page.waitForTimeout(1000);
+		await expect(badge(page)).toBeHidden();
+		await expect(bell(page)).toHaveAttribute("aria-label", "Nyt til dig");
+	});
+
 	test("the first time, the number is 0, though there is something new", async ({page, context}) => {
 		await context.addInitScript(([show]) => {
 			if (!localStorage.getItem("favorites")) {
@@ -106,7 +122,8 @@ test.describe("on a computer", () => {
 		}, [SHOW] as const);
 		await page.goto("/");
 		await expect(page.locator(".shelf .tag-new")).toHaveText("2 nye afsnit");
-		await expect(badge(page)).toBeHidden();
+		// No number, but the dot, since there's something not seen yet
+		await onlyDot(page);
 		await bell(page).click();
 		await expect(page.locator(".news-panel .news-item")).toHaveCount(2);
 	});
@@ -147,7 +164,7 @@ test.describe("on a computer", () => {
 		await expect(page.locator(".news-panel .news-heading").nth(1)).toHaveText("Udløber snart");
 		await page.keyboard.press("Escape");
 		await page.reload();
-		await expect(badge(page)).toBeHidden();
+		await onlyDot(page);
 	});
 
 	test("without favourites, says what it's for", async ({page}) => {
@@ -248,10 +265,10 @@ test.describe("on a phone", () => {
 		await expect(page.getByRole("heading", {level: 1})).toHaveText("Nyt til dig");
 		await expect(page.locator("#news-page .news-item")).toHaveCount(2);
 		await expect(page.locator("#news-page .news-title").first()).toHaveText("Rejseholdet: S4 A2");
-		await expect(badge(page)).toBeHidden();
+		await onlyDot(page);
 		await expect(bell(page)).toHaveAttribute("aria-current", "page");
 		await page.goto("/");
-		await expect(badge(page)).toBeHidden();
+		await onlyDot(page);
 	});
 });
 

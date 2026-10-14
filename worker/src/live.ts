@@ -134,7 +134,7 @@ export interface PlannedProgramme {
 export function planFrom(channels: Channels, schedules: Record<string, Programme[]>, at = clock.now()): Record<string, PlannedProgramme[]> {
 	return Object.fromEntries(Object.entries(channels).map(([slug, channel]) => [slug, (schedules[channel.id] ?? [])
 		.filter(p => p.end > at)
-		.map(p => ({title: p.title, start: p.start, end: p.end, description: p.description.length > 280 ? p.description.slice(0, 279).trimEnd() + "…" : p.description}))]));
+		.map(p => ({title: p.title, start: p.start, end: p.end, description: p.description}))]));
 }
 
 /** The channel a live channel's address names, like DR2 for dr2, if any */

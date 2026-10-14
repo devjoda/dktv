@@ -142,8 +142,6 @@ def plan_from(channels: dict, schedules: dict[str, list[Programme]], at: Optiona
 
     def planned(p: Programme) -> dict:
         description = p.description or ""
-        if len(description) > 280:
-            description = description[:279].rstrip() + "…"
         return {
             "title": p.title,
             "start": round(p.start.timestamp() * 1000),

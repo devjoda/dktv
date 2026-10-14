@@ -334,6 +334,16 @@ h1, h2, h3 {
     text-align: center;
 }
 
+/* Something in it not seen yet, though nothing's new since it was opened */
+.bell-count.is-dot {
+    top: 2px;
+    right: 1px;
+    min-width: 0;
+    width: 11px;
+    height: 11px;
+    padding: 0;
+}
+
 .bell-link[aria-current] .bell-count,
 .bell-link[aria-expanded="true"] .bell-count {
     box-shadow: 0 0 0 2px var(--paper);
@@ -1041,8 +1051,9 @@ h1, h2, h3 {
     max-width: min(100%, 640px);
 }
 
+/* Over Bootstrap's [hidden], which has !important */
 .featured-bars[hidden] {
-    display: flex;
+    display: flex !important;
     visibility: hidden;
 }
 
@@ -1625,11 +1636,8 @@ a:hover .channel-art {
     font-size: var(--text-h3);
 }
 
+/* All of it, which DR's short description is already short enough for */
 .episode-desc {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
     max-width: 72ch;
     margin: 8px 0 0;
     color: var(--muted);
@@ -3126,10 +3134,6 @@ a:hover .channel-art {
 }
 
 .programme-desc {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
     margin: 8px 0 0;
     color: rgba(242, 239, 233, .78);
     font-size: .9375rem;

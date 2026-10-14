@@ -2,7 +2,7 @@ import {describe, expect, test} from "vitest";
 import {NotFound} from "../src/dr";
 import * as dr from "../src/models";
 import {buildSearchResult, search} from "../src/search";
-import {buildShow, getLongDescription, getProgram, getShow, MAX_SEASONS, newEpisodes, rssFeed, thumbnail} from "../src/show";
+import {buildShow, getLongDescription, getProgram, getShow, MAX_SEASONS, newEpisodes, rssFeed, thumbnail, wholeSentences} from "../src/show";
 import {clock, copenhagen, danishDate, danishDatetime, duration, isNew, isoTime, leavingLabel} from "../src/time";
 import {ctx, dr as fakeDR, load} from "./helpers";
 
@@ -256,6 +256,18 @@ describe("pictures and time", () => {
 		expect(isNew(Date.UTC(2026, 8, 20))).toBe(false);
 		expect(isNew(Date.UTC(2026, 9, 13))).toBe(false);
 		expect(isNew(undefined)).toBe(false);
+	});
+});
+
+describe("DR's cut-off short descriptions", () => {
+	test("end at their last whole sentence, when that leaves enough", () => {
+		expect(wholeSentences("Britisk portrætserie fra 2024. (From Roger Moore with Love) Han er kendt som Bond - James Bond. Men også som selvglad engelsk playboy i kultkrimiserien 'De uheldige helte' - og meget..."))
+			.toBe("Britisk portrætserie fra 2024. (From Roger Moore with Love) Han er kendt som Bond - James Bond.");
+		// Otherwise as they were, with an ellipsis of one character
+		expect(wholeSentences("Kort. Og så en meget lang sætning, der bliver ved og ved, indtil DR klipper den over midt i...")).toBe("Kort. Og så en meget lang sætning, der bliver ved og ved, indtil DR klipper den over midt i…");
+		// And the whole ones as they are
+		expect(wholeSentences("Hele beskrivelsen. Med to sætninger.")).toBe("Hele beskrivelsen. Med to sætninger.");
+		expect(wholeSentences("")).toBe("");
 	});
 });
 

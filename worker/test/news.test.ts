@@ -171,7 +171,7 @@ describe("the number", () => {
 		const season = Array.from({length: 10}, (_, i) => episode(String(i + 1), NOW - (i + 1) * DAY));
 		expect(news([favorite(NOW - 30 * DAY)], details({badehotellet_1: series(season)})).count).toBe(10);
 		// As updateBell shows it
-		const badge = {hidden: true, textContent: ""};
+		const badge = {hidden: true, textContent: "", dot: false, classList: {toggle(_: string, on: boolean) { badge.dot = on; }}};
 		const bell = {querySelector: () => badge, label: "", setAttribute(_: string, value: string) { this.label = value; }};
 		b.run("document").querySelectorAll = () => [bell];
 		b.storage.setItem("favoriteDetails", JSON.stringify(details({badehotellet_1: series(season)})));
@@ -180,6 +180,17 @@ describe("the number", () => {
 		expect(badge.textContent).toBe("9+");
 		expect(badge.hidden).toBe(false);
 		expect(bell.label).toBe("Nyt til dig, mere end 9 nye");
+		expect(badge.dot).toBe(false);
+		// Opened: no number, but a dot, as there's still something not seen
+		b.storage.setItem("newsSeen", String(NOW));
+		b.run("updateBell()");
+		expect([badge.hidden, badge.dot, badge.textContent, bell.label]).toEqual([false, true, "", "Nyt til dig, med noget du ikke har set"]);
+		// And nothing, once it's all seen
+		for (let i = 1; i <= 10; i++) {
+			b.storage.setItem(`progress_${i}`, JSON.stringify({time: 0, watched: true, updated: 1}));
+		}
+		b.run("updateBell()");
+		expect([badge.hidden, bell.label]).toEqual([true, "Nyt til dig"]);
 	});
 
 	test("a new favourite's episodes from before it was one don't count, but those after do", () => {

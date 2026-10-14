@@ -30,7 +30,7 @@ from .drtv import (
 )
 from . import live as live_tv
 from .live import channel_named, channel_style, get_channels, get_schedules, plan_from, whats_on
-from .show import Show, clock, danish_date, danish_datetime, duration, is_new, new_episodes, thumbnail
+from .show import Show, clock, danish_date, danish_datetime, duration, is_new, new_episodes, thumbnail, whole_sentences
 
 app = Quart(__name__)
 app.add_template_filter(thumbnail)
@@ -38,6 +38,7 @@ app.add_template_filter(danish_date)
 app.add_template_filter(danish_datetime)
 app.add_template_filter(duration)
 app.add_template_filter(clock)
+app.add_template_filter(whole_sentences)
 app.add_template_global(whats_on)
 app.add_template_global(channel_style)
 app.add_template_test(is_new, "new")
