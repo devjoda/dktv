@@ -48,6 +48,16 @@ def test_newest_of_adding_or_removing_a_favourite_wins():
     assert merged["removed_favorites"] == {}
 
 
+def test_when_the_bell_was_opened_is_the_latest_of_the_devices():
+    phone = sync.clean({"news_seen": 2000})
+    laptop = sync.clean({"news_seen": 5000})
+    assert sync.merge(phone, laptop)["news_seen"] == 5000
+    assert sync.merge(laptop, phone)["news_seen"] == 5000
+    assert sync.clean({})["news_seen"] == 0
+    assert sync.clean({"news_seen": "yesterday"})["news_seen"] == 0
+    assert sync.clean({"news_seen": -5})["news_seen"] == 0
+
+
 def test_favourite_films_stay_films():
     cleaned = sync.clean({"favorites": [{"id": "film_1", "kind": "film", "added": 1}, {"id": "show_2", "added": 2}, {"id": "x_3", "kind": "other", "added": 3}]})
     assert [f["kind"] for f in cleaned["favorites"]] == ["film", "show", "show"]

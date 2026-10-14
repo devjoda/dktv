@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Nyt til dig - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block content %}
+<div class="page-head wrap">
+    <h1>Nyt til dig</h1>
+</div>
+{# Filled in by news.js, from the viewer's favourites in their browser #}
+<div class="news-page wrap">
+    <div class="news js-news" id="news-page" data-full></div>
+    <noscript><p>Nyt til dig kræver JavaScript.</p></noscript>
+</div>
+{% endblock %}

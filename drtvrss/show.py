@@ -47,8 +47,11 @@ class Episode:
         wallpaper: Optional[str] = None,
         len_minutes: Optional[int] = None,
         geo_restricted: bool = False,
+        number: Optional[int] = None,
     ):
         self.title = title
+        # Its number in its season, as DR has it
+        self.number = number
         self.short_description = short_description
         self.description = ""
         self.url = url
@@ -62,10 +65,12 @@ class Episode:
 
 
 class Season:
-    def __init__(self, title: str, id: Optional[str] = None):
+    def __init__(self, title: str, id: Optional[str] = None, number: Optional[int] = None):
         self.title = title
         # DR's id for the season
         self.id = id
+        # Like 11, for "Sæson 11", if DR numbers it
+        self.number = number
         self.episodes = []
 
     def add_episode(self, episode: Episode):
@@ -204,12 +209,44 @@ def danish_datetime(d: datetime) -> str:
 NEW_FOR = timedelta(days=14)
 
 
+def current_time(tz: Optional[ZoneInfo] = None) -> datetime:
+    """Now, which tests can move"""
+    return datetime.now(tz=tz)
+
+
 def is_new(d: Optional[datetime]) -> bool:
     """Whether something came out within the last two weeks"""
     if d is None:
         return False
-    now = datetime.now(tz=COPENHAGEN) if d.tzinfo is not None else datetime.now()
+    now = current_time(COPENHAGEN) if d.tzinfo is not None else current_time()
     return timedelta(0) <= now - d <= NEW_FOR
+
+
+# How many of a series' newest episodes /favorites.json tells of
+NEWEST_EPISODES = 10
+
+
+def new_episodes(show: "Show") -> list[dict]:
+    """The series' episodes from the last two weeks, the newest first, for the viewer to hear of"""
+    found = []
+    for season in show.seasons:
+        for i, entry in enumerate(season.episodes):
+            if is_new(entry.pubdate):
+                found.append(
+                    {
+                        "id": entry.video_id,
+                        "title": entry.title,
+                        "season": season.number,
+                        "number": entry.number or i + 1,
+                        "url": f"/{show.url}/{entry.ep_link}",
+                        "published": round(entry.pubdate.timestamp() * 1000),
+                        "image": thumbnail(entry.wallpaper),
+                    }
+                )
+    # In the order they're watched in, and then the newest first, so those that came out together stay in order
+    found.reverse()
+    found.sort(key=lambda e: e["published"], reverse=True)
+    return found[:NEWEST_EPISODES]
 
 
 def duration(minutes: int) -> str:

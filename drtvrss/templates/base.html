@@ -23,6 +23,7 @@
         <script src="{{ static_url('sync.js') }}"></script>
         <script src="{{ static_url('ui.js') }}"></script>
         <script src="{{ static_url('account.js') }}"></script>
+        <script src="{{ static_url('news.js') }}"></script>
         {% block scripts %}{% endblock %}
     </head>
     <body class="{% block body_class %}{% endblock %}">
@@ -55,6 +56,8 @@
                     <button type="submit" class="search-submit" aria-label="Søg">{{ icon("search") }}</button>
                 </form>
                 <a class="search-link" href="/search/" aria-label="Søg"{% if path.startswith("/search/") %} aria-current="page"{% endif %}>{{ icon("search") }}</a>
+                {# What's new for the viewer: a panel on computers, and /nyt/ on phones, see news.js #}
+                <a class="bell-link js-bell" href="/nyt/" aria-label="Nyt til dig"{% if path.startswith("/nyt/") %} aria-current="page"{% endif %}>{{ icon("bell") }}<span class="bell-count" aria-hidden="true" hidden></span></a>
                 <a class="account-link" href="/sync/" aria-label="Din konto"{% if path.startswith("/sync/") %} aria-current="page"{% endif %}>{{ icon("user") }}</a>
             </div>
         </header>

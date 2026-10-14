@@ -432,6 +432,7 @@ window.addEventListener("pageshow", function () {
     setupListFilters();
     showContinueWatching();
     showFavorites();
+    refreshFavorites();
     updateFavoriteButtons();
     updatePlayButtons();
     setupSeasonTabs();

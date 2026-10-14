@@ -46,6 +46,7 @@ for (const width of [900, 1024, 1180, 1440]) {
 		}
 		await expect(page.getByRole("link", {name: "Søg"}).or(page.getByRole("search")).first()).toBeVisible();
 		await expect(page.getByRole("link", {name: "Din konto"}).first()).toBeVisible();
+		await expect(page.locator(".js-bell")).toBeInViewport({ratio: 1});
 	});
 }
 

@@ -385,6 +385,15 @@ ${icon("heart")}
 <noscript><p class="wrap">Favoritter kræver JavaScript.</p></noscript>`);
 }
 
+/** What's new for the viewer, which the bell in the header opens on phones: filled in by news.js */
+export function newsPage(site: Site): Html {
+	return layout(site, {title: "Nyt til dig"}, html`${pageHead("Nyt til dig")}
+<div class="news-page wrap">
+<div class="news js-news" id="news-page" data-full></div>
+<noscript><p>Nyt til dig kræver JavaScript.</p></noscript>
+</div>`);
+}
+
 /** The viewer's account, which is their sync code. Made to work by sync.js and account.js. */
 export function syncPage(site: Site): Html {
 	return layout(site, {title: "Din konto"}, html`<div class="sync-page wrap" id="sync-page">
@@ -469,7 +478,8 @@ export function privacyPage(site: Site): Html {
 <h2>I din browser</h2>
 <p>Det meste gemmes kun på din egen enhed, i browserens lager. Det forlader ikke enheden, medmindre du opretter en konto.</p>
 <ul>
-<li>Dine favoritter, og hvor langt du er nået i det, du ser.</li>
+<li>Dine favoritter, og hvor langt du er nået i det, du ser, og hvad serverens svar om dine favoritter sidst var, som nye afsnit, så det ikke skal hentes på hver side.</li>
+<li>Hvornår du sidst åbnede klokken, Nyt til dig, så den kun tæller det, der er kommet siden.</li>
 <li>Dine valg: undertekster til direkte TV, om sete afsnit skjules, afspillerens lydstyrke, hastighed og undertekster, og dit navn i Se sammen.</li>
 <li>Om du har valgt at markere intro og rulletekster, og dem, du selv har markeret.</li>
 <li>Din kode, hvis du har en konto.</li>
@@ -482,7 +492,7 @@ export function privacyPage(site: Site): Html {
 <h2>Hvis du har en konto</h2>
 <p>En konto er en kode. Den kræver hverken e-mail, navn eller adgangskode. Under koden gemmes på serveren:</p>
 <ul>
-<li>Dine favoritter, og hvor langt du er nået, så dine enheder kan dele dem.</li>
+<li>Dine favoritter, hvor langt du er nået, og hvornår du sidst åbnede klokken, så dine enheder kan dele dem.</li>
 <li>Dine adgangsnøgler, hvis du opretter nogen: nøglens offentlige del, og hvilken slags enhed den blev lavet på, som "Firefox på Android".</li>
 <li>Hvis du slår beskeder om nye afsnit til: den adresse, din browsers beskedtjeneste (som Googles, Mozillas eller Apples) har givet enheden, og hvilke af dine serier der skal følges. Beskederne er krypteret, så beskedtjenesten ikke kan læse dem.</li>
 <li>De intro og rulletekster, du markerer, og om du har fundet andres markeringer forkerte. Kun tidspunkterne i videoen.</li>

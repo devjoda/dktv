@@ -45,13 +45,27 @@ function localData() {
     } catch (error) {
         console.error("Could not read progress:", error);
     }
-    return {favorites: loadFavorites(), removed_favorites: loadRemovedFavorites(), progress};
+    let newsSeen = 0;
+    try {
+        newsSeen = Number(localStorage.getItem("newsSeen")) || 0;
+    } catch (error) {
+        // Then not
+    }
+    return {favorites: loadFavorites(), removed_favorites: loadRemovedFavorites(), progress, news_seen: newsSeen};
 }
 
 // Keeps what came back, except progress this device has newer since it sent its own
 function storeSynced(data) {
     storeFavorites(data.favorites);
     storeRemovedFavorites(data.removed_favorites);
+    // When the bell was last opened on any of the viewer's devices, see news.js
+    try {
+        if ((data.news_seen || 0) > (Number(localStorage.getItem("newsSeen")) || 0)) {
+            localStorage.setItem("newsSeen", String(data.news_seen));
+        }
+    } catch (error) {
+        // Then this device's own
+    }
     for (const [videoID, progress] of Object.entries(data.progress)) {
         const mine = loadProgress(videoID);
         if (mine == null || (progress.updated || 0) > (mine.updated || 0)) {
@@ -67,6 +81,9 @@ function refreshViewerData() {
     showFavorites();
     updateFavoriteButtons();
     updatePlayButtons();
+    if (typeof updateNews == "function") {
+        updateNews();
+    }
 }
 
 let syncTimer = null;

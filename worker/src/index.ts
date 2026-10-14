@@ -9,7 +9,7 @@ import {getCategories, getList, getPage} from "./discover";
 import {Budget, type Ctx, DRUnavailable, type Env, NotFound, OverBudget} from "./dr";
 import {channelNamed, getChannels, getSchedules, planFrom} from "./live";
 import {search} from "./search";
-import {allEpisodes, getLongDescription, getProgram, getShow, itemId, rssFeed, type Show, thumbnail} from "./show";
+import {allEpisodes, getLongDescription, getProgram, getShow, itemId, newEpisodes, rssFeed, type Show, thumbnail} from "./show";
 import * as passkeys from "./passkeys";
 import * as segments from "./segments";
 import {isRoomId, newRoomId} from "./room";
@@ -222,6 +222,8 @@ app.get("/live/:channel", edgeCached(2 * MINUTE), async c => {
 
 app.get("/favoritter/", edgeCached(60 * MINUTE), c => render(c, pages.favoritesPage(site(c))));
 
+app.get("/nyt/", edgeCached(60 * MINUTE), c => render(c, pages.newsPage(site(c))));
+
 app.get("/sync/", edgeCached(60 * MINUTE), c => render(c, pages.syncPage(site(c))));
 
 app.get("/privatliv/", edgeCached(60 * MINUTE), c => render(c, pages.privacyPage(site(c))));
@@ -286,6 +288,8 @@ app.get("/favorites.json", async c => {
 				episodes: episodes.length,
 				episode_ids: episodes.map(e => e.videoId),
 				new: episodes.length > 0 && isNew(episodes.at(-1)!.pubdate),
+				// For "Nyt til dig", from the series as it's kept, without asking DR for more
+				new_episodes: newEpisodes(show),
 				expires: show.expires ?? null,
 			};
 		}),
