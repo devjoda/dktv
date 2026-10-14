@@ -269,10 +269,11 @@ h1, h2, h3 {
 }
 
 /* What's new for the viewer, and their account, at the end of the header */
+/* Close to the account, as a pair of buttons */
 .bell-link {
     position: relative;
     display: grid;
-    margin: 0 -12px 0 auto;
+    margin: 0 -16px 0 auto;
 }
 
 .account-link {
@@ -685,6 +686,15 @@ h1, h2, h3 {
 @media (min-width: 900px) {
     .search-link {
         display: grid;
+    }
+
+    /* The sections never give way; the search box does, and the round buttons sit close together */
+    .site-nav {
+        flex: 1 0 auto;
+    }
+
+    .search-link {
+        margin-right: -16px;
     }
 
     .bell-link {
