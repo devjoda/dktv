@@ -51,8 +51,8 @@ export interface SyncData {
 	favorites: Favorite[];
 	removed_favorites: Record<string, number>;
 	progress: Record<string, Progress>;
-	// When the viewer last looked at what's new for them, under the bell, in milliseconds, or 0
-	news_seen: number;
+	// When the viewer last emptied the list of what's new for them, under the bell, in milliseconds, or 0
+	news_cleared: number;
 }
 
 export function newCode(): string {
@@ -67,7 +67,7 @@ export function normalizeCode(code: string): string | undefined {
 }
 
 export function empty(): SyncData {
-	return {favorites: [], removed_favorites: {}, progress: {}, news_seen: 0};
+	return {favorites: [], removed_favorites: {}, progress: {}, news_cleared: 0};
 }
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
@@ -135,7 +135,7 @@ export function clean(data: unknown): SyncData {
 			};
 		}
 	}
-	return {favorites, removed_favorites: removed, progress, news_seen: Math.max(0, number(data.news_seen) ?? 0)};
+	return {favorites, removed_favorites: removed, progress, news_cleared: Math.max(0, number(data.news_cleared) ?? 0)};
 }
 
 export function merge(a: SyncData, b: SyncData): SyncData {
@@ -174,7 +174,7 @@ export function merge(a: SyncData, b: SyncData): SyncData {
 			removed[showId] = when;
 		}
 	}
-	return {favorites, removed_favorites: removed, progress, news_seen: Math.max(a.news_seen, b.news_seen)};
+	return {favorites, removed_favorites: removed, progress, news_cleared: Math.max(a.news_cleared, b.news_cleared)};
 }
 
 const seconds = () => Date.now() / 1000;

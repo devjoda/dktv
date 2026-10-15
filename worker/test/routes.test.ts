@@ -388,7 +388,7 @@ describe("an episode", () => {
 		expect(r.text).toContain('<a class="episode-link episode-next" href="/rejseholdet_503605/rejseholdet_503640" data-video-id="503640" rel="next">');
 		expect(r.text).toContain('<span class="episode-name">2. episode</span>');
 		expect(r.text).toContain('data-next-url="/rejseholdet_503605/rejseholdet_503640"');
-		// What it saves about the video, to list it under "Fortsæt med at se"
+		// What it saves about the video, to list it under "Se videre"
 		expect(r.text).toContain('data-title="1. episode"');
 		expect(r.text).toContain('data-show="Rejseholdet"');
 		expect(r.text).toContain('data-image="https://');
@@ -604,22 +604,20 @@ describe("categories and lists", () => {
 });
 
 describe("favourites", () => {
-	test("their page, shows first and films below", async () => {
+	test("their page, series and films together in one grid", async () => {
 		const r = await get("/favoritter/");
 		expect(r.status).toBe(200);
-		const shows = r.text.indexOf('<section class="results" id="favorite-shows" data-favorites="show"');
-		const films = r.text.indexOf('<section class="results" id="favorite-films" data-favorites="film"');
-		expect(shows).toBeGreaterThan(0);
-		expect(shows).toBeLessThan(films);
-		expect(r.text).toContain('<section class="results" id="continue-watching" aria-labelledby="continue-title" hidden>');
-		// Films and single programmes, like a documentary or a concert, which don't get new episodes
-		expect(r.text).toContain('<h2 class="section-title" id="favorite-films-title">Film og programmer</h2>');
+		const grid = r.text.indexOf('<section class="results" id="favorite-list" data-favorites="all" aria-label="Dine favoritter" hidden>');
+		expect(grid).toBeGreaterThan(0);
+		expect(r.text.match(/data-favorites=/g)).toHaveLength(1);
+		// Se videre is on the front page
+		expect(r.text).not.toContain('id="continue-watching"');
 		// The filters, which favorites.js shows when there are enough of more than one kind, before the favourites
 		const filters = between(r.text, '<div class="favorite-filters wrap js-favorite-filters" role="group" aria-label="Vis" hidden>', "</div>");
 		expect([...filters.matchAll(/data-filter="(\w+)" aria-pressed="(\w+)">([^<]+)</g)].map(m => [m[1], m[2], m[3].trim()])).toEqual([
-			["alle", "true", "Alle"], ["serier", "false", "Serier"], ["film", "false", "Film og programmer"], ["dokumentar", "false", "Dokumentar"],
+			["alle", "true", "Alle"], ["serier", "false", "Serier"], ["film", "false", "Film"], ["dokumentar", "false", "Dokumentar"],
 		]);
-		expect(r.text.indexOf("js-favorite-filters")).toBeLessThan(shows);
+		expect(r.text.indexOf("js-favorite-filters")).toBeLessThan(grid);
 		// The same page, whatever filter the address has, which only the browser reads
 		expect((await get("/favoritter/?vis=dokumentar")).text).toBe(r.text);
 	});

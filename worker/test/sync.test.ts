@@ -26,15 +26,15 @@ describe("codes", () => {
 });
 
 describe("merging", () => {
-	test("when the bell was last opened is the latest of the devices', inside what's kept, so it needs no new table", () => {
-		const phone = sync.clean({news_seen: 2000});
-		const laptop = sync.clean({news_seen: 5000});
-		expect(sync.merge(phone, laptop).news_seen).toBe(5000);
-		expect(sync.merge(laptop, phone).news_seen).toBe(5000);
+	test("when the bell's list was last emptied is the latest of the devices', inside what's kept, so it needs no new table", () => {
+		const phone = sync.clean({news_cleared: 2000});
+		const laptop = sync.clean({news_cleared: 5000});
+		expect(sync.merge(phone, laptop).news_cleared).toBe(5000);
+		expect(sync.merge(laptop, phone).news_cleared).toBe(5000);
 		// From devices before it, or nonsense
-		expect(sync.clean({}).news_seen).toBe(0);
-		expect(sync.clean({news_seen: "yesterday"}).news_seen).toBe(0);
-		expect(sync.clean({news_seen: -5}).news_seen).toBe(0);
+		expect(sync.clean({}).news_cleared).toBe(0);
+		expect(sync.clean({news_cleared: "yesterday"}).news_cleared).toBe(0);
+		expect(sync.clean({news_cleared: -5}).news_cleared).toBe(0);
 	});
 
 	test("the newest progress wins", () => {
@@ -95,7 +95,7 @@ describe("syncing", () => {
 		expect(r.status).toBe(201);
 		const code = JSON.parse(r.text).code;
 
-		const phone = {favorites: [{id: "matador_540736", title: "Matador", added: 100}], progress: {"503615": progress(600, 1000)}, news_seen: 3000};
+		const phone = {favorites: [{id: "matador_540736", title: "Matador", added: 100}], progress: {"503615": progress(600, 1000)}, news_cleared: 3000};
 		const fromPhone = await post(`/sync/${code}`, phone);
 		expect(fromPhone.status).toBe(200);
 		expect(JSON.parse(fromPhone.text).favorites[0].id).toBe("matador_540736");
@@ -106,8 +106,8 @@ describe("syncing", () => {
 		expect(merged.favorites.map((f: {id: string}) => f.id)).toEqual(["matador_540736"]);
 		expect(merged.progress["503615"].time).toBe(1200);
 		expect(Object.keys(merged.progress).sort()).toEqual(["503615", "503640"]);
-		// The laptop hears when the phone last opened the bell
-		expect(merged.news_seen).toBe(3000);
+		// The laptop hears when the phone last emptied the bell's list
+		expect(merged.news_cleared).toBe(3000);
 
 		expect((await request(`/sync/${code}`, {method: "DELETE"})).status).toBe(204);
 		expect((await post(`/sync/${code}`, phone)).status).toBe(404);

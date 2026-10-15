@@ -102,7 +102,7 @@ async function subscribeToPush(key) {
     }
     let timer;
     const timeout = new Promise(function (_, reject) {
-        timer = setTimeout(() => reject(new Error("Browseren kunne ikke slå beskeder til. Nogle browsere skal have deres beskedtjeneste slået til først.")), SUBSCRIBE_TIMEOUT);
+        timer = setTimeout(() => reject(new Error("Browseren kunne ikke slå notifikationer til. Nogle browsere skal have deres beskedtjeneste slået til først.")), SUBSCRIBE_TIMEOUT);
     });
     try {
         return await Promise.race([registration.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: fromBase64url(key)}), timeout]);
@@ -128,17 +128,17 @@ async function alertsOn() {
 async function enableAlerts() {
     const {push} = await features();
     if (!push || !pushSupported()) {
-        throw new Error("Denne browser kan ikke få beskeder.");
+        throw new Error("Denne browser kan ikke få notifikationer.");
     }
     if (await Notification.requestPermission() != "granted") {
-        throw new Error("Beskeder er ikke tilladt for siden. Du kan tillade dem i browserens indstillinger.");
+        throw new Error("Notifikationer er ikke tilladt for siden. Du kan tillade dem i browserens indstillinger.");
     }
     const code = await ensureAccount();
     const subscription = await subscribeToPush(push);
     await ask(`/push/${code}`, "POST", subscription.toJSON());
     store("alerts", code);
     store("alertsSent", String(Date.now()));
-    announce("Du får nu besked om nye afsnit");
+    announce("Du får nu notifikationer om nye afsnit");
 }
 
 async function disableAlerts() {
@@ -172,48 +172,6 @@ async function refreshAlerts() {
     } catch (error) {
         console.error("Could not renew the notifications:", error);
     }
-}
-
-// What turning notifications on means, in the viewer's words: without an account, it makes one, since the site
-// needs to know which series to tell them about
-function alertsExplained() {
-    const what = "Få en besked, når en af dine favoritserier får et nyt afsnit, også når siden er lukket.";
-    return syncCode() == null ? `${what} Det opretter en konto til dig, uden e-mail og adgangskode, så siden ved, hvilke serier du følger.` : what;
-}
-
-// Offers notifications once, after the viewer makes a series a favourite, or on the favourites page.
-// Says what turning them on means: the favourites are kept on the server.
-async function offerAlerts(after) {
-    if (stored("alertsOffered") || !loadFavorites().some(f => (f.kind || "show") == "show")) {
-        return;
-    }
-    const {push} = await features();
-    if (!push || !pushSupported() || await alertsOn() || document.querySelector(".alerts-offer")) {
-        return;
-    }
-    const enable = element("button", {type: "button", class: "button button-primary"}, icon("bell"), " Slå beskeder til");
-    const dismiss = element("button", {type: "button", class: "button button-quiet"}, "Nej tak");
-    const offer = element("section", {class: "alerts-offer", "aria-label": "Beskeder om nye afsnit"},
-        element("div", {class: "alerts-offer-text"},
-            element("h2", {}, "Vil du have besked om nye afsnit?"),
-            element("p", {}, alertsExplained())),
-        element("div", {class: "actions"}, enable, dismiss));
-    const close = function () {
-        store("alertsOffered", String(Date.now()));
-        offer.remove();
-    };
-    enable.addEventListener("click", async function () {
-        enable.disabled = true;
-        try {
-            await enableAlerts();
-            close();
-        } catch (error) {
-            enable.disabled = false;
-            announce(error.message);
-        }
-    });
-    dismiss.addEventListener("click", close);
-    after.after(offer);
 }
 
 // Passkeys
@@ -289,6 +247,10 @@ function contributes() {
     return stored("contribute") == "true" && syncCode() != null;
 }
 
+// What the account page says of notifications, which are the bell's news on the device, for when the site is closed
+const ALERTS_OFF = "Klokken viser altid nye afsnit her på siden. Slå notifikationer til for også at få dem på denne enhed, når siden er lukket.";
+const ALERTS_ON = "Denne enhed får en notifikation, når en af dine favoritserier får et nyt afsnit, også når siden er lukket.";
+
 async function setupAccountPage() {
     const page = document.getElementById("sync-page");
     if (page == null || page.dataset.accountReady) {
@@ -334,17 +296,17 @@ async function setupAccountPage() {
         alertsButton.hidden = needsHomeScreen();
         const on = await alertsOn();
         alertsButton.setAttribute("aria-pressed", String(on));
-        alertsButton.lastChild.textContent = on ? " Slå beskeder fra" : " Slå beskeder til";
+        alertsButton.lastChild.textContent = on ? " Slå notifikationer fra" : " Slå notifikationer til";
         find(".js-alerts-status").textContent = on
-            ? "Denne enhed får en besked, når en af dine favoritserier får et nyt afsnit."
-            : "Få en besked på denne enhed, når en af dine favoritserier får et nyt afsnit.";
+            ? ALERTS_ON
+            : ALERTS_OFF;
     };
     alertsButton.addEventListener("click", async function () {
         alertsButton.disabled = true;
         try {
             if (await alertsOn()) {
                 await disableAlerts();
-                announce("Beskeder er slået fra på denne enhed");
+                announce("Notifikationer er slået fra på denne enhed");
             } else {
                 await enableAlerts();
             }
@@ -428,19 +390,7 @@ async function setupAccountPage() {
     renderContribute();
 }
 
-document.addEventListener("click", function (event) {
-    // After making a series a favourite with its big button
-    const button = event.target.closest(".js-favorite:not(.tile-action)");
-    if (button && button.dataset.kind != "film" && button.getAttribute("aria-pressed") == "true") {
-        offerAlerts(button.closest(".actions") || button);
-    }
-});
-
 window.addEventListener("pageshow", function () {
     refreshAlerts();
     setupAccountPage();
-    const favorites = document.getElementById("favorite-shows");
-    if (favorites) {
-        offerAlerts(document.querySelector(".page-head"));
-    }
 });

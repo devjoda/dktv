@@ -8,7 +8,7 @@ import {allEpisodes, type Episode, type Program, type Show, thumbnail, wholeSent
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
 import {layout, LIBRARIES, LIVE_SCRIPTS, MAIN_CATEGORIES, type Site, VIDEO_SCRIPTS} from "./layout";
-import {cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, PROGRESS_BAR, searchField, SEEN_MARK, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
+import {cardFavorite, cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, PROGRESS_BAR, searchField, SEEN_MARK, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
 
 type Schedules = Record<string, Programme[]>;
 
@@ -37,7 +37,7 @@ ${each(featured, (c, i) => html`<div class="hero-slide" id="featured-${i + 1}"${
 ${c.tagline || c.description ? html`<p class="hero-text">${c.tagline || c.description}</p>` : ""}
 <div class="actions">
 <a class="button button-primary" href="${c.episodeURL || c.url}">${icon("play")} ${c.live ? "Se direkte" : "Se nu"}</a>
-${c.showId ? favoriteButton(c.showId, c.title, c.image) : ""}
+${cardFavorite(c)}
 </div>
 </div>
 </div>
@@ -61,11 +61,11 @@ export function indexPage(site: Site, {page, featured, shows, channels, schedule
 	}, html`<h1 class="visually-hidden">Forside</h1>
 ${featured.length ? featuredSlides(featured) : html`<section class="intro wrap">
 <h2>Serier, film og direkte TV</h2>
-<p>Fortsæt hvor du slap, saml dine yndlingsserier, og abonnér på dem med RSS.</p>
+<p>Se videre, hvor du slap, saml dine yndlingsserier, og abonnér på dem med RSS.</p>
 ${searchField()}
 </section>`}
 <section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>
-${shelfHead("Fortsæt med at se", "continue-title", "/favoritter/#continue-watching", true)}
+${shelfHead("Se videre", "continue-title")}
 <div class="shelf-track js-tiles"></div>
 </section>
 <section class="shelf" id="leaving-soon" aria-labelledby="leaving-title" hidden>
@@ -359,37 +359,24 @@ export function listPage(site: Site, {title, cards}: {title: string; cards: Card
 <div class="tile-grid results">${each(cards, cardTile)}</div>`);
 }
 
-/** Filled in by favorites.js and progress.js, from the viewer's browser */
 /** The favourites page's filter, which favorites.js shows once there are enough favourites of more than one kind */
 function favoriteFilters(): Html {
 	return html`<div class="favorite-filters wrap js-favorite-filters" role="group" aria-label="Vis" hidden>
-${each([["alle", "Alle"], ["serier", "Serier"], ["film", "Film og programmer"], ["dokumentar", "Dokumentar"]], ([filter, name]) =>
+${each([["alle", "Alle"], ["serier", "Serier"], ["film", "Film"], ["dokumentar", "Dokumentar"]], ([filter, name]) =>
 	html`<button type="button" class="filter-button" data-filter="${filter}" aria-pressed="${filter == "alle" ? "true" : "false"}">${name} <span class="filter-count"></span></button>
 `)}</div>
 <p class="shelf-empty js-filter-empty" hidden>${icon("heart")}<span class="js-filter-empty-text"></span></p>`;
 }
 
+/** The viewer's favourites, series and films together, filled in by favorites.js and progress.js from their browser */
 export function favoritesPage(site: Site): Html {
 	return layout(site, {title: "Favoritter"}, html`${pageHead("Favoritter")}
 ${favoriteFilters()}
-<section class="results" id="favorite-shows" data-favorites="show" aria-labelledby="favorite-shows-title" hidden>
-<h2 class="section-title" id="favorite-shows-title">Serier</h2>
+<section class="results" id="favorite-list" data-favorites="all" aria-label="Dine favoritter" hidden>
 <p class="shelf-empty js-favorites-empty">
 ${icon("heart")}
-<span>Tryk på <strong>Favorit</strong> på en serie, så samles dine serier her. De gemmes i din browser, og du kan <a href="/sync/">synkronisere dem mellem dine enheder</a>.</span>
+<span>Tryk på <strong>Favorit</strong> på en serie eller film, så samles de her. De gemmes i din browser, og du kan <a href="/sync/">synkronisere dem mellem dine enheder</a>.</span>
 </p>
-<div class="tile-grid js-tiles"></div>
-</section>
-<section class="results" id="favorite-films" data-favorites="film" aria-labelledby="favorite-films-title" hidden>
-<h2 class="section-title" id="favorite-films-title">Film og programmer</h2>
-<p class="shelf-empty js-favorites-empty">
-${icon("heart")}
-<span>Tryk på <strong>Favorit</strong> på en film eller et program, som en dokumentar eller en koncert, så den er her, når du vil se den.</span>
-</p>
-<div class="tile-grid js-tiles"></div>
-</section>
-<section class="results" id="continue-watching" aria-labelledby="continue-title" hidden>
-<h2 class="section-title" id="continue-title">Fortsæt med at se</h2>
 <div class="tile-grid js-tiles"></div>
 </section>
 <noscript><p class="wrap">Favoritter kræver JavaScript.</p></noscript>`);
@@ -408,7 +395,7 @@ export function newsPage(site: Site): Html {
 export function syncPage(site: Site): Html {
 	return layout(site, {title: "Din konto"}, html`<div class="sync-page wrap" id="sync-page">
 <h1>Din konto</h1>
-<p class="sync-intro">Med en konto har du de samme favoritter på din telefon, computer og TV, og du kan fortsætte, hvor du slap. Den kræver hverken e-mail eller adgangskode.</p>
+<p class="sync-intro">Med en konto har du de samme favoritter på din telefon, computer og TV, og du kan se videre, hvor du slap. Den kræver hverken e-mail eller adgangskode.</p>
 <div class="sync-options js-sync-off" hidden>
 <section class="sync-option" aria-labelledby="sync-new">
 <h2 id="sync-new">Ny konto</h2>
@@ -439,11 +426,11 @@ export function syncPage(site: Site): Html {
 </div>
 </section>
 <section class="account-section js-alerts" aria-labelledby="alerts-title" hidden>
-<h2 id="alerts-title">Beskeder om nye afsnit</h2>
-<p class="js-alerts-status">Få en besked på denne enhed, når en af dine favoritserier får et nyt afsnit.</p>
-<p class="js-alerts-home-screen" hidden>På iPhone og iPad skal siden først føjes til hjemmeskærmen: tryk på Del og derefter Føj til hjemmeskærm. Åbn den så derfra, og slå beskeder til her.</p>
+<h2 id="alerts-title">Notifikationer på denne enhed</h2>
+<p class="js-alerts-status">Klokken viser altid nye afsnit her på siden. Slå notifikationer til for også at få dem på denne enhed, når siden er lukket.</p>
+<p class="js-alerts-home-screen" hidden>På iPhone og iPad skal siden først føjes til hjemmeskærmen: tryk på Del og derefter Føj til hjemmeskærm. Åbn den så derfra, og slå notifikationer til her.</p>
 <div class="actions">
-<button type="button" class="button button-primary js-alerts-toggle" aria-pressed="false">${icon("bell")}<span> Slå beskeder til</span></button>
+<button type="button" class="button button-primary js-alerts-toggle" aria-pressed="false">${icon("bell")}<span> Slå notifikationer til</span></button>
 </div>
 </section>
 <section class="account-section js-passkeys" aria-labelledby="passkeys-title" hidden>
@@ -465,7 +452,7 @@ export function syncPage(site: Site): Html {
 </div>
 <section class="account-confirm js-sync-delete-confirm" role="alertdialog" aria-labelledby="delete-title" aria-describedby="delete-text" tabindex="-1" hidden>
 <h2 id="delete-title">Slet din konto?</h2>
-<p id="delete-text">Dine favoritter, hvor langt du er nået, dine beskeder, adgangsnøgler og markeringer af intro og rulletekster slettes fra serveren. Det kan ikke fortrydes, og koden kan ikke bruges igen. Det, der er gemt på denne enhed, bliver her.</p>
+<p id="delete-text">Dine favoritter, hvor langt du er nået, dine notifikationer, adgangsnøgler og markeringer af intro og rulletekster slettes fra serveren. Det kan ikke fortrydes, og koden kan ikke bruges igen. Det, der er gemt på denne enhed, bliver her.</p>
 <label class="switch"><input type="checkbox" class="js-sync-delete-sure"><span>Jeg forstår, at kontoen ikke kan gendannes</span></label>
 <div class="actions">
 <button type="button" class="button button-primary js-sync-delete-yes" disabled>Slet kontoen for altid</button>
@@ -479,7 +466,7 @@ export function syncPage(site: Site): Html {
 <label class="switch"><input type="checkbox" class="js-autoplay-toggle" checked><span>Afspil næste afsnit automatisk</span></label>
 </section>
 <p class="sync-error js-sync-error" role="alert" hidden></p>
-<p class="sync-privacy">Din konto er koden. Under den gemmes dine favoritter, hvor langt du er nået i hvert afsnit, og hvilke af dine enheder der får beskeder. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en konto gemmes de kun i din browser.</p>
+<p class="sync-privacy">Din konto er koden. Under den gemmes dine favoritter, hvor langt du er nået i hvert afsnit, og hvilke af dine enheder der får notifikationer. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en konto gemmes de kun i din browser.</p>
 <noscript><p>Din konto kræver JavaScript.</p></noscript>
 </div>`);
 }
@@ -494,7 +481,7 @@ export function privacyPage(site: Site): Html {
 <p>Det meste gemmes kun på din egen enhed, i browserens lager. Det forlader ikke enheden, medmindre du opretter en konto.</p>
 <ul>
 <li>Dine favoritter, og hvor langt du er nået i det, du ser, og hvad serverens svar om dine favoritter sidst var, som nye afsnit, så det ikke skal hentes på hver side.</li>
-<li>Hvornår du sidst åbnede klokken, Nyt til dig, så den kun tæller det, der er kommet siden.</li>
+<li>Hvilke afsnit du har åbnet fra klokken, Nyt til dig, og hvornår du sidst ryddede den, så den kun viser det, du ikke har set.</li>
 <li>Dine valg: om næste afsnit afspilles automatisk, undertekster til direkte TV, om sete afsnit skjules, afspillerens lydstyrke, hastighed og undertekster, og dit navn i Se sammen.</li>
 <li>Om du har valgt at markere intro og rulletekster, og dem, du selv har markeret.</li>
 <li>Din kode, hvis du har en konto.</li>
@@ -507,9 +494,9 @@ export function privacyPage(site: Site): Html {
 <h2>Hvis du har en konto</h2>
 <p>En konto er en kode. Den kræver hverken e-mail, navn eller adgangskode. Under koden gemmes på serveren:</p>
 <ul>
-<li>Dine favoritter, hvor langt du er nået, og hvornår du sidst åbnede klokken, så dine enheder kan dele dem.</li>
+<li>Dine favoritter, hvor langt du er nået, og hvornår du sidst ryddede klokken, så dine enheder kan dele dem.</li>
 <li>Dine adgangsnøgler, hvis du opretter nogen: nøglens offentlige del, og hvilken slags enhed den blev lavet på, som "Firefox på Android".</li>
-<li>Hvis du slår beskeder om nye afsnit til: den adresse, din browsers beskedtjeneste (som Googles, Mozillas eller Apples) har givet enheden, og hvilke af dine serier der skal følges. Beskederne er krypteret, så beskedtjenesten ikke kan læse dem.</li>
+<li>Hvis du slår notifikationer om nye afsnit til: den adresse, din browsers beskedtjeneste (som Googles, Mozillas eller Apples) har givet enheden, og hvilke af dine serier der skal følges. Notifikationerne er krypteret, så beskedtjenesten ikke kan læse dem.</li>
 <li>De intro og rulletekster, du markerer, og om du har fundet andres markeringer forkerte. Kun tidspunkterne i videoen.</li>
 </ul>
 <p>Det gemmes, indtil du sletter kontoen. Det kan du gøre under <a href="/sync/">Din konto</a>, og så slettes alt, der hører til koden.</p>

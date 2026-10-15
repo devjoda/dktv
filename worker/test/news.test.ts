@@ -81,32 +81,33 @@ beforeEach(() => {
 	b = browser();
 });
 
-/** What the bell has to say, at now: its lines, and how many are new since it was opened */
+/** What the bell has to say, at now: its lines, what's leaving, and its number */
 function news(favorites: unknown[], details: unknown, now = NOW) {
 	b.storage.setItem("favorites", JSON.stringify(favorites));
 	const lines = b.run(`newsLines(loadFavorites(), ${JSON.stringify(details)}, ${now})`);
 	const leaving = b.run(`leavingNews(loadFavorites(), ${JSON.stringify(details)}, ${now})`);
-	const {seen, since} = b.run(`newsTimes(${now})`);
-	return {lines, leaving, count: b.run(`newsCount(${JSON.stringify(lines)}, ${JSON.stringify(leaving)}, ${seen}, ${since})`)};
+	return {lines, leaving, count: lines.length + leaving.length};
 }
 
 const details = (shows: Record<string, unknown>, films: Record<string, unknown> = {}) =>
 	({at: NOW, shows, films, pending: {shows: [], films: []}});
+
+const watched = (id: string, extra: Record<string, unknown> = {}) =>
+	b.storage.setItem(`progress_${id}`, JSON.stringify({time: 0, watched: true, updated: 1, ...extra}));
 
 describe("the lines", () => {
 	test("a whole season at once is one line", () => {
 		const season = Array.from({length: 8}, (_, i) => episode(String(8 - i), NOW - DAY - i * 1000));
 		const {lines} = news([favorite(0)], details({badehotellet_1: series(season)}));
 		expect(lines).toHaveLength(1);
-		expect(lines[0].title).toBe("Badehotellet: 8 nye afsnit");
+		expect([lines[0].show, lines[0].title, lines[0].label]).toEqual(["Badehotellet", "8 nye afsnit", null]);
 		// To the first of them, as none are seen
 		expect(lines[0].url).toBe("/badehotellet_1/afsnit_1");
-		expect(lines[0].seen).toBe(false);
 	});
 
-	test("one episode says which, and each day has a line of its own, the newest first", () => {
+	test("one episode says its name and which it is, and each day has a line of its own, the newest first", () => {
 		const {lines} = news([favorite(0)], details({badehotellet_1: series([episode("3", NOW - DAY), episode("2", NOW - 3 * DAY)])}));
-		expect(lines.map((l: any) => l.title)).toEqual(["Badehotellet: S11 A3", "Badehotellet: S11 A2"]);
+		expect(lines.map((l: any) => [l.show, l.title, l.label])).toEqual([["Badehotellet", "Afsnit 3", "S11 E3"], ["Badehotellet", "Afsnit 2", "S11 E2"]]);
 		expect(lines[0].image).toBe("https://example.com/3.jpg");
 		expect(b.run(`daysAgo(${NOW - DAY}, ${NOW})`)).toBe("i går");
 		expect(b.run(`daysAgo(${NOW}, ${NOW})`)).toBe("i dag");
@@ -118,120 +119,69 @@ describe("the lines", () => {
 		expect(lines).toEqual([]);
 	});
 
-	test("lead to the first episode not seen, and say Set when all are", () => {
+	test("only have what the viewer hasn't seen, started or opened from the bell", () => {
 		const season = [episode("3", NOW - DAY + 2), episode("2", NOW - DAY + 1), episode("1", NOW - DAY)];
-		b.storage.setItem("progress_1", JSON.stringify({time: 0, watched: true, updated: 1}));
+		watched("1");
 		let {lines} = news([favorite(0)], details({badehotellet_1: series(season)}));
-		expect(lines[0].url).toBe("/badehotellet_1/afsnit_2");
-		expect(lines[0].seen).toBe(false);
-		b.storage.setItem("progress_2", JSON.stringify({time: 0, watched: true, updated: 1}));
-		b.storage.setItem("progress_3", JSON.stringify({time: 0, watched: true, updated: 1}));
+		expect([lines[0].title, lines[0].url]).toEqual(["2 nye afsnit", "/badehotellet_1/afsnit_2"]);
+		// Started
+		b.storage.setItem("progress_2", JSON.stringify({time: 120, duration: 2400, watched: false, updated: 1}));
 		({lines} = news([favorite(0)], details({badehotellet_1: series(season)})));
-		// Still there, as seen, leading to the first of them
-		expect(lines).toHaveLength(1);
-		expect(lines[0].seen).toBe(true);
-		expect(lines[0].url).toBe("/badehotellet_1/afsnit_1");
+		expect([lines[0].title, lines[0].label, lines[0].url]).toEqual(["Afsnit 3", "S11 E3", "/badehotellet_1/afsnit_3"]);
+		// Opened from the bell
+		b.run(`Date.now = () => ${NOW}`);
+		b.run(`markNewsOpened("3")`);
+		expect(news([favorite(0)], details({badehotellet_1: series(season)})).lines).toEqual([]);
 	});
 
 	test("favourites leaving within a week say when, as the rest of the site does", () => {
+		b.run(`Date.now = () => ${NOW}`);
 		const {leaving} = news([favorite(0), favorite(0, "en-film_2", "film")], details(
 			{badehotellet_1: series([], {expires: NOW + 3 * DAY})},
 			{"en-film_2": {title: "En film", url: "/program/en-film_2", image: null, minutes: 90, expires: NOW + 20 * DAY}},
 		));
 		expect(leaving.map((l: any) => [l.title, l.label])).toEqual([["Badehotellet", "Udløber om 3 dage"]]);
 	});
+
+	test("\"Ryd alle\" empties it of what's there, but not of what comes after", () => {
+		const leavingSoon = {expires: NOW + 3 * DAY};
+		const before = details({badehotellet_1: series([episode("3", NOW - DAY), episode("2", NOW - 2 * DAY)], leavingSoon)});
+		expect(news([favorite(0)], before).count).toBe(3);
+		b.run(`Date.now = () => ${NOW}`);
+		b.run("scheduleSync = () => {}");
+		b.run("clearNews()");
+		expect(b.storage.getItem("newsCleared")).toBe(String(NOW));
+		expect(news([favorite(0)], before).count).toBe(0);
+		// An episode heard of since, though DR dates it from before
+		const after = details({badehotellet_1: series([episode("4", NOW - DAY / 2, {known: NOW + 1000}), episode("3", NOW - DAY)], leavingSoon)});
+		expect(news([favorite(0)], after, NOW + 2000).lines.map((l: any) => l.title)).toEqual(["Afsnit 4"]);
+	});
 });
 
 describe("the number", () => {
-	test("is 0 the first time, whatever there is", () => {
-		const season = Array.from({length: 12}, (_, i) => episode(String(i + 1), NOW - (i + 1) * DAY));
-		expect(news([favorite(NOW - 100 * DAY)], details({badehotellet_1: series(season)})).count).toBe(0);
-		// The bell's first use is the starting point, on this device
-		expect(b.storage.getItem("newsSince")).toBe(String(NOW));
-		expect(b.storage.getItem("newsSeen")).toBe(String(NOW));
-	});
-
-	test("counts lines new since the bell was opened, not episodes, and only once it's opened again", () => {
-		b.storage.setItem("newsSince", String(NOW - 10 * DAY));
-		b.storage.setItem("newsSeen", String(NOW - 2 * DAY));
-		const season = Array.from({length: 8}, (_, i) => episode(String(8 - i), NOW - DAY - i));
-		const other = series([episode("1", NOW - 3 * DAY)], {title: "Matador"});
-		const found = news([favorite(NOW - 30 * DAY), favorite(NOW - 30 * DAY, "matador_2")], details({badehotellet_1: series(season), matador_2: other}));
-		// The season, and not Matador's older one
-		expect(found.count).toBe(1);
-		// Opening the bell
-		b.run(`Date.now = () => ${NOW}`);
-		b.run("markNewsSeen()");
-		expect(b.storage.getItem("newsSeen")).toBe(String(NOW));
-		expect(news([favorite(NOW - 30 * DAY), favorite(NOW - 30 * DAY, "matador_2")], details({badehotellet_1: series(season), matador_2: other})).count).toBe(0);
-	});
-
-	test("says at most 9+", () => {
-		b.storage.setItem("newsSince", String(NOW - 20 * DAY));
-		b.storage.setItem("newsSeen", String(NOW - 13 * DAY));
+	test("is how many lines there are, and says at most 9+", () => {
 		const season = Array.from({length: 10}, (_, i) => episode(String(i + 1), NOW - (i + 1) * DAY));
 		expect(news([favorite(NOW - 30 * DAY)], details({badehotellet_1: series(season)})).count).toBe(10);
 		// As updateBell shows it
-		const badge = {hidden: true, textContent: "", dot: false, classList: {toggle(_: string, on: boolean) { badge.dot = on; }}};
+		const badge = {hidden: true, textContent: ""};
 		const bell = {querySelector: () => badge, label: "", setAttribute(_: string, value: string) { this.label = value; }};
 		b.run("document").querySelectorAll = () => [bell];
 		b.storage.setItem("favoriteDetails", JSON.stringify(details({badehotellet_1: series(season)})));
 		b.run(`Date.now = () => ${NOW}`);
 		b.run("updateBell()");
-		expect(badge.textContent).toBe("9+");
-		expect(badge.hidden).toBe(false);
-		expect(bell.label).toBe("Nyt til dig, mere end 9 nye");
-		expect(badge.dot).toBe(false);
-		// Opened: no number, but a dot, as there's still something not seen
-		b.storage.setItem("newsSeen", String(NOW));
+		expect([badge.hidden, badge.textContent, bell.label]).toEqual([false, "9+", "Nyt til dig, mere end 9 nye"]);
+		// A number, not a dot, however often the bell is opened
+		for (let i = 1; i <= 7; i++) {
+			watched(String(i));
+		}
 		b.run("updateBell()");
-		expect([badge.hidden, badge.dot, badge.textContent, bell.label]).toEqual([false, true, "", "Nyt til dig, med noget du ikke har set"]);
+		expect([badge.hidden, badge.textContent, bell.label]).toEqual([false, "3", "Nyt til dig, 3 nye"]);
 		// And nothing, once it's all seen
-		for (let i = 1; i <= 10; i++) {
-			b.storage.setItem(`progress_${i}`, JSON.stringify({time: 0, watched: true, updated: 1}));
+		for (let i = 8; i <= 10; i++) {
+			watched(String(i));
 		}
 		b.run("updateBell()");
 		expect([badge.hidden, bell.label]).toEqual([true, "Nyt til dig"]);
-	});
-
-	test("a new favourite's episodes from before it was one don't count, but those after do", () => {
-		b.storage.setItem("newsSince", String(NOW - 10 * DAY));
-		b.storage.setItem("newsSeen", String(NOW - DAY));
-		// Heard of just now, since the series was only just made a favourite
-		const old = episode("2", NOW - 3 * DAY, {known: NOW});
-		expect(news([favorite(NOW - 2 * DAY)], details({badehotellet_1: series([old])})).count).toBe(0);
-		const after = episode("3", NOW - 12 * 60 * 60 * 1000, {known: NOW});
-		expect(news([favorite(NOW - 2 * DAY)], details({badehotellet_1: series([after, old])})).count).toBe(1);
-	});
-
-	test("an episode heard of after the bell was opened counts, though DR dates it from before", () => {
-		b.storage.setItem("newsSince", String(NOW - 10 * DAY));
-		b.storage.setItem("newsSeen", String(NOW - 60 * 60 * 1000));
-		const late = episode("3", NOW - 2 * 60 * 60 * 1000, {known: NOW});
-		expect(news([favorite(NOW - 30 * DAY)], details({badehotellet_1: series([late])})).count).toBe(1);
-		const heard = episode("3", NOW - 2 * 60 * 60 * 1000, {known: NOW - 90 * 60 * 1000});
-		expect(news([favorite(NOW - 30 * DAY)], details({badehotellet_1: series([heard])})).count).toBe(0);
-	});
-
-	test("what's seen already isn't news", () => {
-		b.storage.setItem("newsSince", String(NOW - 10 * DAY));
-		b.storage.setItem("newsSeen", String(NOW - 2 * DAY));
-		b.storage.setItem("progress_3", JSON.stringify({time: 0, watched: true, updated: 1}));
-		expect(news([favorite(NOW - 30 * DAY)], details({badehotellet_1: series([episode("3", NOW - DAY)])})).count).toBe(0);
-	});
-
-	test("a favourite leaving soon counts once, when it comes within the week", () => {
-		b.storage.setItem("newsSince", String(NOW - 10 * DAY));
-		b.storage.setItem("newsSeen", String(NOW - 2 * DAY));
-		const leaving = details({badehotellet_1: series([], {expires: NOW + 6 * DAY})});
-		expect(news([favorite(NOW - 30 * DAY)], leaving).count).toBe(1);
-		b.storage.setItem("newsSeen", String(NOW));
-		expect(news([favorite(NOW - 30 * DAY)], leaving).count).toBe(0);
-		// A day later, still leaving, and not again
-		expect(news([favorite(NOW - 30 * DAY)], leaving, NOW + DAY).count).toBe(0);
-		// One that came within the week before the bell was opened doesn't either
-		b.storage.setItem("newsSeen", String(NOW - DAY / 2));
-		expect(news([favorite(NOW - 30 * DAY)], details({badehotellet_1: series([], {expires: NOW + 3 * DAY})})).count).toBe(0);
 	});
 });
 
@@ -400,10 +350,10 @@ describe("what to watch next", () => {
 			related: {label: "Krimi", cards: [{title: "Bron", url: "/bron_6/", image: null}, {title: "Forbrydelsen", url: "/forbrydelsen_7/", image: null}]},
 		});
 		expect(found.map((f: any) => [f.label, f.title, f.url])).toEqual([
-			["Fortsæt", "En film", "/program/en-film_5"],
+			["Se videre", "En film", "/program/en-film_5"],
 			// Its next episode's address isn't known, so the series'
 			["Næste afsnit", "Matador", "/matador_2/"],
-			["Nyt afsnit", "Rejseholdet: S11 A31", "/rejseholdet_3/afsnit_31"],
+			["Nyt afsnit", "Rejseholdet: S11 E31", "/rejseholdet_3/afsnit_31"],
 			["Krimi", "Bron", "/bron_6/"],
 		]);
 	});

@@ -51,6 +51,9 @@ class Card:
     # For making a show or a film a favourite
     show_id: Optional[str] = None
     film_id: Optional[str] = None
+    # For an episode, its series, which it makes a favourite instead, with the series' title
+    series_id: Optional[str] = None
+    series_title: Optional[str] = None
     live: bool = False
 
 
@@ -82,6 +85,7 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
     video_id = None
     show_id = None
     film_id = None
+    series_id = None
     if item.type == "show":
         url = f"/{slug}/"
         show_id = slug
@@ -92,6 +96,7 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
     elif item.type == "episode":
         url = f"/{item.show_id}/{slug}" if item.show_id else f"/program/{slug}"
         video_id = slug.split("_")[-1]
+        series_id = item.show_id
     elif item.type == "program":
         url = f"/program/{slug}"
         video_id = slug.split("_")[-1]
@@ -126,6 +131,9 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
         video_id=video_id,
         show_id=show_id,
         film_id=film_id,
+        series_id=series_id,
+        # DR's title for an episode is like "Den store bagedyst: Bær i bagedysten"
+        series_title=item.title.split(": ")[0] if series_id else None,
         live=item.type == "link",
     )
 

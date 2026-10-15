@@ -61,7 +61,7 @@ function stillWatchingDue({streak, lastInteraction, now = Date.now(), together =
 }
 
 // What to suggest after the last episode of a series, or a film, at most 4, like {title, url, image, label}:
-// first an episode of a favourite the viewer is halfway through ("Fortsæt"), then the next episode of favourites
+// first an episode of a favourite the viewer is halfway through ("Se videre"), then the next episode of favourites
 // they're watching ("Næste afsnit"), then favourites' new episodes ("Nyt afsnit"), and last DR's own, from the
 // same category. Not what was just watched, what's seen to the end, or what leaves within a day. Where an episode's
 // address isn't known, the series'.
@@ -85,7 +85,7 @@ function whatNextSuggestions({current, favorites, details, progress, related, no
         .filter(p => p.url && p.time > 0 && !p.watched && favoriteKeys.has(keyOfPath(p.url)) && !leavesSoon(p.expires))
         .sort((a, b) => (b.updated || 0) - (a.updated || 0));
     for (const p of started) {
-        add({title: p.show ? `${p.show}: ${p.title || ""}` : p.title || "", url: p.url, image: p.image || null, label: "Fortsæt"});
+        add({title: p.show ? `${p.show}: ${p.title || ""}` : p.title || "", url: p.url, image: p.image || null, label: "Se videre"});
     }
 
     // The next episode of favourites the viewer is watching: some of it seen, and some not
@@ -223,7 +223,7 @@ function offerNext(video) {
     const counting = autoplayNextOn() && !asking;
     let left = NEXT_EPISODE_DELAY;
     const seconds = element("span", {}, String(left));
-    const playNow = element("a", {class: "button button-primary", href: url}, icon("play"), asking ? "Fortsæt" : "Afspil nu");
+    const playNow = element("a", {class: "button button-primary", href: url}, icon("play"), asking ? "Se videre" : "Afspil nu");
     const cancel = element("button", {type: "button", class: "button button-secondary"}, asking ? "Stop" : counting ? "Annullér" : "Luk");
     const box = element("div", {id: "up-next", class: "up-next", role: "region", "aria-label": asking ? "Ser du stadig med?" : "Næste afsnit"},
         element("p", {class: "up-next-label"}, asking ? "Ser du stadig med?" : "Næste afsnit"),

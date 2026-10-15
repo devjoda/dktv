@@ -275,8 +275,12 @@ describe("DR's cut-off short descriptions", () => {
 			.toBe("Britisk portrætserie fra 2024. (From Roger Moore with Love) Han er kendt som Bond - James Bond.");
 		// Otherwise as they were, with an ellipsis of one character
 		expect(wholeSentences("Kort. Og så en meget lang sætning, der bliver ved og ved, indtil DR klipper den over midt i...")).toBe("Kort. Og så en meget lang sætning, der bliver ved og ved, indtil DR klipper den over midt i…");
-		// And the whole ones as they are
+		// Or cut at 255 characters, without saying so
+		expect(wholeSentences("De fire sølvmønter er fundet. Men hvordan leder mønterne til Aros Skatten? Mens Frida, Bjørn og Jens forsøger at regne det hele ud, bliver de eftersøgt af politiet. Familien skal finde Aros Skatten, inden politiet finder dem, men i mørket lurer deres mods"))
+			.toBe("De fire sølvmønter er fundet. Men hvordan leder mønterne til Aros Skatten? Mens Frida, Bjørn og Jens forsøger at regne det hele ud, bliver de eftersøgt af politiet.");
+		// And the whole ones as they are, also shorter ones without a full stop
 		expect(wholeSentences("Hele beskrivelsen. Med to sætninger.")).toBe("Hele beskrivelsen. Med to sætninger.");
+		expect(wholeSentences("Dansk dramaserie fra 2020. Vært: Mads Steffensen")).toBe("Dansk dramaserie fra 2020. Vært: Mads Steffensen");
 		expect(wholeSentences("")).toBe("");
 	});
 });

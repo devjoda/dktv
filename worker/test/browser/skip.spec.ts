@@ -115,6 +115,25 @@ test("lets a viewer who chose to mark the intro do it on the video, and then ski
 	await expect(page.getByRole("button", {name: "Spring intro over"})).toBeVisible();
 });
 
+test("marking's buttons can be clicked twice quickly, and its panel keeps clear of \"Slå lyden til\"", async ({page}) => {
+	await withAccount(page, true);
+	await watch(page, EPISODE);
+	await page.getByRole("button", {name: "Markér intro og rulletekster"}).click();
+	const panel = page.getByRole("region", {name: "Markér intro og rulletekster"});
+	// Not Plyr's double click for full screen
+	for (const name of ["Introen starter nu", "Introen starter et sekund efter"]) {
+		await panel.getByRole("button", {name}).dblclick();
+		expect(await page.evaluate("playing.plyr.fullscreen.active")).toBe(false);
+	}
+	const close = (await panel.getByRole("button", {name: "Luk"}).boundingBox())!;
+	expect(close.width).toBeCloseTo(close.height, 0);
+	// As when the browser would only play without sound
+	await page.evaluate("offerSound(document.getElementById('video'))");
+	const sound = (await page.locator("#unmute").boundingBox())!;
+	const box = (await panel.boundingBox())!;
+	expect(box.y).toBeGreaterThanOrEqual(sound.y + sound.height);
+});
+
 test("doesn't offer marking to those who didn't choose it", async ({page}) => {
 	await withAccount(page, false);
 	await watch(page, EPISODE);

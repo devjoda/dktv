@@ -41,6 +41,9 @@ export interface Card {
 	// For making a show or a film a favourite
 	showId?: string;
 	filmId?: string;
+	// For an episode, its series, which it makes a favourite instead, with the series' title
+	seriesId?: string;
+	seriesTitle?: string;
 	live: boolean;
 }
 
@@ -76,6 +79,7 @@ export function card(item: Json, channelSlugs: Record<string, string>): Card | u
 	let videoId: string | undefined;
 	let cardShowId: string | undefined;
 	let filmId: string | undefined;
+	let seriesId: string | undefined;
 	if (type == "show") {
 		url = `/${slug}/`;
 		cardShowId = slug;
@@ -86,6 +90,7 @@ export function card(item: Json, channelSlugs: Record<string, string>): Card | u
 	} else if (type == "episode") {
 		url = showId ? `/${showId}/${slug}` : `/program/${slug}`;
 		videoId = slug.split("_").at(-1);
+		seriesId = showId;
 	} else if (type == "program") {
 		url = `/program/${slug}`;
 		videoId = slug.split("_").at(-1);
@@ -128,6 +133,9 @@ export function card(item: Json, channelSlugs: Record<string, string>): Card | u
 		videoId,
 		showId: cardShowId,
 		filmId,
+		seriesId,
+		// DR's title for an episode is like "Den store bagedyst: Bær i bagedysten"
+		seriesTitle: seriesId ? title.split(": ")[0] : undefined,
 		live: type == "link",
 	};
 }

@@ -7,7 +7,7 @@ const FINISHED_MARGIN = 60;
 const RESUME_REWIND = 15;
 // How often to save how far the viewer got, in seconds of video
 const SAVE_INTERVAL = 5;
-// How many videos to list under "Fortsæt med at se"
+// How many videos to list under "Se videre"
 const CONTINUE_WATCHING_COUNT = 6;
 
 function isFinished(time, duration) {
@@ -59,7 +59,7 @@ function leavingTags(at) {
 }
 
 // Saves how far the viewer got with the video, which describes itself with
-// data-title, data-show, data-image and data-expires, for listing it under "Fortsæt med at se",
+// data-title, data-show, data-image and data-expires, for listing it under "Se videre",
 // and syncs it within syncDelay milliseconds
 function saveProgress(videoID, video, syncDelay = SYNC_DELAY) {
     if (!isFinite(video.duration)) {
@@ -176,7 +176,7 @@ function playTarget(episodes) {
         return {episode: episodes[0], label: "Afspil"};
     }
     if (latest.progress.time > 0) {
-        return {episode: episodes[latest.index], label: "Fortsæt"};
+        return {episode: episodes[latest.index], label: "Se videre"};
     }
     if (latest.index + 1 < episodes.length) {
         return {episode: episodes[latest.index + 1], label: "Afspil næste"};
@@ -325,7 +325,7 @@ function continueWatchingTile(video) {
     const remove = element("button", {
         type: "button",
         class: "tile-action",
-        "aria-label": `Fjern ${title} fra Fortsæt med at se`,
+        "aria-label": `Fjern ${title} fra Se videre`,
         title: "Fjern",
     }, icon("x"));
     remove.addEventListener("click", function () {
@@ -358,8 +358,4 @@ function showContinueWatching() {
     section.querySelector(".js-tiles").replaceChildren(...started.map(continueWatchingTile));
     section.hidden = started.length == 0;
     section.dispatchEvent(new Event("shelfchange", {bubbles: true}));
-    // On the favourites page, only with all of them
-    if (typeof applyFavoriteFilter == "function") {
-        applyFavoriteFilter();
-    }
 }

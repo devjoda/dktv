@@ -278,19 +278,17 @@ def test_live_plan(get, monkeypatch):
 def test_favorites_page(get):
     r = get("/favoritter/")
     assert r.status_code == 200
-    # Shows first, and films below
-    shows = r.text.index('<section class="results" id="favorite-shows" data-favorites="show"')
-    films = r.text.index('<section class="results" id="favorite-films" data-favorites="film"')
-    assert shows < films
-    assert '<section class="results" id="continue-watching" aria-labelledby="continue-title" hidden>' in r.text
-    # Films and single programmes, like a documentary or a concert, which don't get new episodes
-    assert '<h2 class="section-title" id="favorite-films-title">Film og programmer</h2>' in r.text
+    # Series and films together, in one grid
+    grid = r.text.index('<section class="results" id="favorite-list" data-favorites="all" aria-label="Dine favoritter" hidden>')
+    assert r.text.count("data-favorites=") == 1
+    # Se videre is on the front page
+    assert 'id="continue-watching"' not in r.text
     # The filters, which favorites.js shows when there are enough of more than one kind, before the favourites
     filters = r.text.split('<div class="favorite-filters wrap js-favorite-filters" role="group" aria-label="Vis" hidden>')[1].split("</div>")[0]
     assert re.findall(r'data-filter="(\w+)" aria-pressed="(\w+)">([^<]+)<', filters) == [
-        ("alle", "true", "Alle "), ("serier", "false", "Serier "), ("film", "false", "Film og programmer "), ("dokumentar", "false", "Dokumentar "),
+        ("alle", "true", "Alle "), ("serier", "false", "Serier "), ("film", "false", "Film "), ("dokumentar", "false", "Dokumentar "),
     ]
-    assert r.text.index("js-favorite-filters") < shows
+    assert r.text.index("js-favorite-filters") < grid
     # The same page, whatever filter the address has, which only the browser reads
     assert get("/favoritter/?vis=dokumentar").text == r.text
 
@@ -319,7 +317,7 @@ def test_episode(get):
     assert '<a class="episode-link episode-next" href="/rejseholdet_503605/rejseholdet_503640" data-video-id="503640" rel="next">' in r.text
     assert '<span class="episode-name">2. episode</span>' in r.text
     assert 'data-next-url="/rejseholdet_503605/rejseholdet_503640"' in r.text
-    # What it saves about the video, to list it under "Fortsæt med at se"
+    # What it saves about the video, to list it under "Se videre"
     assert 'data-title="1. episode"' in r.text
     assert 'data-show="Rejseholdet"' in r.text
     assert 'data-image="https://' in r.text and "Width=640" in r.text

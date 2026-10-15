@@ -310,5 +310,9 @@ def test_cut_off_descriptions_end_at_their_last_whole_sentence():
     # Otherwise as they were, with an ellipsis of one character
     short = "Kort. Og så en meget lang sætning, der bliver ved og ved, indtil DR klipper den over midt i..."
     assert whole_sentences(short) == short[:-3] + "…"
+    # Or cut at 255 characters, without saying so
+    aros = "De fire sølvmønter er fundet. Men hvordan leder mønterne til Aros Skatten? Mens Frida, Bjørn og Jens forsøger at regne det hele ud, bliver de eftersøgt af politiet. Familien skal finde Aros Skatten, inden politiet finder dem, men i mørket lurer deres mods"
+    assert whole_sentences(aros) == aros[: aros.index("politiet.") + len("politiet.")]
     assert whole_sentences("Hele beskrivelsen. Med to sætninger.") == "Hele beskrivelsen. Med to sætninger."
+    assert whole_sentences("Dansk dramaserie fra 2020. Vært: Mads Steffensen") == "Dansk dramaserie fra 2020. Vært: Mads Steffensen"
     assert whole_sentences(None) is None

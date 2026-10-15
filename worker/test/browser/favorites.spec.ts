@@ -1,5 +1,5 @@
-// The favourites page's filters: Alle, Serier, Film og programmer and Dokumentar, with how many each has,
-// only in the address, and only once there are enough favourites of more than one kind
+// The favourites page: series and films in one grid, those seen last, and its filters: Alle, Serier, Film and
+// Dokumentar, with how many each has, only in the address, and only once there are enough favourites of more than one kind
 
 import type {BrowserContext, Page} from "@playwright/test";
 import {expect, test} from "./test";
@@ -46,7 +46,7 @@ async function withFavorites(context: BrowserContext, made: Made[], {first = Inf
 }
 
 const filterButton = (page: Page, name: string) => page.locator(".js-favorite-filters").getByRole("button", {name});
-const visibleTiles = (page: Page, section: string) => page.locator(`${section} .tile:visible`);
+const visibleTiles = (page: Page) => page.locator("#favorite-list .tile:visible");
 
 test("filters the favourites, with how many each has, in the address, which back goes back through", async ({page, context}) => {
 	await withFavorites(context, [...series(4), ...series(2, true), ...films(3), ...films(1, true)]);
@@ -55,7 +55,7 @@ test("filters the favourites, with how many each has, in the address, which back
 	await expect(bar).toBeVisible();
 	await expect(filterButton(page, "Alle")).toHaveText("Alle 10");
 	await expect(filterButton(page, "Serier")).toHaveText("Serier 6");
-	await expect(filterButton(page, "Film og programmer")).toHaveText("Film og programmer 4");
+	await expect(filterButton(page, "Film")).toHaveText("Film 4");
 	await expect(filterButton(page, "Dokumentar")).toHaveText("Dokumentar 3");
 	await expect(filterButton(page, "Alle")).toHaveAttribute("aria-pressed", "true");
 
@@ -63,30 +63,26 @@ test("filters the favourites, with how many each has, in the address, which back
 	await expect(page).toHaveURL(/\/favoritter\/\?vis=dokumentar$/);
 	await expect(filterButton(page, "Dokumentar")).toHaveAttribute("aria-pressed", "true");
 	await expect(filterButton(page, "Alle")).toHaveAttribute("aria-pressed", "false");
-	// A documentary series is still among the series, and a documentary among the films: hidden, not moved
-	await expect(visibleTiles(page, "#favorite-shows")).toHaveCount(2);
-	await expect(visibleTiles(page, "#favorite-films")).toHaveCount(1);
-	await expect(page.locator("#favorite-shows .section-title")).toHaveText("Serier");
+	// Documentary series and documentaries, in the one grid
+	await expect(visibleTiles(page)).toHaveCount(3);
+	await expect(page.locator(".section-title")).toHaveCount(0);
 
 	await filterButton(page, "Serier").click();
 	await expect(page).toHaveURL(/\?vis=serier$/);
-	await expect(visibleTiles(page, "#favorite-shows")).toHaveCount(6);
-	await expect(page.locator("#favorite-films")).toBeHidden();
+	await expect(visibleTiles(page)).toHaveCount(6);
 
 	await page.goBack();
 	await expect(page).toHaveURL(/\?vis=dokumentar$/);
 	await expect(filterButton(page, "Dokumentar")).toHaveAttribute("aria-pressed", "true");
-	await expect(visibleTiles(page, "#favorite-shows")).toHaveCount(2);
+	await expect(visibleTiles(page)).toHaveCount(3);
 	await page.goBack();
 	await expect(page).toHaveURL(/\/favoritter\/$/);
-	await expect(visibleTiles(page, "#favorite-shows")).toHaveCount(6);
-	await expect(visibleTiles(page, "#favorite-films")).toHaveCount(4);
+	await expect(visibleTiles(page)).toHaveCount(10);
 
 	// From the address, as when it's shared or reloaded, and not remembered anywhere else
 	await page.goto("/favoritter/?vis=film");
-	await expect(filterButton(page, "Film og programmer")).toHaveAttribute("aria-pressed", "true");
-	await expect(page.locator("#favorite-shows")).toBeHidden();
-	await expect(visibleTiles(page, "#favorite-films")).toHaveCount(4);
+	await expect(filterButton(page, "Film")).toHaveAttribute("aria-pressed", "true");
+	await expect(visibleTiles(page)).toHaveCount(4);
 	await page.goto("/favoritter/");
 	await expect(filterButton(page, "Alle")).toHaveAttribute("aria-pressed", "true");
 	expect(await page.evaluate("Object.keys(localStorage).filter(key => /filter|vis/i.test(key))")).toEqual([]);
@@ -97,25 +93,24 @@ test("says so when a filter has none", async ({page, context}) => {
 	await page.goto("/favoritter/?vis=dokumentar");
 	await expect(filterButton(page, "Dokumentar")).toHaveText("Dokumentar 0");
 	await expect(page.locator(".js-filter-empty")).toHaveText("Ingen dokumentarer blandt dine favoritter endnu.");
-	await expect(page.locator("#favorite-shows")).toBeHidden();
-	await expect(page.locator("#favorite-films")).toBeHidden();
+	await expect(visibleTiles(page)).toHaveCount(0);
 	await filterButton(page, "Alle").click();
 	await expect(page.locator(".js-filter-empty")).toBeHidden();
+	await expect(visibleTiles(page)).toHaveCount(9);
 });
 
 test("has no filters with fewer than 8 favourites, or only one kind, and shows them all", async ({page, context}) => {
 	await withFavorites(context, [...series(4), ...films(3, true)]);
 	await page.goto("/favoritter/?vis=dokumentar");
-	await expect(page.locator("#favorite-films .tile")).toHaveCount(3);
+	await expect(page.locator("#favorite-list .tile")).toHaveCount(7);
 	await expect(page.locator(".js-favorite-filters")).toBeHidden();
-	await expect(visibleTiles(page, "#favorite-shows")).toHaveCount(4);
-	await expect(visibleTiles(page, "#favorite-films")).toHaveCount(3);
+	await expect(visibleTiles(page)).toHaveCount(7);
 });
 
 test("has no filters when all of them are series that aren't documentaries", async ({page, context}) => {
 	await withFavorites(context, series(9));
 	await page.goto("/favoritter/");
-	await expect(page.locator("#favorite-shows .tile")).toHaveCount(9);
+	await expect(page.locator("#favorite-list .tile")).toHaveCount(9);
 	await expect(page.locator(".js-favorite-filters")).toBeHidden();
 });
 
@@ -135,11 +130,21 @@ test("counts again as the server tells of more of them, and has those it hasn't 
 	await page.goto("/favoritter/?vis=dokumentar");
 	// Only the first answer so far: the films' categories aren't known yet
 	await expect(filterButton(page, "Dokumentar")).toHaveText("Dokumentar 3");
-	await expect(visibleTiles(page, "#favorite-films")).toHaveCount(0);
+	await expect(visibleTiles(page)).toHaveCount(3);
 	await expect(filterButton(page, "Alle")).toHaveText("Alle 9");
 	release();
 	await expect(filterButton(page, "Dokumentar")).toHaveText("Dokumentar 6");
-	await expect(visibleTiles(page, "#favorite-films")).toHaveCount(3);
+	await expect(visibleTiles(page)).toHaveCount(6);
+});
+
+test("has what the viewer has seen all of last, and what's new first", async ({page, context}) => {
+	await withFavorites(context, [...series(2), ...films(2)]);
+	await context.addInitScript(`localStorage.setItem("progress_9300", JSON.stringify({time: 0, duration: 3480, watched: true, updated: 1}))`);
+	await page.goto("/favoritter/");
+	const titles = page.locator("#favorite-list .tile-title");
+	// Made favourites in this order, the newest first, but the film the viewer has seen last
+	await expect(titles).toHaveText(["serie-false-0", "serie-false-1", "film-false-1", "film-false-0"]);
+	await expect(page.locator("#favorite-list .tile").last().locator(".js-seen")).toBeVisible();
 });
 
 test("the page is the same whatever filter its address has, so it's kept once for everyone", async ({page}) => {

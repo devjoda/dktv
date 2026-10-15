@@ -68,17 +68,20 @@ export const MAX_SEASONS = 38;
 
 // How much of a cut-off text must be left, to end it at its last whole sentence instead
 const WHOLE_SENTENCES_FROM = 60;
+// How long DR's short descriptions are at most: those as long that don't end a sentence are cut off without saying so
+const DR_CUTS_AT = 255;
 
 /**
- * DR's short descriptions are cut off, like "… og meget...". Ends one at its last whole sentence instead,
- * where that leaves enough of it; the episode's own page has all of it.
+ * DR's short descriptions are cut off, like "… og meget...", or at 255 characters without saying so, like "… lurer deres
+ * mods". Ends one at its last whole sentence instead, where that leaves enough of it; the episode's own page has all of it.
  */
 export function wholeSentences(text: string): string {
 	const cut = /(\.\.\.|…)\s*$/.exec(text);
-	if (cut === null) {
+	const silentlyCut = cut === null && text.length >= DR_CUTS_AT && !/[.!?]["'”»)]?\s*$/.test(text);
+	if (cut === null && !silentlyCut) {
 		return text;
 	}
-	const before = text.slice(0, cut.index);
+	const before = cut ? text.slice(0, cut.index) : text;
 	const ends = [...before.matchAll(/[.!?]["'”»)]?(?=\s)/g)];
 	const last = ends.at(-1);
 	if (last === undefined || last.index + last[0].length < WHOLE_SENTENCES_FROM) {

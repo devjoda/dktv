@@ -66,7 +66,17 @@ function setupControls(video, live = false) {
         iconUrl: "/static/vendor/plyr-3.8.4.svg",
         blankVideo: "",
     });
+    // Plyr goes into full screen and out of it on a double click anywhere on the player but its controls: not on
+    // what the site puts on the picture, like marking's buttons, which are clicked twice quickly on purpose
+    video.closest(".plyr").addEventListener("dblclick", function (event) {
+        if (event.target.closest(OWN_LAYERS)) {
+            event.stopPropagation();
+        }
+    }, {capture: true});
 }
+
+// What the site puts on the picture, on top of Plyr's own
+const OWN_LAYERS = "button, a, input, label, .marking, .up-next, .what-next, .player-message, .unmute";
 
 // The player around the video: Plyr's, or the page's when there's no Plyr
 function playerOf(video) {
