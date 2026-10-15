@@ -171,17 +171,20 @@ test.describe("on a computer", () => {
 
 	test("tells of favourites leaving within a week, and counts them", async ({page, context}) => {
 		await viewer(context, {favorites: [SHOW]});
+		const expires = Date.now() + 3 * DAY + 60 * 60 * 1000;
 		await page.route("**/favorites.json?*", async route => {
 			const response = await route.fetch();
 			const found = await response.json();
-			found.shows[SHOW].expires = Date.now() + 3 * DAY + 60 * 60 * 1000;
+			found.shows[SHOW].expires = expires;
 			await route.fulfill({response, json: found});
 		});
 		await page.goto("/");
 		await expect(badge(page)).toHaveText("3");
 		await bell(page).click();
 		const leaving = page.locator(".news-panel .news-line").filter({hasText: "Udløber"});
-		await expect(leaving.locator(".news-meta")).toHaveText("Udløber om 3 dage");
+		// In whole days, as the viewer's calendar has them, which late in the evening is a day more
+		await expect(leaving.locator(".news-meta")).toHaveText(await page.evaluate(`leavingLabel(${expires})`));
+		await expect(leaving.locator(".news-meta")).toHaveText(/^Udløber om [34] dage$/);
 		await expect(page.locator(".news-panel .news-heading").nth(1)).toHaveText("Udløber snart");
 	});
 

@@ -150,7 +150,7 @@ test("asks whether the viewer still watches, after 3 episodes by themselves and 
 	await expect(asking.getByRole("button", {name: "Stop"})).toBeVisible();
 	await page.waitForTimeout(12_000);
 	await expect(page).toHaveURL(EPISODE);
-	await asking.getByRole("link", {name: "Fortsæt"}).click();
+	await asking.getByRole("link", {name: "Se videre"}).click();
 	await expect(page).toHaveURL(NEXT_EPISODE);
 	// Chosen by the viewer, so the count starts over
 	expect(await page.evaluate(`sessionStorage.getItem("autoStreak")`)).toBe("0");
@@ -176,7 +176,7 @@ test("offers what to watch now after the last episode, from the viewer's favouri
 	await expect(card).toBeVisible();
 	await expect(upNext(page)).toHaveCount(0);
 	// Rejseholdet was just watched, so the film that's halfway, and then DR's own, from the same category
-	await expect(card.locator(".what-next-item").first()).toContainText("Fortsæt");
+	await expect(card.locator(".what-next-item").first()).toContainText("Se videre");
 	await expect(card.locator(".what-next-item").first()).toContainText("Lise Nørgaard: Ikke kun en pige");
 	await expect(card.locator(".what-next-item")).toHaveCount(4);
 	await expect(card.locator(".what-next-label").nth(1)).toHaveText("Serier");

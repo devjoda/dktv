@@ -317,12 +317,13 @@ test.describe("the room's layout", () => {
 		await bo.context().close();
 	});
 
-	test("without a room, the page is as it was", async ({browser}) => {
+	test("without a room, the page is as it was: the season's episodes beside the video, and no chat", async ({browser}) => {
 		const anna = await viewer(browser, "Anna", {viewport: {width: 1366, height: 768}});
 		await watch(anna, EPISODE);
-		expect(await anna.evaluate("getComputedStyle(document.querySelector('main')).display")).toBe("block");
+		await expect(anna.locator(".together")).toHaveCount(0);
 		const video = await box(anna, ".stage");
-		expect(video.width).toBe(1366);
+		const list = await box(anna, ".episode-list");
+		expect(video.width + list.width).toBe(1366);
 		expect((await box(anna, ".watch-title")).y).toBeGreaterThan(video.y + video.height);
 		await anna.context().close();
 	});

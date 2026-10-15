@@ -279,7 +279,7 @@ const NEWEST_EPISODES = 10;
 export interface NewEpisode {
 	id: string;
 	title: string;
-	// Like 11 and 3, for S11 A3, or null if DR doesn't number them
+	// Like 11 and 3, for S11 E3, or null if DR doesn't number them
 	season: number | null;
 	number: number | null;
 	url: string;

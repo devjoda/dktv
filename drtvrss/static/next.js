@@ -339,6 +339,18 @@ function swapPage(page) {
         theirs.replaceWith(actions);
     }
     box.replaceWith(from);
+    // The season's episodes, with the one playing now, which may be of another season
+    const list = document.querySelector(".episode-list");
+    const theirList = page.querySelector(".episode-list");
+    if (list && theirList) {
+        list.replaceWith(theirList);
+    } else if (list) {
+        list.remove();
+    } else if (theirList) {
+        document.querySelector(".watch").after(theirList);
+    }
+    document.body.classList.toggle("has-episodes", theirList != null);
+    showPlaying();
 }
 
 // The server's own suggestions for after what plays now, asked for once, near the end or at it, and never as the page loads
@@ -500,9 +512,9 @@ function setupNext(video) {
             card.remove();
         }
     });
-    // The page's own links to the episodes before and after, in the same page too
+    // The page's own links to the episodes before and after, and to the season's, in the same page too
     document.addEventListener("click", function (event) {
-        const link = event.target.closest(".episode-nav a[href]");
+        const link = event.target.closest(".episode-nav a[href], .episode-list .episode-row[href]");
         if (link && isVideoPath(link.getAttribute("href")) && event.button == 0 && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
             event.preventDefault();
             setSessionNumber("autoStreak", 0);

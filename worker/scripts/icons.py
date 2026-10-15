@@ -1,5 +1,5 @@
-# Draws GLOTV's icons from Schibsted Grotesk, the site's own font: "GLO" over a warm white tag with "TV" on it,
-# on ink, like the logo in the header, where the tag sits beside "GLO".
+# Draws Flimmerkassen's icons from Schibsted Grotesk, the site's own font: "F" over a warm white tag with "kassen" on it,
+# on ink, like the logo in the header, where the tag sits beside "Flimmer".
 # The favicon in drtvrss/templates, as .ico and .svg, and the app's icons in drtvrss/static/icons.
 # Only needed when the icons change; run from the repository's root with
 #   uv run --no-project --with fonttools --with brotli --with pillow python worker/scripts/icons.py
@@ -49,36 +49,39 @@ class Word:
             self.glyphs[name].draw(TransformPen(pen, (scale, 0, 0, -scale, x + (gx - self.left) * scale, baseline)))
 
 
-GLO = Word("GLO", 850, -0.055)
-TV = Word("TV", 800, 0.02)
+F = Word("F", 850, 0)
+TAG = Word("kassen", 800, 0.01)
+# How wide the tag is, for F's height
+TAG_WIDTH = 1.9
 
 
 def layout(size, width):
-    """Where GLO and the tag go on a square of `size`, GLO being `width` of it: GLO's scale and baseline, and the tag's box"""
-    s = size * width / GLO.width
-    cap = GLO.cap * s
-    tag_height = cap * 0.62
-    gap = cap * 0.16
+    """Where F and the tag go on a square of `size`, the tag being `width` of it: F's scale, left and baseline, and the
+    tag's box"""
+    cap = size * width / TAG_WIDTH
+    s = cap / F.cap
+    tag_height = cap * 0.42
+    gap = cap * 0.14
     top = (size - (cap + gap + tag_height)) / 2
-    x = (size - GLO.width * s) / 2
-    tag = (x, top + cap + gap, x + GLO.width * s, top + cap + gap + tag_height)
-    return s, x, top + cap, tag
+    x = (size - size * width) / 2
+    tag = (x, top + cap + gap, x + size * width, top + cap + gap + tag_height)
+    return s, (size - F.width * s) / 2, top + cap, tag
 
 
-def tv_placement(tag):
-    """TV's scale and where it goes, centred on the tag"""
+def tag_placement(tag):
+    """The tag's word's scale and where it goes, centred on it, with room at its ends"""
     left, top, right, bottom = tag
-    t = (bottom - top) * 0.56 / TV.cap
-    return t, (left + right) / 2 - TV.width * t / 2, (top + bottom) / 2 + TV.cap * t / 2
+    t = min((bottom - top) * 0.62 / TAG.cap, (right - left) * 0.84 / TAG.width)
+    return t, (left + right) / 2 - TAG.width * t / 2, (top + bottom) / 2 + TAG.cap * t * 0.36
 
 
 def mark_svg(size, width, radius):
     s, x, baseline, tag = layout(size, width)
     glo = SVGPathPen(None)
-    GLO.draw(glo, s, x, baseline)
-    t, tx, tb = tv_placement(tag)
+    F.draw(glo, s, x, baseline)
+    t, tx, tb = tag_placement(tag)
     tv = SVGPathPen(None)
-    TV.draw(tv, t, tx, tb)
+    TAG.draw(tv, t, tx, tb)
     left, top, right, bottom = tag
     r = (bottom - top) * 0.22
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}">'
@@ -110,12 +113,12 @@ def mark_png(size, width, radius=0.0, background=True):
         draw.rounded_rectangle((0, 0, big - 1, big - 1), radius=big * radius, fill=INK)
     s, x, baseline, tag = layout(big, width)
     colour = PAPER if background else "#ffffff"
-    text(draw, GLO, s, x, baseline, colour)
+    text(draw, F, s, x, baseline, colour)
     left, top, right, bottom = tag
     draw.rounded_rectangle(tag, radius=(bottom - top) * 0.22, fill=colour)
-    t, tx, tb = tv_placement(tag)
-    # On the tag, TV is ink on the icons, and see-through on the badge for notifications
-    text(draw, TV, t, tx, tb, INK if background else (0, 0, 0, 0))
+    t, tx, tb = tag_placement(tag)
+    # On the tag, its word is ink on the icons, and see-through on the badge for notifications
+    text(draw, TAG, t, tx, tb, INK if background else (0, 0, 0, 0))
     return image.resize((size, size), Image.LANCZOS)
 
 

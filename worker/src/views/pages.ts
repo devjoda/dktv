@@ -4,7 +4,7 @@ import type {Card, Category, DiscoverPage, Row} from "../discover";
 import {channelStyle, type Channels, type LiveChannel, percentDone, planFrom, type PlannedProgramme, type Programme, whatsOn} from "../live";
 import type {SearchResult, SearchResultItem} from "../search";
 import type {Segments} from "../segments";
-import {allEpisodes, type Episode, type Program, type Show, thumbnail, wholeSentences} from "../show";
+import {allEpisodes, type Episode, type Program, type Season, type Show, thumbnail, wholeSentences} from "../show";
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
 import {layout, LIBRARIES, LIVE_SCRIPTS, MAIN_CATEGORIES, type Site, VIDEO_SCRIPTS} from "./layout";
@@ -151,6 +151,13 @@ ${show.seasons.length != 1 ? html`<h2 class="season-title">${season.title}</h2>`
 </section>`);
 }
 
+/** Shown by progress.js, in the list of a season's episodes, for what the viewer has seen */
+const SEEN_LABEL = html`<span class="episode-row-seen js-seen" hidden>Set</span>`;
+
+/** Biograftilstand, as the viewer last left it, before the page is drawn, so it doesn't move; see player.js */
+const CINEMA_FIRST = html`<script>try { if (localStorage.getItem("cinema") == "true") document.body.classList.add("cinema"); } catch (error) {}</script>
+`;
+
 /** The episode before or after one, for the side of its page */
 export interface Neighbour {
 	url: string;
@@ -174,10 +181,47 @@ function neighbourLink(kind: "previous" | "next", n: Neighbour | undefined): Htm
 </a>`;
 }
 
+/** The episodes of the season that plays, beside the video or below it */
+export interface SeasonList {
+	title: string;
+	// The show's page, with all of them, when the list doesn't have all of them
+	all?: string;
+	episodes: (Neighbour & {videoId: string; current: boolean})[];
+}
+
+// How many of a season's episodes its list beside the video has at most, and how many of them before the one playing
+const SEASON_LIST_SIZE = 40;
+const SEASON_LIST_BEFORE = 10;
+
+/** The season's episodes around the one playing, for the list beside the video */
+export function seasonList(show: Show, season: Season, e: Episode): SeasonList {
+	const i = season.episodes.indexOf(e);
+	const from = season.episodes.length <= SEASON_LIST_SIZE ? 0 : Math.max(0, Math.min(i - SEASON_LIST_BEFORE, season.episodes.length - SEASON_LIST_SIZE));
+	const shown = season.episodes.slice(from, from + SEASON_LIST_SIZE);
+	return {
+		title: show.seasons.length > 1 ? season.title : "Afsnit",
+		all: shown.length < season.episodes.length ? `/${show.url}/` : undefined,
+		episodes: shown.map(other => ({url: `/${show.url}/${other.link}`, title: other.title, wallpaper: other.wallpaper, minutes: other.minutes, videoId: other.videoId, current: other === e})),
+	};
+}
+
+/** The list of the season's episodes, which next.js swaps for the next one's as it plays in the same page */
+function seasonAside(season: SeasonList): Html {
+	return html`<aside class="episode-list" aria-labelledby="episode-list-title">
+<div class="episode-list-head"><h2 class="side-title" id="episode-list-title">${season.title}</h2>${season.all ? html`<a class="episode-list-all" href="${season.all}">Alle afsnit</a>` : ""}</div>
+<ol class="episode-rows">
+${each(season.episodes, n => html`<li><a class="episode-row" href="${n.url}" data-video-id="${n.videoId}"${attr("aria-current", n.current && "page")}>
+<span class="episode-row-thumb">${n.wallpaper ? html`<img src="${thumbnail(n.wallpaper)}" alt="" loading="lazy">` : ""}${PROGRESS_BAR}</span>
+<span class="episode-row-text"><span class="episode-row-title">${n.title}</span><span class="episode-row-meta">${n.current ? html`<span class="episode-row-now">Spiller nu</span>` : ""}${n.minutes ? html`<span>${duration(n.minutes)}</span>` : ""}${SEEN_LABEL}</span></span>
+</a></li>
+`)}</ol>
+</aside>`;
+}
+
 /** Plays an episode of a show, or a programme on its own, like a film */
-export function videoPage(site: Site, {show, e, description, previous, next, segments}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour; segments?: Segments}): Html {
+export function videoPage(site: Site, {show, e, description, previous, next, segments, season}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour; segments?: Segments; season?: SeasonList}): Html {
 	const film = show === undefined ? (e as Program) : undefined;
-	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title, head: show ? feedLink(show) : undefined, scripts: VIDEO_SCRIPTS}, html`<div class="stage">
+	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title, head: show ? feedLink(show) : undefined, scripts: VIDEO_SCRIPTS, bodyClass: season ? "video-page has-episodes" : "video-page"}, html`${CINEMA_FIRST}<div class="stage">
 <video id="video" controls crossorigin="anonymous" data-episode-id="${e.videoId}"${attr("data-suggest", show ? `/forslag/serie/${show.url}` : `/forslag/program/${(e as Program).url.split("/").at(-1)}`)}${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)}${attr("data-previous-url", previous?.url)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}${attr("data-segments", segments ? JSON.stringify(segments) : undefined)}></video>
 </div>
 <div class="watch">
@@ -196,6 +240,7 @@ ${neighbourLink("next", next)}
 </nav>` : ""}
 </div>
 </div>
+${season ? seasonAside(season) : ""}
 <script>
 playVideo(document.getElementById('video'), ${scriptJSON(e.videoId)});
 </script>`);

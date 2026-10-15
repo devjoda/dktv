@@ -26,7 +26,7 @@
 		}
 	],
 	"vars": {
-		"SERVICE_NAME": "GLOTV",
+		"SERVICE_NAME": "Flimmerkassen",
 		"SOURCE_URL": "https://github.com/devjoda/dktv",
 		"RECOMMENDED_SHOWS": ""
 	},

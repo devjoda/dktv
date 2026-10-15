@@ -1,9 +1,10 @@
 {# The building blocks of the pages #}
 
-{# The site's name as its logo: like GLO with TV on a tag beside it, for names that end in TV #}
+{# The site's name as its logo: like Flimmer with kassen on a tag beside it, for names that end in kassen or TV #}
 {% macro logo(name) -%}
-{% if name|length > 2 and name[-2:]|lower == "tv" -%}
-<span class="logo-word">{{ name[:-2] }}</span><span class="logo-tag">{{ name[-2:] }}</span>
+{%- set tag = name|logo_tag -%}
+{% if tag -%}
+<span class="logo-word">{{ name[:(name|length) - (tag|length)] }}</span><span class="logo-tag">{{ tag }}</span>
 {%- else -%}
 <span class="logo-word">{{ name }}</span>
 {%- endif %}

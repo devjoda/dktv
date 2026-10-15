@@ -44,6 +44,11 @@ describe("the front page", () => {
 			expect(row).toMatch(/<a class="shelf-more" href="\/liste\/\d+\/\?titel=[^"]+"( data-overflow-only)?>Se alle/);
 		}
 		expect(between(r.text, 'id="featured-1"', 'id="featured-2"')).toContain('<a class="button button-primary" href="/');
+		// Each a favourite, but the live channels
+		const featured = r.text.split('class="hero-slide"').slice(1).map(slide => slide.split('class="hero-slide"')[0].split("</section>")[0]);
+		for (const slide of featured) {
+			expect(slide.includes("js-favorite")).toBe(!slide.includes("data-live"));
+		}
 	});
 
 	test("the featured programmes' facts lead somewhere", async () => {
@@ -125,13 +130,13 @@ describe("the front page", () => {
 describe("every page", () => {
 	test("has the logo, which leads to the front page, and the sections in the header", async () => {
 		const r = await get("/");
-		expect(r.text).toContain('<a class="logo" href="/" aria-label="GLOTV, forsiden" aria-current="page"><span class="logo-word">GLO</span><span class="logo-tag">TV</span></a>');
+		expect(r.text).toContain('<a class="logo" href="/" aria-label="Flimmerkassen, forsiden" aria-current="page"><span class="logo-word">Flimmer</span><span class="logo-tag">kassen</span></a>');
 		const nav = between(r.text, '<nav class="site-nav"', "</nav>");
 		for (const title of ["Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]) {
 			expect(nav).toContain(`${title}</a>`);
 		}
 		expect(nav).not.toContain("Forside");
-		expect(r.text).toContain("<title>GLOTV</title>");
+		expect(r.text).toContain("<title>Flimmerkassen</title>");
 		expect(r.text).toContain('<link rel="icon" href="/favicon.svg" type="image/svg+xml">');
 	});
 
@@ -152,8 +157,8 @@ describe("every page", () => {
 
 	test("says it isn't DR's, and links to privacy, syncing and the source", async () => {
 		const footer = between((await get("/")).text, '<footer class="site-footer">', "</footer>");
-		expect(footer).toContain("GLOTV er et uofficielt, uafhængigt projekt og er hverken tilknyttet eller sponsoreret af DR. DR og DRTV er DR's varemærker.");
-		expect(footer).toContain("GLOTV er udelukkende en alternativ brugerflade: alt indhold hentes direkte fra DR's servere");
+		expect(footer).toContain("Siden er en uofficiel, uafhængig alternativ brugerflade og er ikke tilknyttet til DR.");
+		expect(footer).toContain("Alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet materiale end det, DR selv stiller til rådighed. DR og DRTV er DR's varemærker.");
 		expect(footer).toContain('<a href="/privatliv/">Privatliv</a>');
 		expect(footer).toContain('<a href="/sync/">');
 		expect(footer).toContain('<a href="https://github.com/devjoda/dktv">Kildekode</a>');
@@ -162,7 +167,7 @@ describe("every page", () => {
 	test("says what it keeps about its viewers", async () => {
 		const r = await get("/privatliv/");
 		expect(r.status).toBe(200);
-		expect(r.text).toContain("<title>Privatliv - GLOTV</title>");
+		expect(r.text).toContain("<title>Privatliv - Flimmerkassen</title>");
 		expect(r.text).toContain("ingen reklamer og ingen sporing");
 		expect(r.text).toContain('<a href="/sync/">Din konto</a>');
 		expect(between(r.text, '<footer class="site-footer">', "</footer>")).toContain('<a href="/privatliv/" aria-current="page">Privatliv</a>');
@@ -394,6 +399,17 @@ describe("an episode", () => {
 		expect(r.text).toContain('data-image="https://');
 		// Which belongs to its show, so isn't a favourite on its own
 		expect(between(r.text, 'class="watch"', 'class="episode-nav"')).not.toContain("js-favorite");
+		// Its season's episodes, beside the video or below it, with this one playing
+		expect(r.text).toContain('<body class="video-page has-episodes">');
+		const list = between(r.text, '<aside class="episode-list" aria-labelledby="episode-list-title">', "</aside>");
+		expect(list).toContain('<h2 class="side-title" id="episode-list-title">Sæson 1</h2>');
+		expect(list).toContain('<a class="episode-row" href="/rejseholdet_503605/rejseholdet_503615" data-video-id="503615" aria-current="page">');
+		expect(list).toContain('<a class="episode-row" href="/rejseholdet_503605/rejseholdet_503640" data-video-id="503640">');
+		expect(list.match(/aria-current/g)).toHaveLength(1);
+		// All of the season, so no link to the rest
+		expect(list).not.toContain("Alle afsnit");
+		// Biograftilstand, before the page is drawn
+		expect(r.text.indexOf('localStorage.getItem("cinema")')).toBeLessThan(r.text.indexOf('<div class="stage">'));
 	});
 
 	test("links into the next season", async () => {

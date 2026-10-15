@@ -69,10 +69,10 @@ export const VIDEO_SCRIPTS = html`${PLAYER_SCRIPTS}
 <script src="${staticURL("together.js")}"></script>
 <script src="${staticURL("skip.js")}"></script>`;
 
-/** The site's name as its logo: like GLO with TV on a tag beside it, for names that end in TV */
+/** The site's name as its logo: like Flimmer with kassen on a tag beside it, for names that end in kassen or TV */
 function logo(name: string): Html {
-	const tv = /^(.+)(tv)$/i.exec(name);
-	return tv ? html`<span class="logo-word">${tv[1]}</span><span class="logo-tag">${tv[2]}</span>` : html`<span class="logo-word">${name}</span>`;
+	const tag = /^(.+)(kassen|tv)$/i.exec(name);
+	return tag ? html`<span class="logo-word">${tag[1]}</span><span class="logo-tag">${tag[2]}</span>` : html`<span class="logo-word">${name}</span>`;
 }
 
 export interface PageProps {
@@ -138,7 +138,7 @@ ${content}
 <div id="toast" class="toast-message" role="status" aria-live="polite"></div>
 <footer class="site-footer">
 <a class="logo" href="/" aria-label="${site.serviceName}, forsiden">${logo(site.serviceName)}</a>
-<p>${site.serviceName} er et uofficielt, uafhængigt projekt og er hverken tilknyttet eller sponsoreret af DR. DR og DRTV er DR's varemærker. ${site.serviceName} er udelukkende en alternativ brugerflade: alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet end det, DR selv stiller frit til rådighed.</p>
+<p>Siden er en uofficiel, uafhængig alternativ brugerflade og er ikke tilknyttet til DR. Alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet materiale end det, DR selv stiller til rådighed. DR og DRTV er DR's varemærker.</p>
 <nav class="footer-links" aria-label="Om siden">
 <a href="/privatliv/"${attr("aria-current", site.path.startsWith("/privatliv/") && "page")}>Privatliv</a>
 <a href="/sync/">Din konto</a>

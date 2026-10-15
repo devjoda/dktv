@@ -23,7 +23,7 @@
 		}
 	],
 	"vars": {
-		"SERVICE_NAME": "GLOTV",
+		"SERVICE_NAME": "Flimmerkassen",
 		// Where the code that runs here can be got
 		"SOURCE_URL": "https://github.com/devjoda/dktv",
 		// Shows for the front page, like "rejseholdet_503605:matador_540736"
