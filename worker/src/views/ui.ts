@@ -51,10 +51,12 @@ export interface TileProps {
 	// Add a button to make the show or film a favourite
 	showId?: string;
 	filmId?: string;
+	// Or the button itself
+	action?: Html | "";
 }
 
 /** A picture with a title, linking to a show or a video */
-export function tile({href, image, title, meta, tags = [], videoId, episodeIds, minutes, description, showId, filmId}: TileProps): Html {
+export function tile({href, image, title, meta, tags = [], videoId, episodeIds, minutes, description, showId, filmId, action}: TileProps): Html {
 	return html`<article class="tile"${attr("data-video-id", videoId)}${attr("data-episode-ids", episodeIds?.length ? episodeIds.join(" ") : undefined)}>
 <a class="tile-link" href="${href}"><div class="tile-media">${
 	image ? html`<img src="${thumbnail(image)}" alt="" loading="lazy">` : ""}${
@@ -73,9 +75,17 @@ export function widePicture(image: string | undefined, lazy = false): Html {
 		lazy ? html` loading="lazy" fetchpriority="low"` : ""} decoding="async">`;
 }
 
+/** The button that makes one of DR's programmes a favourite: a series, an episode's series, or a film; live channels have none */
+export function cardFavorite(c: Card, compact = false): Html | "" {
+	if (c.showId || c.seriesId) {
+		return favoriteButton((c.showId ?? c.seriesId)!, c.showId ? c.title : c.seriesTitle ?? c.title, c.image, {compact});
+	}
+	return c.filmId ? favoriteButton(c.filmId, c.title, c.image, {compact, kind: "film"}) : "";
+}
+
 /** One of DR's programmes */
 export function cardTile(c: Card): Html {
-	return tile({href: c.url, image: c.image, title: c.title, meta: c.category, tags: c.live ? [["live", "Direkte"]] : [], videoId: c.videoId, showId: c.showId, filmId: c.filmId});
+	return tile({href: c.url, image: c.image, title: c.title, meta: c.category, tags: c.live ? [["live", "Direkte"]] : [], videoId: c.videoId, action: cardFavorite(c, true)});
 }
 
 /** A live channel, with what's on it now */

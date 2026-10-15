@@ -58,7 +58,7 @@ def normalize_code(code: str) -> Optional[str]:
 
 
 def empty() -> dict:
-    return {"favorites": [], "removed_favorites": {}, "progress": {}, "news_seen": 0}
+    return {"favorites": [], "removed_favorites": {}, "progress": {}, "news_cleared": 0}
 
 
 def _number(value) -> Optional[float]:
@@ -129,8 +129,8 @@ def clean(data) -> dict:
         "favorites": favorites,
         "removed_favorites": removed,
         "progress": progress,
-        # When the viewer last looked at what's new for them, under the bell, in milliseconds
-        "news_seen": max(0, _number(data.get("news_seen")) or 0),
+        # When the viewer last emptied the list of what's new for them, under the bell, in milliseconds
+        "news_cleared": max(0, _number(data.get("news_cleared")) or 0),
     }
 
 
@@ -160,7 +160,7 @@ def merge(a: dict, b: dict) -> dict:
         "favorites": favorites,
         "removed_favorites": removed,
         "progress": progress,
-        "news_seen": max(a["news_seen"], b["news_seen"]),
+        "news_cleared": max(a["news_cleared"], b["news_cleared"]),
     }
 
 

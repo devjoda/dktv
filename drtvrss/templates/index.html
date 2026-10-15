@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, tile, card_tile, channel_tile, shelf_head, search_field, favorite_button, wide_picture %}
+{% from "_ui.html" import icon, tile, card_tile, card_favorite, channel_tile, shelf_head, search_field, favorite_button, wide_picture %}
 {% block body_class %}{% if featured %}has-hero{% endif %}{% endblock %}
 {% block scripts %}
 {% if featured %}
@@ -29,7 +29,7 @@
             {% if c.tagline or c.description %}<p class="hero-text">{{ c.tagline or c.description }}</p>{% endif %}
             <div class="actions">
                 <a class="button button-primary" href="{{ c.episode_url or c.url }}">{{ icon("play") }} {{ "Se direkte" if c.live else "Se nu" }}</a>
-                {% if c.show_id %}{{ favorite_button(c.show_id, c.title, c.image) }}{% endif %}
+                {{ card_favorite(c) }}
             </div>
         </div>
     </div>
@@ -48,14 +48,14 @@
 {% else %}
 <section class="intro wrap">
     <h2>Serier, film og direkte TV</h2>
-    <p>Fortsæt hvor du slap, saml dine yndlingsserier, og abonnér på dem med RSS.</p>
+    <p>Se videre, hvor du slap, saml dine yndlingsserier, og abonnér på dem med RSS.</p>
     {{ search_field() }}
 </section>
 {% endif %}
 
 {# Filled in by progress.js, from the viewer's browser #}
 <section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>
-    {{ shelf_head("Fortsæt med at se", "continue-title") }}
+    {{ shelf_head("Se videre", "continue-title") }}
     <div class="shelf-track js-tiles"></div>
 </section>
 

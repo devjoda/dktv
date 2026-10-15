@@ -45,23 +45,23 @@ function localData() {
     } catch (error) {
         console.error("Could not read progress:", error);
     }
-    let newsSeen = 0;
+    let newsCleared = 0;
     try {
-        newsSeen = Number(localStorage.getItem("newsSeen")) || 0;
+        newsCleared = Number(localStorage.getItem("newsCleared")) || 0;
     } catch (error) {
         // Then not
     }
-    return {favorites: loadFavorites(), removed_favorites: loadRemovedFavorites(), progress, news_seen: newsSeen};
+    return {favorites: loadFavorites(), removed_favorites: loadRemovedFavorites(), progress, news_cleared: newsCleared};
 }
 
 // Keeps what came back, except progress this device has newer since it sent its own
 function storeSynced(data) {
     storeFavorites(data.favorites);
     storeRemovedFavorites(data.removed_favorites);
-    // When the bell was last opened on any of the viewer's devices, see news.js
+    // When the viewer last emptied the bell's list on any of their devices, see news.js
     try {
-        if ((data.news_seen || 0) > (Number(localStorage.getItem("newsSeen")) || 0)) {
-            localStorage.setItem("newsSeen", String(data.news_seen));
+        if ((data.news_cleared || 0) > (Number(localStorage.getItem("newsCleared")) || 0)) {
+            localStorage.setItem("newsCleared", String(data.news_cleared));
         }
     } catch (error) {
         // Then this device's own

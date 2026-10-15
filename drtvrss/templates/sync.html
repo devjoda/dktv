@@ -7,7 +7,7 @@
 {# Made to work by sync.js and account.js #}
 <div class="sync-page wrap" id="sync-page">
     <h1>Din konto</h1>
-    <p class="sync-intro">Med en konto har du de samme favoritter på din telefon, computer og TV, og du kan fortsætte, hvor du slap. Den kræver hverken e-mail eller adgangskode.</p>
+    <p class="sync-intro">Med en konto har du de samme favoritter på din telefon, computer og TV, og du kan se videre, hvor du slap. Den kræver hverken e-mail eller adgangskode.</p>
     <div class="sync-options js-sync-off" hidden>
     <section class="sync-option" aria-labelledby="sync-new">
     <h2 id="sync-new">Ny konto</h2>
@@ -38,11 +38,11 @@
     </div>
     </section>
     <section class="account-section js-alerts" aria-labelledby="alerts-title" hidden>
-    <h2 id="alerts-title">Beskeder om nye afsnit</h2>
-    <p class="js-alerts-status">Få en besked på denne enhed, når en af dine favoritserier får et nyt afsnit.</p>
-    <p class="js-alerts-home-screen" hidden>På iPhone og iPad skal siden først føjes til hjemmeskærmen: tryk på Del og derefter Føj til hjemmeskærm. Åbn den så derfra, og slå beskeder til her.</p>
+    <h2 id="alerts-title">Notifikationer på denne enhed</h2>
+    <p class="js-alerts-status">Klokken viser altid nye afsnit her på siden. Slå notifikationer til for også at få dem på denne enhed, når siden er lukket.</p>
+    <p class="js-alerts-home-screen" hidden>På iPhone og iPad skal siden først føjes til hjemmeskærmen: tryk på Del og derefter Føj til hjemmeskærm. Åbn den så derfra, og slå notifikationer til her.</p>
     <div class="actions">
-    <button type="button" class="button button-primary js-alerts-toggle" aria-pressed="false">{{ icon("bell") }}<span> Slå beskeder til</span></button>
+    <button type="button" class="button button-primary js-alerts-toggle" aria-pressed="false">{{ icon("bell") }}<span> Slå notifikationer til</span></button>
     </div>
     </section>
     <section class="account-section js-passkeys" aria-labelledby="passkeys-title" hidden>
@@ -78,7 +78,7 @@
     <label class="switch"><input type="checkbox" class="js-autoplay-toggle" checked><span>Afspil næste afsnit automatisk</span></label>
     </section>
     <p class="sync-error js-sync-error" role="alert" hidden></p>
-    <p class="sync-privacy">Din konto er koden. Under den gemmes dine favoritter, hvor langt du er nået i hvert afsnit, og hvilke af dine enheder der får beskeder. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en konto gemmes de kun i din browser.</p>
+    <p class="sync-privacy">Din konto er koden. Under den gemmes dine favoritter, hvor langt du er nået i hvert afsnit, og hvilke af dine enheder der får notifikationer. Alle med koden kan se og ændre dem, så giv den kun til dine egne enheder. Uden en konto gemmes de kun i din browser.</p>
     <noscript><p>Din konto kræver JavaScript.</p></noscript>
     </div>
 {% endblock %}

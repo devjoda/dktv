@@ -122,12 +122,12 @@ function favoriteToggle(favorite) {
 // How long an episode counts as new, as on the server
 const NEW_FOR = 14 * 24 * 60 * 60 * 1000;
 
-// Like S11 A3, or the episode's title where DR doesn't number it
+// Like S11 E3, or the episode's title where DR doesn't number it
 function episodeLabel(episode) {
     if (episode.number == null) {
         return episode.title;
     }
-    return episode.season != null ? `S${episode.season} A${episode.number}` : `A${episode.number}`;
+    return episode.season != null ? `S${episode.season} E${episode.number}` : `E${episode.number}`;
 }
 
 // A series' episodes from the last two weeks that the viewer hasn't seen, oldest first
@@ -147,7 +147,7 @@ function favoriteTile(favorite, details) {
     }
     // What's new and not seen yet, which the tile leads to
     const unseen = film ? [] : unseenNewEpisodes(details);
-    const news = unseen.length == 1 ? `Nyt: ${episodeLabel(unseen[0])}` : unseen.length > 1 ? `${unseen.length} nye afsnit` : null;
+    const news = unseen.length == 1 ? "Nyt afsnit" : unseen.length > 1 ? `${unseen.length} nye afsnit` : null;
     return buildTile({
         href: film ? `/program/${favorite.id}` : unseen.length ? unseen[0].url : `/${favorite.id}/`,
         image: favorite.image,
@@ -165,22 +165,32 @@ function detailsOf(details, favorite) {
     return ((favorite.kind == "film" ? details.films : details.shows) || {})[favorite.id];
 }
 
-// The favourites with something new the viewer hasn't seen first, the newest first, and then the rest as they were
-function newestFirst(favorites, details) {
-    const newest = favorite => Math.max(0, ...unseenNewEpisodes(detailsOf(details, favorite)).map(e => e.published));
-    return favorites.map(f => [f, f.kind == "film" ? 0 : newest(f)]).sort((a, b) => b[1] - a[1]).map(([f]) => f);
+// Whether the viewer has seen all of a favourite: a film, or every episode of a series that the server told of
+function seenAll(favorite, details) {
+    if (favorite.kind == "film") {
+        return Boolean((loadProgress(favoriteKey(favorite.id)) || {}).watched);
+    }
+    const ids = (details && details.episode_ids) || [];
+    return ids.length > 0 && ids.every(id => (loadProgress(id) || {}).watched);
 }
 
-// Fills in the sections with data-favorites: "all", or only "show" or "film".
-// The front page's row has what's new first.
+// The favourites with something new the viewer hasn't seen first, the newest first; then the rest as they were;
+// and last those the viewer has seen all of
+function favoriteOrder(favorites, details) {
+    const newest = favorite => Math.max(0, ...unseenNewEpisodes(detailsOf(details, favorite)).map(e => e.published));
+    const rank = function (favorite) {
+        const found = detailsOf(details, favorite);
+        return [seenAll(favorite, found) ? 1 : 0, favorite.kind == "film" ? 0 : newest(favorite)];
+    };
+    return favorites.map(f => [f, rank(f)]).sort(([, a], [, b]) => a[0] - b[0] || b[1] - a[1]).map(([f]) => f);
+}
+
+// Fills in the sections with data-favorites: "all", or only "show" or "film"
 function renderFavorites(details = keptDetails()) {
     const favorites = loadFavorites();
     for (const section of document.querySelectorAll("[data-favorites]")) {
         const kind = section.dataset.favorites;
-        let shown = favorites.filter(f => kind == "all" || (f.kind || "show") == kind);
-        if (kind == "all") {
-            shown = newestFirst(shown, details);
-        }
+        const shown = favoriteOrder(favorites.filter(f => kind == "all" || (f.kind || "show") == kind), details);
         const empty = section.querySelector(".js-favorites-empty");
         if (empty) {
             empty.hidden = shown.length > 0;
@@ -203,7 +213,7 @@ function renderFavorites(details = keptDetails()) {
 }
 
 // The favourites page's filters, which are only in its address, like ?vis=dokumentar, so going back goes back to
-// the one before; "alle" has none. A filter hides what isn't in it, without moving anything.
+// the one before; "alle" has none. A filter hides the tiles that aren't in it.
 const FAVORITE_FILTERS = ["alle", "serier", "film", "dokumentar"];
 // How many favourites there must be, of more than one kind, for the filters to be worth showing
 const FILTERS_FROM = 8;
@@ -242,7 +252,7 @@ function chosenFilter(search = location.search) {
 
 const FILTER_EMPTY = {
     serier: "Ingen serier blandt dine favoritter endnu.",
-    film: "Ingen film eller programmer blandt dine favoritter endnu.",
+    film: "Ingen film blandt dine favoritter endnu.",
     dokumentar: "Ingen dokumentarer blandt dine favoritter endnu.",
 };
 
@@ -261,21 +271,9 @@ function applyFavoriteFilter(favorites = loadFavorites(), details = keptDetails(
         button.setAttribute("aria-pressed", String(button.dataset.filter == filter));
     }
     let shown = 0;
-    for (const section of document.querySelectorAll("[data-favorites]")) {
-        let inSection = 0;
-        for (const tile of section.querySelectorAll(".js-tiles > .tile")) {
-            tile.hidden = !(tile.dataset.favoriteFilters || "alle").split(" ").includes(filter);
-            inSection += tile.hidden ? 0 : 1;
-        }
-        shown += inSection;
-        // With all of them, a section without any says how to add some
-        section.hidden = filter != "alle" && inSection == 0;
-    }
-    const continueWatching = document.getElementById("continue-watching");
-    if (continueWatching && filter != "alle") {
-        continueWatching.hidden = true;
-    } else if (continueWatching) {
-        continueWatching.hidden = continueWatching.querySelector(".js-tiles").children.length == 0;
+    for (const tile of document.querySelectorAll("[data-favorites] .js-tiles > .tile")) {
+        tile.hidden = !(tile.dataset.favoriteFilters || "alle").split(" ").includes(filter);
+        shown += tile.hidden ? 0 : 1;
     }
     const empty = document.querySelector(".js-filter-empty");
     empty.hidden = filter == "alle" || shown > 0;

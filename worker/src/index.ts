@@ -52,7 +52,7 @@ app.use("*", async (c, next) => {
 
 function site(c: Context<App>, query?: string): Site {
 	return {
-		serviceName: c.env.SERVICE_NAME || "GLOTV",
+		serviceName: c.env.SERVICE_NAME || "Flimmerkassen",
 		sourceURL: c.env.SOURCE_URL || DEFAULT_SOURCE_URL,
 		path: c.req.path,
 		query,
@@ -536,7 +536,7 @@ app.delete("/push/:code", async c => {
 /** Where passkeys are made for: this site */
 function passkeySite(c: Context<App>): passkeys.Site {
 	const url = new URL(c.req.url);
-	return {origin: url.origin, rpId: url.hostname, name: c.env.SERVICE_NAME || "GLOTV"};
+	return {origin: url.origin, rpId: url.hostname, name: c.env.SERVICE_NAME || "Flimmerkassen"};
 }
 
 app.post("/passkeys/:code/options", async c => {
@@ -654,7 +654,7 @@ app.get("/:showid/:episode", edgeCached(10 * MINUTE), async c => {
 			return {};
 		}),
 	]);
-	return render(c, pages.videoPage(site(c), {show, e, description, previous: neighbour(i - 1), next: neighbour(i + 1), segments: skips}));
+	return render(c, pages.videoPage(site(c), {show, e, description, previous: neighbour(i - 1), next: neighbour(i + 1), segments: skips, season: pages.seasonList(show, season, e)}));
 });
 
 // Like /rejseholdet_503605, for /rejseholdet_503605/

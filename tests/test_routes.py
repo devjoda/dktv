@@ -106,16 +106,20 @@ def test_front_page_features_drs_programmes(get):
     assert '<h2 class="shelf-title" id="row-1">' in r.text
     featured = r.text.split('id="featured-1"')[1].split('id="featured-2"')[0]
     assert '<a class="button button-primary" href="/' in featured
+    # Each a favourite, but the live channels
+    for slide in r.text.split('class="hero-slide"')[1:]:
+        slide = slide.split("</section>")[0]
+        assert ("js-favorite" in slide) == ("data-live" not in slide)
 
 
 def test_header_has_the_logo_and_the_sections(get):
     r = get("/")
-    assert '<a class="logo" href="/" aria-label="GLOTV, forsiden" aria-current="page"><span class="logo-word">GLO</span><span class="logo-tag">TV</span></a>' in r.text
+    assert '<a class="logo" href="/" aria-label="Flimmerkassen, forsiden" aria-current="page"><span class="logo-word">Flimmer</span><span class="logo-tag">kassen</span></a>' in r.text
     nav = r.text.split('<nav class="site-nav"')[1].split("</nav>")[0]
     for title in ["Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]:
         assert f"{title}</a>" in nav
     assert "Forside" not in nav
-    assert "<title>GLOTV</title>" in r.text
+    assert "<title>Flimmerkassen</title>" in r.text
     assert '<link rel="icon" href="/favicon.svg" type="image/svg+xml">' in r.text
 
 
@@ -165,8 +169,8 @@ def test_all_of_a_list(get, fake_dr, monkeypatch):
 
 def test_footer_says_it_isnt_drs_and_links_to_privacy_syncing_and_the_source(get):
     footer = get("/").text.split('<footer class="site-footer">')[1].split("</footer>")[0]
-    assert "GLOTV er et uofficielt, uafhængigt projekt og er hverken tilknyttet eller sponsoreret af DR. DR og DRTV er DR's varemærker." in footer
-    assert "GLOTV er udelukkende en alternativ brugerflade: alt indhold hentes direkte fra DR's servere" in footer
+    assert "Siden er en uofficiel, uafhængig alternativ brugerflade og er ikke tilknyttet til DR." in footer
+    assert "Alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet materiale end det, DR selv stiller til rådighed. DR og DRTV er DR's varemærker." in footer
     assert '<a href="/privatliv/">Privatliv</a>' in footer
     assert '<a href="/sync/">' in footer
     assert '<a href="https://github.com/devjoda/dktv">Kildekode</a>' in footer
@@ -184,7 +188,7 @@ def test_names_dr_only_in_the_footer(get):
 def test_privacy(get):
     r = get("/privatliv/")
     assert r.status_code == 200
-    assert "<title>Privatliv - GLOTV</title>" in r.text
+    assert "<title>Privatliv - Flimmerkassen</title>" in r.text
     assert "ingen reklamer og ingen sporing" in r.text
 
 
@@ -278,19 +282,17 @@ def test_live_plan(get, monkeypatch):
 def test_favorites_page(get):
     r = get("/favoritter/")
     assert r.status_code == 200
-    # Shows first, and films below
-    shows = r.text.index('<section class="results" id="favorite-shows" data-favorites="show"')
-    films = r.text.index('<section class="results" id="favorite-films" data-favorites="film"')
-    assert shows < films
-    assert '<section class="results" id="continue-watching" aria-labelledby="continue-title" hidden>' in r.text
-    # Films and single programmes, like a documentary or a concert, which don't get new episodes
-    assert '<h2 class="section-title" id="favorite-films-title">Film og programmer</h2>' in r.text
+    # Series and films together, in one grid
+    grid = r.text.index('<section class="results" id="favorite-list" data-favorites="all" aria-label="Dine favoritter" hidden>')
+    assert r.text.count("data-favorites=") == 1
+    # Se videre is on the front page
+    assert 'id="continue-watching"' not in r.text
     # The filters, which favorites.js shows when there are enough of more than one kind, before the favourites
     filters = r.text.split('<div class="favorite-filters wrap js-favorite-filters" role="group" aria-label="Vis" hidden>')[1].split("</div>")[0]
     assert re.findall(r'data-filter="(\w+)" aria-pressed="(\w+)">([^<]+)<', filters) == [
-        ("alle", "true", "Alle "), ("serier", "false", "Serier "), ("film", "false", "Film og programmer "), ("dokumentar", "false", "Dokumentar "),
+        ("alle", "true", "Alle "), ("serier", "false", "Serier "), ("film", "false", "Film "), ("dokumentar", "false", "Dokumentar "),
     ]
-    assert r.text.index("js-favorite-filters") < shows
+    assert r.text.index("js-favorite-filters") < grid
     # The same page, whatever filter the address has, which only the browser reads
     assert get("/favoritter/?vis=dokumentar").text == r.text
 
@@ -319,10 +321,20 @@ def test_episode(get):
     assert '<a class="episode-link episode-next" href="/rejseholdet_503605/rejseholdet_503640" data-video-id="503640" rel="next">' in r.text
     assert '<span class="episode-name">2. episode</span>' in r.text
     assert 'data-next-url="/rejseholdet_503605/rejseholdet_503640"' in r.text
-    # What it saves about the video, to list it under "Fortsæt med at se"
+    # What it saves about the video, to list it under "Se videre"
     assert 'data-title="1. episode"' in r.text
     assert 'data-show="Rejseholdet"' in r.text
     assert 'data-image="https://' in r.text and "Width=640" in r.text
+    # Its season's episodes, beside the video or below it, with this one playing
+    assert '<body class="video-page has-episodes">' in r.text
+    episode_list = r.text.split('<aside class="episode-list" aria-labelledby="episode-list-title">')[1].split("</aside>")[0]
+    assert '<h2 class="side-title" id="episode-list-title">Sæson 1</h2>' in episode_list
+    assert '<a class="episode-row" href="/rejseholdet_503605/rejseholdet_503615" data-video-id="503615" aria-current="page">' in episode_list
+    assert '<a class="episode-row" href="/rejseholdet_503605/rejseholdet_503640" data-video-id="503640">' in episode_list
+    assert episode_list.count("aria-current") == 1
+    assert "Alle afsnit" not in episode_list
+    # Biograftilstand, before the page is drawn
+    assert r.text.index('localStorage.getItem("cinema")') < r.text.index('<div class="stage">')
 
 
 def test_episode_links_into_the_next_season(get):

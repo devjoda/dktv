@@ -34,17 +34,21 @@ def thumbnail(image_url: Optional[str], width: int = THUMBNAIL_WIDTH) -> Optiona
 
 # How much of a cut-off text must be left, to end it at its last whole sentence instead
 WHOLE_SENTENCES_FROM = 60
+# How long DR's short descriptions are at most: those as long that don't end a sentence are cut off without saying so
+DR_CUTS_AT = 255
 
 
 def whole_sentences(text: Optional[str]) -> Optional[str]:
-    """DR's short descriptions are cut off, like "… og meget...". Ends one at its last whole sentence
-    instead, where that leaves enough of it; the episode's own page has all of it. Like the Worker's."""
+    """DR's short descriptions are cut off, like "… og meget...", or at 255 characters without saying so, like
+    "… lurer deres mods". Ends one at its last whole sentence instead, where that leaves enough of it; the episode's
+    own page has all of it. Like the Worker's."""
     if not text:
         return text
     cut = re.search(r"(\.\.\.|…)\s*$", text)
-    if cut is None:
+    silently_cut = cut is None and len(text) >= DR_CUTS_AT and not re.search(r"[.!?][\"'”»)]?\s*$", text)
+    if cut is None and not silently_cut:
         return text
-    before = text[: cut.start()]
+    before = text[: cut.start()] if cut else text
     ends = list(re.finditer(r"[.!?][\"'”»)]?(?=\s)", before))
     if not ends or ends[-1].end() < WHOLE_SENTENCES_FROM:
         return before.rstrip() + "…"

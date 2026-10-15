@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_ui.html" import icon, episode_link, favorite_button %}
+{% from "_ui.html" import icon, episode_link, favorite_button, progress_bar %}
 {% block head %}
 <title>{% if s %}{{ s.title }} - {% endif %}{{ e.title }}</title>
 {% if s %}
@@ -13,7 +13,10 @@
 <script src="{{ static_url('player.js') }}"></script>
 <script src="{{ static_url('next.js') }}"></script>
 {% endblock %}
+{% block body_class %}video-page{% if season_list %} has-episodes{% endif %}{% endblock %}
 {% block content %}
+{# Biograftilstand, as the viewer last left it, before the page is drawn, so it doesn't move; see player.js #}
+<script>try { if (localStorage.getItem("cinema") == "true") document.body.classList.add("cinema"); } catch (error) {}</script>
 <div class="stage">
     <video id="video" controls crossorigin="anonymous" data-episode-id="{{ e.video_id }}"
         {%- if s %} data-suggest="/forslag/serie/{{ s.url }}"{% elif e.url %} data-suggest="/forslag/program/{{ e.url.split('/')[-1] }}"{% endif %}
@@ -50,6 +53,20 @@
         {% endif %}
     </div>
 </div>
+{% if season_list %}
+{# The season's episodes, which next.js swaps for the next one's as it plays in the same page #}
+<aside class="episode-list" aria-labelledby="episode-list-title">
+    <div class="episode-list-head"><h2 class="side-title" id="episode-list-title">{{ season_list.title }}</h2>{% if season_list.all %}<a class="episode-list-all" href="{{ season_list.all }}">Alle afsnit</a>{% endif %}</div>
+    <ol class="episode-rows">
+        {% for n in season_list.episodes %}
+        <li><a class="episode-row" href="{{ n.url }}" data-video-id="{{ n.video_id }}"{% if n.current %} aria-current="page"{% endif %}>
+            <span class="episode-row-thumb">{% if n.wallpaper %}<img src="{{ n.wallpaper|thumbnail }}" alt="" loading="lazy">{% endif %}{{ progress_bar() }}</span>
+            <span class="episode-row-text"><span class="episode-row-title">{{ n.title }}</span><span class="episode-row-meta">{% if n.current %}<span class="episode-row-now">Spiller nu</span>{% endif %}{% if n.len_minutes %}<span>{{ n.len_minutes|duration }}</span>{% endif %}<span class="episode-row-seen js-seen" hidden>Set</span></span></span>
+        </a></li>
+        {% endfor %}
+    </ol>
+</aside>
+{% endif %}
 <script>
     playVideo(document.getElementById('video'), {{ e.video_id|tojson }});
 </script>

@@ -66,7 +66,17 @@ function setupControls(video, live = false) {
         iconUrl: "/static/vendor/plyr-3.8.4.svg",
         blankVideo: "",
     });
+    // Plyr goes into full screen and out of it on a double click anywhere on the player but its controls: not on
+    // what the site puts on the picture, like marking's buttons, which are clicked twice quickly on purpose
+    video.closest(".plyr").addEventListener("dblclick", function (event) {
+        if (event.target.closest(OWN_LAYERS)) {
+            event.stopPropagation();
+        }
+    }, {capture: true});
 }
+
+// What the site puts on the picture, on top of Plyr's own
+const OWN_LAYERS = "button, a, input, label, .marking, .up-next, .what-next, .player-message, .unmute";
 
 // The player around the video: Plyr's, or the page's when there's no Plyr
 function playerOf(video) {
@@ -262,6 +272,60 @@ function liveSubtitlesButton(video) {
     pageButton.remove();
     fullscreen.before(button);
     return button;
+}
+
+// Where biograftilstand is offered: where the video has room to grow, as in style.css
+const CINEMA_SCREEN = "(min-width: 1100px)";
+
+// Biograftilstand, like YouTube's: the video as wide as the page and as high as the screen allows, with the season's
+// episodes below it instead of beside it. A button among Plyr's controls, or T, turns it on and off; it's remembered
+// on this device, and the page has it from the start, see CINEMA_FIRST in the Worker's pages.ts.
+function setupCinema(video) {
+    const fullscreen = video.closest(".plyr") && video.closest(".plyr").querySelector('.plyr__controls [data-plyr="fullscreen"]');
+    if (fullscreen == null) {
+        return;
+    }
+    const label = element("span", {class: "plyr__tooltip"});
+    const button = element("button", {type: "button", class: "plyr__controls__item plyr__control cinema-button js-cinema"}, icon("cinema"), label);
+    const show = function () {
+        const on = document.body.classList.contains("cinema");
+        button.setAttribute("aria-pressed", String(on));
+        button.classList.toggle("plyr__control--pressed", on);
+        label.textContent = on ? "Afslut biograftilstand (t)" : "Biograftilstand (t)";
+        button.setAttribute("aria-label", on ? "Afslut biograftilstand" : "Biograftilstand");
+    };
+    const toggle = function () {
+        const on = !document.body.classList.contains("cinema");
+        document.body.classList.toggle("cinema", on);
+        try {
+            localStorage.setItem("cinema", String(on));
+        } catch (error) {
+            console.error("Could not remember biograftilstand:", error);
+        }
+        show();
+        showPlaying();
+    };
+    button.addEventListener("click", toggle);
+    document.addEventListener("keydown", function (event) {
+        const typing = event.target.closest && event.target.closest("input, textarea, select, [contenteditable]");
+        if (event.key.toLowerCase() == "t" && !typing && !event.ctrlKey && !event.metaKey && !event.altKey && matchMedia(CINEMA_SCREEN).matches) {
+            event.preventDefault();
+            toggle();
+        }
+    });
+    fullscreen.before(button);
+    show();
+}
+
+// Scrolls the season's list beside the video to the episode playing, without moving the page
+function showPlaying() {
+    const list = document.querySelector(".episode-list");
+    const current = list && list.querySelector("[aria-current]");
+    if (current == null) {
+        return;
+    }
+    // The list is what the item's offsetTop is from, see style.css
+    list.scrollTop = current.closest("li").offsetTop - list.clientHeight / 3;
 }
 
 // A message on the picture, like what went wrong, with a button to try again, or only for screen readers,
@@ -514,6 +578,8 @@ async function playVideo(video, videoID) {
     playing.video = video;
     playing.videoID = videoID;
     setupControls(video);
+    setupCinema(video);
+    showPlaying();
     keepSound(video);
     showLoading(video);
     setupMediaSession(video, {title: video.dataset.title, show: video.dataset.show});

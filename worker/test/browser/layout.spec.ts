@@ -8,7 +8,7 @@ test.describe("on a phone", () => {
 	test("has tabs at the bottom, all of them on the screen, instead of the header's sections", async ({page}) => {
 		await page.goto("/privatliv/");
 		await expect(page.locator(".site-nav")).toBeHidden();
-		await expect(page.getByRole("link", {name: "GLOTV, forsiden"}).first()).toBeVisible();
+		await expect(page.getByRole("link", {name: "Flimmerkassen, forsiden"}).first()).toBeVisible();
 		const tabs = page.locator(".tab-bar .tab");
 		await expect(tabs).toHaveText(["Forside", "Direkte", "Kategorier", "Søg", "Favoritter"]);
 		for (const tab of await tabs.all()) {

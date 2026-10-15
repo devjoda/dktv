@@ -53,7 +53,7 @@ test("changing channel keeps the sound, in the same player, and changes the addr
 	await guideLink(page, "DR2").click();
 	await expect(page).toHaveURL("/live/DR2");
 	await expect(page.locator(".js-live-title")).toHaveText("DR2");
-	await expect(page).toHaveTitle("DR2 - GLOTV");
+	await expect(page).toHaveTitle("DR2 - Flimmerkassen");
 	await expect(guideLink(page, "DR2")).toHaveAttribute("aria-current", "page");
 	await expect(guideLink(page, "DR1")).not.toHaveAttribute("aria-current");
 	await expect.poll(() => asked).toContain("DR2");

@@ -1,11 +1,10 @@
 // "Nyt til dig", under the bell in the header: new episodes of the viewer's favourite series from the last two
-// weeks, and favourites that leave DR within a week. On computers, the bell opens it in a panel below it, and on
-// phones it's /nyt/. Notifications are how the site reaches the viewer when they're elsewhere; the bell is the
-// list on the site, and where notifications are offered.
+// weeks that they haven't seen, started or opened from here yet, and favourites that leave DR within a week.
+// On computers, the bell opens it in a panel below it, and on phones it's /nyt/. Its number is how many lines
+// it has. "Ryd alle" empties it of what's there now, on the viewer's other devices too when they have an account.
+// Notifications on the device, for when the viewer is elsewhere, are turned on under Din konto.
 //
 // It uses what favorites.js keeps of /favorites.json, and asks for nothing of its own.
-// Its number is how many of the lines are new since the viewer last opened it, which the viewer's devices share
-// when they have an account.
 // Needs progress.js, favorites.js, sync.js and account.js.
 
 // How long an episode is news, and how soon before a favourite leaves that it is, in milliseconds
@@ -30,10 +29,37 @@ function daysAgo(at, now = Date.now()) {
     return days <= 0 ? "i dag" : days == 1 ? "i går" : `for ${days} dage siden`;
 }
 
-// The new episodes of the favourite series: one line per series per day, the newest first, like
-// {key, title: "Badehotellet: S11 A3" or "Badehotellet: 8 nye afsnit", url, image, at, seen, episodes, added}.
-// It leads to the first of the line's episodes the viewer hasn't seen, and is seen when they've seen them all.
-function newsLines(favorites, details, now = Date.now(), watched = id => Boolean((loadProgress(id) || {}).watched)) {
+// The episodes the viewer opened from here, like {id: when}, which are kept as long as they're news
+function openedNews(now = Date.now()) {
+    let opened = {};
+    try {
+        opened = JSON.parse(stored("newsOpened")) || {};
+    } catch (error) {
+        // None, then
+    }
+    return Object.fromEntries(Object.entries(opened).filter(([, at]) => now - at <= NEWS_FOR));
+}
+
+function markNewsOpened(id) {
+    store("newsOpened", JSON.stringify({...openedNews(), [id]: Date.now()}));
+}
+
+// When the viewer last emptied the list with "Ryd alle", here or on another of their devices, or 0
+function newsCleared() {
+    return Number(stored("newsCleared")) || 0;
+}
+
+// Whether the viewer is done with an episode, as news: they've seen it, started it, or opened it from here
+function doneWithEpisode(id, opened = openedNews()) {
+    const progress = loadProgress(id) || {};
+    return Boolean(progress.watched || progress.time > 0 || opened[id]);
+}
+
+// The new episodes of the favourite series that the viewer isn't done with, and that came after "Ryd alle": one line
+// per series per day, the newest first, like {key, show: "Badehotellet", title: "Afsnittets navn" or "8 nye afsnit",
+// label: "S11 E3" or null, url, image, at, episodes, added}. It leads to the first of the line's episodes.
+function newsLines(favorites, details, now = Date.now(), done = doneWithEpisode, cleared = newsCleared()) {
+    const opened = openedNews(now);
     const lines = [];
     for (const favorite of favorites) {
         const show = (favorite.kind || "show") == "show" ? details.shows[favorite.id] : null;
@@ -42,7 +68,7 @@ function newsLines(favorites, details, now = Date.now(), watched = id => Boolean
         }
         const byDay = new Map();
         for (const episode of show.new_episodes || []) {
-            if (episode.published > now || now - episode.published > NEWS_FOR) {
+            if (episode.published > now || now - episode.published > NEWS_FOR || (episode.known ?? episode.published) <= cleared || done(episode.id, opened)) {
                 continue;
             }
             const day = dayOf(episode.published);
@@ -50,15 +76,16 @@ function newsLines(favorites, details, now = Date.now(), watched = id => Boolean
         }
         for (const [day, newestFirst] of byDay) {
             const episodes = [...newestFirst].reverse();
-            const unseen = episodes.filter(e => !watched(e.id));
-            const target = unseen[0] || episodes[0];
+            const one = episodes.length == 1;
             lines.push({
                 key: `${favorite.id}/${day}`,
-                title: episodes.length == 1 ? `${show.title}: ${episodeLabel(episodes[0])}` : `${show.title}: ${episodes.length} nye afsnit`,
-                url: target.url,
-                image: target.image || show.image,
+                show: show.title,
+                title: one ? episodes[0].title : `${episodes.length} nye afsnit`,
+                label: one && episodes[0].number != null ? episodeLabel(episodes[0]) : null,
+                url: episodes[0].url,
+                id: episodes[0].id,
+                image: episodes[0].image || show.image,
                 at: Math.max(...episodes.map(e => e.published)),
-                seen: unseen.length == 0,
                 episodes,
                 added: favorite.added || 0,
             });
@@ -68,12 +95,12 @@ function newsLines(favorites, details, now = Date.now(), watched = id => Boolean
 }
 
 // The favourites that leave DR within a week, the soonest first, like {key, title, url, image, expires, label, from, added},
-// where from is when it came within the week
-function leavingNews(favorites, details, now = Date.now()) {
+// where from is when it came within the week; not those that did before "Ryd alle"
+function leavingNews(favorites, details, now = Date.now(), cleared = newsCleared()) {
     const leaving = [];
     for (const favorite of favorites) {
         const found = detailsOf(details, favorite);
-        if (found && found.expires && found.expires > now && found.expires - now <= LEAVING_WITHIN) {
+        if (found && found.expires && found.expires > now && found.expires - now <= LEAVING_WITHIN && found.expires - LEAVING_WITHIN > cleared) {
             leaving.push({
                 key: `${favorite.id}/leaving`,
                 title: found.title,
@@ -89,59 +116,6 @@ function leavingNews(favorites, details, now = Date.now()) {
     return leaving.sort((a, b) => a.expires - b.expires);
 }
 
-// How many of the lines are new since the bell was opened, at seen: those with an episode this browser heard of
-// since, which came out after the series was made a favourite, and the favourites that came within a week of leaving
-// since. Those the viewer has seen already aren't news. since is when this browser first used the bell, for favourites
-// that don't say when they were made favourites.
-function newsCount(lines, leaving, seen, since) {
-    let count = 0;
-    for (const line of lines) {
-        const from = line.added || since;
-        if (!line.seen && line.episodes.some(e => (e.known ?? e.published) > seen && e.published > from)) {
-            count++;
-        }
-    }
-    for (const item of leaving) {
-        if (item.from > seen && item.from > (item.added || since)) {
-            count++;
-        }
-    }
-    return count;
-}
-
-// How many of the lines the viewer hasn't seen yet, whether they're new since the bell was opened or not:
-// episodes not watched, and favourites leaving soon
-function newsUnwatched(lines, leaving) {
-    return lines.filter(line => !line.seen).length + leaving.length;
-}
-
-// When the bell was last opened, and when this browser first used it; both now, the first time,
-// so it doesn't start with everything
-function newsTimes(now = Date.now()) {
-    let since = Number(stored("newsSince"));
-    if (!since) {
-        since = now;
-        store("newsSince", String(since));
-    }
-    let seen = Number(stored("newsSeen"));
-    if (!seen) {
-        seen = since;
-        store("newsSeen", String(seen));
-    }
-    return {since, seen};
-}
-
-// The viewer has seen what's new, here and in their other tabs, and on their other devices with the next sync,
-// when they opened it, rather than when it only changed while open, which would sync again and again
-function markNewsSeen(opened = true) {
-    newsTimes();
-    store("newsSeen", String(Date.now()));
-    updateBell();
-    if (opened) {
-        scheduleSync();
-    }
-}
-
 // What the bell has to say now
 function currentNews() {
     const favorites = loadFavorites();
@@ -151,22 +125,22 @@ function currentNews() {
     return {favorites, details, lines, leaving};
 }
 
-// The number on the bell, which says how many lines are new since it was opened, and is read out like "3 nye";
-// or, with nothing new since, a dot, as long as there's something in it the viewer hasn't seen
+// Empties the list of what's in it now, here and on the viewer's other devices with the next sync
+function clearNews() {
+    store("newsCleared", String(Date.now()));
+    scheduleSync(0);
+    updateNews();
+}
+
+// The number on the bell, which says how many lines there are, and is read out like "3 nye"
 function updateBell() {
     const {lines, leaving} = currentNews();
-    const {seen, since} = newsTimes();
-    const count = newsCount(lines, leaving, seen, since);
-    const unwatched = newsUnwatched(lines, leaving);
-    const shown = count > NEWS_COUNTED ? `${NEWS_COUNTED}+` : String(count);
+    const count = lines.length + leaving.length;
     for (const bell of document.querySelectorAll(".js-bell")) {
         const badge = bell.querySelector(".bell-count");
-        badge.hidden = count == 0 && unwatched == 0;
-        badge.classList.toggle("is-dot", count == 0);
-        badge.textContent = count ? shown : "";
-        bell.setAttribute("aria-label", count > NEWS_COUNTED ? `Nyt til dig, mere end ${NEWS_COUNTED} nye`
-            : count ? `Nyt til dig, ${count} nye`
-            : unwatched ? "Nyt til dig, med noget du ikke har set" : "Nyt til dig");
+        badge.hidden = count == 0;
+        badge.textContent = count > NEWS_COUNTED ? `${NEWS_COUNTED}+` : count ? String(count) : "";
+        bell.setAttribute("aria-label", count > NEWS_COUNTED ? `Nyt til dig, mere end ${NEWS_COUNTED} nye` : count ? `Nyt til dig, ${count} nye` : "Nyt til dig");
     }
     // On the app's icon too, where the site is installed as an app, like on the home screen
     if (typeof navigator != "undefined" && "setAppBadge" in navigator) {
@@ -174,119 +148,89 @@ function updateBell() {
     }
 }
 
-function newsItem({title, url, image, meta, seen}) {
-    const text = element("span", {class: "news-text"}, element("span", {class: "news-title"}, title), meta);
-    return element("li", {class: "news-line" + (seen ? " is-seen" : "")},
-        element("a", {class: "news-item", href: url},
-            element("span", {class: "news-media"}, image ? element("img", {src: image, alt: "", loading: "lazy"}) : icon("play")),
-            text));
+function newsItem({show, title, url, image, meta}, onOpen) {
+    const text = element("span", {class: "news-text"},
+        ...(show ? [element("span", {class: "news-show"}, show)] : []),
+        element("span", {class: "news-title"}, title), meta);
+    const link = element("a", {class: "news-item", href: url},
+        element("span", {class: "news-media"}, image ? element("img", {src: image, alt: "", loading: "lazy"}) : icon("play")),
+        text);
+    if (onOpen) {
+        link.addEventListener("click", onOpen);
+    }
+    return element("li", {class: "news-line"}, link);
 }
 
 function newsLineItem(line) {
-    const when = element("time", {datetime: new Date(line.at).toISOString()}, daysAgo(line.at));
-    const meta = element("span", {class: "news-meta"}, when);
-    if (line.seen) {
-        meta.append(element("span", {class: "news-seen"}, icon("check"), "Set"));
+    const meta = element("span", {class: "news-meta"}, element("time", {datetime: new Date(line.at).toISOString()}, daysAgo(line.at)));
+    if (line.label) {
+        meta.append(element("span", {}, line.label));
     }
-    return newsItem({...line, meta});
+    // Opened, it's no longer news, here and in the viewer's other tabs
+    return newsItem({...line, meta}, () => markNewsOpened(line.id));
 }
 
 function leavingItem(item) {
     return newsItem({...item, meta: element("span", {class: "news-meta news-leaving"}, item.label)});
 }
 
-// Notifications on this device, at the bottom: offered, or said to be on, with a way to turn them off.
-// Only asks the browser for permission once the viewer has clicked.
-async function renderNewsAlerts(footer, hasShows) {
-    const {push} = await features();
-    if (!push) {
-        footer.hidden = true;
-        return;
-    }
-    if (needsHomeScreen()) {
-        footer.replaceChildren(icon("bell"), element("p", {}, "På iPhone og iPad kan du kun få notifikationer, når siden er føjet til hjemmeskærmen. Tryk på Del, vælg Føj til hjemmeskærm, og åbn siden derfra."));
-        footer.hidden = false;
-        return;
-    }
-    if (!pushSupported()) {
-        footer.hidden = true;
-        return;
-    }
-    const on = await alertsOn();
-    if (!on && !hasShows) {
-        footer.hidden = true;
-        return;
-    }
-    const button = element("button", {type: "button", class: on ? "button button-quiet" : "button button-primary"}, ...(on ? ["Slå fra"] : [icon("bell"), " Få besked på denne enhed"]));
-    const text = on
-        ? element("p", {}, element("strong", {}, "Notifikationer er slået til"), " på denne enhed, når en favoritserie får et nyt afsnit.")
-        : element("p", {}, alertsExplained());
-    button.addEventListener("click", async function () {
-        button.disabled = true;
-        try {
-            if (on) {
-                await disableAlerts();
-                announce("Notifikationer er slået fra på denne enhed");
-            } else {
-                await enableAlerts();
-            }
-        } catch (error) {
-            announce(error.message);
-        }
-        await renderNewsAlerts(footer, hasShows);
-        footer.querySelector("button")?.focus();
-    });
-    footer.replaceChildren(on ? text : button, on ? button : text);
-    footer.hidden = false;
-}
-
 // Fills in a list of what's new: in the bell's panel, with level 2 for its headings, or on /nyt/, with 1
 function renderNews(container, level) {
     const {favorites, details, lines, leaving} = currentNews();
     // Only when it changed, so the viewer's place in it stays
-    const signature = JSON.stringify([favorites.length, details.at == 0, lines.map(l => [l.key, l.title, l.url, l.seen, daysAgo(l.at)]), leaving.map(l => [l.key, l.label])]);
+    const signature = JSON.stringify([favorites.length, details.at == 0, lines.map(l => [l.key, l.title, l.url, daysAgo(l.at)]), leaving.map(l => [l.key, l.label])]);
     if (container.dataset.signature == signature) {
         return;
     }
     container.dataset.signature = signature;
-    const heading = (text, extra = {}) => element("h" + (level + 1), {class: "news-heading", ...extra}, text);
+    const heading = text => element("h" + (level + 1), {class: "news-heading"}, text);
     const parts = [];
+    const any = lines.length + leaving.length > 0;
+    const top = element("div", {class: "news-top"});
     if (level == 2) {
-        parts.push(element("h2", {class: "news-panel-title", tabindex: "-1"}, "Nyt til dig"));
+        top.append(element("h2", {class: "news-panel-title", tabindex: "-1"}, "Nyt til dig"));
+    }
+    if (any) {
+        const clear = element("button", {type: "button", class: "news-clear"}, "Ryd alle");
+        clear.addEventListener("click", function () {
+            clearNews();
+            announce("Nyt til dig er ryddet");
+            const title = container.querySelector(".news-panel-title");
+            if (title) {
+                title.focus();
+            }
+        });
+        top.append(clear);
+    }
+    if (top.childElementCount) {
+        parts.push(top);
     }
     if (favorites.length == 0) {
         parts.push(element("div", {class: "news-empty"}, icon("heart"),
             element("p", {}, "Her kommer nye afsnit af dine favoritserier og favoritter, der snart udløber. Tryk på ", element("strong", {}, "Favorit"), " på en serie eller film for at tilføje den.")));
-    } else if (details.at == 0 && lines.length == 0 && leaving.length == 0) {
+    } else if (details.at == 0 && !any) {
         parts.push(element("p", {class: "news-none"}, "Henter nyt fra dine favoritter …"));
     } else {
         if (lines.length) {
             parts.push(heading("Nye afsnit"), element("ul", {class: "news-list"}, ...lines.slice(0, NEWS_LINES).map(newsLineItem)));
-        } else {
-            parts.push(element("p", {class: "news-none"}, "Intet nyt de sidste 14 dage"));
         }
         if (leaving.length) {
             parts.push(heading("Udløber snart"), element("ul", {class: "news-list"}, ...leaving.map(leavingItem)));
         }
+        if (!any) {
+            parts.push(element("p", {class: "news-none"}, "Intet nyt fra dine favoritter lige nu."));
+        }
     }
-    let footer = container.querySelector(".news-alerts");
-    if (footer == null) {
-        footer = element("div", {class: "news-alerts"});
-        footer.hidden = true;
-    }
-    container.replaceChildren(...parts, footer);
-    renderNewsAlerts(footer, favorites.some(f => (f.kind || "show") == "show"))
-        .catch(error => console.error("Could not tell of the notifications:", error));
+    container.replaceChildren(...parts);
 }
 
-// What's new on /nyt/, which counts as looking under the bell
+// What's new on /nyt/
 function setupNewsPage() {
     const page = document.getElementById("news-page");
     if (page == null) {
         return;
     }
     renderNews(page, 1);
-    markNewsSeen();
 }
 
 const bellPanel = {bell: null, panel: null};
@@ -312,7 +256,6 @@ function openBell() {
     panel.hidden = false;
     bell.setAttribute("aria-expanded", "true");
     panel.querySelector(".news-panel-title").focus();
-    markNewsSeen();
     // What the server didn't have time for before, if anything
     loadFavoriteDetails(true).catch(error => console.error("Could not get details about the favourites:", error));
 }
@@ -372,8 +315,10 @@ function setupBell() {
             closeBell(true);
         }
     });
+    // Where it was clicked, though what was clicked may be gone, like "Ryd alle"
     document.addEventListener("click", function (event) {
-        if (panelOpen() && !panel.contains(event.target) && !bell.contains(event.target)) {
+        const path = event.composedPath();
+        if (panelOpen() && !path.includes(panel) && !path.includes(bell)) {
             closeBell(false);
         }
     });
@@ -384,23 +329,19 @@ function updateNews() {
     updateBell();
     if (panelOpen()) {
         renderNews(bellPanel.panel, 2);
-        markNewsSeen(false);
     }
     const page = document.getElementById("news-page");
     if (page) {
         renderNews(page, 1);
-        markNewsSeen(false);
     }
 }
 
-// When there's more from the server, here or in another tab, or the viewer opened the bell or saw something in another
+// When there's more from the server, here or in another tab, or the viewer cleared the list, or saw or opened
+// something, in another tab or on another device
 window.addEventListener("favoritedetails", updateNews);
 window.addEventListener("storage", function (event) {
-    if (event.key == null || ["newsSeen", "favorites", "favoriteDetails"].includes(event.key) || event.key.startsWith("progress_")) {
-        updateBell();
-        if (panelOpen() && event.key != "newsSeen") {
-            renderNews(bellPanel.panel, 2);
-        }
+    if (event.key == null || ["newsCleared", "newsOpened", "favorites", "favoriteDetails"].includes(event.key) || event.key.startsWith("progress_")) {
+        updateNews();
     }
 });
 

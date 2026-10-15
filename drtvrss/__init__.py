@@ -43,7 +43,21 @@ app.add_template_global(whats_on)
 app.add_template_global(channel_style)
 app.add_template_test(is_new, "new")
 
-SERVICE_NAME = os.getenv("SERVICE_NAME", "GLOTV")
+
+# The endings of the site's name that the logo puts on a warm white tag, like the Worker's logo()
+LOGO_TAGS = ("kassen", "tv")
+
+
+@app.template_filter("logo_tag")
+def logo_tag(name: str) -> str:
+    """The end of the site's name that goes on the logo's tag, like "kassen" of Flimmerkassen, or "" """
+    for tag in LOGO_TAGS:
+        if len(name) > len(tag) and name.lower().endswith(tag):
+            return name[-len(tag):]
+    return ""
+
+
+SERVICE_NAME = os.getenv("SERVICE_NAME", "Flimmerkassen")
 # Where the code that runs here can be got
 SOURCE_URL = os.getenv("SOURCE_URL", "https://github.com/devjoda/dktv")
 
@@ -299,6 +313,34 @@ async def view_program(progid):
     )
 
 
+# How many of a season's episodes its list beside the video has at most, and how many of them before the one playing
+SEASON_LIST_SIZE = 40
+SEASON_LIST_BEFORE = 10
+
+
+def season_list(show, season, e) -> dict:
+    """The season's episodes around the one playing, for the list beside the video, like the Worker's seasonList()"""
+    i = season.episodes.index(e)
+    count = len(season.episodes)
+    start = 0 if count <= SEASON_LIST_SIZE else max(0, min(i - SEASON_LIST_BEFORE, count - SEASON_LIST_SIZE))
+    shown = season.episodes[start : start + SEASON_LIST_SIZE]
+    return {
+        "title": season.title if len(show.seasons) > 1 else "Afsnit",
+        "all": f"/{show.url}/" if len(shown) < count else None,
+        "episodes": [
+            {
+                "url": f"/{show.url}/{other.ep_link}",
+                "title": other.title,
+                "wallpaper": other.wallpaper,
+                "len_minutes": other.len_minutes,
+                "video_id": other.video_id,
+                "current": other is e,
+            }
+            for other in shown
+        ],
+    }
+
+
 @app.route("/<showid>/<episode>")
 async def view_episode(showid, episode):
     show = await get_show(showid)
@@ -331,6 +373,7 @@ async def view_episode(showid, episode):
         e=e,
         previous=neighbour(i - 1),
         next=neighbour(i + 1),
+        season_list=season_list(show, season, e),
         SERVICE_NAME=SERVICE_NAME,
         channels=await get_channels(),
     )

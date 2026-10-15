@@ -24,6 +24,17 @@ describe("DR's rows", () => {
 		expect(item({type: "season", path: "/saeson/x_1"})).toBeUndefined();
 	});
 
+	test("an episode makes its series a favourite, with the series' title, but is still a programme of its own in a row", () => {
+		const episode = {id: "4", type: "episode", title: "Mors dreng: Første afsnit", path: "/episode/mors-dreng_-foerste-afsnit_4", showId: "1"};
+		expect(card(episode, CHANNELS)).toMatchObject({seriesId: "1", seriesTitle: "Mors dreng", videoId: "4"});
+		expect(card(episode, CHANNELS)!.showId).toBeUndefined();
+		const show = {id: "1", type: "show", title: "Mors dreng", path: "/serie/mors-dreng_1"};
+		expect(cards([show, episode], CHANNELS)).toHaveLength(2);
+		// Films are favourites of their own, and live channels none
+		expect(item({type: "program", path: "/program/en-film_5"})!.seriesId).toBeUndefined();
+		expect(item({type: "link", path: "/kanal/dr1_20875"})).toMatchObject({showId: undefined, seriesId: undefined, filmId: undefined});
+	});
+
 	test("taglines are split", () => {
 		const c = item({type: "show", path: "/serie/hoest_1", tagline: "Episode 1:7 | Stor ny dansk dramaserie",
 			customFields: {DisplayCategory: "Fiktionsserie,DR1", ShortVideoUrl: "https://example.com/clip.m3u8"}})!;
