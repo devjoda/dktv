@@ -290,6 +290,24 @@ async function setupFeatured() {
     document.addEventListener("visibilitychange", pauseOrPlay);
 }
 
+// Where a row's next or previous page starts, by its programmes, since rows don't snap to them with a mouse: forward,
+// the first that isn't all in view, and back, the first that the page before has room for
+function shelfPage(track, direction) {
+    const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0;
+    const origin = track.getBoundingClientRect().left - track.scrollLeft + pad;
+    const items = [...track.children].map(item => {
+        const box = item.getBoundingClientRect();
+        return {start: box.left - origin, end: box.right - origin};
+    });
+    const view = track.clientWidth - 2 * pad;
+    if (direction > 0) {
+        const next = items.find(item => item.end > track.scrollLeft + view + 1);
+        return next ? next.start : track.scrollWidth;
+    }
+    const first = items.find(item => item.start >= track.scrollLeft - view - 1);
+    return first && first.start < track.scrollLeft - 1 ? first.start : Math.max(0, track.scrollLeft - view);
+}
+
 // Buttons to scroll rows sideways, for those without a touchpad
 function setupShelves() {
     for (const shelf of document.querySelectorAll(".shelf")) {
@@ -311,8 +329,8 @@ function setupShelves() {
             back.disabled = track.scrollLeft <= 0;
             forward.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
         };
-        back.addEventListener("click", () => track.scrollBy({left: -track.clientWidth * .9}));
-        forward.addEventListener("click", () => track.scrollBy({left: track.clientWidth * .9}));
+        back.addEventListener("click", () => track.scrollTo({left: shelfPage(track, -1)}));
+        forward.addEventListener("click", () => track.scrollTo({left: shelfPage(track, 1)}));
         track.addEventListener("scroll", update, {passive: true});
         shelf.addEventListener("shelfchange", update);
         window.addEventListener("resize", update);

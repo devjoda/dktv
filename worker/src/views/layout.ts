@@ -139,7 +139,7 @@ ${content}
 <div id="toast" class="toast-message" role="status" aria-live="polite"></div>
 <footer class="site-footer">
 <a class="logo" href="/" aria-label="${site.serviceName}, forsiden">${logo(site.serviceName)}</a>
-<p>Siden er en uofficiel, uafhængig alternativ brugerflade og er ikke tilknyttet til DR. Alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet materiale end det, DR selv stiller til rådighed. DR og DRTV er DR's varemærker.</p>
+<p>${site.serviceName} er en uofficiel alternativ brugerflade, og er ikke tilknyttet til DR. Alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet materiale end det, DR selv stiller til rådighed. DR og DRTV er DR's varemærker.</p>
 <nav class="footer-links" aria-label="Om siden">
 <a href="/privatliv/"${attr("aria-current", site.path.startsWith("/privatliv/") && "page")}>Privatliv</a>
 <a href="/sync/">Din konto</a>

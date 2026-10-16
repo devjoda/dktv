@@ -278,6 +278,11 @@ describe("favourites", () => {
 		b.storage.setItem("favorites", JSON.stringify([favorite(2, "503605"), favorite(1, "rejseholdet_503605"), favorite(1, "matador_2")]));
 		expect(b.run("loadFavorites()").map((f: any) => [f.id, f.added])).toEqual([["rejseholdet_503605", 2], ["matador_2", 1]]);
 	});
+
+	test("a tile says how many new episodes, up to 10+", () => {
+		expect([0, 1, 2, 9, 10, 14].map(n => b.run(`newEpisodesTag(${n})`)))
+			.toEqual([null, "Nyt afsnit", "2 nye afsnit", "9 nye afsnit", "10+ nye afsnit", "10+ nye afsnit"]);
+	});
 });
 
 describe("the favourites page's filters", () => {

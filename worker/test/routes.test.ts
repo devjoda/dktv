@@ -157,7 +157,7 @@ describe("every page", () => {
 
 	test("says it isn't DR's, and links to privacy, syncing and the source", async () => {
 		const footer = between((await get("/")).text, '<footer class="site-footer">', "</footer>");
-		expect(footer).toContain("Siden er en uofficiel, uafhængig alternativ brugerflade og er ikke tilknyttet til DR.");
+		expect(footer).toContain("Flimmerkassen er en uofficiel alternativ brugerflade, og er ikke tilknyttet til DR.");
 		expect(footer).toContain("Alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet materiale end det, DR selv stiller til rådighed. DR og DRTV er DR's varemærker.");
 		expect(footer).toContain('<a href="/privatliv/">Privatliv</a>');
 		expect(footer).toContain('<a href="/sync/">');

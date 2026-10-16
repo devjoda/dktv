@@ -1292,6 +1292,14 @@ h1, h2, h3 {
     scroll-snap-align: start;
 }
 
+/* With a mouse or a touchpad, rows scroll as far as the hand does: Firefox stops at every programme of a row that
+   snaps, which makes a swipe across it slow. Its buttons go a page at a time, from programme to programme. */
+@media (hover: hover) and (pointer: fine) {
+    .shelf-track {
+        scroll-snap-type: none;
+    }
+}
+
 .shelf-empty {
     display: flex;
     align-items: center;

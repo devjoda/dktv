@@ -171,7 +171,7 @@ def test_all_of_a_list(get, fake_dr, monkeypatch):
 
 def test_footer_says_it_isnt_drs_and_links_to_privacy_syncing_and_the_source(get):
     footer = get("/").text.split('<footer class="site-footer">')[1].split("</footer>")[0]
-    assert "Siden er en uofficiel, uafhængig alternativ brugerflade og er ikke tilknyttet til DR." in footer
+    assert "Flimmerkassen er en uofficiel alternativ brugerflade, og er ikke tilknyttet til DR." in footer
     assert "Alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet materiale end det, DR selv stiller til rådighed. DR og DRTV er DR's varemærker." in footer
     assert '<a href="/privatliv/">Privatliv</a>' in footer
     assert '<a href="/sync/">' in footer
