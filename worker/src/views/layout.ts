@@ -69,10 +69,12 @@ export const VIDEO_SCRIPTS = html`${PLAYER_SCRIPTS}
 <script src="${staticURL("together.js")}"></script>
 <script src="${staticURL("skip.js")}"></script>`;
 
-/** The site's name as its logo: like Flimmer with kassen on a tag beside it, for names that end in kassen or TV */
+/** The site's name as its logo: for names that end in kassen or TV, like Flimmer, with the box for its i's dot */
 function logo(name: string): Html {
-	const tag = /^(.+)(kassen|tv)$/i.exec(name);
-	return tag ? html`<span class="logo-word">${tag[1]}</span><span class="logo-tag">${tag[2]}</span>` : html`<span class="logo-word">${name}</span>`;
+	const word = /^(.+)(kassen|tv)$/i.exec(name)?.[1] ?? name;
+	const i = word.indexOf("i");
+	return i < 0 || word == name ? html`<span class="logo-word">${word}</span>`
+		: html`<span class="logo-word">${word.slice(0, i)}<span class="logo-i">ı</span>${word.slice(i + 1)}</span>`;
 }
 
 export interface PageProps {

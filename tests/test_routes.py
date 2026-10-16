@@ -114,7 +114,7 @@ def test_front_page_features_drs_programmes(get):
 
 def test_header_has_the_logo_and_the_sections(get):
     r = get("/")
-    assert '<a class="logo" href="/" aria-label="Flimmerkassen, forsiden" aria-current="page"><span class="logo-word">Flimmer</span><span class="logo-tag">kassen</span></a>' in r.text
+    assert '<a class="logo" href="/" aria-label="Flimmerkassen, forsiden" aria-current="page"><span class="logo-word">Fl<span class="logo-i">ı</span>mmer</span></a>' in r.text
     nav = r.text.split('<nav class="site-nav"')[1].split("</nav>")[0]
     for title in ["Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]:
         assert f"{title}</a>" in nav

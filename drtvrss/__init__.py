@@ -44,13 +44,13 @@ app.add_template_global(channel_style)
 app.add_template_test(is_new, "new")
 
 
-# The endings of the site's name that the logo puts on a warm white tag, like the Worker's logo()
+# The endings of the site's name that the logo leaves for the box over its i, like the Worker's logo()
 LOGO_TAGS = ("kassen", "tv")
 
 
 @app.template_filter("logo_tag")
 def logo_tag(name: str) -> str:
-    """The end of the site's name that goes on the logo's tag, like "kassen" of Flimmerkassen, or "" """
+    """The end of the site's name that the logo's box stands for, like "kassen" of Flimmerkassen, or "" """
     for tag in LOGO_TAGS:
         if len(name) > len(tag) and name.lower().endswith(tag):
             return name[-len(tag):]
