@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_ui.html" import icon, pick_result %}
+{% block head %}
+<title>Vælg for mig - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block scripts %}
+<script src="{{ static_url('pick.js') }}"></script>
+{% endblock %}
+{% block content %}
+<div class="page-head wrap">
+    <h1>Vælg for mig</h1>
+</div>
+{# A few questions about what DR has, which pick.js asks, with what's left below them #}
+<section class="pick wrap js-pick" aria-labelledby="pick-question" hidden>
+<p class="pick-step js-pick-step"></p>
+<h2 class="pick-question js-pick-question" id="pick-question" tabindex="-1"></h2>
+<div class="pick-answers js-pick-answers" role="group" aria-labelledby="pick-question"></div>
+<div class="pick-actions">
+<button type="button" class="button button-primary js-pick-surprise">{{ icon("dice") }} Overrask mig</button>
+<button type="button" class="button button-secondary js-pick-back" hidden>{{ icon("chevron-left") }} Tilbage</button>
+<button type="button" class="button button-secondary js-pick-restart" hidden>Start forfra</button>
+</div>
+<p class="pick-count js-pick-count" aria-live="polite"></p>
+</section>
+<p class="wrap pick-loading js-pick-loading">Henter titler …</p>
+<div class="tile-grid results js-pick-tiles"></div>
+{{ pick_result() }}
+<noscript><p class="wrap">Vælg for mig kræver JavaScript.</p></noscript>
+{% endblock %}

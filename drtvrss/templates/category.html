@@ -1,11 +1,15 @@
 {% extends "base.html" %}
-{% from "_ui.html" import card_tile, shelf_head %}
+{% from "_ui.html" import card_tile, icon, shelf_head, pick_result %}
 {% block head %}
 <title>{{ category.title }} - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block scripts %}
+{% if page.rows %}<script src="{{ static_url('pick.js') }}"></script>{% endif %}
 {% endblock %}
 {% block content %}
 <div class="page-head wrap">
     <h1>{{ category.title }}</h1>
+    {% if page.rows %}<button type="button" class="button button-secondary js-pick-surprise" hidden>{{ icon("dice") }} Overrask mig</button>{% endif %}
 </div>
 {% for row in page.rows %}
 <section class="shelf" aria-labelledby="row-{{ loop.index }}">
@@ -17,4 +21,5 @@
 {% else %}
 <p class="wrap">Der er ikke noget i denne kategori lige nu.</p>
 {% endfor %}
+{% if page.rows %}{{ pick_result() }}{% endif %}
 {% endblock %}

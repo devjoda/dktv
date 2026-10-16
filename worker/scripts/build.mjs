@@ -67,7 +67,7 @@ write(join(root, "src", "static-versions.json"), JSON.stringify(versions, null, 
 // What the Worker keeps of DR's data changes along with the code that makes it, so a new
 // version of that code doesn't read what an older one kept
 const keeping = createHash("sha256");
-for (const name of ["cache.ts", "discover.ts", "live.ts", "models.ts", "search.ts", "show.ts"]) {
+for (const name of ["cache.ts", "discover.ts", "live.ts", "models.ts", "pick.ts", "search.ts", "show.ts"]) {
     keeping.update(readFileSync(join(root, "src", name)));
 }
 write(join(root, "src", "kept-version.json"), JSON.stringify({version: keeping.digest("hex").slice(0, 12)}) + "\n");

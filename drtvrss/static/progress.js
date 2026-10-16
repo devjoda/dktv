@@ -200,6 +200,15 @@ function updatePlayButtons() {
     }
 }
 
+// A link to a show's page with #afspil, like from "Vælg for mig", plays where its play button leads:
+// the first episode, or where the viewer got to
+function playIfAsked() {
+    const button = document.querySelector(".js-play[href]");
+    if (location.hash == "#afspil" && button) {
+        location.replace(button.href);
+    }
+}
+
 // Marks a video as seen, or not, like one the viewer watched somewhere else, like on their TV
 function setSeen(videoID, seen, at = Date.now()) {
     const previous = loadProgress(videoID) || {};

@@ -55,6 +55,12 @@ class Card:
     series_id: Optional[str] = None
     series_title: Optional[str] = None
     live: bool = False
+    # What it's like, for "Vælg for mig" and suggestions, see models.tags(); with when it's from, how long a film is,
+    # and how many seasons a show has, when DR says
+    tags: list[str] = field(default_factory=list)
+    year: Optional[int] = None
+    minutes: Optional[int] = None
+    seasons: Optional[int] = None
 
 
 @dataclass
@@ -135,6 +141,11 @@ def card(item: dr.DiscoverItem, channel_slugs: dict[str, str]) -> Optional[Card]
         # DR's title for an episode is like "Den store bagedyst: Bær i bagedysten"
         series_title=item.title.split(": ")[0] if series_id else None,
         live=item.type == "link",
+        tags=dr.tags(item),
+        year=item.release_year,
+        # Rounded half up, like the Worker, not to even
+        minutes=int(item.duration / 60 + 0.5) if item.duration else None,
+        seasons=item.available_season_count,
     )
 
 
@@ -290,13 +301,18 @@ NOT_SIMILAR = ["nyheder"]
 # How many programmes to suggest from a category, at most, and how few make it worth trying a wider one
 SIMILAR = 8
 SIMILAR_ENOUGH = 4
+# What DR says about most of a category, which says little about what a programme is like
+BROAD_TAGS = {"fiktionsserie", "serier", "serie", "film", "dokumentar", "tv-program", "dansk", "ikke-dansk",
+              "gensyn", "dr gensyn", "underholdning", "15-24 år"}
 
 
-async def similar_to(categories: list[str], exclude: str) -> dict:
+async def similar_to(categories: list[str], exclude: str, tags: list[str] = ()) -> dict:
     """Programmes like one with DR's categories, like ["fiktionsserie", "krimi"], for after it: from the page of
     its narrowest category that DR has a page for, without the programme itself, whose DR id `exclude` is:
-    the next one, when a category's page has fewer than 4 others.
+    the next one, when a category's page has fewer than 4 others. Those most like it come first, by what DR says
+    it's like, its `tags`, like "nervepirrende", and otherwise as the category's page has them.
     Like the Worker's similarTo()."""
+    alike = {t for t in tags if t not in BROAD_TAGS}
     pages = await get_categories()
 
     def page_of(category: str) -> Optional[Category]:
@@ -315,13 +331,16 @@ async def similar_to(categories: list[str], exclude: str) -> dict:
             continue
         page = await get_page(found.url.rstrip("/"), max_rows=12)
         seen = {exclude}
-        cards = []
+        candidates = []
         for c in [*(page.featured if page else []), *(card for row in (page.rows if page else []) for card in row.cards)]:
             card_id = (c.show_id or c.film_id or "").split("_")[-1]
-            if c.live or not card_id or card_id in seen or len(cards) >= SIMILAR:
+            if c.live or not card_id or card_id in seen:
                 continue
             seen.add(card_id)
-            cards.append({"title": c.title, "url": c.url, "image": thumbnail(c.image)})
+            candidates.append(c)
+        # Sorting keeps the page's order for those as like it as each other
+        candidates.sort(key=lambda c: -sum(t in alike for t in c.tags))
+        cards = [{"title": c.title, "url": c.url, "image": thumbnail(c.image)} for c in candidates[:SIMILAR]]
         if len(cards) >= SIMILAR_ENOUGH:
             return {"label": found.title, "cards": cards}
         if len(cards) > len(best["cards"]):

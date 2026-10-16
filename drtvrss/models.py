@@ -10,6 +10,7 @@ degrades a page instead of breaking it.
 """
 
 from datetime import datetime
+import re
 from typing import Annotated, Generic, Literal, Optional, TypeVar
 from zoneinfo import ZoneInfo
 
@@ -68,6 +69,8 @@ class Item(DRModel):
     show_id: Optional[str] = None
     # Like ["dokumentar", "kultur", "dr1"]
     categories: Annotated[Optional[list[str]], Lenient] = None
+    # Like ["mood_nervepirrende"], see tags()
+    keywords: Annotated[Optional[list[str]], Lenient] = None
 
 
 class ItemList(DRModel, Generic[T]):
@@ -205,6 +208,13 @@ class DiscoverItem(DRModel):
     tagline: Annotated[Optional[str], Lenient] = None
     images: Images = Images()
     custom_fields: DiscoverCustomFields = DiscoverCustomFields()
+    # Like ["fiktionsserie", "krimi", "dr1"], and DR's keywords, like ["mood_nervepirrende"], see tags()
+    categories: Annotated[Optional[list[str]], Lenient] = None
+    keywords: Annotated[Optional[list[str]], Lenient] = None
+    release_year: Annotated[Optional[int], Lenient] = None
+    # In seconds
+    duration: Annotated[Optional[int], Lenient] = None
+    available_season_count: Annotated[Optional[int], Lenient] = None
 
 
 class Paging(DRModel):
@@ -247,3 +257,22 @@ class Token(DRModel):
     value: str
     type: str
     expiration_date: datetime
+
+
+# DR's keywords that say what something is like, as "prefix_word", and what it's said here instead of the prefix:
+# its kind and genre, like "dokumentar" and "krimi", its mood, like "nervepirrende", where it's from, and who it's for
+KEYWORDS = ("editorialptaxtop_", "editorialptaxsub_", "mood_", "culturalorigin_", "agetargetgroup_")
+# Categories that are only DR's channels and services, or how it can be watched, like with spoken subtitles
+NOT_TAGS = re.compile(r"^(acc_|dr\d?$|drtv$|dr k$|dr tv$|p\d$)")
+
+
+def tags(item) -> list[str]:
+    """What DR says an item is like, from its categories and keywords, in small letters: like
+    ["fiktionsserie", "krimi", "serier", "thriller/krimi", "nervepirrende", "ikke-dansk"]. Like the Worker's tags()."""
+    found = [c.lower() for c in item.categories or [] if isinstance(c, str) and not NOT_TAGS.match(c.lower())]
+    found = list(dict.fromkeys(found))
+    for keyword in item.keywords or []:
+        prefix = next((p for p in KEYWORDS if keyword.startswith(p)), None)
+        if prefix is not None and keyword[len(prefix):].lower() not in found:
+            found.append(keyword[len(prefix):].lower())
+    return found

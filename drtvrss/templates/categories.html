@@ -2,10 +2,12 @@
 {% block head %}
 <title>Kategorier - {{ SERVICE_NAME }}</title>
 {% endblock %}
+{% from "_ui.html" import icon %}
 {% block content %}
 <div class="page-head wrap">
     <h1>Kategorier</h1>
 </div>
+<a class="pick-promo wrap" href="/vaelg/">{{ icon("dice") }}<span><strong>Vælg for mig</strong> Ved du ikke, hvad du vil se? Svar på et par spørgsmål, eller lad terningen bestemme.</span></a>
 <ul class="category-grid wrap">
     {% for c in categories %}
     <li>

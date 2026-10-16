@@ -11,6 +11,7 @@ import {channelNamed, getChannels, getSchedules, planFrom} from "./live";
 import {search} from "./search";
 import {allEpisodes, getLongDescription, getProgram, getShow, isDocumentary, itemId, newEpisodes, rssFeed, type Show, thumbnail} from "./show";
 import * as passkeys from "./passkeys";
+import {pickPool} from "./pick";
 import * as segments from "./segments";
 import {isRoomId, newRoomId} from "./room";
 import * as syncStore from "./sync";
@@ -233,8 +234,14 @@ app.get("/forslag/:kind{serie|program}/:slug", edgeCached(60 * MINUTE), async c 
 	const ctx = c.get("ctx");
 	const slug = c.req.param("slug");
 	const item = c.req.param("kind") == "serie" ? await getShow(ctx, slug) : await getProgram(ctx, slug);
-	return c.json(await similarTo(ctx, item.categories ?? [], itemId(slug)));
+	return c.json(await similarTo(ctx, item.categories ?? [], itemId(slug), item.tags));
 });
+
+// "Vælg for mig": its answers, like ?type=serie, are read by pick.js, which picks from /vaelg.json
+app.get("/vaelg/", edgeCached(60 * MINUTE, {withoutQuery: true}), c => render(c, pages.pickPage(site(c))));
+app.get("/vaelg", c => c.redirect("/vaelg/", 308));
+
+app.get("/vaelg.json", edgeCached(60 * MINUTE), async c => c.json(await pickPool(c.get("ctx"))));
 
 // Its filter, like ?vis=dokumentar, is read by favorites.js
 app.get("/favoritter/", edgeCached(60 * MINUTE, {withoutQuery: true}), c => render(c, pages.favoritesPage(site(c))));

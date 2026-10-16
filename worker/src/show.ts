@@ -45,6 +45,8 @@ export interface Show {
 	expires?: number;
 	// DR's categories for it, like ["dokumentar", "kultur"]. What was kept before they were, hasn't.
 	categories?: string[];
+	// What DR says it's like, see models.tags()
+	tags?: string[];
 	seasons: Season[];
 }
 
@@ -60,6 +62,7 @@ export interface Program {
 	expires?: number;
 	// Like Show's
 	categories?: string[];
+	tags?: string[];
 }
 
 const SHOW_CACHE_TIME = 60 * 60;
@@ -179,6 +182,7 @@ export function buildShow(latest: Json, seasons: Map<string, Json>): Show {
 		nextEpisode: next !== undefined ? next * 1000 : undefined,
 		expires: dr.availableUntil(show) ?? dr.availableUntil(latest),
 		categories: dr.categories(latest).length ? dr.categories(latest) : dr.categories(show),
+		tags: [...new Set([...dr.tags(show), ...dr.tags(latest)])],
 		seasons: [],
 	};
 	for (const ref of dr.items(show, "seasons")) {
@@ -269,6 +273,7 @@ export async function getProgram(ctx: Ctx, slug: string): Promise<Program> {
 			minutes: dr.lengthInMinutes(item),
 			expires: dr.availableUntil(item),
 			categories: dr.categories(item),
+			tags: dr.tags(item),
 		};
 	});
 }

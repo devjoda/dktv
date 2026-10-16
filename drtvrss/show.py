@@ -110,10 +110,13 @@ class Show:
         geo_restricted: bool = False,
         next_episode: Optional[datetime] = None,
         categories: Optional[list[str]] = None,
+        tags: Optional[list[str]] = None,
     ):
         self.title = title
         # DR's categories for it, like ["dokumentar", "kultur"]
         self.categories = categories
+        # What DR says it's like, see models.tags()
+        self.tags = tags or []
         self.description = description
         self.url = url
         self.seasons = []
@@ -197,6 +200,7 @@ class Program:
         wallpaper: Optional[str] = None,
         len_minutes: Optional[int] = None,
         categories: Optional[list[str]] = None,
+        tags: Optional[list[str]] = None,
     ):
         self.title = title
         self.description = description
@@ -206,6 +210,7 @@ class Program:
         self.len_minutes = len_minutes
         # DR's categories for it, like ["dokumentar", "kultur"]
         self.categories = categories
+        self.tags = tags or []
         self.video_id = video_id(url) if url is not None else None
         self.age = time()
 

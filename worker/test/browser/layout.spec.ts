@@ -9,6 +9,7 @@ test.describe("on a phone", () => {
 		await page.goto("/privatliv/");
 		await expect(page.locator(".site-nav")).toBeHidden();
 		await expect(page.getByRole("link", {name: "Flimmerkassen, forsiden"}).first()).toBeVisible();
+		await expect(page.locator(".site-header").getByRole("link", {name: "Vælg for mig"})).toBeInViewport({ratio: 1});
 		const tabs = page.locator(".tab-bar .tab");
 		await expect(tabs).toHaveText(["Forside", "Direkte", "Kategorier", "Søg", "Favoritter"]);
 		for (const tab of await tabs.all()) {
@@ -47,6 +48,16 @@ for (const width of [900, 1024, 1180, 1440]) {
 		await expect(page.getByRole("link", {name: "Søg"}).or(page.getByRole("search")).first()).toBeVisible();
 		await expect(page.getByRole("link", {name: "Din konto"}).first()).toBeVisible();
 		await expect(page.locator(".js-bell")).toBeInViewport({ratio: 1});
+		// Where there's room for it beside the search box
+		const pick = page.locator(".site-header").getByRole("link", {name: "Vælg for mig"});
+		if (width >= 960) {
+			await expect(pick).toBeInViewport({ratio: 1});
+		} else {
+			await expect(pick).toBeHidden();
+		}
+		await expect(page.getByRole("link", {name: "Din konto"}).first()).toBeInViewport({ratio: 1});
+		// Without scrolling sideways
+		expect(await page.evaluate("document.documentElement.scrollWidth")).toBe(width);
 	});
 }
 

@@ -69,10 +69,12 @@ export const VIDEO_SCRIPTS = html`${PLAYER_SCRIPTS}
 <script src="${staticURL("together.js")}"></script>
 <script src="${staticURL("skip.js")}"></script>`;
 
-/** The site's name as its logo: like Flimmer with kassen on a tag beside it, for names that end in kassen or TV */
+/** The site's name as its logo: for names that end in kassen or TV, like Flimmer, with the box for its i's dot */
 function logo(name: string): Html {
-	const tag = /^(.+)(kassen|tv)$/i.exec(name);
-	return tag ? html`<span class="logo-word">${tag[1]}</span><span class="logo-tag">${tag[2]}</span>` : html`<span class="logo-word">${name}</span>`;
+	const word = /^(.+)(kassen|tv)$/i.exec(name)?.[1] ?? name;
+	const i = word.indexOf("i");
+	return i < 0 || word == name ? html`<span class="logo-word">${word}</span>`
+		: html`<span class="logo-word">${word.slice(0, i)}<span class="logo-i">ı</span>${word.slice(i + 1)}</span>`;
 }
 
 export interface PageProps {
@@ -128,6 +130,7 @@ ${each(sections(site.path), ([url, name, current]) =>
 <button type="submit" class="search-submit" aria-label="Søg">${icon("search")}</button>
 </form>
 <a class="search-link" href="/search/" aria-label="Søg"${attr("aria-current", site.path.startsWith("/search/") && "page")}>${icon("search")}</a>
+<a class="pick-link" href="/vaelg/" aria-label="Vælg for mig" title="Vælg for mig"${attr("aria-current", site.path.startsWith("/vaelg/") && "page")}>${icon("dice")}</a>
 <a class="bell-link js-bell" href="/nyt/" aria-label="Nyt til dig"${attr("aria-current", site.path.startsWith("/nyt/") && "page")}>${icon("bell")}<span class="bell-count" aria-hidden="true" hidden></span></a>
 <a class="account-link" href="/sync/" aria-label="Din konto"${attr("aria-current", site.path.startsWith("/sync/") && "page")}>${icon("user")}</a>
 </div>
@@ -138,7 +141,7 @@ ${content}
 <div id="toast" class="toast-message" role="status" aria-live="polite"></div>
 <footer class="site-footer">
 <a class="logo" href="/" aria-label="${site.serviceName}, forsiden">${logo(site.serviceName)}</a>
-<p>Siden er en uofficiel, uafhængig alternativ brugerflade og er ikke tilknyttet til DR. Alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet materiale end det, DR selv stiller til rådighed. DR og DRTV er DR's varemærker.</p>
+<p>${site.serviceName} er en uofficiel alternativ brugerflade, og er ikke tilknyttet til DR. Alt indhold hentes direkte fra DR's servere, og siden giver ikke adgang til andet materiale end det, DR selv stiller til rådighed. DR og DRTV er DR's varemærker.</p>
 <nav class="footer-links" aria-label="Om siden">
 <a href="/privatliv/"${attr("aria-current", site.path.startsWith("/privatliv/") && "page")}>Privatliv</a>
 <a href="/sync/">Din konto</a>

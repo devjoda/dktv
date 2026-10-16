@@ -137,6 +137,12 @@ function unseenNewEpisodes(details, now = Date.now()) {
         .reverse();
 }
 
+// What a favourite's tile says of its new episodes: how many, up to 10+, since a daily programme's two weeks are more
+// than the tile has room for, and the number says no more than "many" by then
+function newEpisodesTag(count) {
+    return count == 1 ? "Nyt afsnit" : count > 1 ? `${count >= 10 ? "10+" : count} nye afsnit` : null;
+}
+
 function favoriteTile(favorite, details) {
     const film = favorite.kind == "film";
     let meta = "";
@@ -147,7 +153,7 @@ function favoriteTile(favorite, details) {
     }
     // What's new and not seen yet, which the tile leads to
     const unseen = film ? [] : unseenNewEpisodes(details);
-    const news = unseen.length == 1 ? "Nyt afsnit" : unseen.length > 1 ? `${unseen.length} nye afsnit` : null;
+    const news = newEpisodesTag(unseen.length);
     return buildTile({
         href: film ? `/program/${favorite.id}` : unseen.length ? unseen[0].url : `/${favorite.id}/`,
         image: favorite.image,
