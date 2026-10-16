@@ -57,7 +57,7 @@ for (const width of [900, 1024, 1180, 1440]) {
 		}
 		await expect(page.getByRole("link", {name: "Din konto"}).first()).toBeInViewport({ratio: 1});
 		// Without scrolling sideways
-		expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
+		expect(await page.evaluate("document.documentElement.scrollWidth")).toBe(width);
 	});
 }
 

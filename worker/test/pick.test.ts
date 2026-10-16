@@ -80,12 +80,21 @@ describe("what's picked from", () => {
 		expect(merged[0]).toMatchObject({url: "/a_1/", showId: "a_1", fresh: true, tags: ["fiktionsserie", "drama"]});
 	});
 
-	test("/vaelg.json has DR's series from the categories' pages, each once, with what it's like", async () => {
+	test("/vaelg.json has DR's series from the categories' pages, each once, with what it's like, more with each visit", async () => {
+		forgetAll();
 		const r = await get("/vaelg.json");
 		expect(r.status).toBe(200);
 		expect(r.contentType).toContain("application/json");
-		const found: Pick[] = JSON.parse(r.text);
-		expect(found.length).toBeGreaterThan(20);
+		const first: Pick[] = JSON.parse(r.text);
+		expect(first.length).toBeGreaterThan(10);
+		// The visits after a minute or so add what the first left out
+		const now = Date.now();
+		let found = first;
+		for (let i = 1; i <= 12; i++) {
+			vi.spyOn(Date, "now").mockReturnValue(now + i * 2 * 60 * 1000);
+			found = JSON.parse((await get("/vaelg.json")).text);
+		}
+		expect(found.length).toBeGreaterThan(first.length);
 		expect(new Set(found.map(p => p.url)).size).toBe(found.length);
 		expect(found.every(p => ["serie", "film", "dokumentar", "program"].includes(p.kind) && Array.isArray(p.tags))).toBe(true);
 		expect(found.some(p => p.kind == "serie" && p.tags.includes("krimi") && p.image?.startsWith("https://"))).toBe(true);
