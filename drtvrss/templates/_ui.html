@@ -149,3 +149,20 @@ show_id and film_id add a button to make the show or film a favourite.
     {% if show.geo_restricted %}<span class="tag tag-geo">Kun i Danmark</span>{% endif %}
 </p>
 {%- endmacro %}
+
+{# What pick.js shows when it has picked something: the programme, and a countdown to it, which can be undone #}
+{% macro pick_result() -%}
+<dialog class="pick-result js-pick-result" aria-labelledby="pick-result-title">
+<div class="pick-result-media js-pick-result-media"></div>
+<div class="pick-result-body">
+<p class="pick-result-kind js-pick-result-kind"></p>
+<h2 class="pick-result-title" id="pick-result-title"></h2>
+<p class="pick-result-countdown js-pick-countdown" aria-live="polite"></p>
+<div class="pick-result-actions">
+<a class="button button-primary js-pick-go" href="/">{{ icon("play") }} Se nu</a>
+<button type="button" class="button button-secondary js-pick-again">{{ icon("dice") }} Slå igen</button>
+<button type="button" class="button button-secondary js-pick-cancel">Fortryd</button>
+</div>
+</div>
+</dialog>
+{%- endmacro %}

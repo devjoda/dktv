@@ -270,10 +270,16 @@ h1, h2, h3 {
 
 /* What's new for the viewer, and their account, at the end of the header */
 /* Close to the account, as a pair of buttons */
+/* With "Vælg for mig" before them */
+.pick-link {
+    display: grid;
+    margin: 0 -16px 0 auto;
+}
+
 .bell-link {
     position: relative;
     display: grid;
-    margin: 0 -16px 0 auto;
+    margin: 0 -16px 0 0;
 }
 
 .account-link {
@@ -282,6 +288,7 @@ h1, h2, h3 {
 
 /* As round buttons, always with their circle, which turns warm white on their own page */
 .search-link,
+.pick-link,
 .bell-link,
 .account-link {
     place-items: center;
@@ -295,6 +302,7 @@ h1, h2, h3 {
 }
 
 .search-link .icon,
+.pick-link .icon,
 .bell-link .icon,
 .account-link .icon {
     width: 22px;
@@ -302,6 +310,7 @@ h1, h2, h3 {
 }
 
 .search-link:hover,
+.pick-link:hover,
 .bell-link:hover,
 .account-link:hover {
     background: rgba(242, 239, 233, .22);
@@ -309,6 +318,7 @@ h1, h2, h3 {
 }
 
 .search-link[aria-current],
+.pick-link[aria-current],
 .bell-link[aria-current],
 .bell-link[aria-expanded="true"],
 .account-link[aria-current] {
@@ -677,7 +687,7 @@ h1, h2, h3 {
         margin-right: -16px;
     }
 
-    .bell-link {
+    .pick-link {
         margin-left: 0;
     }
 
@@ -687,6 +697,34 @@ h1, h2, h3 {
 
     .footer-links {
         margin-left: auto;
+    }
+}
+
+/* Between the tabs and the search box, the sections sit closer, and where there's no room for "Vælg for mig", it's on
+   the categories' page instead */
+@media (min-width: 900px) and (max-width: 1179.98px) {
+    .header-bar {
+        column-gap: 16px;
+    }
+
+    .site-nav ul {
+        gap: 0;
+    }
+
+    .nav-item {
+        padding-inline: 8px;
+    }
+
+    .search-link,
+    .pick-link,
+    .bell-link {
+        margin-right: -8px;
+    }
+}
+
+@media (min-width: 900px) and (max-width: 959.98px) {
+    .pick-link {
+        display: none;
     }
 }
 
@@ -3993,4 +4031,265 @@ video + .up-next {
         transition: none !important;
         scroll-behavior: auto !important;
     }
+}
+
+/* Vælg for mig: a question at a time, big answers, and what's left below, which gets fewer */
+
+.pick {
+    margin-top: 28px;
+}
+
+.pick-step {
+    margin: 0 0 6px;
+    color: var(--muted);
+}
+
+.pick-question {
+    margin: 0;
+    font-size: var(--text-h2);
+    font-weight: 800;
+    letter-spacing: -.02em;
+}
+
+.pick-question:focus {
+    outline: none;
+}
+
+.pick-answers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: 10px;
+    max-width: 920px;
+    margin-top: 20px;
+}
+
+.pick-answers:empty {
+    display: none;
+}
+
+.pick-answer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+    min-height: 64px;
+    padding: 12px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--media-radius);
+    background: var(--raised);
+    color: var(--paper);
+    text-align: left;
+    transition: background-color .15s, border-color .15s;
+}
+
+.pick-answer:hover {
+    border-color: rgba(242, 239, 233, .3);
+    background: var(--raised-hover);
+}
+
+.pick-answer:focus-visible {
+    outline: 2px solid var(--paper);
+    outline-offset: 2px;
+}
+
+.pick-answer-label {
+    font-size: var(--text-lead);
+    font-weight: 750;
+    line-height: 1.2;
+}
+
+.pick-answer-detail {
+    color: var(--muted);
+    font-size: var(--text-small);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Tabular numbers make a comma as wide as a digit */
+.pick-answer-hint {
+    font-variant-numeric: normal;
+}
+
+.pick-answer-skip {
+    background: none;
+}
+
+.pick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pick-actions .icon {
+    width: 1.25em;
+    height: 1.25em;
+}
+
+.pick-count {
+    margin: 28px 0 0;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.pick-loading {
+    margin-top: 28px;
+    color: var(--muted);
+}
+
+.pick ~ .tile-grid {
+    margin-top: 16px;
+    margin-bottom: 48px;
+}
+
+.tile[data-pick] {
+    animation: pick-in .2s ease both;
+}
+
+.tile.is-leaving {
+    opacity: 0;
+    transform: scale(.96);
+    transition: opacity .2s, transform .2s;
+}
+
+@keyframes pick-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tile[data-pick] {
+        animation: none;
+    }
+}
+
+/* What's picked, with a countdown to it */
+
+.pick-result {
+    width: min(100% - 32px, 520px);
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--raised);
+    color: var(--paper);
+}
+
+.pick-result::backdrop {
+    background: rgba(5, 6, 8, .75);
+}
+
+.pick-result-media {
+    aspect-ratio: 16 / 9;
+    background: var(--ink);
+}
+
+.pick-result-media:empty {
+    display: none;
+}
+
+.pick-result-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pick-result-body {
+    padding: 20px 22px 22px;
+}
+
+.pick-result-kind {
+    margin: 0;
+    color: var(--muted);
+}
+
+.pick-result-title {
+    margin: 2px 0 0;
+    font-size: var(--text-h2);
+    font-weight: 800;
+    letter-spacing: -.02em;
+}
+
+.pick-result-countdown {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.pick-result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.pick-result-actions .icon {
+    width: 1.25em;
+    height: 1.25em;
+}
+
+/* The ways to it: on the categories' page, under the front page's top, and on a category's page */
+
+.pick-promo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 28px;
+    color: var(--paper);
+}
+
+.pick-promo > .icon,
+.pick-line .icon {
+    flex: none;
+    width: 28px;
+    height: 28px;
+}
+
+.pick-promo span {
+    color: var(--muted);
+}
+
+.pick-promo strong {
+    display: block;
+    color: var(--paper);
+    font-size: var(--text-h3);
+    font-weight: 800;
+}
+
+.pick-promo:hover strong {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.pick-line {
+    margin: 20px 0 0;
+}
+
+.pick-line a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+}
+
+.pick-line a:hover {
+    color: var(--paper);
+}
+
+.pick-line strong {
+    color: var(--paper);
+}
+
+.page-head:has(.js-pick-surprise) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+}
+
+.page-head .js-pick-surprise .icon {
+    width: 1.25em;
+    height: 1.25em;
 }

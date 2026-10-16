@@ -104,6 +104,27 @@ export function categories(blob: Json): string[] {
 	return Array.isArray(blob?.categories) ? blob.categories.filter((c: unknown) => typeof c == "string").map((c: string) => c.toLowerCase()) : [];
 }
 
+// DR's keywords that say what something is like, as "prefix_word", and what it's said here instead of the prefix:
+// its kind and genre, like "dokumentar" and "krimi", its mood, like "nervepirrende", where it's from, and who it's for
+const KEYWORDS = ["editorialptaxtop_", "editorialptaxsub_", "mood_", "culturalorigin_", "agetargetgroup_"];
+// Categories that are only DR's channels and services, or how it can be watched, like with spoken subtitles
+const NOT_TAGS = /^(acc_|dr\d?$|drtv$|dr k$|dr tv$|p\d$)/;
+
+/**
+ * What DR says an item is like, from its categories and keywords, in small letters: like
+ * ["fiktionsserie", "krimi", "serier", "thriller/krimi", "nervepirrende", "ikke-dansk"]
+ */
+export function tags(blob: Json): string[] {
+	const found = new Set(categories(blob).filter(c => !NOT_TAGS.test(c)));
+	for (const keyword of Array.isArray(blob?.keywords) ? blob.keywords : []) {
+		const prefix = typeof keyword == "string" ? KEYWORDS.find(p => keyword.startsWith(p)) : undefined;
+		if (prefix !== undefined) {
+			found.add(keyword.slice(prefix.length).toLowerCase());
+		}
+	}
+	return [...found];
+}
+
 /** The items of one of DR's lists, like a show's seasons */
 export function items(blob: Json, field: string): Json[] {
 	const found = blob?.[field]?.items;

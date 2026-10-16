@@ -8,7 +8,7 @@ import pytest
 from typing import Optional
 from quart import abort
 
-from drtvrss import app, discover, drtv, live
+from drtvrss import app, discover, drtv, live, pick
 
 from .update_fixtures import fixture_name
 
@@ -41,6 +41,7 @@ def fake_dr(monkeypatch):
     monkeypatch.setattr(discover, "get_api", get_api)
     monkeypatch.setattr(discover, "pages", {})
     monkeypatch.setattr(discover, "categories_cache", (0, []))
+    monkeypatch.setattr(pick, "pool_cache", (0, []))
     monkeypatch.setattr(drtv, "fetch_search", fetch_search)
     monkeypatch.setattr(live, "live_channels", None)
     monkeypatch.setattr(live, "last_fetch", 0)

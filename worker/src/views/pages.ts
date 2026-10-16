@@ -7,7 +7,7 @@ import type {Segments} from "../segments";
 import {allEpisodes, type Episode, type Program, type Season, type Show, thumbnail, wholeSentences} from "../show";
 import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
 import {attr, each, html, type Html, scriptJSON} from "./html";
-import {layout, LIBRARIES, LIVE_SCRIPTS, MAIN_CATEGORIES, type Site, VIDEO_SCRIPTS} from "./layout";
+import {layout, LIBRARIES, LIVE_SCRIPTS, MAIN_CATEGORIES, type Site, staticURL, VIDEO_SCRIPTS} from "./layout";
 import {cardFavorite, cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, PROGRESS_BAR, searchField, SEEN_MARK, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
 
 type Schedules = Record<string, Programme[]>;
@@ -64,6 +64,7 @@ ${featured.length ? featuredSlides(featured) : html`<section class="intro wrap">
 <p>Se videre, hvor du slap, saml dine yndlingsserier, og abonnér på dem med RSS.</p>
 ${searchField()}
 </section>`}
+<p class="pick-line wrap"><a href="/vaelg/">${icon("dice")}<span>Ved du ikke, hvad du vil se? <strong>Vælg for mig</strong></span></a></p>
 <section class="shelf" id="continue-watching" aria-labelledby="continue-title" hidden>
 ${shelfHead("Se videre", "continue-title")}
 <div class="shelf-track js-tiles"></div>
@@ -381,6 +382,45 @@ ${searchField()}
 </div>`);
 }
 
+const PICK_SCRIPT = html`<script src="${staticURL("pick.js")}"></script>`;
+
+/** What pick.js shows when it has picked something: the programme, and a countdown to it, which can be undone */
+function pickResult(): Html {
+	return html`<dialog class="pick-result js-pick-result" aria-labelledby="pick-result-title">
+<div class="pick-result-media js-pick-result-media"></div>
+<div class="pick-result-body">
+<p class="pick-result-kind js-pick-result-kind"></p>
+<h2 class="pick-result-title" id="pick-result-title"></h2>
+<p class="pick-result-countdown js-pick-countdown" aria-live="polite"></p>
+<div class="pick-result-actions">
+<a class="button button-primary js-pick-go" href="/">${icon("play")} Se nu</a>
+<button type="button" class="button button-secondary js-pick-again">${icon("dice")} Slå igen</button>
+<button type="button" class="button button-secondary js-pick-cancel">Fortryd</button>
+</div>
+</div>
+</dialog>`;
+}
+
+/** "Vælg for mig": a few questions about what DR has, which pick.js asks, with what's left below them */
+export function pickPage(site: Site): Html {
+	return layout(site, {title: "Vælg for mig", scripts: PICK_SCRIPT}, html`${pageHead("Vælg for mig")}
+<section class="pick wrap js-pick" aria-labelledby="pick-question" hidden>
+<p class="pick-step js-pick-step"></p>
+<h2 class="pick-question js-pick-question" id="pick-question" tabindex="-1"></h2>
+<div class="pick-answers js-pick-answers" role="group" aria-labelledby="pick-question"></div>
+<div class="pick-actions">
+<button type="button" class="button button-primary js-pick-surprise">${icon("dice")} Overrask mig</button>
+<button type="button" class="button button-secondary js-pick-back" hidden>${icon("chevron-left")} Tilbage</button>
+<button type="button" class="button button-secondary js-pick-restart" hidden>Start forfra</button>
+</div>
+<p class="pick-count js-pick-count" aria-live="polite"></p>
+</section>
+<p class="wrap pick-loading js-pick-loading">Henter titler …</p>
+<div class="tile-grid results js-pick-tiles"></div>
+${pickResult()}
+<noscript><p class="wrap">Vælg for mig kræver JavaScript.</p></noscript>`);
+}
+
 export function categoriesPage(site: Site, categories: Category[]): Html {
 	// Serier, Film and Dokumentar first, which small screens' tabs lead here for
 	const rank = (c: Category) => {
@@ -389,14 +429,19 @@ export function categoriesPage(site: Site, categories: Category[]): Html {
 	};
 	const sorted = categories.map((c, i) => ({c, i})).sort((a, b) => rank(a.c) - rank(b.c) || a.i - b.i).map(({c}) => c);
 	return layout(site, {title: "Kategorier"}, html`${pageHead("Kategorier")}
+<a class="pick-promo wrap" href="/vaelg/">${icon("dice")}<span><strong>Vælg for mig</strong> Ved du ikke, hvad du vil se? Svar på et par spørgsmål, eller lad terningen bestemme.</span></a>
 <ul class="category-grid wrap">
 ${each(sorted, c => html`<li><a class="category" href="${c.url}"><span class="category-mark" aria-hidden="true">${[...c.title][0] ?? ""}</span><span class="category-title">${c.title}</span></a></li>\n`)}
 </ul>`);
 }
 
 export function categoryPage(site: Site, {category, page}: {category: Category; page: DiscoverPage}): Html {
-	return layout(site, {title: category.title}, html`${pageHead(category.title)}
-${page.rows.length ? rows(page.rows) : html`<p class="wrap">Der er ikke noget i denne kategori lige nu.</p>`}`);
+	return layout(site, {title: category.title, scripts: page.rows.length ? PICK_SCRIPT : undefined}, html`<div class="page-head wrap">
+<h1>${category.title}</h1>${page.rows.length ? html`
+<button type="button" class="button button-secondary js-pick-surprise" hidden>${icon("dice")} Overrask mig</button>` : ""}
+</div>
+${page.rows.length ? html`${rows(page.rows)}
+${pickResult()}` : html`<p class="wrap">Der er ikke noget i denne kategori lige nu.</p>`}`);
 }
 
 export function listPage(site: Site, {title, cards}: {title: string; cards: Card[]}): Html {

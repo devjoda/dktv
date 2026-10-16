@@ -19,6 +19,7 @@ from quart import (
 )
 
 from . import discover, drtv
+from .pick import pick_pool
 from . import sync as sync_store
 from .drtv import (
     DRUnavailable,
@@ -251,6 +252,17 @@ async def favorites_page():
     )
 
 
+@app.route("/vaelg/")
+async def pick_page():
+    """"Vælg for mig": its answers, like ?type=serie, are read by pick.js, which picks from /vaelg.json"""
+    return await render_template("vaelg.html", SERVICE_NAME=SERVICE_NAME)
+
+
+@app.route("/vaelg.json")
+async def pick_list():
+    return await pick_pool()
+
+
 @app.route("/nyt/")
 async def news_page():
     """What's new for the viewer, which the bell in the header opens on phones: filled in by news.js"""
@@ -300,7 +312,7 @@ async def suggestions(kind, slug):
     if kind not in ("serie", "program"):
         abort(404)
     item = await get_show(slug) if kind == "serie" else await get_program(slug)
-    return await discover.similar_to(item.categories or [], slug.split("_")[-1])
+    return await discover.similar_to(item.categories or [], slug.split("_")[-1], item.tags)
 
 
 @app.route("/program/<progid>")

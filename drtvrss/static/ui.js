@@ -442,6 +442,7 @@ window.addEventListener("pageshow", function () {
     refreshFavorites();
     updateFavoriteButtons();
     updatePlayButtons();
+    playIfAsked();
     setupSeasonTabs();
     selectPlayingSeason();
     setupFeatured();

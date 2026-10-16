@@ -45,6 +45,12 @@ export interface Card {
 	seriesId?: string;
 	seriesTitle?: string;
 	live: boolean;
+	// What it's like, for "Vælg for mig" and suggestions, see models.tags(); with when it's from, how long a film is,
+	// and how many seasons a show has, when DR says
+	tags: string[];
+	year?: number;
+	minutes?: number;
+	seasons?: number;
 }
 
 export interface Row {
@@ -137,6 +143,11 @@ export function card(item: Json, channelSlugs: Record<string, string>): Card | u
 		// DR's title for an episode is like "Den store bagedyst: Bær i bagedysten"
 		seriesTitle: seriesId ? title.split(": ")[0] : undefined,
 		live: type == "link",
+		tags: dr.tags(item),
+		year: dr.integer(item.releaseYear),
+		// In seconds
+		minutes: typeof item.duration == "number" && item.duration > 0 ? Math.round(item.duration / 60) : undefined,
+		seasons: dr.integer(item.availableSeasonCount),
 	};
 }
 
@@ -340,6 +351,9 @@ const NOT_SIMILAR = ["nyheder"];
 // How many programmes to suggest from a category, at most, and how few make it worth trying a wider one
 const SIMILAR = 8;
 const SIMILAR_ENOUGH = 4;
+// What DR says about most of a category, which says little about what a programme is like
+const BROAD_TAGS = new Set(["fiktionsserie", "serier", "serie", "film", "dokumentar", "tv-program", "dansk", "ikke-dansk",
+	"gensyn", "dr gensyn", "underholdning", "15-24 år"]);
 
 export interface Similar {
 	// The category's name, like Krimi
@@ -349,11 +363,14 @@ export interface Similar {
 
 /**
  * Programmes like one with DR's categories, like ["fiktionsserie", "krimi"], for after it: from the page of its
- * narrowest category that DR has a page for, as the category's own page here has them, without the programme
- * itself, which `exclude` has DR's id for: the next one, when a category's page has fewer than 4 others.
+ * narrowest category that DR has a page for, without the programme itself, which `exclude` has DR's id for:
+ * the next one, when a category's page has fewer than 4 others. Those most like it come first, by what DR says it's
+ * like, its `tags`, like "nervepirrende", and otherwise as the category's own page here has them.
  * Empty, when DR has no page for any of them.
  */
-export async function similarTo(ctx: Ctx, categories: string[], exclude: string): Promise<Similar> {
+export async function similarTo(ctx: Ctx, categories: string[], exclude: string, tags: string[] = []): Promise<Similar> {
+	const alike = new Set(tags.filter(t => !BROAD_TAGS.has(t)));
+	const likeness = (c: Card) => c.tags.filter(t => alike.has(t)).length;
 	const pages = await getCategories(ctx);
 	const pageOf = (category: string) => pages.find(p => {
 		const slug = p.url.split("/").at(-2) ?? "";
@@ -369,15 +386,20 @@ export async function similarTo(ctx: Ctx, categories: string[], exclude: string)
 		}
 		const page = await getPage(ctx, found.url.replace(/\/$/, ""), 12);
 		const seen = new Set([exclude]);
-		const cards: Similar["cards"] = [];
+		const candidates: Card[] = [];
 		for (const c of [...(page?.featured ?? []), ...(page?.rows ?? []).flatMap(row => row.cards)]) {
 			const id = (c.showId ?? c.filmId ?? "").split("_").at(-1);
-			if (c.live || !id || seen.has(id) || cards.length >= SIMILAR) {
+			if (c.live || !id || seen.has(id)) {
 				continue;
 			}
 			seen.add(id);
-			cards.push({title: c.title, url: c.url, image: thumbnail(c.image) ?? null});
+			candidates.push(c);
 		}
+		// Sorting keeps the page's order for those as like it as each other
+		const cards: Similar["cards"] = candidates.map(c => ({c, likeness: likeness(c)}))
+			.sort((a, b) => b.likeness - a.likeness)
+			.slice(0, SIMILAR)
+			.map(({c}) => ({title: c.title, url: c.url, image: thumbnail(c.image) ?? null}));
 		if (cards.length >= SIMILAR_ENOUGH) {
 			return {label: found.title, cards};
 		}
