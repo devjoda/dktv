@@ -90,6 +90,8 @@ test("offers notifications nowhere else", async ({page}) => {
 	await page.route("**/konto.json", route => route.fulfill({json: {push: "BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U"}}));
 	await page.goto("/rejseholdet_503605/");
 	await page.locator(".hero .js-favorite").click();
+	// Kept, before going on
+	await expect(page.locator(".hero .js-favorite")).toHaveAttribute("aria-pressed", "true");
 	await page.goto("/favoritter/");
 	await expect(page.locator(".tile")).toHaveCount(1);
 	await expect(page.getByText("Vil du have besked om nye afsnit?")).toHaveCount(0);
