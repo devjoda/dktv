@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% set og_title = category.title %}
+{% set og_description = "Serier, film og programmer under " ~ category.title ~ ", samlet i rækker." %}
 {% from "_ui.html" import card_tile, icon, shelf_head, pick_result %}
 {% block head %}
 <title>{{ category.title }} - {{ SERVICE_NAME }}</title>

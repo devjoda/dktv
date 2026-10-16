@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% set og_title = (s.title ~ ": " ~ e.title) if s else e.title %}
+{% set og_description, og_image, og_type = e.description, e.wallpaper, "video.episode" if s else "video.other" %}
 {% from "_ui.html" import icon, episode_link, favorite_button, progress_bar %}
 {% block head %}
 <title>{% if s %}{{ s.title }} - {% endif %}{{ e.title }}</title>

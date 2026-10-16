@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set og_title, og_description, og_image, og_type = s.title, s.description, s.wallpaper, "video.tv_show" %}
 {% from "_ui.html" import icon, progress_bar, seen_mark, play_button, show_facts, favorite_button, wide_picture %}
 {% block head %}
 <title>{{ s.title }} - {{ SERVICE_NAME }}</title>
@@ -18,6 +19,7 @@
         <div class="actions">
             {{ play_button(s) }}
             {{ favorite_button(s.url, s.title, s.wallpaper) }}
+            <button type="button" class="button button-secondary js-share-page" data-share-title="{{ s.title }}">{{ icon("share") }} Del</button>
             {# The feed is still linked in the head, for feed readers to find; a button for it can come back as a setting #}
         </div>
     </div>

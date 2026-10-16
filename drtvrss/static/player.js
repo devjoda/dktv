@@ -432,25 +432,12 @@ function setupSharing(video) {
             label.textContent = shown ? `Del fra ${clockOf(shown)}` : "Del";
         }
     });
-    button.addEventListener("click", async function () {
-        const url = location.origin + location.pathname + (from() ? `?t=${from()}` : "");
-        const title = [video.dataset.show, video.dataset.title].filter(Boolean).join(": ");
-        if (navigator.share && matchMedia("(pointer: coarse)").matches) {
-            try {
-                await navigator.share({title, url});
-                return;
-            } catch (error) {
-                if (error.name == "AbortError") {
-                    return;
-                }
-            }
-        }
-        try {
-            await navigator.clipboard.writeText(url);
-            announce(from() ? `Linket til ${clockOf(from())} er kopieret` : "Linket er kopieret");
-        } catch (error) {
-            prompt("Kopiér linket:", url);
-        }
+    button.addEventListener("click", function () {
+        shareLink({
+            title: [video.dataset.show, video.dataset.title].filter(Boolean).join(": "),
+            url: location.origin + location.pathname + (from() ? `?t=${from()}` : ""),
+            copied: from() ? `Linket til ${clockOf(from())} er kopieret` : "Linket er kopieret",
+        });
     });
     actions.prepend(button);
 }

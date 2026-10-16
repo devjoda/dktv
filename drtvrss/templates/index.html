@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% set og_title = SERVICE_NAME %}
+{% set og_description = "Serier, film, dokumentarer og direkte TV. Se videre, hvor du slap, gem dine favoritter, og se sammen med andre." %}
 {% from "_ui.html" import icon, tile, card_tile, card_favorite, channel_tile, shelf_head, search_field, favorite_button, wide_picture %}
 {% block body_class %}{% if featured %}has-hero{% endif %}{% endblock %}
 {% block scripts %}

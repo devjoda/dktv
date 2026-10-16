@@ -3475,6 +3475,12 @@ video + .up-next {
 }
 
 /* "Hvad nu?" over the picture, after the last episode or a film, in full screen too */
+/* Plyr gives all of the player figures of one width, which makes a title's commas as wide as figures: "Den , der" */
+.up-next,
+.what-next {
+    font-variant-numeric: normal;
+}
+
 .what-next {
     position: absolute;
     right: 24px;
@@ -3585,6 +3591,13 @@ video + .up-next {
 .what-next-actions .button {
     min-height: 42px;
     padding: 8px 18px;
+}
+
+.what-next-share {
+    max-width: 100%;
+    margin-top: 12px;
+    padding-inline: 12px;
+    text-align: start;
 }
 
 /* Below a player too small for them, like a phone's */

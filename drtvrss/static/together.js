@@ -584,24 +584,14 @@ function showTogetherPanel() {
         element("div", {class: "together-bottom"},
             element("label", {class: "together-name"}, "Dit navn", name),
             leave));
-    copy.addEventListener("click", async function () {
+    copy.addEventListener("click", function () {
         const title = [together.video.dataset.show, together.video.dataset.title].filter(Boolean).join(": ");
-        if (navigator.share && matchMedia("(pointer: coarse)").matches) {
-            try {
-                await navigator.share({title: `Se ${title} sammen med mig`, url: roomLink()});
-                return;
-            } catch (error) {
-                if (error.name == "AbortError") {
-                    return;
-                }
-            }
-        }
-        try {
-            await navigator.clipboard.writeText(roomLink());
-            announce("Linket er kopieret. Send det til dem, du vil se med.");
-        } catch (error) {
-            link.select();
-        }
+        shareLink({
+            title: `Se ${title} sammen med mig`,
+            url: roomLink(),
+            copied: "Linket er kopieret. Send det til dem, du vil se med.",
+            otherwise: () => link.select(),
+        });
     });
     link.addEventListener("focus", () => link.select());
     let naming = null;
