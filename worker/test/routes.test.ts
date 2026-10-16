@@ -130,7 +130,7 @@ describe("the front page", () => {
 describe("every page", () => {
 	test("has the logo, which leads to the front page, and the sections in the header", async () => {
 		const r = await get("/");
-		expect(r.text).toContain('<a class="logo" href="/" aria-label="Flimmerkassen, forsiden" aria-current="page"><span class="logo-word">Flimmer</span><span class="logo-tag">kassen</span></a>');
+		expect(r.text).toContain('<a class="logo" href="/" aria-label="Flimmerkassen, forsiden" aria-current="page"><span class="logo-word">Fl<span class="logo-i">ı</span>mmer</span></a>');
 		const nav = between(r.text, '<nav class="site-nav"', "</nav>");
 		for (const title of ["Direkte", "Serier", "Film", "Dokumentar", "Kategorier", "Favoritter"]) {
 			expect(nav).toContain(`${title}</a>`);

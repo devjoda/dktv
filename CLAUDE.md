@@ -52,8 +52,8 @@ token, so nothing else needs it.
   which git ignores.
 - Deploy only to workers.dev, never to another domain.
 - Serve every library and font from the site itself: no CDNs, no Google Fonts, no tracking.
-- The site is called Flimmerkassen (`SERVICE_NAME`): its logo is Flimmer in Schibsted Grotesk with kassen on a small
-  warm white tag, and `worker/scripts/icons.py` draws the favicon and the app's icons, F over the tag, from that font.
+- The site is called Flimmerkassen (`SERVICE_NAME`): its logo is Flimmer in Schibsted Grotesk, with a small box, the
+  kassen, for the i's dot, and `worker/scripts/icons.py` draws the favicon and the app's icons, that i, from that font.
 - DR and DRTV are only named in the footer and on the privacy page: the site is its own brand, not DR's.
 - Keep to the look: warm white on ink, Schibsted Grotesk, the programmes' pictures for colour, red only for live and
   progress. No all-caps labels, and no meta joined with " · ".

@@ -1,5 +1,5 @@
-# Draws Flimmerkassen's icons from Schibsted Grotesk, the site's own font: "F" over a warm white tag with "kassen" on it,
-# on ink, like the logo in the header, where the tag sits beside "Flimmer".
+# Draws Flimmerkassen's icons from Schibsted Grotesk, the site's own font: a dotless i with a box, the kassen, for its dot,
+# on ink, like the i in the header's logo, a little bolder, to be seen when small.
 # The favicon in drtvrss/templates, as .ico and .svg, and the app's icons in drtvrss/static/icons.
 # Only needed when the icons change; run from the repository's root with
 #   uv run --no-project --with fonttools --with brotli --with pillow python worker/scripts/icons.py
@@ -49,46 +49,32 @@ class Word:
             self.glyphs[name].draw(TransformPen(pen, (scale, 0, 0, -scale, x + (gx - self.left) * scale, baseline)))
 
 
-F = Word("F", 850, 0)
-TAG = Word("kassen", 800, 0.01)
-# How wide the tag is, for F's height
-TAG_WIDTH = 1.9
+I = Word("\u0131", 850, 0)
+# The box, in ems: its side, its border, and how high its bottom is, over the i's stem like a dot
+BOX, BORDER, BOX_BOTTOM = 0.275, 0.075, 0.6
 
 
-def layout(size, width):
-    """Where F and the tag go on a square of `size`, the tag being `width` of it: F's scale, left and baseline, and the
-    tag's box"""
-    cap = size * width / TAG_WIDTH
-    s = cap / F.cap
-    tag_height = cap * 0.42
-    gap = cap * 0.14
-    top = (size - (cap + gap + tag_height)) / 2
-    x = (size - size * width) / 2
-    tag = (x, top + cap + gap, x + size * width, top + cap + gap + tag_height)
-    return s, (size - F.width * s) / 2, top + cap, tag
+def layout(size, height):
+    """Where the i and its box go on a square of `size`, the two being `height` of it: the i's scale, left and baseline,
+    and the box's edges and border"""
+    em = size * height / (BOX_BOTTOM + BOX)
+    s = em / I.units
+    top = (size - size * height) / 2
+    baseline = top + size * height
+    box = (size / 2 - BOX * em / 2, top, size / 2 + BOX * em / 2, top + BOX * em)
+    return s, size / 2 - I.width * s / 2, baseline, box, BORDER * em
 
 
-def tag_placement(tag):
-    """The tag's word's scale and where it goes, centred on it, with room at its ends"""
-    left, top, right, bottom = tag
-    t = min((bottom - top) * 0.62 / TAG.cap, (right - left) * 0.84 / TAG.width)
-    return t, (left + right) / 2 - TAG.width * t / 2, (top + bottom) / 2 + TAG.cap * t * 0.36
-
-
-def mark_svg(size, width, radius):
-    s, x, baseline, tag = layout(size, width)
-    glo = SVGPathPen(None)
-    F.draw(glo, s, x, baseline)
-    t, tx, tb = tag_placement(tag)
-    tv = SVGPathPen(None)
-    TAG.draw(tv, t, tx, tb)
-    left, top, right, bottom = tag
-    r = (bottom - top) * 0.22
+def mark_svg(size, height, radius):
+    s, x, baseline, box, border = layout(size, height)
+    stem = SVGPathPen(None)
+    I.draw(stem, s, x, baseline)
+    left, top, right, bottom = (box[0] + border / 2, box[1] + border / 2, box[2] - border / 2, box[3] - border / 2)
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}">'
             f'<rect width="{size}" height="{size}" rx="{size * radius:g}" fill="{INK}"/>'
-            f'<path fill="{PAPER}" d="{glo.getCommands()}"/>'
-            f'<rect x="{left:.2f}" y="{top:.2f}" width="{right - left:.2f}" height="{bottom - top:.2f}" rx="{r:.2f}" fill="{PAPER}"/>'
-            f'<path fill="{INK}" d="{tv.getCommands()}"/></svg>\n')
+            f'<path fill="{PAPER}" d="{stem.getCommands()}"/>'
+            f'<rect x="{left:.2f}" y="{top:.2f}" width="{right - left:.2f}" height="{bottom - top:.2f}" rx="{border * 0.4:.2f}" '
+            f'fill="none" stroke="{PAPER}" stroke-width="{border:.2f}"/></svg>\n')
 
 
 def face(word, scale):
@@ -105,20 +91,16 @@ def text(draw, word, scale, x, baseline, colour):
         draw.text((x + (gx - word.left) * scale, baseline), char, font=font, fill=colour, anchor="ls")
 
 
-def mark_png(size, width, radius=0.0, background=True):
+def mark_png(size, height, radius=0.0, background=True):
     big = size * 4
     image = Image.new("RGBA", (big, big), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
     if background:
         draw.rounded_rectangle((0, 0, big - 1, big - 1), radius=big * radius, fill=INK)
-    s, x, baseline, tag = layout(big, width)
+    s, x, baseline, box, border = layout(big, height)
     colour = PAPER if background else "#ffffff"
-    text(draw, F, s, x, baseline, colour)
-    left, top, right, bottom = tag
-    draw.rounded_rectangle(tag, radius=(bottom - top) * 0.22, fill=colour)
-    t, tx, tb = tag_placement(tag)
-    # On the tag, its word is ink on the icons, and see-through on the badge for notifications
-    text(draw, TAG, t, tx, tb, INK if background else (0, 0, 0, 0))
+    text(draw, I, s, x, baseline, colour)
+    draw.rounded_rectangle(box, radius=border * 0.8, outline=colour, width=round(border))
     return image.resize((size, size), Image.LANCZOS)
 
 

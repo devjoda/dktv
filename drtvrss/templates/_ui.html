@@ -1,12 +1,14 @@
 {# The building blocks of the pages #}
 
-{# The site's name as its logo: like Flimmer with kassen on a tag beside it, for names that end in kassen or TV #}
+{# The site's name as its logo: for names that end in kassen or TV, like Flimmer, with the box for its i's dot #}
 {% macro logo(name) -%}
 {%- set tag = name|logo_tag -%}
-{% if tag -%}
-<span class="logo-word">{{ name[:(name|length) - (tag|length)] }}</span><span class="logo-tag">{{ tag }}</span>
+{%- set word = name[:(name|length) - (tag|length)] -%}
+{%- set i = word.find("i") -%}
+{% if tag and i >= 0 -%}
+<span class="logo-word">{{ word[:i] }}<span class="logo-i">ı</span>{{ word[i + 1:] }}</span>
 {%- else -%}
-<span class="logo-word">{{ name }}</span>
+<span class="logo-word">{{ word }}</span>
 {%- endif %}
 {%- endmacro %}
 

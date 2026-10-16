@@ -154,8 +154,7 @@ h1, h2, h3 {
     padding-block: 12px;
 }
 
-/* The site's name, in its own letters, which leads to the front page: Flimmer, with kassen on a warm white tag
-   at the height of its capitals, like a screen's badge */
+/* The site's name, in its own letters, which leads to the front page: Flimmer, with a box, the kassen, for its i's dot */
 .logo {
     display: inline-flex;
     align-items: flex-start;
@@ -171,28 +170,34 @@ h1, h2, h3 {
     letter-spacing: -.055em;
 }
 
-.logo-tag {
-    margin: .1em 0 0 .16em;
-    padding: .12em .32em .16em;
-    border-radius: .28em;
-    background: var(--paper);
-    color: var(--ink);
-    font-size: .4em;
-    font-weight: 800;
-    letter-spacing: .01em;
-    line-height: 1;
+/* A dotless i, with the box where its dot was: over the middle of its stem, its bottom .59em over the baseline, which
+   is the font's ascent, .977em, under the span's top */
+.logo-i {
+    position: relative;
+}
+
+.logo-i::before {
+    position: absolute;
+    top: .137em;
+    left: .03em;
+    width: .25em;
+    height: .25em;
+    box-sizing: border-box;
+    border: .075em solid;
+    border-radius: .03em;
+    content: "";
 }
 
 .logo:hover {
     color: #fff;
 }
 
-.logo:hover .logo-tag {
-    background: #fff;
-}
-
 .has-hero .site-header:not(.is-scrolled) .logo {
     text-shadow: 0 1px 8px rgba(0, 0, 0, .6);
+}
+
+.has-hero .site-header:not(.is-scrolled) .logo-i::before {
+    box-shadow: 0 1px 8px rgba(0, 0, 0, .6);
 }
 
 .site-nav {
