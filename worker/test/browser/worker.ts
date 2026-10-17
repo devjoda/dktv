@@ -196,7 +196,7 @@ export default {
 		}
 		if (url.pathname == "/testkatalog") {
 			// As many runs as a sweep of the fixtures takes, and the front page's own rows after it
-			for (let i = 0; i < 80; i++) {
+			for (let i = 0; i < 200; i++) {
 				await catalogue.run({env, budget: new Budget(), refreshes: 0, incomplete: false, pending: new Map(), waitUntil: p => ctx.waitUntil(p), origin: url.origin});
 			}
 			return Response.json(await catalogue.status({env, budget: new Budget(), refreshes: 0, incomplete: false, pending: new Map(), waitUntil: p => ctx.waitUntil(p), origin: url.origin}));

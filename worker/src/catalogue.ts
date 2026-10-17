@@ -28,14 +28,14 @@ const DAY = 24 * HOUR;
 
 // DR's page with its list of everything from A to Å, a row for each letter
 const A_TO_Å = "/kategorier/a-aa";
-// The most DR gives at a time
-const PAGE_SIZE = 100;
-// How much a run does at most: each request to DR counts 1. A series' own item is two, with its newest season. A run
-// that got a page of DR's list, which takes most of its 10 ms, only looks up a few titles besides.
-const WORK_PER_RUN = 6;
-const WORK_WITH_A_PAGE = 2;
-// How many entries a run makes at most, since each is a little of the run's 10 ms
-const ENTRIES_PER_RUN = 40;
+// How much of DR's list a run gets at once, of the 100 it would give
+const PAGE_SIZE = 50;
+// A run does only one kind of work, since on Cloudflare, where each run starts afresh, even a little of each was more
+// than a run's 10 ms: a step of the sweep, a few titles looked up, or some entries made. How many titles a run looks up
+// at most, by the requests to DR it takes, each one, and a series' own item two, with its newest season; and how many
+// entries it makes at most.
+const LOOK_UPS_PER_RUN = 4;
+const ENTRIES_PER_RUN = 25;
 // The hour, in UTC, after which a day's sweep starts: after DR has put out the day's programmes, at 4
 const SWEEP_FROM_HOUR = 5;
 // How many requests to DR may fail in a sweep before it's given up on, until the next day, and how long DR isn't asked
@@ -163,16 +163,6 @@ export function keptItem(blob: Json): Item | undefined {
 	};
 	// Without what isn't there, so the same item is always the same text
 	return JSON.parse(JSON.stringify(item));
-}
-
-/** A short hash of a text, to tell whether it changed */
-export function hash(value: string): string {
-	let h = 0x811c9dc5;
-	for (let i = 0; i < value.length; i++) {
-		h ^= value.charCodeAt(i);
-		h = Math.imul(h, 0x01000193);
-	}
-	return (h >>> 0).toString(16).padStart(8, "0");
 }
 
 /** The names after a label at the start of a line of a description, like "Medvirkende: Sofie Torp, Thomas Hwan m.fl." */
@@ -530,7 +520,7 @@ function toRow(item: Item) {
 	const kept = JSON.stringify(item);
 	const shown = !item.universes.some(u => KIDS.has(u)) && kindOf(item, wordsOf(item)) !== undefined;
 	// Children's programmes, news and sport aren't shown yet, so they're only looked up to see whether they're gone
-	return {id: item.id, item: kept, hash: hash(kept), due: shown ? 0 : NEVER};
+	return {id: item.id, item: kept, due: shown ? 0 : NEVER};
 }
 
 /** One step of a sweep: how many requests to DR it took, and whether the sweep is done */
@@ -568,13 +558,14 @@ async function sweepStep(ctx: Ctx, sweep: Sweep, now: number): Promise<{requests
 		// What's new or changed is written, and the page's ids noted, for what's on none of them. What was missing is looked
 		// up first, and shown again once its own item says DR has it.
 		const statements = [
+			// The database tells what changed, by the kept item's text, which costs a run nothing; hash is left empty
 			db.prepare(`INSERT INTO titles (id, letter, item, hash, first_seen, details_due, stale)
-				SELECT json_extract(value, '$.id'), ?, json_extract(value, '$.item'), json_extract(value, '$.hash'), ?, json_extract(value, '$.due'), 1
+				SELECT json_extract(value, '$.id'), ?, json_extract(value, '$.item'), '', ?, json_extract(value, '$.due'), 1
 				FROM json_each(?) WHERE true
-				ON CONFLICT (id) DO UPDATE SET letter = excluded.letter, item = excluded.item, hash = excluded.hash, stale = 1,
+				ON CONFLICT (id) DO UPDATE SET letter = excluded.letter, item = excluded.item, stale = 1,
 					details_due = CASE WHEN titles.missing_since IS NOT NULL THEN -1
-						WHEN titles.hash != excluded.hash THEN min(titles.details_due, excluded.details_due) ELSE titles.details_due END
-				WHERE titles.hash != excluded.hash OR titles.letter != excluded.letter OR titles.missing_since IS NOT NULL`)
+						WHEN titles.item != excluded.item THEN min(titles.details_due, excluded.details_due) ELSE titles.details_due END
+				WHERE titles.item != excluded.item OR titles.letter != excluded.letter OR titles.missing_since IS NOT NULL`)
 				.bind(letter.title, sweep.first ? 0 : now, JSON.stringify(items.map(toRow))),
 			db.prepare("INSERT OR REPLACE INTO catalogue_pages (letter, page, ids) VALUES (?, ?, ?)").bind(letter.title, sweep.page, JSON.stringify(items.map((i: Item) => i.id))),
 		];
@@ -694,8 +685,8 @@ function nextLookUp(item: Item, details: Details, now: number): number {
 	return now + 14 * DAY + spread;
 }
 
-/** Looks up a few titles' own items, those that might be gone first, and whether DR answered them */
-async function lookUp(ctx: Ctx, work: number, now: number): Promise<{answered: boolean}> {
+/** Looks up a few titles' own items, those that might be gone first: how many, and whether DR answered them */
+async function lookUp(ctx: Ctx, work: number, now: number): Promise<{looked: number; answered: boolean}> {
 	const db = ctx.env.SYNC;
 	ctx.budget.spend();
 	const due = await db.prepare("SELECT id, item, missing_since FROM titles WHERE details_due <= ? ORDER BY details_due LIMIT ?")
@@ -749,7 +740,7 @@ async function lookUp(ctx: Ctx, work: number, now: number): Promise<{answered: b
 		ctx.budget.spend();
 		await db.batch(statements);
 	}
-	return {answered};
+	return {looked: statements.length, answered};
 }
 
 /** Makes the entries of titles whose kept parts changed, and whether any were */
@@ -804,70 +795,81 @@ async function pause(ctx: Ctx, now: number) {
 	await setKey(ctx, "paused", now + PAUSE_FOR).run();
 }
 
+/** A step of the day's sweep, if one is going on or due: whether there was one, and whether DR answered */
+async function sweepRun(ctx: Ctx, state: Awaited<ReturnType<typeof getState>>, now: number): Promise<{swept: boolean; answered: boolean}> {
+	const db = ctx.env.SYNC;
+	let sweep = state.sweep;
+	if (sweep === undefined && sweepDue(state.last, now)) {
+		sweep = {started: now, first: state.last === undefined, errors: 0, letter: 0, page: 1, at: 0, rows: [], row: 0, featured: {}};
+	}
+	if (sweep === undefined) {
+		return {swept: false, answered: true};
+	}
+	let answered = true;
+	try {
+		if ((await sweepStep(ctx, sweep, now)).done) {
+			await finishSweep(ctx, sweep, now);
+			return {swept: true, answered};
+		}
+	} catch (e) {
+		if (!(e instanceof DRUnavailable || e instanceof NotFound || e instanceof dr.FormatError)) {
+			throw e;
+		}
+		console.log("The catalogue's sweep failed at a step", String(e));
+		sweep.errors++;
+		answered = !(e instanceof DRUnavailable);
+	}
+	ctx.budget.spend();
+	if (sweep.errors > SWEEP_ERRORS) {
+		console.log("The catalogue's sweep is given up on until tomorrow");
+		await db.batch([
+			setKey(ctx, "last", {started: sweep.started, finished: now, error: "Too many errors"} satisfies Last),
+			db.prepare("DELETE FROM catalogue WHERE key = 'sweep'"),
+		]);
+	} else {
+		await setKey(ctx, "sweep", sweep).run();
+	}
+	return {swept: true, answered};
+}
+
 /**
- * Every other minute: a step of the day's sweep of DR's list, a few titles looked up, and their entries made, within
- * what a run may do on the free plan; or, every few hours, in a run of its own, the front page's own rows. What a run
- * doesn't do, the next does.
+ * Every other minute, one kind of work, the first of them that has any, and of the others in another order the next
+ * time: a step of the day's sweep of DR's list, a few titles looked up, or their entries made; or, every few hours, the
+ * front page's own rows. What a run doesn't do, the next does. Which it was is in the log, with what it cost.
  */
 export async function run(ctx: Ctx): Promise<void> {
-	const db = ctx.env.SYNC;
 	const now = clock.now();
 	const state = await getState(ctx);
 	// Once there's a catalogue to make them from
 	if (state.last !== undefined && (state.rows === undefined || now - state.rows.built > ROWS_EVERY)) {
 		await buildRows(ctx, now);
+		console.log("The catalogue's run: rows");
 		return;
 	}
 	await upgradeEntries(ctx, state.entries);
-	if (state.paused !== undefined && now < state.paused) {
-		await makeEntries(ctx, now);
-		return;
-	}
-	let work = WORK_PER_RUN;
-	let answered = true;
-	const last = state.last;
-	let sweep = state.sweep;
-	if (sweep === undefined && sweepDue(last, now)) {
-		sweep = {started: now, first: last === undefined, errors: 0, letter: 0, page: 1, at: 0, rows: [], row: 0, featured: {}};
-	}
-	if (sweep !== undefined) {
+	// While DR isn't asked anything, only entries
+	const asking = state.paused === undefined || now >= state.paused;
+	const work = Math.floor(now / (2 * MINUTE)) % 2 == 0 ? ["sweep", "look up", "entries"] : ["entries", "look up", "sweep"];
+	for (const kind of work) {
 		let done = false;
-		try {
-			const step = await sweepStep(ctx, sweep, now);
-			work = step.requests > 0 ? Math.min(WORK_WITH_A_PAGE, work - step.requests) : work;
-			if (step.done) {
-				await finishSweep(ctx, sweep, now);
-				done = true;
-			}
-		} catch (e) {
-			if (!(e instanceof DRUnavailable || e instanceof NotFound || e instanceof dr.FormatError)) {
-				throw e;
-			}
-			console.log("The catalogue's sweep failed at a step", String(e));
-			sweep.errors++;
-			work = 0;
-			answered = !(e instanceof DRUnavailable);
+		let answered = true;
+		if (kind == "sweep" && asking) {
+			({swept: done, answered} = await sweepRun(ctx, state, now));
+		} else if (kind == "look up" && asking) {
+			const found = await lookUp(ctx, LOOK_UPS_PER_RUN, now);
+			done = found.looked > 0;
+			answered = found.answered;
+		} else if (kind == "entries") {
+			done = await makeEntries(ctx, now);
 		}
-		if (!done) {
-			ctx.budget.spend();
-			if (sweep.errors > SWEEP_ERRORS) {
-				console.log("The catalogue's sweep is given up on until tomorrow");
-				await db.batch([
-					setKey(ctx, "last", {started: sweep.started, finished: now, error: "Too many errors"} satisfies Last),
-					db.prepare("DELETE FROM catalogue WHERE key = 'sweep'"),
-				]);
-			} else {
-				await setKey(ctx, "sweep", sweep).run();
-			}
+		if (!answered) {
+			await pause(ctx, now);
+		}
+		if (done) {
+			console.log("The catalogue's run:", kind);
+			return;
 		}
 	}
-	if (work > 0) {
-		answered = (await lookUp(ctx, work, now)).answered;
-	}
-	if (!answered) {
-		await pause(ctx, now);
-	}
-	await makeEntries(ctx, now);
 }
 
 // The catalogue for the browser
