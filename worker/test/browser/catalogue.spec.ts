@@ -39,6 +39,12 @@ test("Alle titler has all of the catalogue, and each filter says how many it lea
 	await page.goto("/alle/?type=serie&sorter=titel");
 	await expect(page.locator(".js-explore-tiles .tile-title")).toHaveText(["Maria Wern", "Matador", "Rejseholdet"]);
 	await expect(page.locator(".js-explore-sort")).toHaveValue("titel");
+	// Its choices light on dark, as the rest, where the browser draws them itself, as Firefox does
+	const choice = await page.evaluate(`(() => {
+		const style = getComputedStyle(document.querySelector(".js-explore-sort option"));
+		return [style.color, style.backgroundColor];
+	})()`);
+	expect(choice).toEqual(["rgb(242, 239, 233)", "rgb(27, 28, 33)"]);
 	await page.goBack();
 	await expect(page).toHaveURL(/\?q=mynster$/);
 });
