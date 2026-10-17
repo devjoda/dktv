@@ -877,18 +877,22 @@ const SHOWN = "entry IS NOT NULL AND kids = 0 AND missing_since IS NULL AND (exp
 
 const FACETS_JSON = JSON.stringify(FACET_LABELS);
 
-/** The catalogue as the browser gets it, as JSON text, made by the database, with its version */
-export async function catalogueText(ctx: Ctx): Promise<{text: string; version: number}> {
+// How many titles the catalogue has, at least, once its first sweep is well under way
+export const ALMOST_WHOLE = 1000;
+
+/** The catalogue as the browser gets it, as JSON text, made by the database, with its version and how many titles it has */
+export async function catalogueText(ctx: Ctx): Promise<{text: string; version: number; count: number}> {
 	const db = ctx.env.SYNC;
 	ctx.budget.spend(2);
 	const [version, letters] = await db.batch<Json>([
 		db.prepare("SELECT value FROM catalogue WHERE key = 'version'"),
 		// A letter at a time, since what the database gives at once may be at most 2 MB
-		db.prepare(`SELECT group_concat(entry, ',') AS entries FROM titles WHERE ${SHOWN} GROUP BY letter`).bind(clock.now()),
+		db.prepare(`SELECT group_concat(entry, ',') AS entries, count(*) AS n FROM titles WHERE ${SHOWN} GROUP BY letter`).bind(clock.now()),
 	]);
 	const v = Number(version.results[0]?.value ?? 0);
 	const titles = letters.results.map((r: Json) => r.entries).filter(Boolean).join(",");
-	return {text: `{"version":${v},"facets":${FACETS_JSON},"titles":[${titles}]}`, version: v};
+	const count = letters.results.reduce((n: number, r: Json) => n + Number(r.n ?? 0), 0);
+	return {text: `{"version":${v},"facets":${FACETS_JSON},"titles":[${titles}]}`, version: v, count};
 }
 
 /** How the catalogue is doing, for /status.json */

@@ -92,3 +92,25 @@ describe("Cloudflare's cache", () => {
 		expect(dr.requested).toEqual([]);
 	});
 });
+
+describe("the catalogue in Cloudflare's cache", () => {
+	test("isn't kept while it has only a little of DR's list, and is once it has most of it, with a 304 for what the browser has", async () => {
+		const {env} = await import("./helpers");
+		const r = await get("/katalog.json");
+		expect(r.status).toBe(200);
+		expect(r.headers.get("Cache-Control")).toBe("no-cache");
+		expect(pages()).toEqual([]);
+		// As many titles as most of DR's list
+		const entry = (i: number) => JSON.stringify({id: String(i), t: `Titel ${i}`, u: `/titel_${i}/`, k: "serie", n: 0, f: {type: ["serie"]}});
+		await env.SYNC.batch(Array.from({length: 1000}, (_, i) => env.SYNC.prepare(
+			"INSERT INTO titles (id, letter, item, hash, first_seen, entry, stale, kind) VALUES (?, 'A', '{}', '', 0, ?, 0, 'serie')").bind(String(i), entry(i))));
+		await env.SYNC.prepare("INSERT INTO catalogue (key, value) VALUES ('version', '7')").run();
+		const whole = await get("/katalog.json");
+		expect(JSON.parse(whole.text).titles).toHaveLength(1000);
+		expect(whole.headers.get("Cache-Control")).toBe("public, max-age=60");
+		expect(whole.headers.get("ETag")).toBe('"7"');
+		expect(pages()).toHaveLength(1);
+		const unchanged = await request("https://dktv.example/katalog.json", {headers: {"If-None-Match": '"7"'}});
+		expect(unchanged.status).toBe(304);
+	});
+});
