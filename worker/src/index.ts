@@ -32,8 +32,6 @@ const DEFAULT_SOURCE_URL = "https://github.com/devjoda/dktv";
 const FRONT_PAGE_ROWS = 8;
 const FEATURED = 12;
 const MORE_ROWS = 7;
-// When the catalogue's own cron runs, apart from the notifications' every minute
-export const CATALOGUE_CRON = "*/2 * * * *";
 // How long the front page's own rows, from the catalogue, are kept, in seconds
 const OWN_ROWS_TIME = 15 * 60;
 // How many favourites to describe at once, of each kind
@@ -791,7 +789,7 @@ export default {
 			waitUntil: promise => executionCtx.waitUntil(promise),
 			origin: "https://scheduled.invalid",
 		};
-		if (event.cron == CATALOGUE_CRON) {
+		if (event.cron == catalogue.CRON) {
 			await catalogue.run(ctx);
 			return;
 		}

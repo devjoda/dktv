@@ -890,3 +890,13 @@ describe("errors", () => {
 		expect(r.text).toContain("Siden findes ikke");
 	});
 });
+
+describe("the Worker's own module", () => {
+	test("exports only what Cloudflare can run: the handlers, and classes like the rooms' Durable Object", async () => {
+		const main: Record<string, unknown> = await import("../src/index");
+		for (const [name, value] of Object.entries(main)) {
+			const runnable = typeof value == "function" || (typeof value == "object" && value != null && typeof (value as {fetch?: unknown}).fetch == "function");
+			expect(runnable, `${name} isn't something Cloudflare can run`).toBe(true);
+		}
+	});
+});

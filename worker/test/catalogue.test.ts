@@ -1,11 +1,10 @@
 // The catalogue: DR's list from A to Å, gone through by its cron a page at a time, with each title's own item looked up,
 // and what the browser gets of it, from the fixtures of three of its letters, L, M and R
 
-import {existsSync, writeFileSync} from "node:fs";
+import {existsSync, readFileSync, writeFileSync} from "node:fs";
 import {join} from "node:path";
 import {describe, expect, test} from "vitest";
 import * as catalogue from "../src/catalogue";
-import {CATALOGUE_CRON} from "../src/index";
 import worker from "../src/index";
 import {clock} from "../src/time";
 import {ctx, dr as fakeDR, env, get, load, request} from "./helpers";
@@ -283,8 +282,12 @@ describe("the catalogue's cron", () => {
 		const executionCtx = {waitUntil: (p: Promise<unknown>) => waiting.push(p), passThroughOnException() {}, props: {}} as unknown as ExecutionContext;
 		await worker.scheduled({cron: "* * * * *", scheduledTime: MORNING, noRetry() {}} as ScheduledController, env as any, executionCtx);
 		expect(fakeDR.requested).toEqual([]);
-		await worker.scheduled({cron: CATALOGUE_CRON, scheduledTime: MORNING, noRetry() {}} as ScheduledController, env as any, executionCtx);
+		await worker.scheduled({cron: catalogue.CRON, scheduledTime: MORNING, noRetry() {}} as ScheduledController, env as any, executionCtx);
 		expect(fakeDR.requested.length).toBeGreaterThan(0);
+	});
+
+	test("is on the schedule wrangler.jsonc gives Cloudflare", () => {
+		expect(readFileSync(join(__dirname, "..", "wrangler.jsonc"), "utf8")).toContain(`"crons": ["* * * * *", "${catalogue.CRON}"]`);
 	});
 });
 

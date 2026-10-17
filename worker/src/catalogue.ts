@@ -18,6 +18,10 @@ import * as dr from "./models";
 import {thumbnail} from "./show";
 import {clock, copenhagen, parseTime} from "./time";
 
+// When the catalogue's own cron runs, apart from the notifications' every minute, as wrangler.jsonc says. Not exported
+// from index.ts, whose every export Cloudflare takes to be something to run.
+export const CRON = "*/2 * * * *";
+
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
@@ -905,7 +909,7 @@ export async function status(ctx: Ctx): Promise<Json> {
 		version: kept.version ?? 0,
 		lastSweep: kept.last ?? null,
 		sweep: sweep ? {started: sweep.started, letter: sweep.letters?.[sweep.letter]?.title ?? null, letters: sweep.letters?.length ?? null,
-			rows: sweep.rows ? `${sweep.row} af ${sweep.rows.length}` : null, errors: sweep.errors} : null,
+			rows: sweep.pages ? `${sweep.row} af ${sweep.rows.length}` : null, errors: sweep.errors} : null,
 		rowsBuilt: kept.rows_built?.built ?? null,
 		pausedUntil: kept.paused > now ? kept.paused : null,
 	};
