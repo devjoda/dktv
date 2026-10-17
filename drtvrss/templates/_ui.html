@@ -114,6 +114,38 @@ show_id and film_id add a button to make the show or film a favourite.
 </article>
 {%- endmacro %}
 
+{# One of the catalogue's titles, with its kind below it, or meta, like the Worker's entryTile() #}
+{% macro entry_tile(e, meta=None) -%}
+{% set show = e.u.endswith("/") %}
+{% set slug = e.u.removeprefix("/program/").strip("/") %}
+{{ tile(e.u, e.i, e.t, meta=meta or {"serie": "Serie", "film": "Film", "dokumentar": "Dokumentar", "program": "Program"}.get(e.k), video_id=None if show else e.id, show_id=slug if show else None, film_id=None if show else slug) }}
+{%- endmacro %}
+
+{# One of DR's rows, numbered n #}
+{% macro dr_row(row, n) -%}
+<section class="shelf" aria-labelledby="row-{{ n }}">
+    {{ shelf_head(row.title, "row-" ~ n, more=("/liste/" ~ row.more ~ "/?titel=" ~ row.title|urlencode) if row.more else None) }}
+    <div class="shelf-track">
+        {% for c in row.cards %}{{ card_tile(c) }}{% endfor %}
+    </div>
+</section>
+{%- endmacro %}
+
+{# One of the front page's own rows, from the catalogue #}
+{% macro own_row(row) -%}
+<section class="shelf" data-own-row="{{ row.id }}" aria-labelledby="own-{{ row.id }}">
+    {{ shelf_head(row.title, "own-" ~ row.id, more=row.more) }}
+    <div class="shelf-track">
+        {% for e in row.entries %}{{ entry_tile(e, e.x|leaving_label if row.id == "sidste-chance" else None) }}{% endfor %}
+    </div>
+</section>
+{%- endmacro %}
+
+{# Where ui.js gets the next of a page's rows, as it's scrolled down to #}
+{% macro more_rows(start) -%}
+<div class="more-rows js-more-rows" data-from="{{ start }}" aria-hidden="true"></div>
+{%- endmacro %}
+
 {# A row of tiles that scrolls sideways, with a link to all of it when it's longer #}
 {% macro shelf_head(title, id, more=None) -%}
 <div class="shelf-head">

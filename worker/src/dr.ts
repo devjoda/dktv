@@ -18,6 +18,13 @@ export interface Env {
 /** DR doesn't have it, or it isn't anything here */
 export class NotFound extends Error {}
 
+/** DR doesn't have a series or a programme any more, or a series' episode, whose page then says so */
+export class Gone extends NotFound {
+	constructor(message: string, readonly kind: "serie" | "program", readonly show?: {title: string; url: string}) {
+		super(message);
+	}
+}
+
 /** DR didn't answer, or answered with an error of its own */
 export class DRUnavailable extends Error {}
 
@@ -83,6 +90,10 @@ async function request(ctx: Ctx, url: string, init: RequestInit, what: string): 
 export async function getApi(ctx: Ctx, path: string, params: Params = {}): Promise<Json> {
 	const query = new URLSearchParams({...API_PARAMS, ...stringify(params)});
 	const r = await request(ctx, `${API}${path}?${query}`, {}, path);
+	// DR asking us to slow down, or turning us away, which isn't DR not having it
+	if (r.status == 429 || r.status == 403) {
+		throw new DRUnavailable(`DR responded ${r.status} to ${path}`);
+	}
 	// DR doesn't have it, or doesn't think we asked for anything sensible
 	if (r.status >= 400 && r.status < 500) {
 		throw new NotFound(`DR responded ${r.status} to ${path}`);

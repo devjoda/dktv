@@ -1,0 +1,203 @@
+{
+ "id": "313",
+ "isStatic": false,
+ "isSystemPage": false,
+ "metadata": {
+  "description": "Se eller gense DR-Programmer. Find Kultur, Livsstil, Dokumentarer, Børneprogrammer og meget mere. Find alle tilgængelige DR-programmer her",
+  "keywords": []
+ },
+ "key": "TVAZ",
+ "path": "/kategorier/a-aa",
+ "template": "Home",
+ "themes": [],
+ "title": "Kategorier A-Å",
+ "entries": [
+  {
+   "customFields": {
+    "imageText": "DRTV | A - Å",
+    "textColor": {
+     "color": "#000000",
+     "opacity": 100
+    },
+    "textHorizontalAlignment": "left",
+    "textVerticalAlignment": "middle",
+    "imageWidth": "fullWidth",
+    "widthPercentage": null,
+    "imageHorizontalAlignment": "center",
+    "link": "",
+    "altText": ""
+   },
+   "type": "ImageEntry",
+   "id": "4da7e91",
+   "template": "H9",
+   "title": "",
+   "images": {
+    "custom": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Page'&EntityId='313'&Width=2100&Height=210&ImageId='45275758'"
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "backgroundColor": {
+     "color": "",
+     "opacity": 100
+    },
+    "textColor": {
+     "color": "",
+     "opacity": 100
+    },
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "7dda335",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "TX1",
+   "title": "",
+   "list": {
+    "id": "375844",
+    "path": "/liste/375844",
+    "items": [],
+    "size": 12,
+    "paging": {
+     "total": 12,
+     "page": 0,
+     "size": 1,
+     "next": "/lists/375844?page_size=1&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 1
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "assetTitlePosition": "below"
+   },
+   "type": "ListEntry",
+   "id": "43b2e07",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "T1",
+   "title": "L",
+   "list": {
+    "id": "348",
+    "path": "/liste/348",
+    "items": [],
+    "size": 95,
+    "paging": {
+     "total": 95,
+     "page": 0,
+     "size": 1,
+     "next": "/lists/348?page_size=1&page=1&sub=Anonymous&param=TitleGroupKey%3Al",
+     "options": {
+      "pageSize": 1
+     }
+    },
+    "parameter": "TitleGroupKey:l",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "assetTitlePosition": "below"
+   },
+   "type": "ListEntry",
+   "id": "8b0343b",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "T1",
+   "title": "M",
+   "list": {
+    "id": "348",
+    "path": "/liste/348",
+    "items": [],
+    "size": 289,
+    "paging": {
+     "total": 289,
+     "page": 0,
+     "size": 1,
+     "next": "/lists/348?page_size=1&page=1&sub=Anonymous&param=TitleGroupKey%3Am",
+     "options": {
+      "pageSize": 1
+     }
+    },
+    "parameter": "TitleGroupKey:m",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "assetTitlePosition": "below"
+   },
+   "type": "ListEntry",
+   "id": "b844453",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "T1",
+   "title": "R",
+   "list": {
+    "id": "348",
+    "path": "/liste/348",
+    "items": [],
+    "size": 95,
+    "paging": {
+     "total": 95,
+     "page": 0,
+     "size": 1,
+     "next": "/lists/348?page_size=1&page=1&sub=Anonymous&param=TitleGroupKey%3Ar",
+     "options": {
+      "pageSize": 1
+     }
+    },
+    "parameter": "TitleGroupKey:r",
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  },
+  {
+   "customFields": {
+    "customTagline": "",
+    "assetTitlePosition": "below",
+    "moreLinkUrl": ""
+   },
+   "type": "ListEntry",
+   "id": "2faa642",
+   "listMeta": {
+    "isProfileList": false
+   },
+   "template": "S1",
+   "title": "Flere kategorier",
+   "list": {
+    "id": "277824",
+    "path": "/liste/277824",
+    "items": [],
+    "size": 11,
+    "paging": {
+     "total": 11,
+     "page": 0,
+     "size": 1,
+     "next": "/lists/277824?page_size=1&page=1&sub=Anonymous",
+     "options": {
+      "pageSize": 1
+     }
+    },
+    "listMeta": {
+     "isProfileList": false
+    }
+   }
+  }
+ ]
+}

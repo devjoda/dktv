@@ -1,8 +1,11 @@
 // Keeps DR's images in the viewer's browser, since DR's image server doesn't say they may be kept.
 // That makes pages load faster, and DR only sees each image asked for once, instead of on every visit.
+// Keeps the catalogue too, which Vælg for mig, Alle titler and the search field use at once, while it gets it again.
 // It also shows the notifications about new episodes, below.
 
 const CACHE = "dr-images-v1";
+const CATALOGUE_CACHE = "catalogue-v1";
+const CATALOGUE = "/katalog.json";
 // Around 25 MB, with DR's thumbnails at about 50 KB each
 const MAX_IMAGES = 500;
 
@@ -16,7 +19,7 @@ self.addEventListener("activate", (event) => {
     event.waitUntil((async () => {
         // Those of earlier versions of this worker
         for (const name of await caches.keys()) {
-            if (name != CACHE) {
+            if (name != CACHE && name != CATALOGUE_CACHE) {
                 await caches.delete(name);
             }
         }
@@ -25,10 +28,31 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-    if (event.request.method == "GET" && isDRImage(new URL(event.request.url))) {
+    const url = new URL(event.request.url);
+    if (event.request.method == "GET" && isDRImage(url)) {
         event.respondWith(cachedImage(event));
+    } else if (event.request.method == "GET" && url.origin == self.location.origin && url.pathname == CATALOGUE) {
+        event.respondWith(cachedCatalogue(event));
     }
 });
+
+// The catalogue as it was kept, at once, while it's got again for the next time; what has left DR since, the pages
+// leave out themselves
+async function cachedCatalogue(event) {
+    const cache = await caches.open(CATALOGUE_CACHE);
+    const kept = await cache.match(CATALOGUE);
+    const fresh = fetch(event.request).then((response) => {
+        if (response.ok) {
+            return cache.put(CATALOGUE, response.clone()).then(() => response);
+        }
+        return response;
+    });
+    if (kept) {
+        event.waitUntil(fresh.catch(() => {}));
+        return kept;
+    }
+    return fresh;
+}
 
 async function cachedImage(event) {
     const url = event.request.url;

@@ -72,6 +72,9 @@ async def get_api(path: str, /, **params) -> dict:
     print("Fetching from DR", path, params)
     try:
         async with http().get(API + path, params=API_PARAMS | params, timeout=5) as r:
+            # DR asking us to slow down, or turning us away, which isn't DR not having it
+            if r.status in (403, 429):
+                raise DRUnavailable(f"DR responded {r.status} to {path}")
             # DR doesn't have it, or doesn't think we asked for anything sensible
             if 400 <= r.status < 500:
                 abort(404)

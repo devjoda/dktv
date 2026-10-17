@@ -1,7 +1,12 @@
-// "Vælg for mig": asks a few questions about what DR has, from /vaelg.json, with what's left below them, and picks
-// one of it, when one is left or the viewer asks with "Overrask mig". On a category's page, "Overrask mig" picks from
-// its rows. What the viewer has seen and their favourites count for what's picked, but are only read here.
-// Needs progress.js and favorites.js.
+// "Vælg for mig": asks a few questions about the catalogue, with what's left below them, and picks one of it, when one
+// is left or the viewer asks with "Overrask mig". On a category's page, "Overrask mig" picks from its rows.
+// The questions after the first are about what the catalogue has now: each is asked only when its answers split what's
+// left well, and a question's answers are the values of its facet that do, like the topics there are most of among the
+// documentaries left. Which comes next is chance, the better it splits the likelier, and less likely what was asked
+// last time, so it isn't the same every time.
+// What the viewer has seen, their favourites, what was picked for them lately, the time of day and the time of year
+// count for what's picked, but are only read here.
+// Needs progress.js, favorites.js and catalogue.js.
 
 // How few programmes are worth showing all of, instead of asking more
 const PICK_FEW = 6;
@@ -11,103 +16,61 @@ const PICK_MOST_QUESTIONS = 4;
 const PICK_LEAST_SHARE = 0.1;
 // How much of what's left a question's answers must cover between them, so "Ligeglad" isn't the only answer
 const PICK_LEAST_COVER = 0.4;
-// The most answers to a question, besides "Ligeglad"
+// The most answers to a question, besides "Ligeglad", and how many of the best answers they're chosen from, at random
 const PICK_MOST_ANSWERS = 4;
+const PICK_ANSWERS_FROM = 7;
+// How many pictures each answer has of what it leads to
+const PICK_ANSWER_PICTURES = 3;
 // How many of what's left are shown
 const PICK_SHOWN = 48;
 // How long before what's picked starts, in seconds
 const PICK_COUNTDOWN = 5;
 // How long a tile takes to go, in milliseconds, as in style.css
 const PICK_LEAVING = 200;
+// How many of what was picked, and of the questions asked, are remembered, in the browser
+const PICK_REMEMBERED = 12;
 
-// Whether a programme has any of DR's tags, like "krimi", see Card.tags on the server
-function pickTagged(...tags) {
-    return item => item.tags.some(tag => tags.includes(tag));
+const PICK_KINDS = CATALOGUE_KINDS;
+
+// Whether a title has a facet's value
+function pickHas(facet, value) {
+    return item => hasValue(item, facet, value);
 }
-
-const PICK_FOR_CHILDREN = pickTagged("4-5 år", "6-8 år", "9-11 år", "familie", "dr ramasjang", "børn", "børn/animation",
-    "børn/fiktion", "børn/fakta", "tegnefilm");
-
-const PICK_KINDS = {
-    serie: "Serie",
-    film: "Film",
-    dokumentar: "Dokumentar",
-    program: "Program",
-};
 
 // The first question, which is always asked
 const PICK_FIRST = {
     id: "type",
     prompts: ["Serie, film eller dokumentar?"],
-    answers: [
-        {id: "serie", label: "En serie", test: item => item.kind == "serie"},
-        {id: "film", label: "En film", test: item => item.kind == "film"},
-        {id: "dokumentar", label: "En dokumentar", test: item => item.kind == "dokumentar"},
-        {id: "program", label: "Et program", hint: "Mad, livsstil og underholdning", test: item => item.kind == "program"},
+    answers: () => [
+        {id: "serie", label: "En serie"},
+        {id: "film", label: "En film"},
+        {id: "dokumentar", label: "En dokumentar"},
+        {id: "program", label: "Et program", hint: "Mad, livsstil og underholdning"},
     ],
 };
 
-// The others, which are asked when they split what's left well, each in one of a few ways, so it isn't the same every time
+// What some of the facets' values are called as answers, where the filter's label would sound odd
+const PICK_LABELS = {
+    stemning: {spaending: "Nervepirrende", sjovt: "Noget at grine af", foelelser: "Store følelser", hygge: "Hyggeligt", moerkt: "Mørkt og råt", klogt: "Tankevækkende", aegte: "Ægte og autentisk", magisk: "Eventyrligt"},
+    tid: {kort: "Under en halv time", time: "Op til en time", aften: "1-1½ time", lang: "En hel aften"},
+    omfang: {en: "En enkelt sæson", flere: "Et par sæsoner", mange: "Mange sæsoner"},
+    fra: {dansk: "Dansk", udland: "Fra udlandet"},
+    aktuelt: {nyt: "Noget nyt", "nye-afsnit": "Med nye afsnit", "sidste-chance": "Inden det forsvinder", gensyn: "Et gensyn"},
+};
+
+// The others, asked when they split what's left well, each in one of a few ways. A facet's question has its values as
+// answers; those in the same group aren't both asked, like where it's from and which country.
 const PICK_QUESTIONS = [
-    {
-        id: "stemning",
-        prompts: ["Skal pulsen op eller ned?", "Tjubang eller tænksom?", "Hvad er du i humør til?"],
-        answers: [
-            {id: "spaending", label: "Nervepirrende", test: pickTagged("nervepirrende", "spændingsfyldt", "spænding", "thriller/krimi", "action/thriller", "action", "krimi")},
-            {id: "grin", label: "Noget at grine af", test: pickTagged("sjovt", "skæv", "humor/satire", "humor", "satire")},
-            {id: "foelelser", label: "Store følelser", test: pickTagged("følelsesladet", "romantisk", "romantik/kærlighed", "drama", "livsbekræftende", "danske skæbnefortællinger", "internationale skæbnefortællinger")},
-            {id: "hygge", label: "Hyggeligt", test: pickTagged("feel good/hyggelig", "mad", "hus/have", "have", "bolig", "rejser", "rejse")},
-            {id: "moerkt", label: "Mørkt og råt", test: pickTagged("mørk/uhyggelig", "rå")},
-            {id: "klogt", label: "Tankevækkende", test: pickTagged("intellektuel/tankevækkende", "religion/etik/filosofi", "teknologi/videnskab", "teknologi/viden", "videnskab")},
-        ],
-    },
-    {
-        id: "emne",
-        prompts: ["Hvad skal det handle om?", "Hvad vil du blive klogere på?", "Vælg et emne"],
-        answers: [
-            {id: "historie", label: "Historie", test: pickTagged("historie", "historisk drama", "militær/krig", "kongelige")},
-            {id: "natur", label: "Natur og dyr", test: pickTagged("natur", "natur/dyr", "vildmarksliv", "dyr", "klima/miljø/bæredygtighed")},
-            {id: "forbrydelser", label: "Forbrydelser", test: pickTagged("kriminalitet", "krimi", "thriller/krimi")},
-            {id: "kultur", label: "Kunst og musik", test: pickTagged("kultur", "kunst/kultur", "musik", "klassisk musik", "design/arkitektur", "fashion")},
-            {id: "samfund", label: "Mennesker og samfund", test: pickTagged("dansk aktualitet/samfundsforhold", "international aktualitet/samfundsforhold", "aktualitet/samfundsforhold", "politik", "dansk identitet/relationer", "identitet/relationer", "international identitet/relationer")},
-            {id: "krop", label: "Krop og sundhed", test: pickTagged("krop", "sundhed", "seksualitet")},
-            {id: "mad", label: "Mad", test: pickTagged("mad")},
-            {id: "hjem", label: "Hus og have", test: pickTagged("hus/have", "have", "bolig")},
-        ],
-    },
-    {
-        id: "fra",
-        prompts: ["Herhjemme eller ude i verden?", "Dansk eller udenlandsk?", "Hjemlig hygge eller ud i verden?"],
-        answers: [
-            {id: "dansk", label: "Dansk", test: pickTagged("dansk")},
-            {id: "udland", label: "Fra udlandet", test: pickTagged("ikke-dansk")},
-        ],
-    },
-    {
-        id: "tid",
-        prompts: ["Hvor meget tid har du?", "Hvor længe skal det vare?"],
-        answers: [
-            {id: "kort", label: "Under en time", test: item => item.minutes > 0 && item.minutes <= 60},
-            {id: "aften", label: "En hel aften", test: item => item.minutes > 60 || item.seasons == 1},
-            {id: "mange", label: "Mange aftener", hint: "Flere sæsoner", test: item => item.seasons >= 2},
-        ],
-    },
-    {
-        id: "alder",
-        prompts: ["Splinterny eller gammel kending?", "Noget nyt eller et gensyn?"],
-        answers: [
-            {id: "nyt", label: "Noget nyt", test: item => Boolean(item.fresh) || item.year >= new Date().getFullYear() - 1},
-            {id: "gensyn", label: "Et gensyn", test: item => pickTagged("gensyn", "dr gensyn")(item) || (item.year > 0 && item.year < 2000)},
-        ],
-    },
-    {
-        id: "boern",
-        prompts: ["Er der børn i sofaen?", "Ser børnene med?"],
-        answers: [
-            {id: "ja", label: "Ja, noget for hele familien", test: PICK_FOR_CHILDREN},
-            {id: "nej", label: "Nej, kun voksne", test: item => !PICK_FOR_CHILDREN(item)},
-        ],
-    },
+    {id: "stemning", prompts: ["Skal pulsen op eller ned?", "Tjubang eller tænksom?", "Hvad er du i humør til?"]},
+    {id: "genre", prompts: ["Hvilken slags?", "Hvad skal det være?", "Vælg en genre"]},
+    {id: "emne", prompts: ["Hvad skal det handle om?", "Hvad vil du blive klogere på?", "Vælg et emne"]},
+    {id: "land", group: "fra", prompts: ["Hvor i verden?", "Hvor skal det foregå?", "Hvorfra?"]},
+    {id: "fra", group: "fra", prompts: ["Herhjemme eller ude i verden?", "Dansk eller udenlandsk?"]},
+    {id: "aarti", prompts: ["Fra hvilken tid?", "Splinterny eller fra arkivet?"]},
+    {id: "tid", prompts: ["Hvor meget tid har du?", "Hvor længe skal det vare?"]},
+    {id: "omfang", prompts: ["Noget kort eller noget at bide i?", "Hvor mange sæsoner?"]},
+    {id: "aktuelt", prompts: ["Noget nyt eller et gensyn?", "Splinterny eller gammel kending?"]},
+    {id: "person", prompts: ["Med nogen, du kender?", "Hvem skal være med?"]},
 ];
 
 const PICK_SKIP = "ligeglad";
@@ -120,9 +83,11 @@ function pickQuestion(id) {
 // without those it doesn't know
 function pickAnswers(search = location.search) {
     const found = [];
+    const asked = new Set();
     for (const [id, answer] of new URLSearchParams(search)) {
         const question = pickQuestion(id);
-        if (question && (answer == PICK_SKIP || question.answers.some(a => a.id == answer))) {
+        if (question && answer && !asked.has(id) && (question != PICK_FIRST || answer == PICK_SKIP || PICK_FIRST.answers().some(a => a.id == answer))) {
+            asked.add(id);
             found.push([id, answer]);
         }
     }
@@ -131,34 +96,53 @@ function pickAnswers(search = location.search) {
 
 // What's left of the programmes after the answers
 function pickLeft(items, answers) {
-    return answers.reduce(function (left, [id, answer]) {
-        if (answer == PICK_SKIP) {
-            return left;
-        }
-        const test = pickQuestion(id).answers.find(a => a.id == answer).test;
-        return left.filter(test);
-    }, items);
+    return answers.reduce((left, [id, answer]) => answer == PICK_SKIP ? left : left.filter(pickHas(id, answer)), items);
 }
 
-// A question's answers worth giving for what's left, with how many each leaves, the most first:
-// each must leave some, and take some away
-function pickChoices(question, items) {
+// What an answer is called
+function pickAnswerLabel(catalogue, question, value) {
+    const own = PICK_LABELS[question.id] && PICK_LABELS[question.id][value];
+    return own || facetValueLabel(catalogue || {facets: new Map()}, question.id, value);
+}
+
+// A question's answers worth giving for what's left, with how many each leaves, the most first: each must leave some,
+// and take some away. Of a facet's values, those there are most of, and a few of them at random, so it varies.
+function pickChoices(question, items, catalogue = null, random = Math.random) {
     const least = Math.max(1, Math.ceil(items.length * PICK_LEAST_SHARE));
     const most = items.length - least;
-    return question.answers
-        .map(answer => ({answer, count: items.filter(answer.test).length}))
-        .filter(choice => choice.count >= least && choice.count <= most)
-        .sort((a, b) => b.count - a.count)
-        .slice(0, PICK_MOST_ANSWERS);
+    const counts = new Map();
+    for (const item of items) {
+        for (const value of item.f[question.id] || []) {
+            counts.set(value, (counts.get(value) || 0) + 1);
+        }
+    }
+    const worth = [...counts].filter(([, count]) => count >= least && count <= most).sort((a, b) => b[1] - a[1]);
+    let chosen = worth.slice(0, PICK_ANSWERS_FROM);
+    while (chosen.length > PICK_MOST_ANSWERS) {
+        // Those there are fewest of go first, but not always
+        const weights = chosen.map(([, count], i) => (i + 1) / count);
+        let left = random() * weights.reduce((sum, weight) => sum + weight, 0);
+        const i = weights.findIndex(weight => (left -= weight) <= 0);
+        chosen.splice(i < 0 ? chosen.length - 1 : i, 1);
+    }
+    return chosen.map(([value, count]) => ({answer: {id: value, label: pickAnswerLabel(catalogue, question, value), hint: pickHint(question, value, items)}, count}));
+}
+
+// A word more about an answer, where it needs one: that a series' length is its episodes'
+function pickHint(question, value, items) {
+    if (question.id == "tid" && items.length && items.every(item => isShowEntry(item))) {
+        return "Pr. afsnit";
+    }
+    return undefined;
 }
 
 // How well a question splits what's left, from 0 to 1: how much its answers cover, and how evenly they share it
-function pickScore(question, items) {
-    const choices = pickChoices(question, items);
+function pickScore(question, items, catalogue = null) {
+    const choices = pickChoices(question, items, catalogue, () => 0);
     if (choices.length < 2) {
         return 0;
     }
-    const covered = items.filter(item => choices.some(choice => choice.answer.test(item))).length / items.length;
+    const covered = items.filter(item => choices.some(choice => hasValue(item, question.id, choice.answer.id))).length / items.length;
     if (covered < PICK_LEAST_COVER) {
         return 0;
     }
@@ -167,9 +151,31 @@ function pickScore(question, items) {
     return covered * entropy / Math.log(choices.length);
 }
 
-// The next question for what's left, or null when there's nothing more worth asking:
-// one of those that split it well, at random, the better they split it the likelier
-function pickNext(items, answers, random = Math.random) {
+// What Vælg for mig remembers in the browser, so it varies: the questions asked last, and what was picked lately
+function pickMemory() {
+    try {
+        const kept = JSON.parse(localStorage.getItem("pickMemory") || "{}");
+        return {asked: Array.isArray(kept.asked) ? kept.asked : [], picked: Array.isArray(kept.picked) ? kept.picked : []};
+    } catch (error) {
+        return {asked: [], picked: []};
+    }
+}
+
+function rememberPick(change) {
+    const memory = pickMemory();
+    change(memory);
+    memory.asked = memory.asked.slice(-PICK_REMEMBERED);
+    memory.picked = memory.picked.slice(-PICK_REMEMBERED);
+    try {
+        localStorage.setItem("pickMemory", JSON.stringify(memory));
+    } catch (error) {
+        // Then it's only less varied
+    }
+}
+
+// The next question for what's left, or null when there's nothing more worth asking: one of those that split it well,
+// at random, the better they split it the likelier, and less likely one asked lately
+function pickNext(items, answers, random = Math.random, catalogue = null, memory = {asked: []}) {
     if (answers.length == 0) {
         return PICK_FIRST;
     }
@@ -177,8 +183,9 @@ function pickNext(items, answers, random = Math.random) {
         return null;
     }
     const asked = new Set(answers.map(([id]) => id));
-    const scored = PICK_QUESTIONS.filter(question => !asked.has(question.id))
-        .map(question => ({question, weight: pickScore(question, items) ** 2}))
+    const groups = new Set(answers.map(([id]) => pickQuestion(id).group).filter(Boolean));
+    const scored = PICK_QUESTIONS.filter(question => !asked.has(question.id) && !(question.group && groups.has(question.group)))
+        .map(question => ({question, weight: pickScore(question, items, catalogue) ** 2 * (memory.asked.includes(question.id) ? 0.5 : 1)}))
         .filter(({weight}) => weight > 0);
     let left = random() * scored.reduce((sum, {weight}) => sum + weight, 0);
     for (const {question, weight} of scored) {
@@ -190,39 +197,60 @@ function pickNext(items, answers, random = Math.random) {
     return scored.length ? scored.at(-1).question : null;
 }
 
-// Broad tags, which say too little about what the viewer likes
-const PICK_BROAD = new Set(["fiktionsserie", "serier", "serie", "film", "dokumentar", "tv-program", "dansk", "ikke-dansk",
-    "gensyn", "dr gensyn", "underholdning", "15-24 år"]);
+// The facets whose values say what the viewer likes, of their favourites
+const PICK_LIKED_FACETS = ["genre", "stemning", "emne", "person"];
 
-// How likely something is to be picked: not what the viewer has seen or begun, and more so what's like their favourites
-function pickWeight(item, liked) {
+// How likely something is to be picked: not what the viewer has seen, begun, or was picked for them lately, and more so
+// what's like their favourites, new, chosen by DR's editors, short late in the evening, a film at the weekend, and
+// Christmas in December
+function pickWeight(item, liked, now = new Date(), picked = []) {
     let weight = 1;
-    const progress = item.videoId ? loadProgress(item.videoId) : null;
+    const videoId = item.videoId || (item.u && !isShowEntry(item) ? item.id : null);
+    const progress = videoId ? loadProgress(videoId) : null;
     if (progress && progress.watched) {
         weight *= 0.05;
     } else if (progress && progress.time > 0) {
         weight *= 0.2;
     }
-    const favorite = item.showId || item.filmId;
+    const favorite = item.u ? entrySlug(item) : item.showId || item.filmId;
     if (favorite && isFavorite(favorite)) {
         weight *= 0.3;
     }
-    const shared = item.tags ? item.tags.filter(tag => liked.has(tag)).length : 0;
+    if (item.u && picked.includes(item.u)) {
+        weight *= 0.2;
+    }
+    const f = item.f || {};
+    const shared = PICK_LIKED_FACETS.reduce((n, facet) => n + (f[facet] || []).filter(value => liked.has(facet + "\n" + value)).length, 0);
     weight *= 1 + 0.5 * Math.min(shared, 3);
-    if (item.fresh) {
+    if ((f.aktuelt || []).some(value => value == "nyt" || value == "nye-afsnit")) {
         weight *= 1.3;
+    }
+    if (f.udvalgt && f.udvalgt.length) {
+        weight *= 1.5;
+    }
+    const hour = now.getHours();
+    if ((hour >= 22 || hour < 5) && item.m && item.m <= 60) {
+        weight *= 1.3;
+    }
+    if ([5, 6].includes(now.getDay()) && hour >= 18 && item.k == "film") {
+        weight *= 1.3;
+    }
+    if (now.getMonth() == 11 && (f.emne || []).includes("jul")) {
+        weight *= 2;
     }
     return weight;
 }
 
-// The narrower tags of the viewer's favourites, as far as they're among the programmes
+// The facets' values of the viewer's favourites that say what they like, as far as they're among the programmes
 function pickLiked(items) {
     const favorites = new Set(loadFavorites().map(favorite => favoriteKey(favorite.id)));
     const liked = new Set();
     for (const item of items) {
-        const id = item.showId || item.filmId;
+        const id = item.u ? entrySlug(item) : item.showId || item.filmId;
         if (id && favorites.has(favoriteKey(id))) {
-            (item.tags || []).filter(tag => !PICK_BROAD.has(tag)).forEach(tag => liked.add(tag));
+            for (const facet of PICK_LIKED_FACETS) {
+                (item.f && item.f[facet] || []).forEach(value => liked.add(facet + "\n" + value));
+            }
         }
     }
     return liked;
@@ -231,8 +259,10 @@ function pickLiked(items) {
 // One of the programmes, at random, by pickWeight(), but not `not`, if there are others
 function pickOne(items, all = items, not = null, random = Math.random) {
     const liked = pickLiked(all);
-    const choices = items.length > 1 && not ? items.filter(item => item.url != not.url) : items;
-    const weights = choices.map(item => pickWeight(item, liked));
+    const picked = pickMemory().picked;
+    const now = new Date();
+    const choices = items.length > 1 && not ? items.filter(item => (item.u || item.url) != (not.u || not.url)) : items;
+    const weights = choices.map(item => pickWeight(item, liked, now, picked));
     let left = random() * weights.reduce((sum, weight) => sum + weight, 0);
     for (let i = 0; i < choices.length; i++) {
         left -= weights[i];
@@ -245,21 +275,26 @@ function pickOne(items, all = items, not = null, random = Math.random) {
 
 // Where a programme starts: a film plays on its page, and a series' page plays where its play button would
 function pickTarget(item) {
-    return item.url.endsWith("/") ? item.url + "#afspil" : item.url;
+    const url = item.u || item.url;
+    return url.endsWith("/") ? url + "#afspil" : url;
 }
 
 // The picture with the picked programme, and a countdown to it, which "Fortryd" stops
 function pickShow(item, again) {
     const dialog = document.querySelector(".js-pick-result");
+    if (item.u) {
+        rememberPick(memory => memory.picked.push(item.u));
+    }
     if (dialog == null) {
         location.href = pickTarget(item);
         return;
     }
     clearInterval(Number(dialog.dataset.timer));
     const media = dialog.querySelector(".js-pick-result-media");
-    media.replaceChildren(item.image ? element("img", {src: item.image, alt: ""}) : "");
-    dialog.querySelector(".js-pick-result-kind").textContent = PICK_KINDS[item.kind] || "";
-    dialog.querySelector("#pick-result-title").textContent = item.title;
+    const image = item.i || item.image;
+    media.replaceChildren(image ? element("img", {src: image, alt: ""}) : "");
+    dialog.querySelector(".js-pick-result-kind").textContent = PICK_KINDS[item.k || item.kind] || "";
+    dialog.querySelector("#pick-result-title").textContent = item.t || item.title;
     const go = dialog.querySelector(".js-pick-go");
     go.href = pickTarget(item);
     const againButton = dialog.querySelector(".js-pick-again");
@@ -308,23 +343,15 @@ const pickSeed = Math.random().toString(36).slice(2);
 
 function pickOrder(item) {
     let hash = 0;
-    for (const char of pickSeed + item.url) {
+    for (const char of pickSeed + item.u) {
         hash = (hash * 31 + char.charCodeAt(0)) | 0;
     }
     return hash;
 }
 
 function pickTile(item) {
-    const id = item.showId || item.filmId;
-    const tile = buildTile({
-        href: item.url,
-        image: item.image,
-        title: item.title,
-        meta: PICK_KINDS[item.kind] || "",
-        videoID: item.videoId || null,
-        action: id ? favoriteToggle({id, kind: item.showId ? "show" : "film", title: item.title, image: item.image}) : null,
-    });
-    tile.dataset.pick = item.url;
+    const tile = catalogueTile(item);
+    tile.dataset.pick = item.u;
     return tile;
 }
 
@@ -334,7 +361,7 @@ function pickShowTiles(grid, items) {
     const shown = [...items]
         .sort((a, b) => Number(Boolean(pickSeen(a))) - Number(Boolean(pickSeen(b))) || pickOrder(a) - pickOrder(b))
         .slice(0, PICK_SHOWN);
-    const wanted = new Set(shown.map(item => item.url));
+    const wanted = new Set(shown.map(item => item.u));
     const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
     for (const [url, tile] of kept) {
         if (!wanted.has(url)) {
@@ -348,14 +375,14 @@ function pickShowTiles(grid, items) {
         }
     }
     for (const item of shown) {
-        grid.append(kept.get(item.url) || pickTile(item));
+        grid.append(kept.get(item.u) || pickTile(item));
     }
     updateFavoriteButtons();
     markProgress();
 }
 
 function pickSeen(item) {
-    const progress = item.videoId ? loadProgress(item.videoId) : null;
+    const progress = isShowEntry(item) ? null : loadProgress(item.id);
     return progress && (progress.watched || progress.time > 0);
 }
 
@@ -363,11 +390,32 @@ function pickCount(count) {
     return count == 1 ? "1 titel passer" : `${count} titler passer`;
 }
 
+// A few pictures of what an answer leads to, those likeliest to be picked first
+function pickPictures(items) {
+    const liked = pickLiked(items);
+    const now = new Date();
+    return items.filter(item => item.i)
+        .map(item => ({item, weight: pickWeight(item, liked, now)}))
+        .sort((a, b) => b.weight - a.weight || pickOrder(a.item) - pickOrder(b.item))
+        .slice(0, PICK_ANSWER_PICTURES)
+        .map(({item}) => element("img", {src: item.i, alt: "", loading: "lazy"}));
+}
+
+function pickAnswerButton(question, answer, count, items) {
+    return element("button", {type: "button", class: "pick-answer", "data-question": question.id, "data-answer": answer.id},
+        element("span", {class: "pick-answer-pictures", "aria-hidden": "true"}, ...pickPictures(items)),
+        element("span", {class: "pick-answer-label"}, answer.label),
+        answer.hint ? element("span", {class: "pick-answer-detail pick-answer-hint"}, answer.hint) : "",
+        element("span", {class: "pick-answer-detail"}, count == 1 ? "1 titel" : `${count} titler`));
+}
+
 // The page's question, its answers, and what's left, for the answers in the address
-function pickRender(section, items, {start = false} = {}) {
+function pickRender(section, catalogue, {start = false} = {}) {
+    const items = catalogue.titles;
     const answers = pickAnswers();
     const left = pickLeft(items, answers);
-    const question = pickNext(left, answers);
+    const memory = pickMemory();
+    const question = pickNext(left, answers, Math.random, catalogue, memory);
     const step = section.querySelector(".js-pick-step");
     const title = section.querySelector(".js-pick-question");
     const choices = section.querySelector(".js-pick-answers");
@@ -379,15 +427,15 @@ function pickRender(section, items, {start = false} = {}) {
         step.textContent = answers.length ? `Spørgsmål ${answers.length + 1}` : "Svar på et par spørgsmål, eller lad terningen bestemme.";
         title.textContent = question.prompts[Math.floor(Math.random() * question.prompts.length)];
         const found = question == PICK_FIRST
-            ? question.answers.map(answer => ({answer, count: left.filter(answer.test).length})).filter(choice => choice.count > 0)
-            : pickChoices(question, left);
+            ? question.answers().map(answer => ({answer, count: left.filter(pickHas("type", answer.id)).length})).filter(choice => choice.count > 0)
+            : pickChoices(question, left, catalogue);
         choices.replaceChildren(
-            ...found.map(({answer, count}) => element("button", {type: "button", class: "pick-answer", "data-question": question.id, "data-answer": answer.id},
-                element("span", {class: "pick-answer-label"}, answer.label),
-                answer.hint ? element("span", {class: "pick-answer-detail pick-answer-hint"}, answer.hint) : "",
-                element("span", {class: "pick-answer-detail"}, count == 1 ? "1 titel" : `${count} titler`))),
+            ...found.map(({answer, count}) => pickAnswerButton(question, answer, count, left.filter(pickHas(question.id, answer.id)))),
             element("button", {type: "button", class: "pick-answer pick-answer-skip", "data-question": question.id, "data-answer": PICK_SKIP},
                 element("span", {class: "pick-answer-label"}, "Ligeglad")));
+        if (question != PICK_FIRST && answers.length == 1) {
+            rememberPick(kept => kept.asked.push(question.id));
+        }
     } else {
         step.textContent = "";
         title.textContent = left.length == 1 ? "Her er den, der passer" : left.length <= PICK_FEW ? "Her er dine forslag" : "Her er, hvad der passer";
@@ -421,7 +469,7 @@ function pickPageItems() {
             videoId: tile.dataset.videoId || null,
             showId: favorite && favorite.dataset.kind == "show" ? favorite.dataset.favoriteId : null,
             filmId: favorite && favorite.dataset.kind == "film" ? favorite.dataset.favoriteId : null,
-            tags: [],
+            f: {},
         });
     }
     return [...found.values()];
@@ -444,21 +492,22 @@ function setupPickCategory() {
 
 async function setupPickPage(section) {
     const loading = document.querySelector(".js-pick-loading");
-    let items;
+    let catalogue;
     try {
-        const response = await fetch("/vaelg.json");
-        if (!response.ok) {
-            throw new Error(`The server answered ${response.status}`);
-        }
-        items = await response.json();
+        catalogue = await loadCatalogue();
     } catch (error) {
         console.error("Could not get the programmes to pick from:", error);
         loading.textContent = "Titlerne kunne ikke hentes lige nu. Prøv igen om lidt.";
         return;
     }
+    if (catalogue.titles.length == 0) {
+        loading.textContent = "Der er ingen titler endnu. Prøv igen om lidt.";
+        return;
+    }
     loading.remove();
     section.hidden = false;
-    let left = pickRender(section, items, {start: true});
+    const items = catalogue.titles;
+    let left = pickRender(section, catalogue, {start: true});
     let last = null;
     const surprise = function () {
         last = pickOne(left, items, last);
@@ -468,7 +517,7 @@ async function setupPickPage(section) {
     };
     const go = function (search) {
         history.pushState(null, "", location.pathname + search);
-        left = pickRender(section, items);
+        left = pickRender(section, catalogue);
         if (left.length == 1) {
             last = left[0];
             pickShow(last, null);
@@ -492,7 +541,7 @@ async function setupPickPage(section) {
     });
     window.addEventListener("popstate", function () {
         pickClose();
-        left = pickRender(section, items);
+        left = pickRender(section, catalogue);
     });
 }
 

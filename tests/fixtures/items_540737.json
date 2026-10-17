@@ -1,0 +1,2370 @@
+{
+ "images": {
+  "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540737'&Width=1920&Height=1080&ImageId='71778211'",
+  "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540737'&Width=1440&Height=2160&ImageId='71778213'",
+  "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540737'&Width=1920&Height=1080&ImageId='71778215'"
+ },
+ "advisoryText": "",
+ "copyright": "",
+ "credits": [],
+ "customMetadata": [],
+ "distributor": "DRTV",
+ "releaseYear": 1978,
+ "availableEpisodeCount": 24,
+ "seasonNumber": 1,
+ "showId": "540736",
+ "episodeCount": 24,
+ "offers": [
+  {
+   "deliveryType": "StreamOrDownload",
+   "endDate": "2027-03-01T22:59:00Z",
+   "scopes": [
+    "540737"
+   ],
+   "exclusionRules": [],
+   "resolution": "HD-1080",
+   "name": "D468078_Season Free HD-1080 Season",
+   "availability": "Available",
+   "ownership": "Free",
+   "price": 0,
+   "startDate": "2025-09-01T04:00:00Z"
+  }
+ ],
+ "trailers": [],
+ "scopes": [
+  "540737"
+ ],
+ "categories": [
+  "fiktionsserie",
+  "gensyn",
+  "dr gensyn",
+  "acc_audio_description",
+  "acc_spoken_subtitles"
+ ],
+ "channelPath": "",
+ "customFields": {
+  "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn",
+  "BrandingChannelShort": "TVG",
+  "BrandingChannelDisplayName": "DR Gensyn",
+  "DisplayCategory": "Fiktionsserie,Gensyn",
+  "TargetAudience": "Adults",
+  "RatingSegment": "DRTV",
+  "PrimaryContentUniverse": "DRTV",
+  "ClassificationRating": "MRAM-ALL",
+  "IsGeoRestricted": "False",
+  "PresentationTypeCode": "Show",
+  "IsSeasonDRMPlayoutRequired": "False",
+  "PageTitle": "Matador: Sæson 1",
+  "ExtraDetails": "Fiktionsserie | SÆSON 1",
+  "OfferDateTimeRanges": [
+   {
+    "From": "2025-09-01T04:00:00Z",
+    "To": "2027-03-01T22:59:00Z",
+    "SegmentationTags": [
+     "DRTV"
+    ]
+   }
+  ],
+  "PathIdSegment": "matador_540737",
+  "ShortVideoUrl": "https://drod23b.akamaized.net/all/clear/none/27/5dd7b7f36187a4181859eb27/5dd7b74f6187a4181859eb23/stream_fmp4/master_manifest.m3u8",
+  "ContentUniverses": [
+   "drtv"
+  ]
+ },
+ "customId": "urn:dr:ocs:tv:content:season:1344434573000",
+ "genres": [
+  "ukendt"
+ ],
+ "id": "540737",
+ "type": "season",
+ "keywords": [
+  "editorialptaxtop_serier"
+ ],
+ "description": "Klassikeren over alle danske dramaklassikere.",
+ "shortDescription": "Klassikeren over alle danske dramaklassikere.",
+ "contextualTitle": "",
+ "sports": [],
+ "subtype": "",
+ "tagline": "1. december | Det er snart jul… og tid til Matador",
+ "themes": [],
+ "title": "Matador",
+ "vodItemWatchPath": "",
+ "classification": {
+  "code": "DR-Voksen",
+  "name": "Voksen"
+ },
+ "path": "/saeson/matador_540737",
+ "genrePaths": [],
+ "totalUserRatings": 0,
+ "show": {
+  "images": {
+   "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540736'&Width=1920&Height=1080&ImageId='71778204'",
+   "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540736'&Width=1440&Height=2160&ImageId='71778206'",
+   "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540736'&Width=1920&Height=1080&ImageId='71778208'"
+  },
+  "advisoryText": "",
+  "copyright": "",
+  "credits": [],
+  "customMetadata": [],
+  "distributor": "",
+  "availableSeasonCount": 1,
+  "offers": [
+   {
+    "deliveryType": "None",
+    "endDate": "2027-03-01T22:59:00Z",
+    "scopes": [
+     "540736"
+    ],
+    "exclusionRules": [],
+    "resolution": "Unknown",
+    "id": "ID0EUB",
+    "name": "D468078_Show Free  Show",
+    "availability": "Available",
+    "ownership": "Free",
+    "price": 0,
+    "startDate": "2025-09-01T04:00:00Z"
+   }
+  ],
+  "trailers": [],
+  "scopes": [
+   "540736"
+  ],
+  "categories": [
+   "fiktionsserie",
+   "gensyn",
+   "dr gensyn",
+   "acc_audio_description",
+   "acc_spoken_subtitles"
+  ],
+  "channelPath": "",
+  "customFields": {
+   "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn",
+   "BrandingChannelShort": "TVG",
+   "BrandingChannelDisplayName": "DR Gensyn",
+   "DisplayCategory": "Fiktionsserie,Gensyn",
+   "TargetAudience": "Adults",
+   "RatingSegment": "DRTV",
+   "PrimaryContentUniverse": "DRTV",
+   "ClassificationRating": "MRAM-ALL",
+   "PresentationTypeCode": "Show",
+   "IsGeoRestricted": "False",
+   "IsSeriesDRMPlayoutRequired": "False",
+   "PageTitle": "Matador",
+   "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+   "TitleExtraDetails": "DR Gensyn | 1 SÆSON",
+   "PathIdSegment": "matador_540736",
+   "ContentUniverses": [
+    "drtv"
+   ]
+  },
+  "customId": "urn:dr:ocs:tv:content:series:1344431885000",
+  "genres": [
+   "ukendt"
+  ],
+  "id": "540736",
+  "type": "show",
+  "keywords": [
+   "editorialptaxtop_serier",
+   "editorialptaxsub_historisk drama",
+   "mood_feel good/hyggelig",
+   "culturalorigin_dansk"
+  ],
+  "description": "Klassikeren over alle danske dramaklassikere.",
+  "shortDescription": "Klassikeren over alle danske dramaklassikere.",
+  "contextualTitle": "",
+  "sports": [],
+  "subtype": "",
+  "themes": [],
+  "title": "Matador",
+  "vodItemWatchPath": "",
+  "path": "/serie/matador_540736",
+  "genrePaths": [],
+  "totalUserRatings": 0,
+  "seasons": {
+   "id": "540736-seasons",
+   "path": "",
+   "items": [
+    {
+     "images": {
+      "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540737'&Width=1920&Height=1080&ImageId='71778211'",
+      "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540737'&Width=1440&Height=2160&ImageId='71778213'",
+      "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540737'&Width=1920&Height=1080&ImageId='71778215'"
+     },
+     "releaseYear": 1978,
+     "availableEpisodeCount": 24,
+     "seasonNumber": 1,
+     "showId": "540736",
+     "episodeCount": 24,
+     "offers": [
+      {
+       "deliveryType": "StreamOrDownload",
+       "scopes": [
+        "540737"
+       ],
+       "resolution": "HD-1080",
+       "availability": "Available",
+       "ownership": "Free",
+       "price": 0
+      }
+     ],
+     "scopes": [
+      "540737"
+     ],
+     "categories": [
+      "fiktionsserie",
+      "gensyn",
+      "dr gensyn",
+      "acc_audio_description",
+      "acc_spoken_subtitles"
+     ],
+     "channelPath": "",
+     "customFields": {
+      "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn",
+      "BrandingChannelShort": "TVG",
+      "BrandingChannelDisplayName": "DR Gensyn",
+      "DisplayCategory": "Fiktionsserie,Gensyn",
+      "TargetAudience": "Adults",
+      "RatingSegment": "DRTV",
+      "PrimaryContentUniverse": "DRTV",
+      "ClassificationRating": "MRAM-ALL",
+      "IsGeoRestricted": "False",
+      "PresentationTypeCode": "Show",
+      "IsSeasonDRMPlayoutRequired": "False",
+      "PageTitle": "Matador: Sæson 1",
+      "ExtraDetails": "Fiktionsserie | SÆSON 1",
+      "OfferDateTimeRanges": [
+       {
+        "From": "2025-09-01T04:00:00Z",
+        "To": "2027-03-01T22:59:00Z",
+        "SegmentationTags": [
+         "DRTV"
+        ]
+       }
+      ],
+      "PathIdSegment": "matador_540737",
+      "ShortVideoUrl": "https://drod23b.akamaized.net/all/clear/none/27/5dd7b7f36187a4181859eb27/5dd7b74f6187a4181859eb23/stream_fmp4/master_manifest.m3u8",
+      "ContentUniverses": [
+       "drtv"
+      ]
+     },
+     "customId": "urn:dr:ocs:tv:content:season:1344434573000",
+     "genres": [
+      "ukendt"
+     ],
+     "id": "540737",
+     "type": "season",
+     "keywords": [
+      "editorialptaxtop_serier"
+     ],
+     "shortDescription": "Klassikeren over alle danske dramaklassikere.",
+     "contextualTitle": "",
+     "sports": [],
+     "subtype": "",
+     "tagline": "1. december | Det er snart jul… og tid til Matador",
+     "themes": [],
+     "title": "Matador",
+     "vodItemWatchPath": "",
+     "classification": {
+      "code": "DR-Voksen",
+      "name": "Voksen"
+     },
+     "path": "/saeson/matador_540737"
+    }
+   ],
+   "size": 1,
+   "paging": {
+    "total": 1,
+    "page": 1,
+    "size": 200,
+    "options": {
+     "pageSize": 200
+    }
+   }
+  }
+ },
+ "episodes": {
+  "id": "540737-episodes",
+  "path": "",
+  "items": [
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540758'&Width=1920&Height=1080&ImageId='71778320'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540758'&Width=1920&Height=1080&ImageId='71778322'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540758'&Width=1440&Height=2160&ImageId='71778213'"
+    },
+    "duration": 2719,
+    "releaseYear": 1978,
+    "episodeNumber": 1,
+    "episodeName": "Matador: Den rejsende",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540758"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540758",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E1 Den rejsende",
+     "ContextualTitleExtraDetails": "11. NOV 1978 | 45M",
+     "AvailableFrom": "1978-11-11T19:02:42.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Den rejsende",
+     "ExtraDetails": "SÆSON 1 EPISODE 1 | 45M",
+     "PathIdSegment": "matador_-den-rejsende_540758",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505269160",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540758",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1978.\n\"Den rejsende - 1929\".\nMads Andersen-Skjern kommer til Korsbæk som handelsrejsende sammen med sønnen Daniel. Han besøger det snobbede Damernes Magasin og opdager, at der er gode muligheder for at åbne en konkurrerende forretning",
+    "contextualTitle": "1. Den rejsende",
+    "sports": [],
+    "subtype": "",
+    "themes": [],
+    "title": "Matador: Den rejsende",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-den-rejsende_540758",
+    "watchPath": "/se/matador_-den-rejsende_540758"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540753'&Width=1920&Height=1080&ImageId='71778271'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540753'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540753'&Width=1920&Height=1080&ImageId='71778289'"
+    },
+    "duration": 2431,
+    "releaseYear": 1978,
+    "episodeNumber": 2,
+    "episodeName": "Matador: Genboen",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540753"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540753",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E2 Genboen",
+     "ContextualTitleExtraDetails": "18. NOV 1978 | 41M",
+     "AvailableFrom": "1978-11-18T13:45:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Genboen",
+     "ExtraDetails": "SÆSON 1 EPISODE 2 | 41M",
+     "ShortVideoUrl": "https://drod24e.akamaized.net/all/clear/none/01/673ed854b01f9b5e68a26e01/673ed854bf1f6425983c5a35/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-genboen_540753",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505269240",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540753",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1978.\n\"Genboen - 1929\".\nMads Andersen-Skjern går til Korsbæk Bank for at låne penge til sin forretning, men afvises af bankdirektør Varnæs, der er personlig ven med indehaveren af Damernes Magasin, Albert Arnesen. Mads skaffer pengene",
+    "contextualTitle": "2. Genboen",
+    "sports": [],
+    "subtype": "",
+    "tagline": "2. december | Mads får et godt øje til grisehandlerens datter, Ingeborg",
+    "themes": [],
+    "title": "Matador: Genboen",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-genboen_540753",
+    "watchPath": "/se/matador_-genboen_540753"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540743'&Width=1920&Height=1080&ImageId='71778244'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540743'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540743'&Width=1920&Height=1080&ImageId='71778246'"
+    },
+    "duration": 2981,
+    "releaseYear": 1978,
+    "episodeNumber": 3,
+    "episodeName": "Matador: Skiftedag",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540743"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540743",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E3 Skiftedag",
+     "ContextualTitleExtraDetails": "25. NOV 1978 | 50M",
+     "AvailableFrom": "1978-11-25T12:05:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Skiftedag",
+     "ExtraDetails": "SÆSON 1 EPISODE 3 | 50M",
+     "ShortVideoUrl": "https://drod23i.akamaized.net/all/clear/none/3d/5dde64216187a418185a153d/5dde63646187a418185a153b/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-skiftedag_540743",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505269320",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540743",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1978.\n\"Skiftedag - 1930\".\nKunderne strømmer til Tøjhuset, især da byens baronesse skifter fra Damernes Magasin til Tøjhuset. Det ser sort ud for Arnesen, men han reddes i sidste øjeblik af sin førstemand, hr. Schwann, der arver og sæt",
+    "contextualTitle": "3. Skiftedag",
+    "sports": [],
+    "subtype": "",
+    "tagline": "3. december | Damernes Magasin får voldsom konkurrence af Tøjhuset",
+    "themes": [],
+    "title": "Matador: Skiftedag",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-skiftedag_540743",
+    "watchPath": "/se/matador_-skiftedag_540743"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540759'&Width=1920&Height=1080&ImageId='71778325'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540759'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540759'&Width=1920&Height=1080&ImageId='71778327'"
+    },
+    "duration": 3294,
+    "releaseYear": 1978,
+    "episodeNumber": 4,
+    "episodeName": "Matador: Skyggetanten",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540759"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540759",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E4 Skyggetanten",
+     "ContextualTitleExtraDetails": "2. DEC 1978 | 55M",
+     "AvailableFrom": "1978-12-02T13:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Skyggetanten",
+     "ExtraDetails": "SÆSON 1 EPISODE 4 | 55M",
+     "ShortVideoUrl": "https://drod21p.akamaized.net/all/clear/none/dc/691dc1aaa0ff2715fc046edc/691dc1a56a82e00f08d2ffe1/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-skyggetanten_540759",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505269400",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540759",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1978.\n\"Skyggetanten - 1931\".\nBankdirektørens sarte kone, Maude, har sin ugifte søster Elisabeth som husholderske. En rolle alle er tilfreds med, indtil Kristen Andersen-Skjern kommer til byen for at hjælpe Mads med hans voksende udlån",
+    "contextualTitle": "4. Skyggetanten",
+    "sports": [],
+    "subtype": "",
+    "tagline": "4. december | Maudes ugifte søster Elisabeth stilles i et svært dilemma ",
+    "themes": [],
+    "title": "Matador: Skyggetanten",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-skyggetanten_540759",
+    "watchPath": "/se/matador_-skyggetanten_540759"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540752'&Width=1920&Height=1080&ImageId='71778281'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540752'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540752'&Width=1920&Height=1080&ImageId='71778294'"
+    },
+    "duration": 3597,
+    "releaseYear": 1978,
+    "episodeNumber": 5,
+    "episodeName": "Matador: Den enes død",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540752"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540752",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E5 Den enes død",
+     "ContextualTitleExtraDetails": "9. DEC 1978 | 1T 0M",
+     "AvailableFrom": "1978-12-09T12:55:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Den enes død",
+     "ExtraDetails": "SÆSON 1 EPISODE 5 | 1T 0M",
+     "ShortVideoUrl": "https://drod21p.akamaized.net/all/clear/none/05/673eddd2b01f9b5e68a26e05/673eddd2aa96125908d82d01/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-den-enes-doed_540752",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505269590",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540752",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1978.\n\"Den enes død - 1932\".    \nElisabeth beslutter sig for at flytte i egen lejlighed og blive spillelærerinde. Mads udvider atter forretningen, og Ingeborg er gravid. Arnesen har igen brug for penge, men da Korsbæk Bank nægter ham ",
+    "contextualTitle": "5. Den enes død",
+    "sports": [],
+    "subtype": "",
+    "tagline": "5. december | I familien Varnæs kommer flere usagte sandheder frem i lyset",
+    "themes": [],
+    "title": "Matador: Den enes død",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-den-enes-doed_540752",
+    "watchPath": "/se/matador_-den-enes-doed_540752"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540750'&Width=1920&Height=1080&ImageId='71778257'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540750'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540750'&Width=1920&Height=1080&ImageId='71778274'"
+    },
+    "duration": 3378,
+    "releaseYear": 1978,
+    "episodeNumber": 6,
+    "episodeName": "Matador: Opmarch",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540750"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540750",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E6 Opmarch",
+     "ContextualTitleExtraDetails": "16. DEC 1978 | 56M",
+     "AvailableFrom": "1978-12-16T12:25:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Opmarch",
+     "ExtraDetails": "SÆSON 1 EPISODE 6 | 56M",
+     "ShortVideoUrl": "https://drod21c.akamaized.net/all/clear/none/ef/5ddf80be6187a418185a1cef/5ddf801e6187a418185a1ce4/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-opmarch_540750",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505269670",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540750",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1978.\n\"Opmarch - 1932\".                 \nMod sin fars vilje beslutter Arnesens enke, Vicki, sig for at flytte til København. Mads køber Damernes Magasin med planer om at åbne en bank, og mens de gamle, etablerede familier er præget af",
+    "contextualTitle": "6. Opmarch",
+    "sports": [],
+    "subtype": "",
+    "tagline": "6. december | Arnesens enke, Vicki, har nye planer for fremtiden",
+    "themes": [],
+    "title": "Matador: Opmarch",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-opmarch_540750",
+    "watchPath": "/se/matador_-opmarch_540750"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540744'&Width=1920&Height=1080&ImageId='71778249'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540744'&Width=1920&Height=1080&ImageId='71778253'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540744'&Width=1440&Height=2160&ImageId='71778213'"
+    },
+    "duration": 4511,
+    "releaseYear": 1979,
+    "episodeNumber": 7,
+    "episodeName": "Matador: Fødselsdagen",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540744"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540744",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E7 Fødselsdagen",
+     "ContextualTitleExtraDetails": "17. NOV 1979 | 1T 15M",
+     "AvailableFrom": "1979-11-17T13:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Fødselsdagen",
+     "ExtraDetails": "SÆSON 1 EPISODE 7 | 1T 15M",
+     "ShortVideoUrl": "https://drod21c.akamaized.net/all/clear/none/ef/5ddf80be6187a418185a1cef/5ddf801e6187a418185a1ce4/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-foedselsdagen_540744",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505321500",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540744",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1979.\n\"Fødselsdagen - 1933\".\nMens Mads Skjern udvider forretningen under navnet \"Skjerns Magasin\" og åbner Omegnsbanken med broren Kristen som direktør, trænges bankdirektør Varnæs fra alle sider. Hans bror Jørgen er blevet ruineret a",
+    "contextualTitle": "7. Fødselsdagen",
+    "sports": [],
+    "subtype": "",
+    "tagline": "7. december | Fru Fernando Møhge afholder sin 100 års fødselsdag ",
+    "themes": [],
+    "title": "Matador: Fødselsdagen",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-foedselsdagen_540744",
+    "watchPath": "/se/matador_-foedselsdagen_540744"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540755'&Width=1920&Height=1080&ImageId='71778305'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540755'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540755'&Width=1920&Height=1080&ImageId='71778307'"
+    },
+    "duration": 4611,
+    "releaseYear": 1979,
+    "episodeNumber": 8,
+    "episodeName": "Matador: Komme fremmede",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540755"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540755",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E8 Komme fremmede",
+     "ContextualTitleExtraDetails": "24. NOV 1979 | 1T 17M",
+     "AvailableFrom": "1979-11-24T00:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Komme fremmede",
+     "ExtraDetails": "SÆSON 1 EPISODE 8 | 1T 17M",
+     "ShortVideoUrl": "https://drod20s.akamaized.net/all/clear/none/18/5dde792c6187a418185a1618/5dde78896187a418185a1614/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-komme-fremmede_540755",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505321690",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540755",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1979.\n\"Komme fremmede - 1934\".\nDen internationalt kendte maler Ernst Nyborg kommer til Korsbæk i forbindelse med sin udstilling i byen. Maude Varnæs møder sin fortid, og Mads Skjern opdager, at kunsten - og byrådssekretær Lund - kan f",
+    "contextualTitle": "8. Komme fremmede",
+    "sports": [],
+    "subtype": "",
+    "tagline": "8. december | Der kommer liv i huset, da Jørgen og hans kæreste kommer på besøg",
+    "themes": [],
+    "title": "Matador: Komme fremmede",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-komme-fremmede_540755",
+    "watchPath": "/se/matador_-komme-fremmede_540755"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540742'&Width=1920&Height=1080&ImageId='71778239'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540742'&Width=1920&Height=1080&ImageId='71778241'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540742'&Width=1440&Height=2160&ImageId='71778213'"
+    },
+    "duration": 4270,
+    "releaseYear": 1979,
+    "episodeNumber": 9,
+    "episodeName": "Matador: Hen til kommoden",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540742"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540742",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E9 Hen til kommoden",
+     "ContextualTitleExtraDetails": "1. DEC 1979 | 1T 11M",
+     "AvailableFrom": "1979-12-01T00:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Hen til kommoden",
+     "ExtraDetails": "SÆSON 1 EPISODE 9 | 1T 11M",
+     "ShortVideoUrl": "https://drod23n.akamaized.net/all/clear/none/27/5de8dac76187c61818015d27/5de8da486187c61818015d23/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-hen-til-kommoden_540742",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505321770",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540742",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1979.\n\"Hen til kommoden - 1935\".\nAgnes og \"Røde\" gifter sig, men begivenhederne i Tyskland påvirker den ægteskabelige lykke. Mads Skjern er netop påbegyndt byggeriet af sin konfektionsfabrik i Korsbæk, da gamle fru Møhge gør en opdage",
+    "contextualTitle": "9. Hen til kommoden",
+    "sports": [],
+    "subtype": "",
+    "tagline": "9. december | Agnes og ”Røde” gifter sig, men tosomheden bliver kortvarig",
+    "themes": [],
+    "title": "Matador: Hen til kommoden",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-hen-til-kommoden_540742",
+    "watchPath": "/se/matador_-hen-til-kommoden_540742"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540741'&Width=1920&Height=1080&ImageId='73734644'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540741'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540741'&Width=1920&Height=1080&ImageId='73734646'"
+    },
+    "duration": 3903,
+    "releaseYear": 1979,
+    "episodeNumber": 10,
+    "episodeName": "Matador: I disse tider",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540741"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540741",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E10 I disse tider",
+     "ContextualTitleExtraDetails": "8. DEC 1979 | 1T 5M",
+     "AvailableFrom": "1979-12-08T00:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – I disse tider",
+     "ExtraDetails": "SÆSON 1 EPISODE 10 | 1T 5M",
+     "ShortVideoUrl": "https://drod24n.akamaized.net/all/clear/none/73/691dc72bfad1d047d4ee6473/691dc72bfe92f908407f4549/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-i-disse-tider_540741",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505321850",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540741",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1979.\n\"I disse tider - 1935\".\nElisabeth Friis bliver samtaleemne i Korsbæk, da Skjold Hansens datter, Iben, kommer hjem fra Tyskland og kaster sin kærlighed på Kristen. Men byen har også andet at sladre om. Jørgen Varnæs skaber nye pr",
+    "contextualTitle": "10. I disse tider",
+    "sports": [],
+    "subtype": "",
+    "tagline": "10. december | Korsbæk får nyt at sladre om, da Iben Skjold Hansen kommer til byen",
+    "themes": [],
+    "title": "Matador: I disse tider",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-i-disse-tider_540741",
+    "watchPath": "/se/matador_-i-disse-tider_540741"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540754'&Width=1920&Height=1080&ImageId='71778300'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540754'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540754'&Width=1920&Height=1080&ImageId='71778302'"
+    },
+    "duration": 4360,
+    "releaseYear": 1979,
+    "episodeNumber": 11,
+    "episodeName": "Matador: I klemme",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540754"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540754",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description,acc_spoken_subtitles",
+     "AccessServicesOffered": "StandardVideo,AudioDescription,SpokenSubtitles",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E11 I klemme",
+     "ContextualTitleExtraDetails": "15. DEC 1979 | 1T 13M",
+     "AvailableFrom": "1979-12-15T00:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "ForeignLanguageSubtitles,CombinedLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – I klemme",
+     "ExtraDetails": "SÆSON 1 EPISODE 11 | 1T 13M",
+     "ShortVideoUrl": "https://drod24a.akamaized.net/all/clear/none/75/5dedfdc06187c61818017d75/5dedfd236187c61818017d69/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-i-klemme_540754",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505321930",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540754",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1979.\n\"I klemme - 1936\".\nByrådssekretæren er igen i knibe, men finder selv en udvej. Da Ulla bliver gravid, finder bankdirektør Varnæs ud af, at et er principper, noget andet det virkelige liv. Vicki Hachel vender tilbage til Korsbæk ",
+    "contextualTitle": "11. I klemme",
+    "sports": [],
+    "subtype": "",
+    "tagline": "11. december | Bankdirektør Varnæs kommer i et moralsk dilemma",
+    "themes": [],
+    "title": "Matador: I klemme",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-i-klemme_540754",
+    "watchPath": "/se/matador_-i-klemme_540754"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540749'&Width=1920&Height=1080&ImageId='71778272'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540749'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540749'&Width=1920&Height=1080&ImageId='71778283'"
+    },
+    "duration": 4937,
+    "releaseYear": 1978,
+    "episodeNumber": 12,
+    "episodeName": "Matador: I lyst og nød",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540749"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540749",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description,acc_spoken_subtitles",
+     "AccessServicesOffered": "StandardVideo,AudioDescription,SpokenSubtitles",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E12 I lyst og nød",
+     "ContextualTitleExtraDetails": "22. DEC 1979 | 1T 22M",
+     "AvailableFrom": "1979-12-22T00:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "ForeignLanguageSubtitles,CombinedLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – I lyst og nød",
+     "ExtraDetails": "SÆSON 1 EPISODE 12 | 1T 22M",
+     "ShortVideoUrl": "https://drod21d.akamaized.net/all/clear/none/36/673ee6ec57d35349ac8eb636/673ee6ebbf1f6425983c5a37/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-i-lyst-og-noed_540749",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505322070",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540749",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1979.\n\"I lyst og nød - 1936-1937\".\nMads Skjern kommer igen i klemme i rådhusskandalen, men reddes på stregen af et overraskende giftermål. Lauritz og Herbert drager afsted for at deltage i den spanske borgerkrig. Familielivet stilles ",
+    "contextualTitle": "12. I lyst og nød",
+    "sports": [],
+    "subtype": "",
+    "tagline": "12. december | En ny husholderske hos familien Varnæs giver udfordringer",
+    "themes": [],
+    "title": "Matador: I lyst og nød",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-i-lyst-og-noed_540749",
+    "watchPath": "/se/matador_-i-lyst-og-noed_540749"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540760'&Width=1920&Height=1080&ImageId='71778330'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540760'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540760'&Width=1920&Height=1080&ImageId='71778333'"
+    },
+    "duration": 5027,
+    "releaseYear": 1980,
+    "episodeNumber": 13,
+    "episodeName": "Matador: Et nyt liv",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540760"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540760",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E13 Et nyt liv",
+     "ContextualTitleExtraDetails": "6. DEC 1980 | 1T 24M",
+     "AvailableFrom": "1980-12-06T00:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Et nyt liv",
+     "ExtraDetails": "SÆSON 1 EPISODE 13 | 1T 24M",
+     "ShortVideoUrl": "https://drod23r.akamaized.net/all/clear/none/fe/638eebcfaa5a6106d0f6d2fe/638eebbaf1b23013b8be5269/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-et-nyt-liv_540760",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505374970",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540760",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"Et nyt liv - 1937-38\".                    \nÆgteparret Varnæs har samlet stumperne af ægteskabet og får en efternøler, som er skyld i, at Regitze skal levere en hundehvalp tilbage. Mads Skjern køber herskabsvilla ved fjorden. Jø",
+    "contextualTitle": "13. Et nyt liv",
+    "sports": [],
+    "subtype": "",
+    "tagline": "13. december | Hos familien Varnæs ser en lille efternøler dagens lys",
+    "themes": [],
+    "title": "Matador: Et nyt liv",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-et-nyt-liv_540760",
+    "watchPath": "/se/matador_-et-nyt-liv_540760"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540740'&Width=1920&Height=1080&ImageId='71778225'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540740'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540740'&Width=1920&Height=1080&ImageId='71778231'"
+    },
+    "duration": 4403,
+    "releaseYear": 1980,
+    "episodeNumber": 14,
+    "episodeName": "Matador: Brikkerne",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540740"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540740",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description,acc_spoken_subtitles",
+     "AccessServicesOffered": "StandardVideo,AudioDescription,SpokenSubtitles",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E14 Brikkerne",
+     "ContextualTitleExtraDetails": "13. DEC 1980 | 1T 13M",
+     "AvailableFrom": "1980-12-13T00:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "ForeignLanguageSubtitles,CombinedLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Brikkerne",
+     "ExtraDetails": "SÆSON 1 EPISODE 14 | 1T 13M",
+     "ShortVideoUrl": "https://drod23q.akamaized.net/all/clear/none/0b/673eea0cb01f9b5e68a26e0b/673eea0cbf1f6425983c5a39/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-brikkerne_540740",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505375000",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540740",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"Brikkerne - 1938-39\".\nArnold har gjort en pige gravid, og fru Violet vil gøre alt for at undgå et i hendes øje uheldigt ægteskab, men i sidste øjeblik griber Ingeborg ind. Jørgen Varnæs lever nu på Mads Skjerns nåde. Lærer Ande",
+    "contextualTitle": "14. Brikkerne",
+    "sports": [],
+    "subtype": "",
+    "tagline": "14. december | Ingeborg trækker sig tilbage fra arbejdet i forretningen",
+    "themes": [],
+    "title": "Matador: Brikkerne",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-brikkerne_540740",
+    "watchPath": "/se/matador_-brikkerne_540740"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540761'&Width=1920&Height=1080&ImageId='71778332'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540761'&Width=1920&Height=1080&ImageId='71778336'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540761'&Width=1440&Height=2160&ImageId='71778213'"
+    },
+    "duration": 4391,
+    "releaseYear": 1980,
+    "episodeNumber": 15,
+    "episodeName": "Matador: At tænke og tro",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540761"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540761",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E15 At tænke og tro",
+     "ContextualTitleExtraDetails": "20. DEC 1980 | 1T 13M",
+     "AvailableFrom": "1980-12-20T00:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – At tænke og tro",
+     "ExtraDetails": "SÆSON 1 EPISODE 15 | 1T 13M",
+     "ShortVideoUrl": "https://drod24t.akamaized.net/all/clear/none/62/61b84d1bac5a6127bcff4a62/61b84d1385ccbc0e54f0ff5a/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-at-taenke-og-tro_540761",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505375190",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540761",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"At tænke og tro - efterår 1939\".\nDa Daniel skal konfirmeres, får familien Skjern besøg af den indremissionske faster Anna. Kristens ægteskab med Iben er en ulykkelig misforståelse. Herbert Schmidt vender hjem fra den spanske bo",
+    "contextualTitle": "15. At tænke og tro",
+    "sports": [],
+    "subtype": "",
+    "tagline": "15. december | Den indremissionske faster Anna skaber ravage med sit besøg",
+    "themes": [],
+    "title": "Matador: At tænke og tro",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-at-taenke-og-tro_540761",
+    "watchPath": "/se/matador_-at-taenke-og-tro_540761"
+   },
+   {
+    "images": {
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540738'&Width=1920&Height=1080&ImageId='71778220'",
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540738'&Width=1920&Height=1080&ImageId='71778218'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540738'&Width=1440&Height=2160&ImageId='71778213'"
+    },
+    "duration": 5129,
+    "releaseYear": 1980,
+    "episodeNumber": 16,
+    "episodeName": "Matador: Lauras store dag",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540738"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540738",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description,acc_spoken_subtitles",
+     "AccessServicesOffered": "StandardVideo,AudioDescription,SpokenSubtitles",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E16 Lauras store dag",
+     "ContextualTitleExtraDetails": "27. DEC 1980 | 1T 25M",
+     "AvailableFrom": "1980-12-27T00:00:00.0000000Z",
+     "SubtitleLanguagesOffered": "ForeignLanguageSubtitles,CombinedLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Lauras store dag",
+     "ExtraDetails": "SÆSON 1 EPISODE 16 | 1T 25M",
+     "ShortVideoUrl": "https://drod23p.akamaized.net/all/clear/none/a1/61b84da5a95a61017ce721a1/61b84da368dad1154097f512/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-lauras-store-dag_540738",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505375270",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540738",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"Lauras store dag - forår 1940\".\nMens Agnes har sagt op og startet egen virksomhed, får Laura medalje for lang og tro tjeneste. Tyskerne invaderer Danmark, og Herbert må atter flygte. Viggo Skjold Hansen lejer sit garageanlæg ud",
+    "contextualTitle": "16. Lauras store dag",
+    "sports": [],
+    "subtype": "",
+    "tagline": "16. december | Laura får en medalje for lang og tro tjeneste",
+    "themes": [],
+    "title": "Matador: Lauras store dag",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-lauras-store-dag_540738",
+    "watchPath": "/se/matador_-lauras-store-dag_540738"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540756'&Width=1920&Height=1080&ImageId='71778310'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540756'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540756'&Width=1920&Height=1080&ImageId='71778312'"
+    },
+    "duration": 4775,
+    "releaseYear": 1980,
+    "episodeNumber": 17,
+    "episodeName": "Matador: De voksnes rækker",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540756"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540756",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description,acc_spoken_subtitles",
+     "AccessServicesOffered": "StandardVideo,AudioDescription,SpokenSubtitles",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E17 De voksnes rækker",
+     "ContextualTitleExtraDetails": "3. JAN 1981 | 1T 20M",
+     "AvailableFrom": "1981-01-03T14:30:00.0000000Z",
+     "SubtitleLanguagesOffered": "ForeignLanguageSubtitles,CombinedLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – De voksnes rækker",
+     "ExtraDetails": "SÆSON 1 EPISODE 17 | 1T 20M",
+     "ShortVideoUrl": "https://drod21q.akamaized.net/all/clear/none/a2/61b84dcea95a61017ce721a2/61b84dca0dac2616b4fa7808/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-de-voksnes-raekker_540756",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505375350",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540756",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"De voksnes rækker - 1941-42\".\nDa Tyskland invaderer Sovjetunionen i juni 1941, må Røde gå under jorden. Ingeborgs fraskilte mand Holger tilslutter sig det nazistiske Regiment Nordland og bringer Ingeborg i forlegenhed ved at vi",
+    "contextualTitle": "17. De voksnes rækker",
+    "sports": [],
+    "subtype": "",
+    "tagline": "17. december | Daniel kommer forbi med en overraskelse",
+    "themes": [],
+    "title": "Matador: De voksnes rækker",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-de-voksnes-raekker_540756",
+    "watchPath": "/se/matador_-de-voksnes-raekker_540756"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540748'&Width=1920&Height=1080&ImageId='71778266'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540748'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540748'&Width=1920&Height=1080&ImageId='71778273'"
+    },
+    "duration": 4763,
+    "releaseYear": 1980,
+    "episodeNumber": 18,
+    "episodeName": "Matador: Hr. Stein",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540748"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540748",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E18 Hr. Stein",
+     "ContextualTitleExtraDetails": "10. JAN 1981 | 1T 19M",
+     "AvailableFrom": "1981-01-10T14:35:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Hr. Stein",
+     "ExtraDetails": "SÆSON 1 EPISODE 18 | 1T 19M",
+     "ShortVideoUrl": "https://drod23c.akamaized.net/all/clear/none/a3/61b84de8a95a61017ce721a3/61b84de60dac2616b4fa7809/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-hr-stein_540748",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505375430",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540748",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"Hr. Stein - 1943\".\nDa de danske jødeforfølgelser sætter ind, kommer hr. Stein, den stilfærdige, jødiske bogholder i Korsbæk Bank, i fare, men Maude Varnæs træder uventet i karakter og redder ham i sikkerhed til grisehandlerens ",
+    "contextualTitle": "18. Hr. Stein",
+    "sports": [],
+    "subtype": "",
+    "tagline": "18. december | Maude Varnæs træder uventet i karakter",
+    "themes": [],
+    "title": "Matador: Hr. Stein",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-hr-stein_540748",
+    "watchPath": "/se/matador_-hr-stein_540748"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540739'&Width=1920&Height=1080&ImageId='71778224'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540739'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540739'&Width=1920&Height=1080&ImageId='71778227'"
+    },
+    "duration": 3482,
+    "releaseYear": 1981,
+    "episodeNumber": 19,
+    "episodeName": "Matador: Handel og vandel",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540739"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540739",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E19 Handel og vandel",
+     "ContextualTitleExtraDetails": "28. NOV 1981 | 58M",
+     "AvailableFrom": "1981-11-28T12:20:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Handel og vandel",
+     "ExtraDetails": "SÆSON 1 EPISODE 19 | 58M",
+     "ShortVideoUrl": "https://drod23i.akamaized.net/all/clear/none/63/61b84de7ac5a6127bcff4a63/61b84de585ccbc0e54f0ff5b/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-handel-og-vandel_540739",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505425120",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540739",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"Handel og vandel - forår 1944\".\nMens Røde er i Sverige, udvider Agnes sin blomstrende virksomhed med restaurering af gamle bakker. Ellens nye familie tjener penge på at arbejde for tyskerne, og Daniel vil hellere lære at lave m",
+    "contextualTitle": "19. Handel og vandel",
+    "sports": [],
+    "subtype": "",
+    "tagline": "19. december | Agnes finder på nye ideer i sin virksomhed",
+    "themes": [],
+    "title": "Matador: Handel og vandel",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-handel-og-vandel_540739",
+    "watchPath": "/se/matador_-handel-og-vandel_540739"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540745'&Width=1920&Height=1080&ImageId='71778250'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540745'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540745'&Width=1920&Height=1080&ImageId='71778254'"
+    },
+    "duration": 3694,
+    "releaseYear": 1981,
+    "episodeNumber": 20,
+    "episodeName": "Matador: Den 11. time",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540745"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540745",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description,acc_spoken_subtitles",
+     "AccessServicesOffered": "StandardVideo,AudioDescription,SpokenSubtitles",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E20 Den 11. time",
+     "ContextualTitleExtraDetails": "5. DEC 1981 | 1T 2M",
+     "AvailableFrom": "1981-12-05T12:10:00.0000000Z",
+     "SubtitleLanguagesOffered": "ForeignLanguageSubtitles,CombinedLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Den 11. time",
+     "ExtraDetails": "SÆSON 1 EPISODE 20 | 1T 2M",
+     "ShortVideoUrl": "https://drod24f.akamaized.net/all/clear/none/14/61b84dffaf5a6122988a4714/61b84dfb85ccbc0e54f0ff5c/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-den-11-time_540745",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505425200",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540745",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"Den 11. time - januar-april 1945\".\nKrigen går på hæld. Mads får travlt med at investere sine sorte penge, og dr. Hansen og Kristen må gå under jorden, da Ullas forlovede, Poul, bliver skudt under en aktion. Misse Møghe bliver g",
+    "contextualTitle": "20. Den 11. time",
+    "sports": [],
+    "subtype": "",
+    "tagline": "20. december | Lærer Andersen gifter sig med Misse Møghe",
+    "themes": [],
+    "title": "Matador: Den 11. time",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-den-11-time_540745",
+    "watchPath": "/se/matador_-den-11-time_540745"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540746'&Width=1920&Height=1080&ImageId='71778258'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540746'&Width=1920&Height=1080&ImageId='71778264'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540746'&Width=1440&Height=2160&ImageId='71778213'"
+    },
+    "duration": 3499,
+    "releaseYear": 1981,
+    "episodeNumber": 21,
+    "episodeName": "Matador: Vi vil fred her til lands",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540746"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540746",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description,acc_spoken_subtitles",
+     "AccessServicesOffered": "StandardVideo,AudioDescription,SpokenSubtitles",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E21 Vi vil fred her til lands",
+     "ContextualTitleExtraDetails": "12. DEC 1981 | 58M",
+     "AvailableFrom": "1981-12-12T14:45:00.0000000Z",
+     "SubtitleLanguagesOffered": "ForeignLanguageSubtitles,CombinedLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Vi vil fred her til lands",
+     "ExtraDetails": "SÆSON 1 EPISODE 21 | 58M",
+     "ShortVideoUrl": "https://drod23d.akamaized.net/all/clear/none/64/61b84e2cac5a6127bcff4a64/61b84e2985ccbc0e54f0ff5d/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-vi-vil-fred-her-til-lands_540746",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505425390",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540746",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"Vi vil fred her til lands - forår 1945\".\nLærer Andersen og Hitler dør samme dag, og under familien Varnæs' gravøl for lærer Andersen modtager selskabet befrielsesbudskabet, og Misse afslører en hemmelighed for Maude. Skjold Han",
+    "contextualTitle": "21. Vi vil fred her til lands",
+    "sports": [],
+    "subtype": "",
+    "tagline": "21. december | Der er glæde og sorg i Korsbæk - Hitler og Lærer Andersen er døde",
+    "themes": [],
+    "title": "Matador: Vi vil fred her til lands",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-vi-vil-fred-her-til-lands_540746",
+    "watchPath": "/se/matador_-vi-vil-fred-her-til-lands_540746"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540751'&Width=1920&Height=1080&ImageId='71778267'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540751'&Width=1920&Height=1080&ImageId='71778284'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540751'&Width=1440&Height=2160&ImageId='71778213'"
+    },
+    "duration": 3500,
+    "releaseYear": 1981,
+    "episodeNumber": 22,
+    "episodeName": "Matador: Det går jo godt",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540751"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540751",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E22 Det går jo godt",
+     "ContextualTitleExtraDetails": "19. DEC 1981 | 58M",
+     "AvailableFrom": "1981-12-19T13:35:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Det går jo godt",
+     "ExtraDetails": "SÆSON 1 EPISODE 22 | 58M",
+     "ShortVideoUrl": "https://drod20c.akamaized.net/all/clear/none/a4/61b84e46a95a61017ce721a4/61b84e4385ccbc0e54f0ff5e/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-det-gaar-jo-godt_540751",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505425470",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540751",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"Det går jo godt - 1945-46\".\nKristen og Iben er blevet skilt. Også Ellens ægteskab vakler, og Ulrik kommer hjem med Maja, som han har gjort gravid. Rødes drømme om en politisk karriere smuldrer, og Daniel Skjern har til sin fars",
+    "contextualTitle": "22. Det går jo godt",
+    "sports": [],
+    "subtype": "",
+    "tagline": "22. december | Daniel har til sin fars fortvivlelse afbrudt sine handelsstudier",
+    "themes": [],
+    "title": "Matador: Det går jo godt",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-det-gaar-jo-godt_540751",
+    "watchPath": "/se/matador_-det-gaar-jo-godt_540751"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540747'&Width=1920&Height=1080&ImageId='71778255'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540747'&Width=1920&Height=1080&ImageId='71778265'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540747'&Width=1440&Height=2160&ImageId='71778213'"
+    },
+    "duration": 3763,
+    "releaseYear": 1981,
+    "episodeNumber": 23,
+    "episodeName": "Matador: Mellem brødre",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540747"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540747",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description",
+     "AccessServicesOffered": "StandardVideo,AudioDescription",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E23 Mellem brødre",
+     "ContextualTitleExtraDetails": "26. DEC 1981 | 1T 3M",
+     "AvailableFrom": "1981-12-26T13:15:00.0000000Z",
+     "SubtitleLanguagesOffered": "DanishLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – Mellem brødre",
+     "ExtraDetails": "SÆSON 1 EPISODE 23 | 1T 3M",
+     "ShortVideoUrl": "https://drod24a.akamaized.net/all/clear/none/16/61b84e6daf5a6122988a4716/61b84e6a0f851007380cd1f8/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-mellem-broedre_540747",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505425550",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540747",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"Mellem brødre - 1946\".\nJernbanerestauranten bliver købt af Ada, der gifter sig med tjener Boldt og omdøber stedet til Rosenhaven. Jørgen genser Gitte, og det bliver signalet til hans undergang. Kristen og Elisabeth bliver gift ",
+    "contextualTitle": "23. Mellem brødre",
+    "sports": [],
+    "subtype": "",
+    "tagline": "23. december | Kristen og Elisabeth bliver gift ",
+    "themes": [],
+    "title": "Matador: Mellem brødre",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-mellem-broedre_540747",
+    "watchPath": "/se/matador_-mellem-broedre_540747"
+   },
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540757'&Width=1920&Height=1080&ImageId='71778313'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540757'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540757'&Width=1920&Height=1080&ImageId='71778316'"
+    },
+    "duration": 4938,
+    "releaseYear": 1981,
+    "episodeNumber": 24,
+    "episodeName": "Matador: New Look",
+    "seasonId": "540737",
+    "showId": "540736",
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540757"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540757",
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn,acc_audio_description,acc_spoken_subtitles",
+     "AccessServicesOffered": "StandardVideo,AudioDescription,SpokenSubtitles",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "ProductionCountry": "DANMARK",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PlayButtonExtraDetails": "S1:E24 New Look",
+     "ContextualTitleExtraDetails": "2. JAN 1982 | 1T 22M",
+     "AvailableFrom": "1982-01-02T11:40:00.0000000Z",
+     "SubtitleLanguagesOffered": "ForeignLanguageSubtitles,CombinedLanguageSubtitles",
+     "PresentationTypeCode": "Show",
+     "PageTitle": "Matador: Sæson 1 – New Look",
+     "ExtraDetails": "SÆSON 1 EPISODE 24 | 1T 22M",
+     "ShortVideoUrl": "https://drod23l.akamaized.net/all/clear/none/15/61b84e45af5a6122988a4715/61b84e420dac2616b4fa780a/stream_fmp4/master_manifest.m3u8",
+     "PathIdSegment": "matador_-new-look_540757",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:playable:00505425630",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540757",
+    "type": "episode",
+    "keywords": [
+     "editorialptaxtop_serier",
+     "editorialptaxsub_drama",
+     "culturalorigin_dansk"
+    ],
+    "shortDescription": "Dansk dramaserie fra 1980.\n\"New Look - 1947\".\nMads er blevet inspireret af en forretningsrejse til Amerika og tilbyder Daniel et nyt job, men Daniel vil hellere til Paris og designe tøj. I stedet får Agnes buddet og takker ja. Senere har Daniel en ven med",
+    "contextualTitle": "24. New Look",
+    "sports": [],
+    "subtype": "",
+    "tagline": "24. december | Mads har taget nye ideer med hjem fra Amerika",
+    "themes": [],
+    "title": "Matador: New Look",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/episode/matador_-new-look_540757",
+    "watchPath": "/se/matador_-new-look_540757"
+   }
+  ],
+  "size": 24,
+  "paging": {
+   "total": 1,
+   "page": 1,
+   "size": 200,
+   "options": {
+    "pageSize": 200
+   }
+  }
+ }
+}

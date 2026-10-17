@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set og_title = SERVICE_NAME %}
 {% set og_description = "Serier, film, dokumentarer og direkte TV. Se videre, hvor du slap, gem dine favoritter, og se sammen med andre." %}
-{% from "_ui.html" import icon, tile, card_tile, card_favorite, channel_tile, shelf_head, search_field, favorite_button, wide_picture %}
+{% from "_ui.html" import icon, tile, card_tile, card_favorite, channel_tile, shelf_head, search_field, favorite_button, wide_picture, dr_row, own_row, more_rows %}
 {% block body_class %}{% if featured %}has-hero{% endif %}{% endblock %}
 {% block scripts %}
 {% if featured %}
@@ -99,14 +99,10 @@
 </section>
 {% endif %}
 
-{% if page %}
-{% for row in page.rows %}
-<section class="shelf" aria-labelledby="row-{{ loop.index }}">
-    {{ shelf_head(row.title, "row-" ~ loop.index, more=("/liste/" ~ row.more ~ "/?titel=" ~ row.title|urlencode) if row.more else None) }}
-    <div class="shelf-track">
-        {% for c in row.cards %}{{ card_tile(c) }}{% endfor %}
-    </div>
-</section>
+{# DR's rows, with the front page's own among them, from the catalogue, and the rest of DR's got later #}
+{% set number = namespace(n=0) %}
+{% for kind, row in rows %}
+{% if kind == "dr" %}{% set number.n = number.n + 1 %}{{ dr_row(row, number.n) }}{% else %}{{ own_row(row) }}{% endif %}
 {% endfor %}
-{% endif %}
+{% if more_from is not none %}{{ more_rows(more_from) }}{% endif %}
 {% endblock %}

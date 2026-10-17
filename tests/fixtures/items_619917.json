@@ -1,0 +1,93 @@
+{
+ "images": {
+  "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='619917'&Width=1920&Height=1080&ImageId='81080624'",
+  "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='619917'&Width=1440&Height=2160&ImageId='81080626'",
+  "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='619917'&Width=1920&Height=1080&ImageId='81080628'"
+ },
+ "advisoryText": "",
+ "copyright": "",
+ "credits": [],
+ "customMetadata": [],
+ "distributor": "DRTV",
+ "duration": 6558,
+ "releaseYear": 2023,
+ "location": "",
+ "venue": "",
+ "offers": [
+  {
+   "deliveryType": "StreamOrDownload",
+   "endDate": "2026-11-13T22:59:00Z",
+   "scopes": [
+    "619917"
+   ],
+   "exclusionRules": [],
+   "resolution": "HD-1080",
+   "id": "ID0ENIAC",
+   "name": "D468078_Program Free HD-1080 Program_Anonymous",
+   "availability": "Available",
+   "ownership": "Free",
+   "price": 0,
+   "startDate": "2026-09-16T04:00:00Z"
+  }
+ ],
+ "trailers": [],
+ "scopes": [
+  "619917"
+ ],
+ "categories": [
+  "film",
+  "dr1"
+ ],
+ "channelPath": "",
+ "customFields": {
+  "OwnedCategory": "Film,DR1",
+  "AccessServicesOffered": "StandardVideo",
+  "BrandingChannelShort": "DR1",
+  "BrandingChannelDisplayName": "DR1",
+  "ProductionCountry": "DANMARK",
+  "DisplayCategory": "Film",
+  "TargetAudience": "Adults",
+  "RatingSegment": "DRTV",
+  "PrimaryContentUniverse": "DRTV",
+  "ClassificationRating": "MRAM-15",
+  "IsGeoRestricted": "True",
+  "ContextualTitleExtraDetails": "16. SEP 2026 | 1T 49M",
+  "AvailableFrom": "2026-09-16T04:00:00.0000000Z",
+  "PageTitle": "Madame Ida",
+  "ExtraDetails": "Film | 1T 49M",
+  "TitleExtraDetails": "DR1 | 1T 49M",
+  "ShortVideoUrl": "https://drod24d.akamaized.net/all/clear/none/fc/6aa3b881b7ee8800012958fc/6aa3b881b417390001cc478b/stream_fmp4/master_manifest.m3u8",
+  "PathIdSegment": "madame-ida_619917",
+  "ContentUniverses": [
+   "drtv"
+  ]
+ },
+ "customId": "urn:dr:ocs:tv:content:playable:00962300020",
+ "genres": [
+  "ukendt"
+ ],
+ "id": "619917",
+ "type": "program",
+ "keywords": [
+  "editorialptaxtop_film",
+  "editorialptaxsub_drama",
+  "mood_følelsesladet",
+  "culturalorigin_dansk"
+ ],
+ "description": "Dansk spillefilm fra 2024.\nI starten af 1950'erne bliver 15-årige Cecilia gravid på det børnehjem, hvor hun er vokset op. For at skjule den uønskede graviditet bliver hun sendt ud for at bo hos Ida, der skal adoptere barnet. Ida bor i sit afsidesliggende palæ, som engang var samlingspunkt for højere samfundslag, men hvor hun nu har boet isoleret fra omverdenen i mange år, kun med selskab fra sin livslange tjenestepige Alma på 70 år. Hos Ida og Alma oplever Cecilia for første gang i sit liv et glimt af forældrekærlighed, og trods deres forskelle opstår der et stærkt bånd mellem de tre kvinder. Alt dette sættes dog på en alvorlig prøve efterhånden som fødslen nærmer sig.\nMedvirkende: Flora Ofelia Hoffmann Lindahl, Christine Albeck Børge, Karen-Lise Mynster, Sarah Boberg.\nInstruktion: Jacob Møller. Udløber: 13. nov 2026",
+ "shortDescription": "Dansk spillefilm fra 2024.\nI starten af 1950'erne bliver 15-årige Cecilia gravid på det børnehjem, hvor hun er vokset op. For at skjule den uønskede graviditet bliver hun sendt ud for at bo hos Ida, der skal adoptere barnet. Ida bor i sit afsidesliggende ",
+ "contextualTitle": "",
+ "sports": [],
+ "tagline": "Film | En uønsket graviditet skaber et stærkt bånd mellem tre kvinder",
+ "themes": [],
+ "title": "Madame Ida",
+ "vodItemWatchPath": "",
+ "classification": {
+  "code": "DR-Voksen",
+  "name": "Voksen"
+ },
+ "path": "/program/madame-ida_619917",
+ "watchPath": "/se/madame-ida_619917",
+ "genrePaths": [],
+ "totalUserRatings": 0
+}

@@ -8,7 +8,7 @@ import pytest
 from typing import Optional
 from quart import abort
 
-from drtvrss import app, discover, drtv, live, pick
+from drtvrss import app, catalogue, discover, drtv, live
 
 from .update_fixtures import fixture_name
 
@@ -41,7 +41,10 @@ def fake_dr(monkeypatch):
     monkeypatch.setattr(discover, "get_api", get_api)
     monkeypatch.setattr(discover, "pages", {})
     monkeypatch.setattr(discover, "categories_cache", (0, []))
-    monkeypatch.setattr(pick, "pool_cache", (0, []))
+    monkeypatch.setattr(discover, "later_rows", {})
+    # The catalogue, which the tests make themselves, instead of the app going through DR's list as it starts
+    monkeypatch.setattr(catalogue, "catalogue", catalogue.Catalogue())
+    monkeypatch.setenv("CATALOGUE", "off")
     monkeypatch.setattr(drtv, "fetch_search", fetch_search)
     monkeypatch.setattr(live, "live_channels", None)
     monkeypatch.setattr(live, "last_fetch", 0)

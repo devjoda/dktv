@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "_ui.html" import icon, search_field, shelf_head %}
+{% block head %}
+<title>Kan ikke længere ses - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block content %}
+{# A series, a programme or an episode that DR doesn't have any more, like the Worker's gonePage(): with the series, for
+   an episode of one that's still there, and something else to see, which catalogue.js finds of the same kind #}
+<div class="empty">
+    {{ icon("alert") }}
+    <h1>Kan ikke længere ses</h1>
+    <p>{% if show %}Afsnittet kan ikke længere ses, men resten af {{ show.title }} kan måske.{% else %}Det kan ikke længere ses her. Måske er det udløbet.{% endif %}</p>
+    {% if show %}<a class="button button-primary" href="{{ show.url }}">Gå til {{ show.title }}</a>{% else %}{{ search_field() }}{% endif %}
+    <a class="button button-secondary" href="/">Gå til forsiden</a>
+</div>
+<section class="shelf js-gone-suggestions" data-kind="{{ kind }}" aria-labelledby="gone-title" hidden>
+    {{ shelf_head("Måske noget for dig", "gone-title") }}
+    <div class="shelf-track js-tiles"></div>
+</section>
+{% endblock %}

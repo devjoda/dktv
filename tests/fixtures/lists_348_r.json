@@ -1,0 +1,249 @@
+{
+ "id": "348",
+ "parameter": "TitleGroupKey:r",
+ "customFields": {
+  "PathIdSegment": "alt-indhold-_-_titlegroupkey__348"
+ },
+ "itemTypes": [
+  "show",
+  "program"
+ ],
+ "description": "",
+ "title": "R",
+ "shortDescription": "",
+ "themes": [],
+ "path": "/a-aa/r",
+ "items": [
+  {
+   "images": {
+    "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='595127'&Width=1440&Height=2160&ImageId='78119550'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='595127'&Width=1920&Height=1080&ImageId='78119546'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='595127'&Width=1920&Height=1080&ImageId='78119552'"
+   },
+   "duration": 5666,
+   "releaseYear": 1993,
+   "offers": [
+    {
+     "deliveryType": "StreamOrDownload",
+     "scopes": [
+      "595127"
+     ],
+     "resolution": "HD-1080",
+     "availability": "Available",
+     "ownership": "Free",
+     "price": 0
+    }
+   ],
+   "scopes": [
+    "595127"
+   ],
+   "categories": [
+    "film",
+    "dr1",
+    "acc_spoken_subtitles"
+   ],
+   "channelPath": "",
+   "customFields": {
+    "OwnedCategory": "Film,DR1,acc_spoken_subtitles",
+    "AccessServicesOffered": "StandardVideo,SpokenSubtitles",
+    "BrandingChannelShort": "DR1",
+    "BrandingChannelDisplayName": "DR1",
+    "ProductionCountry": "USA",
+    "DisplayCategory": "Film",
+    "TargetAudience": "Adults",
+    "RatingSegment": "DRTV",
+    "PrimaryContentUniverse": "DRTV",
+    "ClassificationRating": "MRAM-15",
+    "IsGeoRestricted": "True",
+    "ContextualTitleExtraDetails": "26. DEC 2013 | 1T 34M",
+    "AvailableFrom": "2013-12-25T23:41:42.5200000Z",
+    "PageTitle": "Red Rock West",
+    "ExtraDetails": "Film | 1T 34M",
+    "TitleExtraDetails": "DR1 | 1T 34M",
+    "PathIdSegment": "red-rock-west_595127",
+    "ContentUniverses": [
+     "drtv"
+    ]
+   },
+   "customId": "urn:dr:ocs:tv:content:playable:00021333110",
+   "genres": [
+    "ukendt"
+   ],
+   "id": "595127",
+   "type": "program",
+   "keywords": [
+    "editorialptaxtop_film",
+    "editorialptaxsub_thriller/krimi",
+    "mood_nervepirrende",
+    "culturalorigin_ikke-dansk"
+   ],
+   "shortDescription": "Amerikansk thriller fra 1993.\nDagen er begyndt dårligt for den tidligere marinesoldat Michael, men da han træder ind i en bar i lillebyen Red Rock West, synes heldet at skifte. Manden bag disken tilbyder ham 10.000 dollars for at myrde hans hustru. Hun er",
+   "contextualTitle": "",
+   "sports": [],
+   "themes": [],
+   "title": "Red Rock West",
+   "vodItemWatchPath": "",
+   "classification": {
+    "code": "DR-Voksen",
+    "name": "Voksen"
+   },
+   "path": "/program/red-rock-west_595127",
+   "watchPath": "/se/red-rock-west_595127"
+  },
+  {
+   "images": {
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503605'&Width=1920&Height=1080&ImageId='62325408'",
+    "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503605'&Width=1440&Height=2160&ImageId='62325410'",
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503605'&Width=1920&Height=1080&ImageId='62325412'"
+   },
+   "availableSeasonCount": 4,
+   "offers": [
+    {
+     "deliveryType": "None",
+     "scopes": [
+      "503605"
+     ],
+     "resolution": "Unknown",
+     "availability": "Available",
+     "ownership": "Free",
+     "price": 0
+    }
+   ],
+   "scopes": [
+    "503605"
+   ],
+   "categories": [
+    "fiktionsserie",
+    "krimi",
+    "gensyn",
+    "dr gensyn",
+    "acc_spoken_subtitles"
+   ],
+   "channelPath": "",
+   "customFields": {
+    "OwnedCategory": "Fiktionsserie,Krimi,Gensyn,DR Gensyn",
+    "BrandingChannelShort": "TVG",
+    "BrandingChannelDisplayName": "DR Gensyn",
+    "DisplayCategory": "Fiktionsserie,Krimi,Gensyn",
+    "TargetAudience": "Adults",
+    "RatingSegment": "DRTV",
+    "PrimaryContentUniverse": "DRTV",
+    "ClassificationRating": "MRAM-15",
+    "PresentationTypeCode": "Show",
+    "IsGeoRestricted": "False",
+    "IsSeriesDRMPlayoutRequired": "False",
+    "PageTitle": "Rejseholdet",
+    "ExtraDetails": "Fiktionsserie | 4 SÆSONER",
+    "TitleExtraDetails": "DR Gensyn | 4 SÆSONER",
+    "ShortVideoUrl": "https://drod22n.akamaized.net/all/clear/none/72/68b7de78bf401e3210c19772/68b7de719d741e22284c2074/stream_fmp4/master_manifest.m3u8",
+    "PathIdSegment": "rejseholdet_503605",
+    "ContentUniverses": [
+     "drtv"
+    ]
+   },
+   "customId": "urn:dr:ocs:tv:content:series:755327011000",
+   "genres": [
+    "ukendt"
+   ],
+   "id": "503605",
+   "type": "show",
+   "keywords": [
+    "editorialptaxtop_serier",
+    "editorialptaxsub_krimi",
+    "mood_nervepirrende",
+    "culturalorigin_dansk"
+   ],
+   "shortDescription": "Dansk krimiserie 2000-2003. Charlotte Fich, Mads Mikkelsen og Lars Brygmann er blandt de mange stærke navne, der medvirker i den Emmy-belønnede dramaserie - baseret på virkelige kriminalsager.",
+   "contextualTitle": "",
+   "sports": [],
+   "subtype": "",
+   "tagline": "Se eller gense den Emmy-belønnede krimiserie",
+   "themes": [],
+   "title": "Rejseholdet",
+   "vodItemWatchPath": "",
+   "path": "/serie/rejseholdet_503605"
+  },
+  {
+   "images": {
+    "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='225290'&Width=1920&Height=1080&ImageId='6673467'",
+    "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='225290'&Width=1920&Height=1080&ImageId='6673465'",
+    "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='png'&Quality=85&EntityType='Item'&EntityId='225290'&Width=1440&Height=2160&ImageId='16099618'",
+    "square": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='225290'&Width=2048&Height=2048&ImageId='16958835'"
+   },
+   "availableSeasonCount": 1,
+   "offers": [
+    {
+     "deliveryType": "None",
+     "scopes": [
+      "225290"
+     ],
+     "resolution": "Unknown",
+     "availability": "Available",
+     "ownership": "Free",
+     "price": 0
+    }
+   ],
+   "scopes": [
+    "225290"
+   ],
+   "categories": [
+    "tegnefilm",
+    "dr ramasjang"
+   ],
+   "channelPath": "",
+   "customFields": {
+    "OwnedCategory": "Tegnefilm,DR Ramasjang",
+    "BrandingChannelShort": "TVR",
+    "BrandingChannelDisplayName": "DR Ramasjang",
+    "DisplayCategory": "Tegnefilm",
+    "TargetAudience": "All",
+    "RatingSegment": "Ramasjang",
+    "PrimaryContentUniverse": "Ramasjang",
+    "ClassificationRating": "MRAM-ALL",
+    "PresentationTypeCode": "Ongoing",
+    "IsGeoRestricted": "True",
+    "IsSeriesDRMPlayoutRequired": "False",
+    "PageTitle": "Rita og Krokodille",
+    "ExtraDetails": "Tegnefilm | 1 SÆSON",
+    "TitleExtraDetails": "DR Ramasjang | 1 SÆSON",
+    "PathIdSegment": "rita-og-krokodille_225290",
+    "ContentUniverses": [
+     "drtv",
+     "ultra",
+     "ramasjang"
+    ]
+   },
+   "customId": "urn:dr:ocs:tv:content:series:1845061619000",
+   "genres": [
+    "ukendt"
+   ],
+   "id": "225290",
+   "type": "show",
+   "keywords": [
+    "editorialptaxtop_børn/animation",
+    "editorialptaxsub_venskab",
+    "editorialptaxsub_hverdag",
+    "agetargetgroup_2-3 år",
+    "agetargetgroup_4-5 år",
+    "culturalorigin_dansk"
+   ],
+   "shortDescription": "Danske tegnefilm om den søde og meget bestemte pige Rita  hendes sultne og uforudsigelige ven Krokodille. Selvom han giver hende en del udfordringer, er Krokodille klart Ritas allerbedste ven. Skabt af Siri Melchior, der også står bag bøgerne.",
+   "contextualTitle": "",
+   "sports": [],
+   "subtype": "",
+   "themes": [],
+   "title": "Rita og Krokodille",
+   "vodItemWatchPath": "",
+   "path": "/serie/rita-og-krokodille_225290"
+  }
+ ],
+ "size": 3,
+ "paging": {
+  "total": 1,
+  "page": 1,
+  "size": 100,
+  "options": {
+   "pageSize": 100
+  }
+ }
+}

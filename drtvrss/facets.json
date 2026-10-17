@@ -1,0 +1,117 @@
+{
+ "about": "The filters of the catalogue, which the Worker's catalogue.ts and the Python app's catalogue.py both read: what each of DR's words for a title says it is. A title's words are its keywords and categories, as top:, sub:, cat:, mood:, origin:, country:, rating: and acc:, in small letters, apart from country:, which is DR's own. The browser gets the facets' names and labels with the catalogue.",
+ "facets": [
+  {"id": "type", "label": "Type", "values": [
+   {"id": "serie", "label": "Serier"},
+   {"id": "film", "label": "Film"},
+   {"id": "dokumentar", "label": "Dokumentarer"},
+   {"id": "program", "label": "Programmer"}
+  ]},
+  {"id": "genre", "label": "Genre", "values": [
+   {"id": "krimi", "label": "Krimi", "from": ["sub:krimi", "sub:thriller/krimi", "cat:krimi"]},
+   {"id": "drama", "label": "Drama", "from": ["sub:drama", "sub:danske skæbnefortællinger", "sub:internationale skæbnefortællinger", "sub:tv-teater", "cat:teater og tv-film"]},
+   {"id": "historisk-drama", "label": "Historisk drama", "from": ["sub:historisk drama"]},
+   {"id": "humor", "label": "Humor og satire", "from": ["sub:humor/satire", "cat:humor", "cat:satire"]},
+   {"id": "action", "label": "Action og spænding", "from": ["sub:action/thriller", "sub:action", "sub:spænding"]},
+   {"id": "kaerlighed", "label": "Kærlighed", "from": ["sub:romantik/kærlighed"]},
+   {"id": "historie", "label": "Historie", "from": ["sub:historie", "cat:historie", "sub:militær/krig"]},
+   {"id": "kongelige", "label": "Kongelige", "from": ["sub:kongelige"]},
+   {"id": "virkelighedens-krimi", "label": "Virkelighedens krimi", "from": ["sub:kriminalitet"]},
+   {"id": "natur", "label": "Natur og dyr", "from": ["sub:natur/dyr", "cat:natur", "sub:vildmarksliv", "sub:klima/miljø/bæredygtighed"]},
+   {"id": "kultur", "label": "Kunst og kultur", "from": ["sub:kunst/kultur", "cat:kultur", "sub:design/arkitektur", "sub:fashion"]},
+   {"id": "musik", "label": "Musik", "from": ["sub:musik", "sub:klassisk musik", "cat:musik", "top:musik"]},
+   {"id": "samfund", "label": "Samfund og politik", "from": ["sub:aktualitet/samfundsforhold", "sub:dansk aktualitet/samfundsforhold", "sub:international aktualitet/samfundsforhold", "sub:politik", "cat:politik", "cat:debat"]},
+   {"id": "mennesker", "label": "Mennesker og relationer", "from": ["sub:identitet/relationer", "sub:dansk identitet/relationer", "sub:international identitet/relationer", "sub:seksualitet"]},
+   {"id": "sundhed", "label": "Krop og sundhed", "from": ["sub:sundhed", "cat:sundhed", "cat:krop"]},
+   {"id": "mad", "label": "Mad", "from": ["sub:mad", "cat:mad"]},
+   {"id": "bolig", "label": "Hus og have", "from": ["sub:hus/have", "cat:bolig", "cat:have"]},
+   {"id": "viden", "label": "Videnskab og teknologi", "from": ["sub:teknologi/videnskab", "sub:teknologi/viden", "cat:videnskab", "cat:teknologi"]},
+   {"id": "tro", "label": "Tro og filosofi", "from": ["sub:religion/etik/filosofi", "sub:religion"]},
+   {"id": "rejser", "label": "Rejser", "from": ["sub:rejser", "cat:rejse"]},
+   {"id": "penge", "label": "Penge og erhverv", "from": ["sub:penge/erhverv", "sub:penge og erhverv"]},
+   {"id": "underholdning", "label": "Underholdning", "from": ["sub:underholdning", "cat:underholdning", "cat:quiz"]},
+   {"id": "reality", "label": "Reality", "from": ["cat:reality"]},
+   {"id": "livsstil", "label": "Livsstil", "from": ["sub:livsstil", "cat:livsstil"]}
+  ]},
+  {"id": "stemning", "label": "Stemning", "values": [
+   {"id": "spaending", "label": "Nervepirrende", "from": ["mood:nervepirrende", "mood:spændingsfyldt"]},
+   {"id": "sjovt", "label": "Sjovt og skævt", "from": ["mood:sjovt", "mood:skæv"]},
+   {"id": "foelelser", "label": "Store følelser", "from": ["mood:følelsesladet", "mood:romantisk", "mood:livsbekræftende"]},
+   {"id": "hygge", "label": "Hyggeligt", "from": ["mood:feel good/hyggelig"]},
+   {"id": "moerkt", "label": "Mørkt og råt", "from": ["mood:mørk/uhyggelig", "mood:rå"]},
+   {"id": "klogt", "label": "Tankevækkende", "from": ["mood:intellektuel/tankevækkende"]},
+   {"id": "aegte", "label": "Autentisk", "from": ["mood:autentisk/realistisk"]},
+   {"id": "magisk", "label": "Eventyrligt", "from": ["mood:eventyrlig/magisk"]}
+  ]},
+  {"id": "emne", "label": "Emne", "open": true},
+  {"id": "person", "label": "Personer", "open": true},
+  {"id": "fra", "label": "Dansk eller udenlandsk", "values": [
+   {"id": "dansk", "label": "Dansk", "from": ["origin:dansk", "country:DANMARK"]},
+   {"id": "udland", "label": "Udenlandsk", "from": ["origin:ikke-dansk"]}
+  ]},
+  {"id": "land", "label": "Land", "values": [
+   {"id": "danmark", "label": "Danmark", "from": ["country:DANMARK", "country:GRØNLAND", "country:FÆRØERNE"]},
+   {"id": "norden", "label": "Norden", "from": ["country:SVERIGE", "country:NORGE", "country:FINLAND", "country:ISLAND", "country:NORDEN"]},
+   {"id": "storbritannien", "label": "Storbritannien og Irland", "from": ["country:STORBRITANNIEN", "country:IRLAND"]},
+   {"id": "usa", "label": "USA og Canada", "from": ["country:USA", "country:CANADA"]},
+   {"id": "europa", "label": "Resten af Europa", "from": ["country:FRANKRIG & MONACO", "country:FRANKRIG", "country:TYSKLAND", "country:HOLLAND", "country:BELGIEN", "country:ITALIEN", "country:SPANIEN", "country:PORTUGAL", "country:POLEN", "country:TJEKKIET", "country:UKRAINE", "country:ØSTRIG", "country:SCHWEIZ", "country:EUROPA"]},
+   {"id": "verden", "label": "Resten af verden", "otherCountries": true}
+  ]},
+  {"id": "aarti", "label": "Årti", "values": [
+   {"id": "2020", "label": "2020'erne"},
+   {"id": "2010", "label": "2010'erne"},
+   {"id": "2000", "label": "2000'erne"},
+   {"id": "1990", "label": "1990'erne"},
+   {"id": "1980", "label": "1980'erne"},
+   {"id": "1970", "label": "1970'erne"},
+   {"id": "1960", "label": "1960'erne"},
+   {"id": "aeldre", "label": "Før 1960"}
+  ]},
+  {"id": "tid", "label": "Længde", "values": [
+   {"id": "kort", "label": "Under 30 min."},
+   {"id": "time", "label": "30-60 min."},
+   {"id": "aften", "label": "1-1½ time"},
+   {"id": "lang", "label": "Over 1½ time"}
+  ]},
+  {"id": "omfang", "label": "Sæsoner", "values": [
+   {"id": "en", "label": "1 sæson"},
+   {"id": "flere", "label": "2-4 sæsoner"},
+   {"id": "mange", "label": "5 sæsoner eller flere"}
+  ]},
+  {"id": "aktuelt", "label": "Aktuelt", "values": [
+   {"id": "nyt", "label": "Nyt"},
+   {"id": "nye-afsnit", "label": "Nye afsnit"},
+   {"id": "sidste-chance", "label": "Sidste chance"},
+   {"id": "gensyn", "label": "Gensyn", "from": ["top:gensyn", "cat:gensyn"]}
+  ]},
+  {"id": "alder", "label": "Aldersgrænse", "values": [
+   {"id": "alle", "label": "Tilladt for alle", "from": ["rating:all"]},
+   {"id": "7", "label": "Fra 7 år", "from": ["rating:07"]},
+   {"id": "11", "label": "Fra 11 år", "from": ["rating:11"]},
+   {"id": "15", "label": "Fra 15 år", "from": ["rating:15"]}
+  ]},
+  {"id": "tilg", "label": "Tilgængelighed", "values": [
+   {"id": "tegnsprog", "label": "Tegnsprog", "from": ["acc:signlanguage"]},
+   {"id": "synstolkning", "label": "Synstolkning", "from": ["acc:audiodescription"]},
+   {"id": "oplaest", "label": "Oplæste undertekster", "from": ["acc:spokensubtitles"]}
+  ]},
+  {"id": "udvalgt", "label": "Udvalgt", "open": true}
+ ],
+ "notShown": ["top:nyheder", "sub:nyheder", "sub:arkivnyheder", "cat:nyheder", "cat:arkivnyheder", "top:sport", "sub:sport", "cat:sport"],
+ "kidsUniverses": ["ramasjang", "minisjang", "ultra"],
+ "notTopics": ["danmark", "livsstil", "tv-programmer", "ukendt"],
+ "notPeople": [],
+ "notCountries": ["GRUPPER AF LANDE", "IKKE GEOGRAFISK BESTEMT"],
+ "names": {"mgp": "MGP", "d.a.d. alias disneyland after dark": "D-A-D"},
+ "categories": {
+  "fiktionsserier": {"type": "serie"},
+  "film": {"type": "film"},
+  "dokumentar": {"type": "dokumentar"},
+  "krimi": {"genre": "krimi"},
+  "livsstil": {"genre": "livsstil"},
+  "historie": {"genre": "historie"},
+  "kultur": {"genre": "kultur"},
+  "underholdning": {"genre": "underholdning"},
+  "natur": {"genre": "natur"}
+ }
+}

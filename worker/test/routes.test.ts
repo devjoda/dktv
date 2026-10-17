@@ -360,11 +360,14 @@ describe("a show", () => {
 	});
 
 	test("that isn't there", async () => {
+		// One DR doesn't have any more, or never had
 		const r = await get("/findes-ikke_1/");
 		expect(r.status).toBe(404);
-		expect(r.text).toContain("Siden findes ikke");
+		expect(r.text).toContain("Kan ikke længere ses");
 		expect(r.text).toContain('action="/search/"');
-		expect((await get("/ikke-et-tal/")).status).toBe(404);
+		const notOne = await get("/ikke-et-tal/");
+		expect(notOne.status).toBe(404);
+		expect(notOne.text).toContain("Siden findes ikke");
 		// A programme isn't a show
 		expect((await get("/lise-noergaard_-ikke-kun-en-pige_362031/")).status).toBe(404);
 	});
@@ -885,5 +888,15 @@ describe("errors", () => {
 		const r = await get("/a/b/c/d");
 		expect(r.status).toBe(404);
 		expect(r.text).toContain("Siden findes ikke");
+	});
+});
+
+describe("the Worker's own module", () => {
+	test("exports only what Cloudflare can run: the handlers, and classes like the rooms' Durable Object", async () => {
+		const main: Record<string, unknown> = await import("../src/index");
+		for (const [name, value] of Object.entries(main)) {
+			const runnable = typeof value == "function" || (typeof value == "object" && value != null && typeof (value as {fetch?: unknown}).fetch == "function");
+			expect(runnable, `${name} isn't something Cloudflare can run`).toBe(true);
+		}
 	});
 });

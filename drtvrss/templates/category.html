@@ -11,7 +11,9 @@
 {% block content %}
 <div class="page-head wrap">
     <h1>{{ category.title }}</h1>
-    {% if page.rows %}<button type="button" class="button button-secondary js-pick-surprise" hidden>{{ icon("dice") }} Overrask mig</button>{% endif %}
+    {% if all or page.rows %}
+    <div class="page-actions">{% if all %}<a class="button button-secondary" href="{{ all }}">{{ icon("filter") }} Alle titler</a>{% endif %}{% if page.rows %}<button type="button" class="button button-secondary js-pick-surprise" hidden>{{ icon("dice") }} Overrask mig</button>{% endif %}</div>
+    {% endif %}
 </div>
 {% for row in page.rows %}
 <section class="shelf" aria-labelledby="row-{{ loop.index }}">

@@ -4,14 +4,15 @@ import {Hono, type Context, type MiddlewareHandler} from "hono";
 import {getCookie} from "hono/cookie";
 import * as alerts from "./alerts";
 import {vapidKeys} from "./alerts";
-import {peek, REFRESHES_PER_VISIT} from "./cache";
+import facets from "../../drtvrss/facets.json";
+import {cached, peek, REFRESHES_PER_VISIT} from "./cache";
+import * as catalogue from "./catalogue";
 import {getCategories, getList, getPage, similarTo} from "./discover";
-import {Budget, type Ctx, DRUnavailable, type Env, NotFound, OverBudget} from "./dr";
+import {Budget, type Ctx, DRUnavailable, type Env, Gone, NotFound, OverBudget} from "./dr";
 import {channelNamed, getChannels, getSchedules, planFrom} from "./live";
 import {search} from "./search";
 import {allEpisodes, getLongDescription, getProgram, getShow, isDocumentary, itemId, newEpisodes, rssFeed, type Show, thumbnail} from "./show";
 import * as passkeys from "./passkeys";
-import {pickPool} from "./pick";
 import * as segments from "./segments";
 import {isRoomId, newRoomId} from "./room";
 import * as syncStore from "./sync";
@@ -26,9 +27,13 @@ type App = {Bindings: Env; Variables: {ctx: Ctx}};
 
 const DEFAULT_SOURCE_URL = "https://github.com/devjoda/dktv";
 
-// How many of DR's rows the front page shows, and of its featured programmes, like DR's own
+// How many of DR's rows the front page shows, and of its featured programmes, like DR's own; and how many each
+// later part of it has, which ui.js gets as the page is scrolled down to it
 const FRONT_PAGE_ROWS = 8;
 const FEATURED = 12;
+const MORE_ROWS = 7;
+// How long the front page's own rows, from the catalogue, are kept, in seconds
+const OWN_ROWS_TIME = 15 * 60;
 // How many favourites to describe at once, of each kind
 const MAX_FAVORITES = 50;
 // Far more than a viewer's favourites and progress take up
@@ -93,6 +98,9 @@ function edgeCached(seconds: number, {withoutQuery = false}: {withoutQuery?: boo
 		ctx.budget.spend();
 		const hit = await cache.match(key);
 		if (hit) {
+			if (unchanged(c, hit)) {
+				return new Response(null, {status: 304, headers: {"ETag": hit.headers.get("ETag")!, "Cache-Control": "public, max-age=60"}});
+			}
 			const response = new Response(hit.body, hit);
 			response.headers.set("Cache-Control", "public, max-age=60");
 			return response;
@@ -113,10 +121,42 @@ function edgeCached(seconds: number, {withoutQuery = false}: {withoutQuery?: boo
 			ctx.waitUntil(cache.put(key, kept).catch(e => console.log("Could not keep the page", c.req.url, String(e))));
 		}
 		c.res.headers.set("Cache-Control", "public, max-age=60");
+		if (unchanged(c, c.res)) {
+			c.res = new Response(null, {status: 304, headers: {"ETag": c.res.headers.get("ETag")!, "Cache-Control": "public, max-age=60"}});
+		}
 	};
 }
 
+/** Whether the browser has what it would get already, by its ETag */
+function unchanged(c: Context<App>, response: Response): boolean {
+	const tag = response.headers.get("ETag");
+	return tag != null && (c.req.header("If-None-Match") ?? "").split(/\s*,\s*/).includes(tag);
+}
+
 const MINUTE = 60;
+
+/** A show's or a programme's page, or Gone, when DR doesn't have it any more, which the catalogue's cron hears of */
+async function orGone<T>(c: Context<App>, slug: string, kind: "serie" | "program", get: () => Promise<T>): Promise<T> {
+	try {
+		return await get();
+	} catch (e) {
+		if (e instanceof NotFound && /^\d+$/.test(slug.split("_").at(-1) ?? "")) {
+			catalogue.noteGone(c.get("ctx"), String(Number(slug.split("_").at(-1))));
+			throw new Gone(String(e), kind);
+		}
+		throw e;
+	}
+}
+
+/** The front page's own rows, from the catalogue, or none, when the database doesn't answer */
+async function ownRows(ctx: Ctx): Promise<catalogue.OwnRow[]> {
+	try {
+		return await cached(ctx, "own-rows", OWN_ROWS_TIME, () => catalogue.getOwnRows(ctx));
+	} catch (e) {
+		console.log("Could not get the front page's own rows", String(e));
+		return [];
+	}
+}
 
 // Like rejseholdet_503605, or fiktionsserier
 const SLUG = /^[\w-]+$/;
@@ -136,7 +176,7 @@ function redirectTo(c: Context<App>, prefix: string, slug: string, status: 302 |
 app.get("/", edgeCached(2 * MINUTE), async c => {
 	const ctx = c.get("ctx");
 	const channels = await getChannels(ctx);
-	const [page, schedules] = await Promise.all([getPage(ctx, "/", FRONT_PAGE_ROWS), getSchedules(ctx, channels)]);
+	const [page, schedules, own] = await Promise.all([getPage(ctx, "/", FRONT_PAGE_ROWS), getSchedules(ctx, channels), ownRows(ctx)]);
 	// Only the ones fetched already, so the front page never waits for them; the others are fetched for later
 	const recommended = (c.env.RECOMMENDED_SHOWS ?? "").split(":").filter(Boolean);
 	const shows: Show[] = [];
@@ -154,7 +194,14 @@ app.get("/", edgeCached(2 * MINUTE), async c => {
 			ctx.waitUntil(getShow(ctx, slug).catch(e => console.log("Could not fetch recommended show", slug, String(e))));
 		}
 	}
-	return render(c, pages.indexPage(site(c), {page, featured: page?.featured.slice(0, FEATURED) ?? [], shows, channels, schedules}));
+	return render(c, pages.indexPage(site(c), {page, featured: page?.featured.slice(0, FEATURED) ?? [], shows, channels, schedules, own, moreFrom: FRONT_PAGE_ROWS}));
+});
+
+/** The front page's later rows, from the row ?fra=, which ui.js puts in as the page is scrolled down to them */
+app.get("/raekker/", edgeCached(2 * MINUTE), async c => {
+	const from = Math.min(Math.max(Math.floor(Number(c.req.query("fra"))) || 0, 0), 200);
+	const page = await getPage(c.get("ctx"), "/", MORE_ROWS, from, false);
+	return render(c, pages.moreRows(page, from, from + MORE_ROWS));
 });
 
 app.get("/kategorier/", edgeCached(10 * MINUTE), async c => {
@@ -172,10 +219,37 @@ app.get("/kategorier/:slug/", edgeCached(10 * MINUTE), async c => {
 	if (page === undefined) {
 		throw new DRUnavailable(`No page for the category ${slug}`);
 	}
-	return render(c, pages.categoryPage(site(c), {category, page}));
+	return render(c, pages.categoryPage(site(c), {category, page, all: allTitlesOf(slug)}));
 });
 
 app.get("/kategorier/:slug", c => redirectTo(c, "/kategorier/", c.req.param("slug"), 308));
+
+/** Alle titler, with the filter of one of DR's categories, like /alle/?genre=krimi for Krimi, if it has one */
+function allTitlesOf(slug: string): string | undefined {
+	const filter = (facets.categories as Record<string, Record<string, string>>)[slug];
+	return filter ? `/alle/?${new URLSearchParams(filter)}` : undefined;
+}
+
+// Alle titler: all of the catalogue, to find something in with filters, which explore.js reads from the address
+app.get("/alle/", edgeCached(60 * MINUTE, {withoutQuery: true}), c => render(c, pages.allPage(site(c))));
+app.get("/alle", c => c.redirect("/alle/", 308));
+
+/**
+ * The catalogue, for Vælg for mig, Alle titler, the search field and Hvad nu?: all of DR's series, films and programmes,
+ * as the database puts it together. Browsers ask again with its ETag, and get a 304 while it's the same.
+ */
+app.get("/katalog.json", edgeCached(60 * MINUTE), async c => {
+	try {
+		const {text, version} = await catalogue.catalogueText(c.get("ctx"));
+		return c.body(text, 200, {"Content-Type": "application/json; charset=UTF-8", "ETag": `"${version}"`});
+	} catch (e) {
+		console.log("Could not get the catalogue", String(e));
+		return c.json({error: "Titlerne kan ikke hentes lige nu."}, 503);
+	}
+});
+
+/** How the catalogue's cron is doing: how many titles, its last sweep of DR's list, and where the one going on is */
+app.get("/status.json", edgeCached(15 * MINUTE), async c => c.json({catalogue: await catalogue.status(c.get("ctx"))}));
 
 /** All of a row of DR's, like all films from A to Å */
 app.get("/liste/:id{[0-9]+}/", edgeCached(10 * MINUTE), async c => {
@@ -238,11 +312,9 @@ app.get("/forslag/:kind{serie|program}/:slug", edgeCached(60 * MINUTE), async c 
 	return c.json(await similarTo(ctx, item.categories ?? [], itemId(slug), item.tags));
 });
 
-// "Vælg for mig": its answers, like ?type=serie, are read by pick.js, which picks from /vaelg.json
+// "Vælg for mig": its answers, like ?type=serie, are read by pick.js, which picks from /katalog.json
 app.get("/vaelg/", edgeCached(60 * MINUTE, {withoutQuery: true}), c => render(c, pages.pickPage(site(c))));
 app.get("/vaelg", c => c.redirect("/vaelg/", 308));
-
-app.get("/vaelg.json", edgeCached(60 * MINUTE), async c => c.json(await pickPool(c.get("ctx"))));
 
 // Its filter, like ?vis=dokumentar, is read by favorites.js
 app.get("/favoritter/", edgeCached(60 * MINUTE, {withoutQuery: true}), c => render(c, pages.favoritesPage(site(c))));
@@ -331,7 +403,7 @@ app.get("/favorites.json", async c => {
 
 app.get("/program/:id", edgeCached(10 * MINUTE), async c => {
 	const ctx = c.get("ctx");
-	const program = await getProgram(ctx, c.req.param("id"));
+	const program = await orGone(c, c.req.param("id"), "program", () => getProgram(ctx, c.req.param("id")));
 	// A film's credits, for "Hvad nu?" as they start
 	const skips = await segments.getSegments(ctx, program.videoId, []).catch(error => {
 		console.log("Could not get the intro and credits of", program.videoId, String(error));
@@ -626,17 +698,20 @@ app.get("/:showid/afsnit/:number{[0-9]+}", async c => {
 });
 
 app.get("/:showid/", edgeCached(10 * MINUTE), async c => {
-	return render(c, pages.showPage(site(c), await getShow(c.get("ctx"), c.req.param("showid"))));
+	const slug = c.req.param("showid");
+	return render(c, pages.showPage(site(c), await orGone(c, slug, "serie", () => getShow(c.get("ctx"), slug))));
 });
 
 app.get("/:showid/:episode", edgeCached(10 * MINUTE), async c => {
 	const ctx = c.get("ctx");
-	const show = await getShow(ctx, c.req.param("showid"));
+	const slug = c.req.param("showid");
+	const show = await orGone(c, slug, "serie", () => getShow(ctx, slug));
 	const wanted = c.req.param("episode");
 	const episodes = show.seasons.flatMap(season => season.episodes.map(e => ({season, e})));
 	const i = episodes.findLastIndex(({e}) => e.url.includes(wanted));
 	if (i < 0) {
-		throw new NotFound(`${show.url} has no episode ${wanted}`);
+		// Like an episode of a season that's left DR, while the series is still there
+		throw new Gone(`${show.url} has no episode ${wanted}`, "serie", {title: show.title, url: `/${show.url}/`});
 	}
 	const {season, e} = episodes[i];
 
@@ -679,6 +754,9 @@ function notFound(c: Context<App>) {
 app.notFound(notFound);
 
 app.onError((e, c) => {
+	if (e instanceof Gone) {
+		return render(c, pages.gonePage(site(c), {kind: e.kind, show: e.show}), 404);
+	}
 	if (e instanceof NotFound) {
 		return notFound(c);
 	}
@@ -697,13 +775,12 @@ export {Room} from "./room";
 export default {
 	fetch: app.fetch,
 
-	/** Every minute: checks the followed series for new episodes, and sends notifications */
-	async scheduled(_event: ScheduledController, env: Env, executionCtx: ExecutionContext) {
-		const keys = vapidKeys(env);
-		if (!keys) {
-			return;
-		}
-		await alerts.run({
+	/**
+	 * Every minute: checks the followed series for new episodes, and sends notifications. And every other minute, in a
+	 * run of its own, with its own share of what a run may do: a step of the catalogue's.
+	 */
+	async scheduled(event: ScheduledController, env: Env, executionCtx: ExecutionContext) {
+		const ctx: Ctx = {
 			env,
 			budget: new Budget(),
 			refreshes: 0,
@@ -711,6 +788,15 @@ export default {
 			pending: new Map(),
 			waitUntil: promise => executionCtx.waitUntil(promise),
 			origin: "https://scheduled.invalid",
-		}, keys);
+		};
+		if (event.cron == catalogue.CRON) {
+			await catalogue.run(ctx);
+			return;
+		}
+		const keys = vapidKeys(env);
+		if (!keys) {
+			return;
+		}
+		await alerts.run(ctx, keys);
 	},
 } satisfies ExportedHandler<Env>;

@@ -76,6 +76,8 @@ class DiscoverPage:
     title: str
     featured: list[Card] = field(default_factory=list)
     rows: list[Row] = field(default_factory=list)
+    # Whether the page has more rows after these, which a later part of it gets
+    more: bool = False
 
 
 @dataclass
@@ -210,7 +212,8 @@ def category_url(name: str, categories: list["Category"]) -> Optional[str]:
     return None
 
 
-async def build_page(path: str, max_rows: int) -> DiscoverPage:
+async def build_page(path: str, max_rows: int, from_row: int = 0, with_top: bool = True) -> DiscoverPage:
+    """One of DR's pages: its top and max_rows of its rows, from the row from_row, or only the rows, for its later parts"""
     page = dr.Page.model_validate(
         await get_api("/page", path=path, list_page_size=ROW_SIZE, max_list_prefetch=3)
     )
@@ -220,12 +223,13 @@ async def build_page(path: str, max_rows: int) -> DiscoverPage:
     categories = await get_categories()
     featured = []
     hero = next((e for e in page.entries if (e.template or "").startswith(("DRH", "H")) and e.list), None)
-    if hero is not None:
+    if hero is not None and with_top:
         featured = cards((await row_list(hero)).items, channel_slugs)
         for c in featured:
             c.category_url = category_url(c.category, categories)
 
-    entries = [e for e in page.entries if is_row(e)][:max_rows]
+    all_rows = [e for e in page.entries if is_row(e)]
+    entries = all_rows[from_row:from_row + max_rows]
     results = await asyncio.gather(*map(row_list, entries), return_exceptions=True)
     rows = []
     for entry, found in zip(entries, results):
@@ -236,10 +240,25 @@ async def build_page(path: str, max_rows: int) -> DiscoverPage:
         row = Row(entry.title.strip(), cards(found.items, channel_slugs), more)
         if len(row.cards) >= MIN_ROW:
             rows.append(row)
-    return DiscoverPage(page.title or "", featured, rows)
+    return DiscoverPage(page.title or "", featured, rows, len(all_rows) > from_row + max_rows)
 
 
 pages: dict[str, tuple[float, DiscoverPage]] = {}
+later_rows: dict[tuple[str, int], tuple[float, DiscoverPage]] = {}
+
+
+async def get_later_rows(path: str, from_row: int, count: int) -> Optional[DiscoverPage]:
+    """The later rows of one of DR's pages, from the row from_row, for the front page to get as it's scrolled down"""
+    cached = later_rows.get((path, from_row))
+    if cached is not None and cached[0] + PAGE_CACHE_TIME > time():
+        return cached[1]
+    try:
+        page = await build_page(path, count, from_row, with_top=False)
+    except Exception as e:
+        print("Could not get the later rows of", path, repr(e))
+        return cached[1] if cached is not None else None
+    later_rows[(path, from_row)] = (time(), page)
+    return page
 
 
 async def get_page(path: str, max_rows: int = 10, refresh: bool = False) -> Optional[DiscoverPage]:

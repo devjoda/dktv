@@ -2,9 +2,11 @@ from contextlib import suppress
 from datetime import datetime, timezone
 from functools import lru_cache
 from typing import Optional
+from urllib.parse import urlencode
 import asyncio
 import gzip
 import hashlib
+import json
 import os
 import sqlite3
 
@@ -18,8 +20,9 @@ from quart import (
     send_from_directory,
 )
 
-from . import discover, drtv
-from .pick import pick_pool
+from werkzeug.exceptions import NotFound
+
+from . import catalogue, discover, drtv
 from . import sync as sync_store
 from .drtv import (
     DRUnavailable,
@@ -41,6 +44,7 @@ app.add_template_filter(duration)
 app.add_template_filter(clock)
 app.add_template_filter(whole_sentences)
 app.add_template_filter(preview_text)
+app.add_template_filter(catalogue.leaving_label, "leaving_label")
 app.add_template_global(whats_on)
 app.add_template_global(channel_style)
 app.add_template_test(is_new, "new")
@@ -141,23 +145,47 @@ async def keep_fresh(recommended_shows: list[str]):
 
 
 refresher: Optional[asyncio.Task] = None
+cataloguer: Optional[asyncio.Task] = None
 recommended_shows: list[str] = []
 
 
 @app.before_serving
 async def startup():
-    global refresher, recommended_shows
+    global refresher, cataloguer, recommended_shows
     drtv.open_session()
     recommended_shows = [s for s in os.getenv("RECOMMENDED_SHOWS", "").split(":") if s]
     refresher = asyncio.create_task(keep_fresh(recommended_shows))
+    # Not in the tests, which make the catalogue themselves, with CATALOGUE=off
+    if os.getenv("CATALOGUE", "on") != "off":
+        cataloguer = asyncio.create_task(catalogue.keep_catalogue())
 
 
 @app.after_serving
 async def shutdown():
-    refresher.cancel()
-    with suppress(asyncio.CancelledError):
-        await refresher
+    for task in (refresher, cataloguer):
+        if task is not None:
+            task.cancel()
+            with suppress(asyncio.CancelledError):
+                await task
     await drtv.close_session()
+
+
+# The front page's own rows, from the catalogue, in the order they come among DR's, after every other one of them
+OWN_ORDER = ["sidste-chance", "stemning", "tema", "nye-film", "kort"]
+OWN_EVERY = 2
+# How many rows each later part of the front page has, which ui.js gets as the page is scrolled down to it
+MORE_ROWS = 7
+
+
+def front_rows(rows: list, own: list[dict]) -> list[tuple[str, object]]:
+    """DR's rows, with the front page's own among them, like the Worker's frontRows(): [("dr", row) or ("own", row)]"""
+    ordered = [row for row_id in OWN_ORDER for row in own if row["id"] == row_id]
+    found = []
+    for i, row in enumerate(rows):
+        found.append(("dr", row))
+        if (i + 1) % OWN_EVERY == 0 and ordered:
+            found.append(("own", ordered.pop(0)))
+    return found + [("own", row) for row in ordered]
 
 
 @app.route("/")
@@ -169,10 +197,23 @@ async def index():
         shows=[s for s in map(get_cached_show, recommended_shows) if s is not None],
         page=page,
         featured=page.featured[:FEATURED] if page else [],
+        rows=front_rows(page.rows if page else [], catalogue.own_rows()),
+        more_from=FRONT_PAGE_ROWS if page and page.more else None,
         SERVICE_NAME=SERVICE_NAME,
         channels=await get_channels(),
         schedules=await get_schedules(),
     )
+
+
+@app.route("/raekker/")
+async def later_rows():
+    """The front page's later rows, from the row ?fra=, which ui.js puts in as the page is scrolled down to them"""
+    try:
+        start = min(max(int(request.args.get("fra", "0")), 0), 200)
+    except ValueError:
+        start = 0
+    page = await discover.get_later_rows("/", start, MORE_ROWS)
+    return await render_template("rows.html", page=page, start=start, next=start + MORE_ROWS)
 
 
 MAIN_CATEGORIES = ["/kategorier/fiktionsserier/", "/kategorier/film/", "/kategorier/dokumentar/"]
@@ -197,10 +238,12 @@ async def category(slug):
     page = await discover.get_page(f"/kategorier/{slug}", max_rows=12)
     if page is None:
         raise drtv.DRUnavailable(f"No page for the category {slug}")
+    filter = catalogue.FACETS_FILE["categories"].get(slug)
     return await render_template(
         "category.html",
         category=found,
         page=page,
+        all=f"/alle/?{urlencode(filter)}" if filter else None,
         SERVICE_NAME=SERVICE_NAME,
         channels=await get_channels(),
     )
@@ -255,13 +298,27 @@ async def favorites_page():
 
 @app.route("/vaelg/")
 async def pick_page():
-    """"Vælg for mig": its answers, like ?type=serie, are read by pick.js, which picks from /vaelg.json"""
+    """"Vælg for mig": its answers, like ?type=serie, are read by pick.js, which picks from /katalog.json"""
     return await render_template("vaelg.html", SERVICE_NAME=SERVICE_NAME)
 
 
-@app.route("/vaelg.json")
-async def pick_list():
-    return await pick_pool()
+@app.route("/alle/")
+async def all_titles():
+    """Alle titler: all of the catalogue, to find something in with filters, which explore.js reads from the address"""
+    return await render_template("alle.html", SERVICE_NAME=SERVICE_NAME, channels=await get_channels())
+
+
+@app.route("/katalog.json")
+async def catalogue_list():
+    """The catalogue, for Vælg for mig, Alle titler, the search field and Hvad nu?, like the Worker's"""
+    response = Response(json.dumps(catalogue.catalogue_json(), ensure_ascii=False, separators=(",", ":")), mimetype="application/json")
+    response.set_etag(str(catalogue.catalogue.version))
+    return await response.make_conditional(request)
+
+
+@app.route("/status.json")
+async def status():
+    return catalogue.status()
 
 
 @app.route("/nyt/")
@@ -316,11 +373,34 @@ async def suggestions(kind, slug):
     return await discover.similar_to(item.categories or [], slug.split("_")[-1], item.tags)
 
 
+async def gone(kind: str, slug: str, show=None):
+    """The page of a series, a programme or an episode that DR doesn't have any more, like the Worker's gonePage()"""
+    found = catalogue.catalogue.titles.get(slug.split("_")[-1])
+    if found is not None and show is None:
+        # Looked up next, to see whether it's gone
+        found["due"] = -1
+    try:
+        channels = await get_channels()
+    except Exception:
+        channels = {}
+    return await render_template("gone.html", kind=kind, show=show, SERVICE_NAME=SERVICE_NAME, channels=channels), 404
+
+
+def is_dr_id(slug: str) -> bool:
+    return slug.split("_")[-1].isdigit()
+
+
 @app.route("/program/<progid>")
 async def view_program(progid):
+    try:
+        program = await get_program(progid)
+    except NotFound:
+        if is_dr_id(progid):
+            return await gone("program", progid)
+        raise
     return await render_template(
         "video.html",
-        e=await get_program(progid),
+        e=program,
         SERVICE_NAME=SERVICE_NAME,
         channels=await get_channels(),
     )
@@ -356,11 +436,17 @@ def season_list(show, season, e) -> dict:
 
 @app.route("/<showid>/<episode>")
 async def view_episode(showid, episode):
-    show = await get_show(showid)
+    try:
+        show = await get_show(showid)
+    except NotFound:
+        if is_dr_id(showid):
+            return await gone("serie", showid)
+        raise
     episodes = [(season, entry) for season in show.seasons for entry in season.episodes]
     matches = [i for i, (_, entry) in enumerate(episodes) if episode in entry.url]
     if not matches:
-        abort(404)
+        # Like an episode of a season that's left DR, while the series is still there
+        return await gone("serie", showid, show={"title": show.title, "url": f"/{show.url}/"})
     i = matches[-1]
     season, e = episodes[i]
 
@@ -407,7 +493,12 @@ async def play_episode_number(showid, number):
 
 @app.route("/<showid>/")
 async def view_show(showid):
-    show = await get_show(showid)
+    try:
+        show = await get_show(showid)
+    except NotFound:
+        if is_dr_id(showid):
+            return await gone("serie", showid)
+        raise
     return await render_template(
         "show.html",
         s=show,

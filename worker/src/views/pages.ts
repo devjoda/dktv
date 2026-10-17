@@ -1,23 +1,75 @@
 // The pages
 
+import type {OwnRow} from "../catalogue";
 import type {Card, Category, DiscoverPage, Row} from "../discover";
 import {channelStyle, type Channels, type LiveChannel, percentDone, planFrom, type PlannedProgramme, type Programme, whatsOn} from "../live";
 import type {SearchResult, SearchResultItem} from "../search";
 import type {Segments} from "../segments";
 import {allEpisodes, type Episode, type Program, type Season, type Show, thumbnail, wholeSentences} from "../show";
-import {clockTime, danishDate, danishDatetime, duration, isNew, isoTime} from "../time";
-import {attr, each, html, type Html, scriptJSON} from "./html";
+import {clock, clockTime, danishDate, danishDatetime, duration, isNew, isoTime, leavingLabel} from "../time";
+import {attr, each, html, type Html, raw, scriptJSON} from "./html";
 import {layout, LIBRARIES, LIVE_SCRIPTS, MAIN_CATEGORIES, type Site, staticURL, VIDEO_SCRIPTS} from "./layout";
-import {cardFavorite, cardTile, channelTile, favoriteButton, icon, leaving, moreLink, playButton, PROGRESS_BAR, searchField, SEEN_MARK, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
+import {cardFavorite, cardTile, channelTile, entryTile, favoriteButton, icon, leaving, moreLink, playButton, PROGRESS_BAR, searchField, SEEN_MARK, shelfHead, showFacts, type Tag, tile, widePicture} from "./ui";
 
 type Schedules = Record<string, Programme[]>;
 
-function rows(found: Row[]): Html {
-	return each(found, (row, i) => html`<section class="shelf" aria-labelledby="row-${i + 1}">
+function rowShelf(row: Row, i: number): Html {
+	return html`<section class="shelf" aria-labelledby="row-${i + 1}">
 ${shelfHead(row.title, `row-${i + 1}`, moreLink(row), row.complete)}
 <div class="shelf-track">${each(row.cards, cardTile)}</div>
 </section>
-`);
+`;
+}
+
+/** DR's rows, numbered from `from`, for the later parts of a page */
+function rows(found: Row[], from = 0): Html {
+	return each(found, (row, i) => rowShelf(row, from + i));
+}
+
+// The front page's own rows, from the catalogue, in the order they come among DR's, after every other one of them
+const OWN_ORDER = ["sidste-chance", "stemning", "tema", "nye-film", "kort"];
+const OWN_EVERY = 2;
+const OWN_LEAST = 4;
+
+/** One of the front page's own rows, without what has left DR since it was made */
+function ownShelf(row: OwnRow): Html {
+	const now = clock.now();
+	const entries = row.entries.filter(e => e.x === undefined || e.x > now);
+	if (entries.length < OWN_LEAST) {
+		return html``;
+	}
+	return html`<section class="shelf" data-own-row="${row.id}" aria-labelledby="own-${row.id}">
+${shelfHead(row.title, `own-${row.id}`, row.more)}
+<div class="shelf-track">${each(entries, e => entryTile(e, row.id == "sidste-chance" ? leavingLabel(e.x) : undefined))}</div>
+</section>
+`;
+}
+
+/** DR's rows, with the front page's own among them */
+function frontRows(found: Row[], own: OwnRow[]): Html {
+	const ordered = OWN_ORDER.map(id => own.find(row => row.id == id)).filter(row => row !== undefined);
+	let out = "";
+	let next = 0;
+	found.forEach((row, i) => {
+		out += rowShelf(row, i).text;
+		if ((i + 1) % OWN_EVERY == 0 && next < ordered.length) {
+			out += ownShelf(ordered[next++]).text;
+		}
+	});
+	for (const row of ordered.slice(next)) {
+		out += ownShelf(row).text;
+	}
+	return raw(out);
+}
+
+/** Where ui.js gets the next of a page's rows, as it's scrolled down to */
+function moreRowsMark(from: number): Html {
+	return html`<div class="more-rows js-more-rows" data-from="${from}" aria-hidden="true"></div>`;
+}
+
+/** The front page's later rows, from the row `from`, for ui.js to put in, and where to get those after them */
+export function moreRows(page: DiscoverPage | undefined, from: number, next: number): Html {
+	return page ? html`${rows(page.rows, from)}${page.more ? moreRowsMark(next) : ""}` : html``;
 }
 
 /**
@@ -63,7 +115,7 @@ function shareButton(title: string): Html {
 	return html`<button type="button" class="button button-secondary js-share-page" data-share-title="${title}">${icon("share")} Del</button>`;
 }
 
-export function indexPage(site: Site, {page, featured, shows, channels, schedules}: {page?: DiscoverPage; featured: Card[]; shows: Show[]; channels: Channels; schedules: Schedules}): Html {
+export function indexPage(site: Site, {page, featured, shows, channels, schedules, own = [], moreFrom}: {page?: DiscoverPage; featured: Card[]; shows: Show[]; channels: Channels; schedules: Schedules; own?: OwnRow[]; moreFrom?: number}): Html {
 	return layout(site, {
 		preview: {title: site.serviceName, description: FRONT_PAGE_TEXT},
 		bodyClass: featured.length ? "has-hero" : "",
@@ -109,7 +161,7 @@ ${shelfHead("Anbefalede serier", "recommended-title")}
 		});
 	})}</div>
 </section>` : ""}
-${page ? rows(page.rows) : ""}`);
+${frontRows(page?.rows ?? [], own)}${page?.more && moreFrom !== undefined ? moreRowsMark(moreFrom) : ""}`);
 }
 
 function feedLink(show: Show): Html {
@@ -234,6 +286,8 @@ ${each(season.episodes, n => html`<li><a class="episode-row" href="${n.url}" dat
 /** Plays an episode of a show, or a programme on its own, like a film */
 export function videoPage(site: Site, {show, e, description, previous, next, segments, season}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour; segments?: Segments; season?: SeasonList}): Html {
 	const film = show === undefined ? (e as Program) : undefined;
+	// What was kept of it from before it left DR, when DR doesn't answer
+	const over = e.expires !== undefined && e.expires <= clock.now();
 	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title,
 		preview: {title: show ? `${show.title}: ${e.title}` : e.title, description, image: e.wallpaper, type: show ? "video.episode" : "video.other"}, head: show ? feedLink(show) : undefined, scripts: VIDEO_SCRIPTS, bodyClass: season ? "video-page has-episodes" : "video-page"}, html`${CINEMA_FIRST}<div class="stage">
 <video id="video" controls crossorigin="anonymous" data-episode-id="${e.videoId}"${attr("data-suggest", show ? `/forslag/serie/${show.url}` : `/forslag/program/${(e as Program).url.split("/").at(-1)}`)}${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)}${attr("data-previous-url", previous?.url)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}${attr("data-segments", segments ? JSON.stringify(segments) : undefined)}></video>
@@ -244,6 +298,7 @@ ${show ? html`<a class="eyebrow" href="/${show.url}/">${icon("chevron-left")} ${
 <h1 class="watch-title">${e.title}</h1>
 <p class="meta">${e.pubdate ? html`<span>${danishDate(e.pubdate)}</span>` : ""}${e.minutes ? html`<span>${duration(e.minutes)}</span>` : ""}${
 	isNew(e.pubdate) ? html`<span class="tag tag-new">Ny</span>` : ""}${leaving(e.expires)}${e.geoRestricted ? html`<span class="tag tag-geo">Kun i Danmark</span>` : ""}</p>
+${over ? html`<p class="watch-gone">${icon("alert")} ${show ? "Afsnittet" : "Programmet"} kan ikke længere ses.</p>` : ""}
 <p class="description">${wholeSentences(description)}</p>
 <div class="actions">
 ${film ? favoriteButton(film.url.split("/").at(-1)!, e.title, e.wallpaper, {kind: "film"}) : ""}
@@ -255,9 +310,9 @@ ${neighbourLink("next", next)}
 </div>
 </div>
 ${season ? seasonAside(season) : ""}
-<script>
+${over ? "" : html`<script>
 playVideo(document.getElementById('video'), ${scriptJSON(e.videoId)});
-</script>`);
+</script>`}`);
 }
 
 /** One of the channels in the channel guide: what's on it now, how far it's got, and what's next */
@@ -395,7 +450,26 @@ ${searchField()}
 </div>`);
 }
 
+/**
+ * A series, a programme or an episode that DR doesn't have any more: with the series, for an episode of one that's still
+ * there, and something else to see, which catalogue.js finds of the same kind
+ */
+export function gonePage(site: Site, {kind, show}: {kind: "serie" | "program"; show?: {title: string; url: string}}): Html {
+	return layout(site, {title: "Kan ikke længere ses"}, html`<div class="empty">
+${icon("alert")}
+<h1>Kan ikke længere ses</h1>
+<p>${show ? `Afsnittet kan ikke længere ses, men resten af ${show.title} kan måske.` : "Det kan ikke længere ses her. Måske er det udløbet."}</p>
+${show ? html`<a class="button button-primary" href="${show.url}">Gå til ${show.title}</a>` : searchField()}
+<a class="button button-secondary" href="/">Gå til forsiden</a>
+</div>
+<section class="shelf js-gone-suggestions" data-kind="${kind}" aria-labelledby="gone-title" hidden>
+${shelfHead("Måske noget for dig", "gone-title")}
+<div class="shelf-track js-tiles"></div>
+</section>`);
+}
+
 const PICK_SCRIPT = html`<script src="${staticURL("pick.js")}"></script>`;
+const EXPLORE_SCRIPT = html`<script src="${staticURL("explore.js")}"></script>`;
 
 /** What pick.js shows when it has picked something: the programme, and a countdown to it, which can be undone */
 function pickResult(): Html {
@@ -443,18 +517,46 @@ export function categoriesPage(site: Site, categories: Category[]): Html {
 	const sorted = categories.map((c, i) => ({c, i})).sort((a, b) => rank(a.c) - rank(b.c) || a.i - b.i).map(({c}) => c);
 	return layout(site, {title: "Kategorier"}, html`${pageHead("Kategorier")}
 <a class="pick-promo wrap" href="/vaelg/">${icon("dice")}<span><strong>Vælg for mig</strong> Ved du ikke, hvad du vil se? Svar på et par spørgsmål, eller lad terningen bestemme.</span></a>
+<a class="pick-promo wrap" href="/alle/">${icon("filter")}<span><strong>Alle titler</strong> Find blandt alle serier, film og dokumentarer, efter genre, stemning, emne, land, årti og længde.</span></a>
 <ul class="category-grid wrap">
 ${each(sorted, c => html`<li><a class="category" href="${c.url}"><span class="category-mark" aria-hidden="true">${[...c.title][0] ?? ""}</span><span class="category-title">${c.title}</span></a></li>\n`)}
 </ul>`);
 }
 
-export function categoryPage(site: Site, {category, page}: {category: Category; page: DiscoverPage}): Html {
+export function categoryPage(site: Site, {category, page, all}: {category: Category; page: DiscoverPage; all?: string}): Html {
 	return layout(site, {title: category.title, preview: {title: category.title, description: `Serier, film og programmer under ${category.title}, samlet i rækker.`}, scripts: page.rows.length ? PICK_SCRIPT : undefined}, html`<div class="page-head wrap">
-<h1>${category.title}</h1>${page.rows.length ? html`
-<button type="button" class="button button-secondary js-pick-surprise" hidden>${icon("dice")} Overrask mig</button>` : ""}
+<h1>${category.title}</h1>${all || page.rows.length ? html`
+<div class="page-actions">${all ? html`<a class="button button-secondary" href="${all}">${icon("filter")} Alle titler</a>` : ""}${page.rows.length ? html`
+<button type="button" class="button button-secondary js-pick-surprise" hidden>${icon("dice")} Overrask mig</button>` : ""}</div>` : ""}
 </div>
 ${page.rows.length ? html`${rows(page.rows)}
 ${pickResult()}` : html`<p class="wrap">Der er ikke noget i denne kategori lige nu.</p>`}`);
+}
+
+const ALL_TEXT = "Alle serier, film og dokumentarer, efter genre, stemning, emne, land, årti og længde.";
+
+// How Alle titler can be sorted, which explore.js does
+const SORTS: [string, string][] = [
+	["anbefalet", "Anbefalet"], ["nyeste", "Nyeste"], ["udloeber", "Udløber snart"], ["titel", "Titel, A-Å"], ["aar", "Årstal, nyeste"], ["laengde", "Længde, korteste"],
+];
+
+/** Alle titler: all of the catalogue, with its filters, which explore.js shows and reads from the address */
+export function allPage(site: Site): Html {
+	return layout(site, {title: "Alle titler", preview: {title: "Alle titler", description: ALL_TEXT}, scripts: EXPLORE_SCRIPT}, html`${pageHead("Alle titler")}
+<section class="explore wrap js-explore" aria-label="Find blandt alle titler" hidden>
+<div class="explore-bar">
+<div class="list-filter-search explore-search">${icon("search")}<input type="search" class="list-filter-field js-explore-search" placeholder="Find en titel, et emne eller en person" aria-label="Find en titel, et emne eller en person" enterkeyhint="search"></div>
+<label class="explore-sort"><span>Sortér efter</span><select class="form-select js-explore-sort">${each(SORTS, ([id, label]) => html`<option value="${id}">${label}</option>`)}</select></label>
+<button type="button" class="button button-secondary explore-toggle js-explore-toggle" aria-expanded="false" aria-controls="explore-filters">${icon("filter")} Filtre<span class="filter-count js-explore-active-count"></span></button>
+</div>
+<div class="explore-chosen js-explore-chosen" aria-label="Valgte filtre"></div>
+<div class="explore-filters js-explore-filters" id="explore-filters"></div>
+<p class="explore-count js-explore-count" role="status"></p>
+</section>
+<p class="wrap pick-loading js-explore-loading">Henter titler …</p>
+<div class="tile-grid results js-explore-tiles"></div>
+<div class="wrap explore-more"><button type="button" class="button button-secondary js-explore-more" hidden>Vis flere</button></div>
+<noscript><p class="wrap">Alle titler kræver JavaScript.</p></noscript>`);
 }
 
 export function listPage(site: Site, {title, cards}: {title: string; cards: Card[]}): Html {
@@ -587,9 +689,10 @@ export function privacyPage(site: Site): Html {
 <li>Hvilke afsnit du har åbnet fra klokken, Nyt til dig, og hvornår du sidst ryddede den, så den kun viser det, du ikke har set.</li>
 <li>Dine valg: om næste afsnit afspilles automatisk, undertekster til direkte TV, om sete afsnit skjules, afspillerens lydstyrke, hastighed og undertekster, og dit navn i Se sammen.</li>
 <li>Om du har valgt at markere intro og rulletekster, og dem, du selv har markeret.</li>
+<li>Hvad Vælg for mig sidst spurgte om og foreslog, så det ikke er det samme hver gang.</li>
 <li>Din kode, hvis du har en konto.</li>
 <li>Så længe fanen er åben: det rum, du ser sammen med andre i.</li>
-<li>Programmernes billeder, så siderne åbner hurtigere.</li>
+<li>Programmernes billeder og listen over alle titler, så siderne åbner hurtigere.</li>
 <li>Den kanal, du sidst så, i en cookie, så Direkte åbner den igen. Det er sidens eneste cookie: den bruges kun til at åbne kanalen, og den hverken sendes videre eller gemmes på serveren.</li>
 </ul>
 <p>Du sletter det hele ved at slette sidens data i din browser.</p>
