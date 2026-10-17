@@ -24,9 +24,11 @@ from .show import thumbnail
 A_TO_AA = "/kategorier/a-aa"
 PAGE_SIZE = 100
 DAY = 24 * 60 * 60
-# How long the catalogue is kept before DR's list is gone through again, and how long between looking up titles
+# How long the catalogue is kept before DR's list is gone through again, how long between looking up titles, and how
+# long DR isn't asked anything after it doesn't answer, or asks to be asked less
 SWEEP_EVERY = DAY
 LOOK_UP_EVERY = 0.5
+PAUSE_FOR = 30 * 60
 # How much of a letter must be found again for what wasn't to be taken as gone, instead of DR leaving some out
 KEPT_SHARE = 0.8
 # How many of DR's own rows' titles are read, of each row
@@ -477,8 +479,8 @@ def _next_look_up(item: dict, details: dict) -> float:
     return now + 14 * DAY + spread
 
 
-async def look_up(title: dict):
-    """A title's own item, and a series' newest season's"""
+async def look_up(title: dict) -> bool:
+    """A title's own item, and a series' newest season's, and whether DR answered"""
     item = title["item"]
     try:
         if item["type"] == "show":
@@ -499,12 +501,13 @@ async def look_up(title: dict):
             # Gone: left out, and asked about again in a week
             title["missing"] = title.get("missing") or round(time() * 1000)
             title["due"] = time() + 7 * DAY
-            return
+            return True
         print("Could not look up", item["id"], repr(e))
         title["due"] = time() + 3600
-        return
+        return not isinstance(e, drtv.DRUnavailable)
     title.update(details=details, due=_next_look_up(item, details), missing=None)
     catalogue.make(title)
+    return True
 
 
 async def keep_catalogue():
@@ -518,9 +521,8 @@ async def keep_catalogue():
                 # Tried again in an hour
                 catalogue.swept = time() - SWEEP_EVERY + 3600
         due = sorted((t for t in catalogue.titles.values() if t["due"] <= time()), key=lambda t: t["due"])
-        if due:
-            await look_up(due[0])
-        await asyncio.sleep(LOOK_UP_EVERY if due else 60)
+        answered = await look_up(due[0]) if due else True
+        await asyncio.sleep(PAUSE_FOR if not answered else LOOK_UP_EVERY if due else 60)
 
 
 def catalogue_json() -> dict:

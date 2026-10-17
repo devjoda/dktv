@@ -93,3 +93,17 @@ def test_the_front_page_has_rows_of_its_own_and_gets_the_rest_of_drs_later(get, 
 def test_the_front_pages_own_rows_need_enough_titles(fake_dr):
     fill()
     assert all(len(row["entries"]) >= 4 for row in catalogue.own_rows())
+
+
+def test_when_dr_asks_to_be_asked_less_nothing_is_taken_to_be_gone(fake_dr, monkeypatch):
+    fill()
+    from drtvrss import drtv
+
+    async def slow_down(path, /, **params):
+        raise drtv.DRUnavailable("DR responded 429")
+
+    monkeypatch.setattr(drtv, "get_api", slow_down)
+    matador = catalogue.catalogue.titles["540736"]
+    assert asyncio.run(catalogue.look_up(matador)) is False
+    assert matador.get("missing") is None
+    assert len(catalogue.catalogue_json()["titles"]) == 5

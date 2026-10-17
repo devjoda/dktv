@@ -234,15 +234,47 @@ describe("the catalogue's cron", () => {
 		expect((await rows("SELECT count(*) AS n FROM titles WHERE stale = 1"))[0].n).toBe(0);
 	});
 
-	test("goes on another day after DR fails too often, and keeps what it had", async () => {
+	test("when DR asks to be asked less, or turns it away, takes nothing to be gone, and asks DR nothing for a while", async () => {
 		clock.now = () => MORNING;
+		await runCatalogue();
+		await env.SYNC.prepare("UPDATE titles SET details_due = 0 WHERE id IN ('362031', '619917', '540736')").run();
+		fakeDR.answer = path => path.startsWith("/items/") ? new Response("{}", {status: 429}) : undefined;
+		fakeDR.requested = [];
+		await catalogue.run(ctx());
+		// The first, and then not the rest
+		expect(fakeDR.requested.filter(r => r.startsWith("/items/"))).toHaveLength(1);
+		expect(await rows("SELECT id FROM titles WHERE missing_since IS NOT NULL AND id != '595127'")).toEqual([]);
+		expect((await katalog()).titles).toHaveLength(5);
+		// Nothing for half an hour
+		fakeDR.requested = [];
+		clock.now = () => MORNING + 20 * 60_000;
+		await catalogue.run(ctx());
+		expect(fakeDR.requested).toEqual([]);
+		expect(JSON.parse((await get("/status.json")).text).catalogue.pausedUntil).toBe(MORNING + 30 * 60_000);
+		// Then again, and with DR answering, as before
+		fakeDR.answer = undefined;
+		clock.now = () => MORNING + 31 * 60_000;
+		await catalogue.run(ctx());
+		expect(fakeDR.requested.some(r => r.startsWith("/items/"))).toBe(true);
+		// A page of DR's turning the site away isn't a page that isn't there
+		fakeDR.answer = () => new Response("{}", {status: 403});
+		expect((await get("/rejseholdet_503605/")).status).toBe(503);
+	});
+
+	test("goes on another day after DR fails too often, trying again each half hour, and keeps what it had", async () => {
 		fakeDR.down = true;
-		await runCatalogue(25);
+		// Asking DR once each time, after its pause
+		for (let i = 0; i < 25; i++) {
+			clock.now = () => MORNING + i * 31 * 60_000;
+			fakeDR.requested = [];
+			await catalogue.run(ctx());
+			expect(fakeDR.requested.length).toBeLessThanOrEqual(1);
+		}
 		fakeDR.down = false;
 		const last = JSON.parse((await rows("SELECT value FROM catalogue WHERE key = 'last'"))[0].value);
 		expect(last.error).toBeTruthy();
-		expect(catalogue.sweepDue(last, MORNING + 60_000)).toBe(false);
-		expect(catalogue.sweepDue(last, MORNING + DAY)).toBe(true);
+		expect(catalogue.sweepDue(last, last.finished + 60_000)).toBe(false);
+		expect(catalogue.sweepDue(last, last.finished + DAY)).toBe(true);
 	});
 
 	test("runs on its own schedule, apart from the notifications'", async () => {

@@ -34,8 +34,10 @@ const WORK_WITH_A_PAGE = 2;
 const ENTRIES_PER_RUN = 40;
 // The hour, in UTC, after which a day's sweep starts: after DR has put out the day's programmes, at 4
 const SWEEP_FROM_HOUR = 5;
-// How many requests to DR may fail in a sweep before it's given up on, until the next day
+// How many requests to DR may fail in a sweep before it's given up on, until the next day, and how long DR isn't asked
+// anything after it doesn't answer, or asks to be asked less
 const SWEEP_ERRORS = 20;
+const PAUSE_FOR = 30 * MINUTE;
 // How much of a letter must be found again for what wasn't to be taken as maybe gone, instead of DR leaving some out
 const KEPT_SHARE = 0.8;
 // How long what DR doesn't have any more is kept, in case it comes back
@@ -688,14 +690,15 @@ function nextLookUp(item: Item, details: Details, now: number): number {
 	return now + 14 * DAY + spread;
 }
 
-/** Looks up a few titles' own items, those that might be gone first, and how many requests that took */
-async function lookUp(ctx: Ctx, work: number, now: number): Promise<number> {
+/** Looks up a few titles' own items, those that might be gone first, and whether DR answered them */
+async function lookUp(ctx: Ctx, work: number, now: number): Promise<{answered: boolean}> {
 	const db = ctx.env.SYNC;
 	ctx.budget.spend();
 	const due = await db.prepare("SELECT id, item, missing_since FROM titles WHERE details_due <= ? ORDER BY details_due LIMIT ?")
 		.bind(now, work).all<Due>();
 	const statements: D1PreparedStatement[] = [];
 	let spent = 0;
+	let answered = true;
 	for (const row of due.results) {
 		const item: Item = JSON.parse(row.item);
 		const cost = item.type == "show" ? 2 : 1;
@@ -728,6 +731,11 @@ async function lookUp(ctx: Ctx, work: number, now: number): Promise<number> {
 			} else if (e instanceof DRUnavailable || e instanceof dr.FormatError) {
 				console.log("Could not look up", item.id, String(e));
 				statements.push(db.prepare("UPDATE titles SET details_due = ? WHERE id = ?").bind(now + HOUR, item.id));
+				// Not the rest either, when DR doesn't answer, or asks to be asked less
+				if (e instanceof DRUnavailable) {
+					answered = false;
+					break;
+				}
 			} else {
 				throw e;
 			}
@@ -737,7 +745,7 @@ async function lookUp(ctx: Ctx, work: number, now: number): Promise<number> {
 		ctx.budget.spend();
 		await db.batch(statements);
 	}
-	return spent;
+	return {answered};
 }
 
 /** Makes the entries of titles whose kept parts changed, and whether any were */
@@ -778,11 +786,18 @@ async function upgradeEntries(ctx: Ctx, made: string | undefined) {
 }
 
 /** What the cron keeps besides the titles, by name */
-async function getState(ctx: Ctx): Promise<{entries?: string; last?: Last; sweep?: Sweep; rows?: {built: number}}> {
+async function getState(ctx: Ctx): Promise<{entries?: string; last?: Last; sweep?: Sweep; rows?: {built: number}; paused?: number}> {
 	ctx.budget.spend();
-	const found = await ctx.env.SYNC.prepare("SELECT key, value FROM catalogue WHERE key IN ('entries', 'last', 'sweep', 'rows_built')").all<{key: string; value: string}>();
+	const found = await ctx.env.SYNC.prepare("SELECT key, value FROM catalogue WHERE key IN ('entries', 'last', 'sweep', 'rows_built', 'paused')").all<{key: string; value: string}>();
 	const state = Object.fromEntries(found.results.map(r => [r.key, JSON.parse(r.value)]));
-	return {entries: state.entries, last: state.last, sweep: state.sweep, rows: state.rows_built};
+	return {entries: state.entries, last: state.last, sweep: state.sweep, rows: state.rows_built, paused: state.paused};
+}
+
+/** DR isn't asked anything for a while, after it didn't answer, or asked to be asked less */
+async function pause(ctx: Ctx, now: number) {
+	console.log("The catalogue doesn't ask DR anything for", PAUSE_FOR / MINUTE, "minutes");
+	ctx.budget.spend();
+	await setKey(ctx, "paused", now + PAUSE_FOR).run();
 }
 
 /**
@@ -800,7 +815,12 @@ export async function run(ctx: Ctx): Promise<void> {
 		return;
 	}
 	await upgradeEntries(ctx, state.entries);
+	if (state.paused !== undefined && now < state.paused) {
+		await makeEntries(ctx, now);
+		return;
+	}
 	let work = WORK_PER_RUN;
+	let answered = true;
 	const last = state.last;
 	let sweep = state.sweep;
 	if (sweep === undefined && sweepDue(last, now)) {
@@ -822,6 +842,7 @@ export async function run(ctx: Ctx): Promise<void> {
 			console.log("The catalogue's sweep failed at a step", String(e));
 			sweep.errors++;
 			work = 0;
+			answered = !(e instanceof DRUnavailable);
 		}
 		if (!done) {
 			ctx.budget.spend();
@@ -837,7 +858,10 @@ export async function run(ctx: Ctx): Promise<void> {
 		}
 	}
 	if (work > 0) {
-		await lookUp(ctx, work, now);
+		answered = (await lookUp(ctx, work, now)).answered;
+	}
+	if (!answered) {
+		await pause(ctx, now);
 	}
 	await makeEntries(ctx, now);
 }
@@ -869,7 +893,7 @@ export async function status(ctx: Ctx): Promise<Json> {
 	const now = clock.now();
 	ctx.budget.spend(4);
 	const [state, shown, due] = await db.batch<Json>([
-		db.prepare("SELECT key, value FROM catalogue WHERE key IN ('last', 'sweep', 'version', 'rows_built')"),
+		db.prepare("SELECT key, value FROM catalogue WHERE key IN ('last', 'sweep', 'version', 'rows_built', 'paused')"),
 		db.prepare(`SELECT count(*) AS n FROM titles WHERE ${SHOWN}`).bind(now),
 		db.prepare("SELECT count(*) AS n FROM titles WHERE details_due <= ?").bind(now),
 	]);
@@ -883,6 +907,7 @@ export async function status(ctx: Ctx): Promise<Json> {
 		sweep: sweep ? {started: sweep.started, letter: sweep.letters?.[sweep.letter]?.title ?? null, letters: sweep.letters?.length ?? null,
 			rows: sweep.rows ? `${sweep.row} af ${sweep.rows.length}` : null, errors: sweep.errors} : null,
 		rowsBuilt: kept.rows_built?.built ?? null,
+		pausedUntil: kept.paused > now ? kept.paused : null,
 	};
 }
 
