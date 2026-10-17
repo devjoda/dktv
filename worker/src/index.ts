@@ -240,7 +240,11 @@ app.get("/alle", c => c.redirect("/alle/", 308));
  */
 app.get("/katalog.json", edgeCached(60 * MINUTE), async c => {
 	try {
-		const {text, version} = await catalogue.catalogueText(c.get("ctx"));
+		const {text, version, count} = await catalogue.catalogueText(c.get("ctx"));
+		// While the catalogue's first sweep has only got a little of DR's list, it isn't kept, so the next visit gets more
+		if (count < catalogue.ALMOST_WHOLE) {
+			c.get("ctx").incomplete = true;
+		}
 		return c.body(text, 200, {"Content-Type": "application/json; charset=UTF-8", "ETag": `"${version}"`});
 	} catch (e) {
 		console.log("Could not get the catalogue", String(e));
