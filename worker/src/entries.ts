@@ -1,8 +1,9 @@
 // What the catalogue keeps of DR's titles, from DR's list and from each title's own item, and what the browser gets of
 // each, its entry: its kind, what it's like, and its filters' values, by drtvrss/facets.json.
 //
-// The catalogue's cron makes all of the entries again after an update that changes this file, models.ts, show.ts or the
-// filters (scripts/build.mjs), and not after one that only changes the cron, in catalogue.ts.
+// The catalogue's cron makes all of the entries again after an update that changes the code of this file, or of the
+// others' that it uses, or the filters (scripts/catalogue-version.mjs), and not after one that only changes the cron,
+// in catalogue.ts, or a comment.
 
 import facetsFile from "../../drtvrss/facets.json";
 import {type Json} from "./dr";

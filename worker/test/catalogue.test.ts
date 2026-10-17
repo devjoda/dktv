@@ -1,9 +1,11 @@
 // The catalogue: DR's list from A to Å, gone through by its cron a page at a time, with each title's own item looked up,
 // and what the browser gets of it, from the fixtures of three of its letters, L, M and R
 
-import {existsSync, readFileSync, writeFileSync} from "node:fs";
+import {cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from "node:fs";
+import {tmpdir} from "node:os";
 import {join} from "node:path";
 import {describe, expect, test} from "vitest";
+import {catalogueVersion} from "../scripts/catalogue-version.mjs";
 import * as catalogue from "../src/catalogue";
 import * as entries from "../src/entries";
 import worker from "../src/index";
@@ -401,5 +403,40 @@ describe("a run of the catalogue's cron", () => {
 		expect(ran).toEqual(expect.arrayContaining(["sweep", "look up", "entries", "rows"]));
 		// Titles are looked up, and entries made, while the sweep goes on, not only after it
 		expect(new Set(ran.slice(0, 9))).toEqual(new Set(["sweep", "look up", "entries"]));
+	});
+});
+
+describe("the catalogue's version, after an update to which the cron makes all of the entries again", () => {
+	const root = join(__dirname, "..");
+
+	/** The version of a copy of the Worker's code and the filters, with one of their files changed */
+	function versionWith(path: string, change: (text: string) => string): string {
+		const copy = mkdtempSync(join(tmpdir(), "dktv-"));
+		try {
+			cpSync(join(root, "src"), join(copy, "worker", "src"), {recursive: true});
+			cpSync(join(root, "..", "drtvrss", "facets.json"), join(copy, "drtvrss", "facets.json"));
+			const file = join(copy, path);
+			const before = readFileSync(file, "utf8");
+			const after = change(before);
+			expect(after).not.toBe(before);
+			writeFileSync(file, after);
+			return catalogueVersion(join(copy, "worker"));
+		} finally {
+			rmSync(copy, {recursive: true});
+		}
+	}
+
+	test("changes with the code that makes the entries, wherever it is, and with the filters", () => {
+		const version = catalogueVersion(root);
+		expect(versionWith("worker/src/entries.ts", text => text.replace('new Set(["af", ', 'new Set(["af", "zu", '))).not.toBe(version);
+		expect(versionWith("worker/src/show.ts", text => text.replace("width = 640", "width = 480"))).not.toBe(version);
+		expect(versionWith("drtvrss/facets.json", text => text.replace('"label": "Serier"', '"label": "Tv-serier"'))).not.toBe(version);
+	});
+
+	test("but not with a comment, the code that doesn't make them, like the series' pages', or what the build writes", () => {
+		const version = catalogueVersion(root);
+		expect(versionWith("worker/src/entries.ts", text => text.replace("// What the catalogue keeps", "// What it keeps"))).toBe(version);
+		expect(versionWith("worker/src/show.ts", text => text + "\nexport const unused = () => 1;\n")).toBe(version);
+		expect(versionWith("worker/src/kept-version.json", text => text.replace(/"version":"\w+"/, '"version":"other"'))).toBe(version);
 	});
 });
