@@ -73,9 +73,9 @@ for (const name of ["cache.ts", "discover.ts", "live.ts", "models.ts", "search.t
 write(join(root, "src", "kept-version.json"), JSON.stringify({version: keeping.digest("hex").slice(0, 12)}) + "\n");
 
 // The catalogue's entries change along with the code and the filters that make them, so the catalogue's cron makes
-// them again after an update that changes them
+// them again after an update that changes them, and not after one that only changes the cron
 const catalogue = createHash("sha256");
-for (const path of [join(root, "src", "catalogue.ts"), join(root, "src", "models.ts"), join(root, "..", "drtvrss", "facets.json")]) {
+for (const path of [join(root, "src", "entries.ts"), join(root, "src", "models.ts"), join(root, "src", "show.ts"), join(root, "..", "drtvrss", "facets.json")]) {
     catalogue.update(readFileSync(path));
 }
 write(join(root, "src", "catalogue-version.json"), JSON.stringify({version: catalogue.digest("hex").slice(0, 12)}) + "\n");

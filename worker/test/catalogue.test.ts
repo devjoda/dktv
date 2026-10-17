@@ -5,6 +5,7 @@ import {existsSync, readFileSync, writeFileSync} from "node:fs";
 import {join} from "node:path";
 import {describe, expect, test} from "vitest";
 import * as catalogue from "../src/catalogue";
+import * as entries from "../src/entries";
 import worker from "../src/index";
 import {clock} from "../src/time";
 import {ctx, dr as fakeDR, env, get, load, request} from "./helpers";
@@ -24,59 +25,68 @@ async function rows(sql: string, ...params: unknown[]): Promise<any[]> {
 	return (await env.SYNC.prepare(sql).bind(...params).all()).results;
 }
 
-async function katalog(): Promise<{version: number; facets: any[]; titles: catalogue.Entry[]}> {
+async function katalog(): Promise<{version: number; facets: any[]; titles: entries.Entry[]}> {
 	const r = await get("/katalog.json");
 	expect(r.status).toBe(200);
 	return JSON.parse(r.text);
 }
 
-const titleOf = (found: {titles: catalogue.Entry[]}, title: string) => found.titles.find(e => e.t == title)!;
+const titleOf = (found: {titles: entries.Entry[]}, title: string) => found.titles.find(e => e.t == title)!;
+
+/** The first minute after the morning whose run does a kind of work first, as each kind of work is first in turn */
+function minuteOf(kind: string): number {
+	for (let minute = MORNING; ; minute += 60_000) {
+		if (["sweep", "look up", "entries"][Math.floor(minute / 60_000) % 3] == kind) {
+			return minute;
+		}
+	}
+}
 
 describe("what's kept of DR's titles", () => {
 	test("an item of DR's list, with what it's like, when it leaves, and who it's for", () => {
-		const item = catalogue.keptItem(load("lists_348_m.json").items.find((i: any) => i.title == "Matador"))!;
+		const item = entries.keptItem(load("lists_348_m.json").items.find((i: any) => i.title == "Matador"))!;
 		expect(item).toMatchObject({id: "540736", type: "show", title: "Matador", path: "/serie/matador_540736", seasons: 1, universes: ["drtv"]});
 		expect(item.categories).toContain("fiktionsserie");
 		expect(item.keywords).toContain("editorialptaxsub_historisk drama");
-		expect(catalogue.keptItem({type: "episode", id: 1, title: "A", path: "/a"})).toBeUndefined();
-		expect(catalogue.keptItem({type: "show", title: "Uden id", path: "/a"})).toBeUndefined();
-		const kids = catalogue.keptItem(load("lists_348_m.json").items.find((i: any) => i.title == "Max Pinlig"))!;
+		expect(entries.keptItem({type: "episode", id: 1, title: "A", path: "/a"})).toBeUndefined();
+		expect(entries.keptItem({type: "show", title: "Uden id", path: "/a"})).toBeUndefined();
+		const kids = entries.keptItem(load("lists_348_m.json").items.find((i: any) => i.title == "Max Pinlig"))!;
 		expect(kids.universes).toContain("ramasjang");
 	});
 
 	test("the names after Medvirkende and Instruktion in a film's description, without m.fl. and what follows on the line", () => {
 		const text = "Dansk spillefilm fra 2023.\nMarie tager til Velling.\nMedvirkende: Sofie Torp, Thomas Hwan, Anders Agger og Lotte Andersen m.fl.\nInstruktør: Hella Joof. Udløber: 20. okt 2026";
-		expect(catalogue.namesAfter(text, ["Medvirkende"])).toEqual(["Sofie Torp", "Thomas Hwan", "Anders Agger", "Lotte Andersen"]);
-		expect(catalogue.namesAfter(text, ["Instruktion", "Instruktør"])).toEqual(["Hella Joof"]);
-		expect(catalogue.namesAfter("Ingen medvirkende her.", ["Medvirkende"])).toEqual([]);
-		const film = catalogue.programmeDetails(load("items_619917.json"));
+		expect(entries.namesAfter(text, ["Medvirkende"])).toEqual(["Sofie Torp", "Thomas Hwan", "Anders Agger", "Lotte Andersen"]);
+		expect(entries.namesAfter(text, ["Instruktion", "Instruktør"])).toEqual(["Hella Joof"]);
+		expect(entries.namesAfter("Ingen medvirkende her.", ["Medvirkende"])).toEqual([]);
+		const film = entries.programmeDetails(load("items_619917.json"));
 		expect(film.cast).toContain("Karen-Lise Mynster");
 		expect(film.directors).toEqual(["Jacob Møller"]);
 		expect(film.expires).toBeGreaterThan(Date.parse("2026-10-17"));
 	});
 
 	test("a series' years, seasons, episodes, how long they are and where it's from, from its item and newest season", () => {
-		const details = catalogue.seriesDetails(load("items_540736.json"), load("items_540737.json"));
+		const details = entries.seriesDetails(load("items_540736.json"), load("items_540737.json"));
 		expect(details).toMatchObject({years: [1978, 1978], seasons: 1, episodes: 24, country: "DANMARK"});
 		expect(details.minutes).toBeGreaterThan(40);
-		expect(catalogue.seriesDetails({}, undefined)).toEqual({});
+		expect(entries.seriesDetails({}, undefined)).toEqual({});
 	});
 
 	test("names written as names, and DR's own odd ones as they're known", () => {
-		expect(catalogue.properName("margrethe ii, dronning, danmark")).toBe("Margrethe II, Dronning, Danmark");
-		expect(catalogue.properName("lars von trier")).toBe("Lars von Trier");
-		expect(catalogue.properName("anne og anders")).toBe("Anne og Anders");
-		expect(catalogue.properName("mgp")).toBe("MGP");
+		expect(entries.properName("margrethe ii, dronning, danmark")).toBe("Margrethe II, Dronning, Danmark");
+		expect(entries.properName("lars von trier")).toBe("Lars von Trier");
+		expect(entries.properName("anne og anders")).toBe("Anne og Anders");
+		expect(entries.properName("mgp")).toBe("MGP");
 	});
 });
 
 describe("what the browser gets of a title", () => {
-	const item = (extra: Partial<catalogue.Item>): catalogue.Item => ({
+	const item = (extra: Partial<entries.Item>): entries.Item => ({
 		id: "1", type: "show", title: "A", path: "/serie/a_1", categories: [], keywords: [], universes: ["drtv"], access: [], ...extra,
 	});
 
 	test("its kind and filters, from what DR says it is, and where it is here", () => {
-		const {entry, kind, kids} = catalogue.entryOf(item({
+		const {entry, kind, kids} = entries.entryOf(item({
 			categories: ["fiktionsserie", "krimi", "dr1", "acc_spoken_subtitles"],
 			keywords: ["editorialptaxtop_serier", "editorialptaxsub_thriller/krimi", "mood_nervepirrende", "culturalorigin_ikke-dansk", "thesaurus_politi", "thesaurus_danmark", "franchise_test1"],
 			seasons: 3, rating: "MRAM-15",
@@ -92,7 +102,7 @@ describe("what the browser gets of a title", () => {
 	});
 
 	test("a film's length and when it came, its people, and a country of its own", () => {
-		const {entry, kind} = catalogue.entryOf(item({
+		const {entry, kind} = entries.entryOf(item({
 			type: "program", path: "/program/film_2", id: "2", categories: ["film"], duration: 5430, year: 1983, availableFrom: 1000,
 			keywords: ["person_dirch passer"],
 		}), {cast: ["Ghita Nørby"], directors: ["Gabriel Axel"], country: "JAPAN", expires: 5000}, undefined, 0);
@@ -102,11 +112,11 @@ describe("what the browser gets of a title", () => {
 	});
 
 	test("news and sport aren't shown, and children's programmes are told apart", () => {
-		expect(catalogue.entryOf(item({categories: ["nyheder"]}), undefined, undefined, 0).kind).toBeUndefined();
-		expect(catalogue.entryOf(item({keywords: ["editorialptaxtop_sport"]}), undefined, undefined, 0).kind).toBeUndefined();
-		expect(catalogue.entryOf(item({universes: ["drtv", "ramasjang"]}), undefined, undefined, 0).kids).toBe(true);
-		expect(catalogue.entryOf(item({categories: ["dokumentar"]}), undefined, undefined, 0).kind).toBe("dokumentar");
-		expect(catalogue.entryOf(item({}), undefined, undefined, 0).kind).toBe("program");
+		expect(entries.entryOf(item({categories: ["nyheder"]}), undefined, undefined, 0).kind).toBeUndefined();
+		expect(entries.entryOf(item({keywords: ["editorialptaxtop_sport"]}), undefined, undefined, 0).kind).toBeUndefined();
+		expect(entries.entryOf(item({universes: ["drtv", "ramasjang"]}), undefined, undefined, 0).kids).toBe(true);
+		expect(entries.entryOf(item({categories: ["dokumentar"]}), undefined, undefined, 0).kind).toBe("dokumentar");
+		expect(entries.entryOf(item({}), undefined, undefined, 0).kind).toBe("program");
 	});
 });
 
@@ -115,16 +125,16 @@ describe("what the browser gets of a title", () => {
 const ENTRIES = join(__dirname, "..", "..", "tests", "fixtures", "catalogue_entries.json");
 
 /** The fixtures' titles' entries, from their lists' items, and their own items, as the cron looks them up */
-function fixtureEntries(): catalogue.Entry[] {
-	const items: catalogue.Item[] = ["l", "m", "r"].flatMap(l => load(`lists_348_${l}.json`).items.map(catalogue.keptItem));
-	const details: Record<string, catalogue.Details> = {
-		"362031": catalogue.programmeDetails(load("items_362031.json")),
-		"619917": catalogue.programmeDetails(load("items_619917.json")),
-		"540736": catalogue.seriesDetails(load("items_540736.json"), load("items_540737.json")),
-		"617585": catalogue.seriesDetails(load("items_617585.json"), load("items_617586.json")),
-		"503605": catalogue.seriesDetails(load("items_503605.json"), load("items_503612.json")),
+function fixtureEntries(): entries.Entry[] {
+	const items: entries.Item[] = ["l", "m", "r"].flatMap(l => load(`lists_348_${l}.json`).items.map(entries.keptItem));
+	const details: Record<string, entries.Details> = {
+		"362031": entries.programmeDetails(load("items_362031.json")),
+		"619917": entries.programmeDetails(load("items_619917.json")),
+		"540736": entries.seriesDetails(load("items_540736.json"), load("items_540737.json")),
+		"617585": entries.seriesDetails(load("items_617585.json"), load("items_617586.json")),
+		"503605": entries.seriesDetails(load("items_503605.json"), load("items_503612.json")),
 	};
-	return items.map(item => catalogue.entryOf(item, details[item.id], item.id == "540736" ? ["Store danske serier"] : undefined, item.id == "540736" ? 0 : 1000).entry);
+	return items.map(item => entries.entryOf(item, details[item.id], item.id == "540736" ? ["Store danske serier"] : undefined, item.id == "540736" ? 0 : 1000).entry);
 }
 
 describe("the entries, as the Python app makes them too", () => {
@@ -230,7 +240,25 @@ describe("the catalogue's cron", () => {
 		]);
 		await catalogue.run(ctx());
 		expect(titleOf(await katalog(), "Matador").f.type).toEqual(["serie"]);
-		expect((await rows("SELECT count(*) AS n FROM titles WHERE stale = 1"))[0].n).toBe(0);
+		expect((await rows("SELECT count(*) AS n FROM titles WHERE stale > 0"))[0].n).toBe(0);
+	});
+
+	test("after an update, makes the entries of the titles that have none first, and then the others again", async () => {
+		clock.now = () => MORNING;
+		await runCatalogue();
+		// Many more than a run makes, as if an older version had made them, and a title of DR's list's that has none yet,
+		// after all of them in the table
+		await env.SYNC.batch([
+			env.SYNC.prepare("UPDATE catalogue SET value = '\"old\"' WHERE key = 'entries'"),
+			env.SYNC.prepare(`WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n WHERE i < 30)
+				INSERT INTO titles (id, letter, item, hash, first_seen, details_due, entry, stale)
+				SELECT 'kopi-' || i, letter, item, '', 0, 9e15, entry, 0 FROM titles, n WHERE id = '540736'`),
+			env.SYNC.prepare("UPDATE titles SET entry = NULL, stale = 1 WHERE id = 'kopi-30'"),
+		]);
+		clock.now = () => minuteOf("entries");
+		await catalogue.run(ctx());
+		expect(await rows("SELECT stale, entry IS NOT NULL AS made FROM titles WHERE id = 'kopi-30'")).toEqual([{stale: 0, made: 1}]);
+		expect((await rows("SELECT count(*) AS n FROM titles WHERE stale = 2"))[0].n).toBeGreaterThan(10);
 	});
 
 	test("when DR asks to be asked less, or turns it away, takes nothing to be gone, and asks DR nothing for a while", async () => {
@@ -276,18 +304,22 @@ describe("the catalogue's cron", () => {
 		expect(catalogue.sweepDue(last, last.finished + DAY)).toBe(true);
 	});
 
-	test("runs on its own schedule, apart from the notifications'", async () => {
+	test("runs on its own schedules, of the even minutes and the odd, apart from the notifications'", async () => {
 		clock.now = () => MORNING;
 		const waiting: Promise<unknown>[] = [];
 		const executionCtx = {waitUntil: (p: Promise<unknown>) => waiting.push(p), passThroughOnException() {}, props: {}} as unknown as ExecutionContext;
 		await worker.scheduled({cron: "* * * * *", scheduledTime: MORNING, noRetry() {}} as ScheduledController, env as any, executionCtx);
 		expect(fakeDR.requested).toEqual([]);
-		await worker.scheduled({cron: catalogue.CRON, scheduledTime: MORNING, noRetry() {}} as ScheduledController, env as any, executionCtx);
-		expect(fakeDR.requested.length).toBeGreaterThan(0);
+		for (const cron of catalogue.CRONS) {
+			fakeDR.requested = [];
+			await worker.scheduled({cron, scheduledTime: MORNING, noRetry() {}} as ScheduledController, env as any, executionCtx);
+			expect(fakeDR.requested.length).toBeGreaterThan(0);
+		}
 	});
 
-	test("is on the schedule wrangler.jsonc gives Cloudflare", () => {
-		expect(readFileSync(join(__dirname, "..", "wrangler.jsonc"), "utf8")).toContain(`"crons": ["* * * * *", "${catalogue.CRON}"]`);
+	test("is on the schedules wrangler.jsonc gives Cloudflare", () => {
+		const crons = ["* * * * *", ...catalogue.CRONS].map(cron => `"${cron}"`).join(", ");
+		expect(readFileSync(join(__dirname, "..", "wrangler.jsonc"), "utf8")).toContain(`"crons": [${crons}]`);
 	});
 });
 
@@ -349,12 +381,12 @@ describe("the pages", () => {
 });
 
 describe("a run of the catalogue's cron", () => {
-	test("does one kind of work only, a sweep's step, a few look-ups or some entries, and the others first every other time", async () => {
+	test("does one kind of work only, a sweep's step, a few look-ups or some entries, each first in turn", async () => {
 		const ran: string[] = [];
 		const log = console.log as unknown as {mock: {calls: unknown[][]}};
-		// Two minutes apart, as the cron runs, so turns change
-		for (let i = 0; i < 40; i++) {
-			clock.now = () => MORNING + i * 2 * 60_000;
+		// A minute apart, as the cron runs, so turns change
+		for (let i = 0; i < 60; i++) {
+			clock.now = () => MORNING + i * 60_000;
 			const before = log.mock.calls.length;
 			fakeDR.requested = [];
 			await catalogue.run(ctx());
@@ -364,8 +396,9 @@ describe("a run of the catalogue's cron", () => {
 			// A look-up asks DR about at most 4, and a sweep's step about one page, or at most 2 of DR's rows
 			expect(fakeDR.requested.length).toBeLessThanOrEqual(said[0]?.endsWith("look up") ? 4 : 2);
 		}
-		expect(new Set(ran)).toEqual(new Set(["sweep", "look up", "entries"]));
-		// Entries are made while the sweep goes on, not only after it
-		expect(ran.slice(0, 8)).toContain("entries");
+		// Until the sweep is done, and all of it looked up and made, and then the front page's rows are made
+		expect(ran).toEqual(expect.arrayContaining(["sweep", "look up", "entries", "rows"]));
+		// Titles are looked up, and entries made, while the sweep goes on, not only after it
+		expect(new Set(ran.slice(0, 9))).toEqual(new Set(["sweep", "look up", "entries"]));
 	});
 });

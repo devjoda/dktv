@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {join} from "node:path";
 import {createContext, runInContext} from "node:vm";
 import {afterEach, describe, expect, test, vi} from "vitest";
-import type {Entry} from "../src/catalogue";
+import type {Entry} from "../src/entries";
 import {card, getPage, similarTo} from "../src/discover";
 import * as dr from "../src/models";
 import {getShow} from "../src/show";

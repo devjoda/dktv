@@ -42,10 +42,11 @@
 		// SQLite-backed, which the free plan has
 		{"tag": "v1", "new_sqlite_classes": ["Room"]}
 	],
-	// Checks the followed series for new episodes, and sends notifications, every minute; and every other minute, goes on
-	// with the catalogue of DR's titles, in a run of its own (CATALOGUE_CRON in src/index.ts)
+	// Checks the followed series for new episodes, and sends notifications, every minute; and every minute, in a run of its
+	// own, goes on with the catalogue of DR's titles, as two schedules, of the even minutes and the odd (CRONS in
+	// src/catalogue.ts), since Cloudflare runs each schedule once a minute at most
 	"triggers": {
-		"crons": ["* * * * *", "*/2 * * * *"]
+		"crons": ["* * * * *", "*/2 * * * *", "1-59/2 * * * *"]
 	},
 	// Which deploy is running, so pages kept from before an update aren't served after it
 	"version_metadata": {

@@ -1,6 +1,6 @@
 // The building blocks of the pages
 
-import type {Entry} from "../catalogue";
+import type {Entry} from "../entries";
 import type {Card} from "../discover";
 import {channelStyle, type LiveChannel, percentDone, type Programme, whatsOn} from "../live";
 import {allEpisodes, playlist, type Show, thumbnail} from "../show";
