@@ -14,7 +14,7 @@ const DAY = 24 * 60 * 60 * 1000;
 const MORNING = Date.parse("2026-10-17T06:00:00Z");
 
 /** The catalogue's cron, run as many times as it takes to go through DR's list and look up every title */
-async function runCatalogue(times = 60) {
+async function runCatalogue(times = 150) {
 	for (let i = 0; i < times; i++) {
 		await catalogue.run(ctx());
 	}
@@ -144,7 +144,7 @@ describe("the catalogue's cron", () => {
 		// The page with the letters first
 		expect(fakeDR.requested[0]).toBe("/page?path=%2Fkategorier%2Fa-aa&list_page_size=1&max_list_prefetch=0");
 		await runCatalogue();
-		expect(fakeDR.requested).toContain("/lists/348?page_size=100&page=1&param=TitleGroupKey%3Am");
+		expect(fakeDR.requested).toContain("/lists/348?page_size=50&page=1&param=TitleGroupKey%3Am");
 		const kept = await rows("SELECT id, letter, first_seen, kind, kids, missing_since FROM titles ORDER BY id");
 		expect(kept.map(r => r.id).sort()).toEqual(["225290", "296793", "362031", "503605", "540736", "584100", "595127", "617585", "619917"]);
 		// All there from the start
@@ -169,7 +169,7 @@ describe("the catalogue's cron", () => {
 		// And DR's own rows say what its editors chose
 		expect(fakeDR.requested).toContain("/lists/376779?page_size=50");
 		const status = JSON.parse((await get("/status.json")).text).catalogue;
-		expect(status).toMatchObject({titles: 5, sweep: null, lastSweep: {started: MORNING, titles: 5}});
+		expect(status).toMatchObject({titles: 5, sweep: null, lastSweep: {started: MORNING}});
 	});
 
 	test("a day later, writes only what changed: a new title is new, and one that's gone is looked up, then left out", async () => {
@@ -345,5 +345,27 @@ describe("the pages", () => {
 		env.SYNC = {prepare() { throw new Error("No database"); }, batch() { throw new Error("No database"); }} as unknown as D1Database;
 		const r = await request("/katalog.json");
 		expect(r.status).toBe(503);
+	});
+});
+
+describe("a run of the catalogue's cron", () => {
+	test("does one kind of work only, a sweep's step, a few look-ups or some entries, and the others first every other time", async () => {
+		const ran: string[] = [];
+		const log = console.log as unknown as {mock: {calls: unknown[][]}};
+		// Two minutes apart, as the cron runs, so turns change
+		for (let i = 0; i < 40; i++) {
+			clock.now = () => MORNING + i * 2 * 60_000;
+			const before = log.mock.calls.length;
+			fakeDR.requested = [];
+			await catalogue.run(ctx());
+			const said = log.mock.calls.slice(before).map(call => call.join(" ")).filter(line => line.startsWith("The catalogue's run:"));
+			expect(said.length).toBeLessThanOrEqual(1);
+			ran.push(said[0]?.slice("The catalogue's run: ".length) ?? "nothing");
+			// A look-up asks DR about at most 4, and a sweep's step about one page, or at most 2 of DR's rows
+			expect(fakeDR.requested.length).toBeLessThanOrEqual(said[0]?.endsWith("look up") ? 4 : 2);
+		}
+		expect(new Set(ran)).toEqual(new Set(["sweep", "look up", "entries"]));
+		// Entries are made while the sweep goes on, not only after it
+		expect(ran.slice(0, 8)).toContain("entries");
 	});
 });
