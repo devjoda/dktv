@@ -11,9 +11,10 @@ An unofficial frontend for DRTV. The interface is in Danish; reply in Danish whe
   When a page changes, change `worker/src/views` and `drtvrss/templates` alike, so both stay the same.
 - The catalogue of all of DR's titles (`worker/src/catalogue.ts`, `drtvrss/catalogue.py`) is made from DR's list from A
   to Å, with the filters in `drtvrss/facets.json`, which both read. What the browser gets of each title, its entry, is
-  made in `worker/src/entries.ts`; the cron makes them all again after an update that changes that file or the filters,
-  so keep the cron's own code out of it. Vælg for mig, Alle titler, the search field's suggestions, Hvad nu? and the
-  front page's own rows use it, as `/katalog.json`.
+  made in `worker/src/entries.ts`; the cron makes them all again after an update that changes the code that makes them,
+  in that file or in what it uses of others, or the filters (`worker/scripts/catalogue-version.mjs`), so keep the
+  cron's own code out of it. Vælg for mig, Alle titler, the search field's suggestions, Hvad nu? and the front page's
+  own rows use it, as `/katalog.json`.
 
 ## Tests
 
@@ -59,6 +60,9 @@ token, so nothing else needs it.
 - After a merge, follow the run with `gh api "repos/devjoda/dktv/actions/runs?branch=main&per_page=3"`,
   and when it's done, check the change on https://dktv.joachim-144.workers.dev.
 - A migration can't be undone by deploying again: make them only add tables and columns.
+- Say in a pull request when it makes the catalogue's entries again, which `worker/src/catalogue-version.json` shows
+  after `npm run build`, on `main` and on the branch: once it's deployed, the cron makes all of them again, over up to
+  about 9 hours, and Alle titler has old and new ones meanwhile.
 
 ## Rules
 

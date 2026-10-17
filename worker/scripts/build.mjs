@@ -5,6 +5,7 @@ import {createHash} from "node:crypto";
 import {existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync} from "node:fs";
 import {dirname, join, relative} from "node:path";
 import {fileURLToPath} from "node:url";
+import {catalogueVersion} from "./catalogue-version.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const source = join(root, "..", "drtvrss", "static");
@@ -74,9 +75,5 @@ write(join(root, "src", "kept-version.json"), JSON.stringify({version: keeping.d
 
 // The catalogue's entries change along with the code and the filters that make them, so the catalogue's cron makes
 // them again after an update that changes them, and not after one that only changes the cron
-const catalogue = createHash("sha256");
-for (const path of [join(root, "src", "entries.ts"), join(root, "src", "models.ts"), join(root, "src", "show.ts"), join(root, "..", "drtvrss", "facets.json")]) {
-    catalogue.update(readFileSync(path));
-}
-write(join(root, "src", "catalogue-version.json"), JSON.stringify({version: catalogue.digest("hex").slice(0, 12)}) + "\n");
+write(join(root, "src", "catalogue-version.json"), JSON.stringify({version: catalogueVersion(root)}) + "\n");
 console.log("The browser's files are in public/");
