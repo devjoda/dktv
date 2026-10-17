@@ -42,9 +42,9 @@ The site must stay on the free plan, which allows 10 ms of CPU per request (and 
 - The catalogue's cron (`worker/src/catalogue.ts`) runs every minute, on two schedules of its own, of the even minutes
   and the odd, and each run does one kind of work, each first in turn: a step of the day's sweep of DR's list, a few
   titles looked up, or some entries made, writing only what changed, as D1's limits are the whole site's. Each run
-  starts cold on Cloudflare, where it costs about three times what it does warm in Node: keep each kind under 3 ms cold
-  in Node, and check its `cpuTime` in `wrangler tail`, which logs the kind as "The catalogue's run: …". What's heavy,
-  like choosing the front page's rows, the database does.
+  starts cold on Cloudflare, where it costs three to four times what it does in a fresh Node process: keep each kind
+  mostly under 2.5 ms there, and check its `cpuTime` in `wrangler tail`, which logs the kind as "The catalogue's run:
+  …". What's heavy, like choosing the front page's rows, the database does.
 - `npm run bench` measures CPU in Node; after deploying, `wrangler tail dktv --format json` shows the real `cpuTime`,
   which needs a Cloudflare login, so only the user's machine can run it.
 

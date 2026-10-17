@@ -393,8 +393,9 @@ describe("a run of the catalogue's cron", () => {
 			const said = log.mock.calls.slice(before).map(call => call.join(" ")).filter(line => line.startsWith("The catalogue's run:"));
 			expect(said.length).toBeLessThanOrEqual(1);
 			ran.push(said[0]?.slice("The catalogue's run: ".length) ?? "nothing");
-			// A look-up asks DR about at most 4, and a sweep's step about one page, or at most 2 of DR's rows
-			expect(fakeDR.requested.length).toBeLessThanOrEqual(said[0]?.endsWith("look up") ? 4 : 2);
+			// A look-up asks DR about at most one series and a programme, and a sweep's step about one page, or at most 2 of
+			// DR's rows
+			expect(fakeDR.requested.length).toBeLessThanOrEqual(said[0]?.endsWith("look up") ? 3 : 2);
 		}
 		// Until the sweep is done, and all of it looked up and made, and then the front page's rows are made
 		expect(ran).toEqual(expect.arrayContaining(["sweep", "look up", "entries", "rows"]));

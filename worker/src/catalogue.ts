@@ -33,9 +33,9 @@ const PAGE_SIZE = 50;
 // A run does only one kind of work, since on Cloudflare, where each run starts afresh, even a little of each was more
 // than a run's 10 ms: a step of the sweep, a few titles looked up, or some entries made, each first in turn. How many
 // titles a run looks up at most, by the requests to DR it takes, each one, and a series' own item two, with its newest
-// season; and how many entries it makes at most.
+// season, whose episodes may be hundreds of KB, so a run has one series at most; and how many entries it makes at most.
 const WORK = ["sweep", "look up", "entries"] as const;
-const LOOK_UPS_PER_RUN = 4;
+const LOOK_UPS_PER_RUN = 3;
 const ENTRIES_PER_RUN = 20;
 // The hour, in UTC, after which a day's sweep starts: after DR has put out the day's programmes, at 4
 const SWEEP_FROM_HOUR = 5;
