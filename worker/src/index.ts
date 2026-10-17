@@ -780,8 +780,8 @@ export default {
 	fetch: app.fetch,
 
 	/**
-	 * Every minute: checks the followed series for new episodes, and sends notifications. And every other minute, in a
-	 * run of its own, with its own share of what a run may do: a step of the catalogue's.
+	 * Every minute: checks the followed series for new episodes, and sends notifications. And every minute, in a run of
+	 * its own, with its own share of what a run may do: a step of the catalogue's.
 	 */
 	async scheduled(event: ScheduledController, env: Env, executionCtx: ExecutionContext) {
 		const ctx: Ctx = {
@@ -793,7 +793,7 @@ export default {
 			waitUntil: promise => executionCtx.waitUntil(promise),
 			origin: "https://scheduled.invalid",
 		};
-		if (event.cron == catalogue.CRON) {
+		if (catalogue.CRONS.includes(event.cron)) {
 			await catalogue.run(ctx);
 			return;
 		}
