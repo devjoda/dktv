@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% set og_title, og_description = "Alle titler", "Alle serier, film og dokumentarer, efter genre, stemning, emne, land, årti og længde." %}
+{% from "_ui.html" import icon %}
+{% block head %}
+<title>Alle titler - {{ SERVICE_NAME }}</title>
+{% endblock %}
+{% block scripts %}
+<script src="{{ static_url('explore.js') }}"></script>
+{% endblock %}
+{% block content %}
+<div class="page-head wrap">
+    <h1>Alle titler</h1>
+</div>
+{# All of the catalogue, with its filters, which explore.js shows and reads from the address #}
+<section class="explore wrap js-explore" aria-label="Find blandt alle titler" hidden>
+<div class="explore-bar">
+<div class="list-filter-search explore-search">{{ icon("search") }}<input type="search" class="list-filter-field js-explore-search" placeholder="Find en titel, et emne eller en person" aria-label="Find en titel, et emne eller en person" enterkeyhint="search"></div>
+<label class="explore-sort"><span>Sortér efter</span><select class="form-select js-explore-sort">{% for id, label in [("anbefalet", "Anbefalet"), ("nyeste", "Nyeste"), ("udloeber", "Udløber snart"), ("titel", "Titel, A-Å"), ("aar", "Årstal, nyeste"), ("laengde", "Længde, korteste")] %}<option value="{{ id }}">{{ label }}</option>{% endfor %}</select></label>
+<button type="button" class="button button-secondary explore-toggle js-explore-toggle" aria-expanded="false" aria-controls="explore-filters">{{ icon("filter") }} Filtre<span class="filter-count js-explore-active-count"></span></button>
+</div>
+<div class="explore-chosen js-explore-chosen" aria-label="Valgte filtre"></div>
+<div class="explore-filters js-explore-filters" id="explore-filters"></div>
+<p class="explore-count js-explore-count" role="status"></p>
+</section>
+<p class="wrap pick-loading js-explore-loading">Henter titler …</p>
+<div class="tile-grid results js-explore-tiles"></div>
+<div class="wrap explore-more"><button type="button" class="button button-secondary js-explore-more" hidden>Vis flere</button></div>
+<noscript><p class="wrap">Alle titler kræver JavaScript.</p></noscript>
+{% endblock %}

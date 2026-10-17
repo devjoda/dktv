@@ -4,7 +4,7 @@
 // with a few suggestions, and nothing that starts by itself.
 // After three episodes in a row that started by themselves, without the viewer doing anything for an hour and a half,
 // it asks "Ser du stadig med?" instead of going on.
-// Needs progress.js, favorites.js, sync.js, account.js and player.js; together.js and skip.js use it.
+// Needs progress.js, favorites.js, sync.js, account.js, catalogue.js and player.js; together.js and skip.js use it.
 
 // How long to wait before playing the next episode, in seconds
 const NEXT_EPISODE_DELAY = 10;
@@ -62,8 +62,8 @@ function stillWatchingDue({streak, lastInteraction, now = Date.now(), together =
 
 // What to suggest after the last episode of a series, or a film, at most 4, like {title, url, image, label}:
 // first an episode of a favourite the viewer is halfway through ("Se videre"), then the next episode of favourites
-// they're watching ("Næste afsnit"), then favourites' new episodes ("Nyt afsnit"), and last DR's own, from the
-// same category. Not what was just watched, what's seen to the end, or what leaves within a day. Where an episode's
+// they're watching ("Næste afsnit"), then favourites' new episodes ("Nyt afsnit"), and last what's most like it, from
+// the catalogue, or from DR's same category. Not what was just watched, what's seen to the end, or what leaves within a day. Where an episode's
 // address isn't known, the series'.
 function whatNextSuggestions({current, favorites, details, progress, related, now = Date.now(), watched}) {
     const isWatched = watched || (id => progress.some(p => p.videoID == id && p.watched));
@@ -353,7 +353,8 @@ function swapPage(page) {
     showPlaying();
 }
 
-// The server's own suggestions for after what plays now, asked for once, near the end or at it, and never as the page loads
+// Suggestions for after what plays now, asked for once, near the end or at it, and never as the page loads: those most
+// like it in the catalogue, and the server's own, from DR's categories, for what the catalogue doesn't have
 function loadSuggestions(video) {
     const url = video.dataset.suggest;
     if (!url) {
@@ -361,9 +362,27 @@ function loadSuggestions(video) {
     }
     if (next.suggestedFor != url || next.suggested == null) {
         next.suggestedFor = url;
-        next.suggested = fetch(url).then(response => (response.ok ? response.json() : null)).catch(() => null);
+        next.suggested = catalogueSuggestions(favoriteKey(url.split("/").pop()))
+            .catch(() => null)
+            .then(found => found || fetch(url).then(response => (response.ok ? response.json() : null)).catch(() => null));
     }
     return next.suggested;
+}
+
+// What's most like a series or a film in the catalogue, by DR's id for it, as {label, cards}, or null; not what leaves
+// within a day
+async function catalogueSuggestions(id) {
+    const catalogue = await loadCatalogue();
+    const entry = catalogue.byId.get(id);
+    if (entry == null) {
+        return null;
+    }
+    const now = Date.now();
+    const found = similarTitles(catalogue, entry, 2 * WHAT_NEXT_COUNT, other => Boolean(other.x) && other.x - now < LEAVES_TOO_SOON);
+    if (found.length == 0) {
+        return null;
+    }
+    return {label: sharedLabel(catalogue, entry, found), cards: found.map(({entry: other}) => ({title: other.t, url: other.u, image: other.i || null}))};
 }
 
 // "Hvad nu?" on the picture, after the last episode, or a film: no countdown, and nothing starts by itself.

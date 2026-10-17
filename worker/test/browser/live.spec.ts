@@ -106,9 +106,9 @@ test("1 to 4, Page Up and Page Down change channel, like a remote, but not while
 	expect(await page.locator("#video").evaluate((video: Video) => video.currentTime)).toBeLessThan(before + 5);
 	await expect(page).toHaveURL("/live/DR1");
 	// Nor change channel while writing
-	await page.getByRole("searchbox", {name: "Søg"}).fill("");
-	await page.getByRole("searchbox", {name: "Søg"}).press("3");
-	await expect(page.getByRole("searchbox", {name: "Søg"})).toHaveValue("3");
+	await page.getByRole("combobox", {name: "Søg"}).fill("");
+	await page.getByRole("combobox", {name: "Søg"}).press("3");
+	await expect(page.getByRole("combobox", {name: "Søg"})).toHaveValue("3");
 	await expect(page).toHaveURL("/live/DR1");
 });
 
@@ -180,8 +180,8 @@ test("plays without sound when the browser won't have it, with a button to turn 
 	await page.locator("#unmute").click();
 	await expect(page.locator("#unmute")).toHaveCount(0);
 	expect((await sound(page)).muted).toBe(false);
-	// Which counts as the viewer's own choice, and the browser's refusal didn't
-	expect(await page.evaluate(() => JSON.parse(localStorage.getItem("sound")!).muted)).toBe(false);
+	// Which counts as the viewer's own choice, and the browser's refusal didn't, once the browser says the sound changed
+	await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("sound") ?? "null")?.muted)).toBe(false);
 	// The sound stays on when changing channel
 	await guideLink(page, "DR2").click();
 	await playsPast(page, 0.2);

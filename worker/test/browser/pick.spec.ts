@@ -1,5 +1,6 @@
-// "Vælg for mig": a question at a time, which leaves fewer below it, "Ligeglad", going back, and what's picked:
-// by "Overrask mig", or when one is left, with a countdown that can be undone. And "Overrask mig" on a category's page.
+// "Vælg for mig": a question at a time about the catalogue, which leaves fewer below it, "Ligeglad", going back, and
+// what's picked: by "Overrask mig", or when one is left, with a countdown that can be undone. And "Overrask mig" on a
+// category's page.
 
 import type {BrowserContext, Page} from "@playwright/test";
 import {expect, playsPast, test} from "./test";
@@ -7,33 +8,32 @@ import {expect, playsPast, test} from "./test";
 const SHOW = "/rejseholdet_503605/";
 const FILM = "/program/lise-noergaard_-ikke-kun-en-pige_362031";
 
-/** Programmes like /vaelg.json's: ten series, the last of them Rejseholdet, which the fixtures have, and ten films */
+/** A catalogue like /katalog.json's: ten series, the last of them Rejseholdet, which the fixtures have, and ten films */
 function pool() {
 	const series = Array.from({length: 10}, (_, i) => ({
-		title: i == 9 ? "Rejseholdet" : `Serie ${i}`,
-		url: i == 9 ? SHOW : `/serie-${i}_${8000 + i}/`,
-		showId: i == 9 ? "rejseholdet_503605" : `serie-${i}_${8000 + i}`,
-		kind: "serie",
-		seasons: 1 + (i % 2),
-		tags: i == 9 ? ["fiktionsserie", "drama", "følelsesladet", "ikke-dansk"]
-			: i < 5 ? ["fiktionsserie", "krimi", "nervepirrende", i % 2 ? "dansk" : "ikke-dansk"]
-				: ["fiktionsserie", "humor", "sjovt", "dansk"],
+		id: i == 9 ? "503605" : String(8000 + i),
+		t: i == 9 ? "Rejseholdet" : `Serie ${i}`,
+		u: i == 9 ? SHOW : `/serie-${i}_${8000 + i}/`,
+		k: "serie",
+		s: 1 + (i % 2),
+		f: i == 9 ? {type: ["serie"], genre: ["drama"], stemning: ["foelelser"], fra: ["udland"]}
+			: i < 5 ? {type: ["serie"], genre: ["krimi"], stemning: ["spaending"], fra: [i % 2 ? "dansk" : "udland"]}
+				: {type: ["serie"], genre: ["humor"], stemning: ["sjovt"], fra: ["dansk"]},
 	}));
 	const films = Array.from({length: 10}, (_, i) => ({
-		title: i == 0 ? "Lise Nørgaard" : `Film ${i}`,
-		url: i == 0 ? FILM : `/program/film-${i}_${9000 + i}`,
-		filmId: i == 0 ? "lise-noergaard_-ikke-kun-en-pige_362031" : `film-${i}_${9000 + i}`,
-		videoId: i == 0 ? "362031" : String(9000 + i),
-		kind: "film",
-		minutes: 40 + i * 10,
-		tags: ["film", i % 2 ? "dansk" : "ikke-dansk"],
+		id: i == 0 ? "362031" : String(9000 + i),
+		t: i == 0 ? "Lise Nørgaard" : `Film ${i}`,
+		u: i == 0 ? FILM : `/program/film-${i}_${9000 + i}`,
+		k: "film",
+		m: 40 + i * 10,
+		f: {type: ["film"], fra: [i % 2 ? "dansk" : "udland"]},
 	}));
-	return [...series, ...films];
+	return {version: 1, facets: [], titles: [...series, ...films]};
 }
 
-/** A viewer whose /vaelg.json is pool(), and whose chances are always `random`, so the questions come in one order */
+/** A viewer whose /katalog.json is pool(), and whose chances are always `random`, so the questions come in one order */
 async function picking(context: BrowserContext, random: number) {
-	await context.route("**/vaelg.json", route => route.fulfill({json: pool()}));
+	await context.route("**/katalog.json", route => route.fulfill({json: pool()}));
 	await context.addInitScript(`Math.random = () => ${random};`);
 }
 
@@ -155,7 +155,7 @@ test("a category's page has Overrask mig, which picks from its rows, and again p
 });
 
 test("says so when the programmes can't be got", async ({page, context}) => {
-	await context.route("**/vaelg.json", route => route.fulfill({status: 503, body: ""}));
+	await context.route("**/katalog.json", route => route.fulfill({status: 503, body: ""}));
 	await page.goto("/vaelg/");
 	await expect(page.locator(".js-pick-loading")).toHaveText("Titlerne kunne ikke hentes lige nu. Prøv igen om lidt.");
 	await expect(page.locator(".js-pick")).toBeHidden();

@@ -27,6 +27,7 @@ export const ICONS = raw(`<svg xmlns="http://www.w3.org/2000/svg" style="display
 <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.4 12 4l8 6.4V19a1 1 0 0 1-1 1h-4.25v-5.75h-5.5V20H5a1 1 0 0 1-1-1z"/></symbol>
 <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
 <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.5 21V4.5M5.5 4.5h11l-2.5 4 2.5 4h-11"/></symbol>
+<symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
 <symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="8.75" cy="8.75" r="1.35" fill="currentColor" stroke="none"/><circle cx="15.25" cy="8.75" r="1.35" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.35" fill="currentColor" stroke="none"/><circle cx="8.75" cy="15.25" r="1.35" fill="currentColor" stroke="none"/><circle cx="15.25" cy="15.25" r="1.35" fill="currentColor" stroke="none"/></symbol>
 <symbol id="i-cinema" viewBox="0 0 24 24"><rect x="2.5" y="6.5" width="19" height="11" rx="1.5"/></symbol>
 </svg>`);

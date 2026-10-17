@@ -4307,7 +4307,8 @@ video + .up-next {
     color: var(--paper);
 }
 
-.page-head:has(.js-pick-surprise) {
+.page-head:has(.js-pick-surprise),
+.page-head:has(.page-actions) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -4315,7 +4316,311 @@ video + .up-next {
     gap: 12px 24px;
 }
 
-.page-head .js-pick-surprise .icon {
+.page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.page-head .js-pick-surprise .icon,
+.page-actions .icon {
     width: 1.25em;
     height: 1.25em;
+}
+
+/* Vælg for mig: a few pictures of what an answer leads to */
+
+.pick-answer-pictures {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.pick-answer-pictures:empty {
+    display: none;
+}
+
+.pick-answer-pictures img {
+    width: 52px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 2px solid var(--raised);
+    border-radius: 4px;
+    background: var(--raised-hover);
+}
+
+.pick-answer-pictures img + img {
+    margin-left: -14px;
+}
+
+.pick-answer:hover .pick-answer-pictures img {
+    border-color: var(--raised-hover);
+}
+
+/* The front page's later rows, which ui.js gets as it's scrolled down to them */
+
+.more-rows {
+    min-height: 1px;
+}
+
+/* A video that DR doesn't have any more */
+
+.watch-gone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 0;
+    color: var(--leaving);
+    font-weight: 650;
+}
+
+/* Alle titler */
+
+.explore {
+    margin-top: 24px;
+}
+
+.explore-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+}
+
+.explore-search {
+    flex: 1 1 320px;
+    max-width: 480px;
+}
+
+.explore-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: .9375rem;
+}
+
+.explore-sort .form-select {
+    width: auto;
+    border-color: var(--line);
+    border-radius: 999px;
+    background-color: rgba(242, 239, 233, .06);
+    color: var(--paper);
+}
+
+.explore-toggle .icon {
+    width: 1.25em;
+    height: 1.25em;
+}
+
+.explore-toggle .filter-count {
+    margin-left: 2px;
+}
+
+.explore-chosen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.explore-chosen:empty {
+    display: none;
+}
+
+.chosen-filter,
+.chosen-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 6px 12px 6px 14px;
+    border: 1px solid var(--paper);
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: .9375rem;
+    font-weight: 650;
+}
+
+.chosen-filter .icon {
+    width: 1em;
+    height: 1em;
+}
+
+.chosen-clear {
+    border-color: var(--line);
+    background: none;
+    color: var(--muted);
+}
+
+.chosen-clear:hover {
+    color: var(--paper);
+}
+
+.explore-filters {
+    display: none;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.explore-filters.is-open {
+    display: grid;
+}
+
+.explore-facet {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.explore-facet-title {
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: var(--text-small);
+    font-weight: 650;
+}
+
+.explore-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.explore-values .filter-button {
+    min-height: 36px;
+    padding: 6px 14px;
+    font-size: .875rem;
+}
+
+.filter-more {
+    padding: 6px 4px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-size: .875rem;
+    font-weight: 650;
+}
+
+.filter-more:hover {
+    color: var(--paper);
+}
+
+.explore-count {
+    margin: 20px 0 0;
+    color: var(--muted);
+}
+
+.explore ~ .tile-grid {
+    margin-top: 16px;
+}
+
+.explore-empty {
+    grid-column: 1 / -1;
+}
+
+.explore-more {
+    display: flex;
+    justify-content: center;
+    margin-block: 32px 48px;
+}
+
+@media (min-width: 900px) {
+    .explore-filters {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px 32px;
+    }
+}
+
+/* What the search fields suggest as the viewer types */
+
+.has-suggestions {
+    position: relative;
+}
+
+.search-suggestions {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    min-width: min(360px, calc(100vw - 32px));
+    max-height: min(70vh, 520px);
+    overflow-y: auto;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--raised);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, .5);
+    text-align: left;
+}
+
+.header-search .search-suggestions {
+    left: auto;
+    width: 360px;
+}
+
+.suggestion {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: var(--paper);
+}
+
+.suggestion:hover,
+.suggestion[aria-selected=true] {
+    background: var(--raised-hover);
+    color: #fff;
+}
+
+.suggestion-media {
+    flex: none;
+    width: 72px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--raised-hover);
+}
+
+.suggestion-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.suggestion-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.suggestion-title {
+    overflow: hidden;
+    font-weight: 650;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.suggestion-meta {
+    color: var(--muted);
+    font-size: var(--text-small);
+}
+
+.suggestion-value .suggestion-text {
+    padding-left: 84px;
+}
+
+.suggestion-all {
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+    border-radius: 0 0 8px 8px;
+    color: var(--muted);
+}
+
+.suggestion-all .icon {
+    flex: none;
+    margin-left: 26px;
 }

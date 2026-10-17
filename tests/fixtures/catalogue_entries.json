@@ -1,0 +1,340 @@
+[
+ {
+  "id": "362031",
+  "t": "Lise Nørgaard: Ikke kun en pige",
+  "u": "/program/lise-noergaard_-ikke-kun-en-pige_362031",
+  "k": "dokumentar",
+  "i": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='362031'&Width=640&Height=360&ImageId='43968372'",
+  "y": 2023,
+  "m": 48,
+  "x": 1830812340000,
+  "n": 1673110800000,
+  "f": {
+   "type": [
+    "dokumentar"
+   ],
+   "genre": [
+    "kultur"
+   ],
+   "fra": [
+    "dansk"
+   ],
+   "land": [
+    "danmark"
+   ],
+   "alder": [
+    "alle"
+   ],
+   "person": [
+    "Lise Nørgaard"
+   ],
+   "aarti": [
+    "2020"
+   ],
+   "tid": [
+    "time"
+   ]
+  }
+ },
+ {
+  "id": "619917",
+  "t": "Madame Ida",
+  "u": "/program/madame-ida_619917",
+  "k": "film",
+  "i": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='619917'&Width=640&Height=360&ImageId='81080624'",
+  "y": 2023,
+  "m": 109,
+  "x": 1794610740000,
+  "n": 1789531200000,
+  "f": {
+   "type": [
+    "film"
+   ],
+   "genre": [
+    "drama"
+   ],
+   "stemning": [
+    "foelelser"
+   ],
+   "fra": [
+    "dansk"
+   ],
+   "land": [
+    "danmark"
+   ],
+   "alder": [
+    "15"
+   ],
+   "person": [
+    "Flora Ofelia Hoffmann Lindahl",
+    "Christine Albeck Børge",
+    "Karen-Lise Mynster",
+    "Sarah Boberg",
+    "Jacob Møller"
+   ],
+   "aarti": [
+    "2020"
+   ],
+   "tid": [
+    "lang"
+   ]
+  }
+ },
+ {
+  "id": "584100",
+  "t": "Magten",
+  "u": "/magten_584100/",
+  "k": "program",
+  "i": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='584100'&Width=640&Height=360&ImageId='76725210'",
+  "s": 1,
+  "n": 1000,
+  "f": {
+   "fra": [
+    "dansk"
+   ],
+   "emne": [
+    "folketingsvalg 2026"
+   ],
+   "omfang": [
+    "en"
+   ]
+  }
+ },
+ {
+  "id": "617585",
+  "t": "Maria Wern",
+  "u": "/maria-wern_617585/",
+  "k": "serie",
+  "i": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617585'&Width=640&Height=360&ImageId='80793623'",
+  "y": 2023,
+  "m": 88,
+  "s": 1,
+  "e": 1,
+  "x": 1810677540000,
+  "n": 1000,
+  "l": 1698177124080,
+  "w": 1795150800000,
+  "f": {
+   "type": [
+    "serie"
+   ],
+   "genre": [
+    "krimi"
+   ],
+   "tilg": [
+    "oplaest"
+   ],
+   "stemning": [
+    "spaending"
+   ],
+   "fra": [
+    "udland"
+   ],
+   "land": [
+    "norden"
+   ],
+   "alder": [
+    "15"
+   ],
+   "aarti": [
+    "2020"
+   ],
+   "tid": [
+    "aften"
+   ],
+   "omfang": [
+    "en"
+   ]
+  }
+ },
+ {
+  "id": "540736",
+  "t": "Matador",
+  "u": "/matador_540736/",
+  "k": "serie",
+  "i": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540736'&Width=640&Height=360&ImageId='71778204'",
+  "y": 1978,
+  "m": 71,
+  "s": 1,
+  "e": 24,
+  "x": 1803941940000,
+  "n": 0,
+  "l": 378819600000,
+  "f": {
+   "type": [
+    "serie"
+   ],
+   "aktuelt": [
+    "gensyn"
+   ],
+   "tilg": [
+    "synstolkning",
+    "oplaest"
+   ],
+   "genre": [
+    "historisk-drama"
+   ],
+   "stemning": [
+    "hygge"
+   ],
+   "fra": [
+    "dansk"
+   ],
+   "land": [
+    "danmark"
+   ],
+   "alder": [
+    "alle"
+   ],
+   "aarti": [
+    "1970"
+   ],
+   "tid": [
+    "aften"
+   ],
+   "omfang": [
+    "en"
+   ],
+   "udvalgt": [
+    "Store danske serier"
+   ]
+  }
+ },
+ {
+  "id": "296793",
+  "t": "Max Pinlig",
+  "u": "/max-pinlig_296793/",
+  "k": "program",
+  "i": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='296793'&Width=640&Height=360&ImageId='15516966'",
+  "s": 2,
+  "n": 1000,
+  "f": {
+   "type": [
+    "program"
+   ],
+   "tilg": [
+    "oplaest"
+   ],
+   "fra": [
+    "dansk"
+   ],
+   "alder": [
+    "7"
+   ],
+   "omfang": [
+    "flere"
+   ]
+  }
+ },
+ {
+  "id": "595127",
+  "t": "Red Rock West",
+  "u": "/program/red-rock-west_595127",
+  "k": "film",
+  "i": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='595127'&Width=640&Height=360&ImageId='78119546'",
+  "y": 1993,
+  "m": 94,
+  "n": 1388014902520,
+  "f": {
+   "type": [
+    "film"
+   ],
+   "tilg": [
+    "oplaest"
+   ],
+   "genre": [
+    "krimi"
+   ],
+   "stemning": [
+    "spaending"
+   ],
+   "fra": [
+    "udland"
+   ],
+   "land": [
+    "usa"
+   ],
+   "alder": [
+    "15"
+   ],
+   "aarti": [
+    "1990"
+   ],
+   "tid": [
+    "lang"
+   ]
+  }
+ },
+ {
+  "id": "503605",
+  "t": "Rejseholdet",
+  "u": "/rejseholdet_503605/",
+  "k": "serie",
+  "i": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='503605'&Width=640&Height=360&ImageId='62325408'",
+  "y": 2000,
+  "m": 78,
+  "s": 4,
+  "e": 32,
+  "x": 1836773940000,
+  "n": 1000,
+  "l": 1072987200000,
+  "f": {
+   "type": [
+    "serie"
+   ],
+   "genre": [
+    "krimi"
+   ],
+   "aktuelt": [
+    "gensyn"
+   ],
+   "tilg": [
+    "oplaest"
+   ],
+   "stemning": [
+    "spaending"
+   ],
+   "fra": [
+    "dansk"
+   ],
+   "land": [
+    "danmark"
+   ],
+   "alder": [
+    "15"
+   ],
+   "aarti": [
+    "2000"
+   ],
+   "tid": [
+    "aften"
+   ],
+   "omfang": [
+    "flere"
+   ]
+  }
+ },
+ {
+  "id": "225290",
+  "t": "Rita og Krokodille",
+  "u": "/rita-og-krokodille_225290/",
+  "k": "program",
+  "i": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='225290'&Width=640&Height=360&ImageId='6673465'",
+  "s": 1,
+  "n": 1000,
+  "f": {
+   "type": [
+    "program"
+   ],
+   "fra": [
+    "dansk"
+   ],
+   "alder": [
+    "alle"
+   ],
+   "omfang": [
+    "en"
+   ]
+  }
+ }
+]

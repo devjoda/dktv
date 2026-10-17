@@ -16,7 +16,7 @@ const MAX_LIST = 1000;
 const MIN_ROW = 3;
 
 // DR's categories, as they're linked here and from the header
-const CATEGORY_LIST = 376779;
+export const CATEGORY_LIST = 376779;
 
 // Rows on DR's pages that are better elsewhere here, or aren't rows of programmes
 const SKIPPED_ROWS = new Set(["Se live tv", "Se livesport", "Kategorier"]);
@@ -66,6 +66,8 @@ export interface DiscoverPage {
 	title: string;
 	featured: Card[];
 	rows: Row[];
+	// Whether the page has more rows after these, which a later part of it gets
+	more?: boolean;
 }
 
 export interface Category {
@@ -283,10 +285,11 @@ async function getRow(ctx: Ctx, listId: string, optional = false): Promise<RowLi
 }
 
 /**
- * One of DR's pages, like "/" or "/kategorier/film", or undefined if DR doesn't say.
+ * One of DR's pages, like "/" or "/kategorier/film", or undefined if DR doesn't say: its top and maxRows of its rows,
+ * from the row `from`, or only the rows, without the top, for the later parts of a page.
  * When DR doesn't answer, the last one it did is used for a while longer.
  */
-export async function getPage(ctx: Ctx, path: string, maxRows = 10): Promise<DiscoverPage | undefined> {
+export async function getPage(ctx: Ctx, path: string, maxRows = 10, from = 0, withTop = true): Promise<DiscoverPage | undefined> {
 	let layout: Layout;
 	try {
 		layout = await getLayout(ctx, path);
@@ -294,10 +297,10 @@ export async function getPage(ctx: Ctx, path: string, maxRows = 10): Promise<Dis
 		console.log("Could not get DR's page", path, String(e));
 		return undefined;
 	}
-	const wanted = layout.rows.slice(0, maxRows);
+	const wanted = layout.rows.slice(from, from + maxRows);
 	const [categories, hero, ...found] = await Promise.all([
 		getCategories(ctx),
-		layout.hero ? getRow(ctx, layout.hero).catch(e => {
+		withTop && layout.hero ? getRow(ctx, layout.hero).catch(e => {
 			console.log("Could not get the top of", path, String(e));
 			return undefined;
 		}) : undefined,
@@ -315,7 +318,7 @@ export async function getPage(ctx: Ctx, path: string, maxRows = 10): Promise<Dis
 			rows.push({title: row.title, cards: list.cards, more: row.list, complete: list.pages <= 1});
 		}
 	});
-	return {title: layout.title, featured, rows};
+	return {title: layout.title, featured, rows, more: layout.rows.length > from + maxRows};
 }
 
 export interface FullList {

@@ -42,9 +42,10 @@
 		// SQLite-backed, which the free plan has
 		{"tag": "v1", "new_sqlite_classes": ["Room"]}
 	],
-	// Checks the followed series for new episodes, and sends notifications
+	// Checks the followed series for new episodes, and sends notifications, every minute; and every other minute, goes on
+	// with the catalogue of DR's titles, in a run of its own (CATALOGUE_CRON in src/index.ts)
 	"triggers": {
-		"crons": ["* * * * *"]
+		"crons": ["* * * * *", "*/2 * * * *"]
 	},
 	// Which deploy is running, so pages kept from before an update aren't served after it
 	"version_metadata": {

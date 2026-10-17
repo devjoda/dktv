@@ -1,0 +1,7 @@
+{# The front page's later rows, from the row start, for ui.js to put in, and where to get those after them #}
+{% from "_ui.html" import dr_row, more_rows %}
+{% if page %}
+{% for row in page.rows %}{{ dr_row(row, start + loop.index) }}
+{% endfor %}
+{% if page.more %}{{ more_rows(next) }}{% endif %}
+{% endif %}

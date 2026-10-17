@@ -469,6 +469,40 @@ function setupListFilters() {
     }
 }
 
+// The front page's later rows, got as it's scrolled down to them, a few at a time, since a visit to the server may only
+// get a few of DR's rows; each part says where the next one is
+function setupMoreRows() {
+    const mark = document.querySelector(".js-more-rows:not([data-ready])");
+    if (mark == null) {
+        return;
+    }
+    mark.dataset.ready = "true";
+    const observer = new IntersectionObserver(async function ([entry]) {
+        if (!entry.isIntersecting) {
+            return;
+        }
+        observer.disconnect();
+        try {
+            const response = await fetch(`/raekker/?fra=${encodeURIComponent(mark.dataset.from)}`);
+            if (!response.ok) {
+                throw new Error(`The server answered ${response.status}`);
+            }
+            const part = document.createElement("template");
+            part.innerHTML = await response.text();
+            mark.replaceWith(part.content);
+        } catch (error) {
+            console.info("No more rows:", error);
+            mark.remove();
+            return;
+        }
+        setupShelves();
+        markProgress();
+        updateFavoriteButtons();
+        setupMoreRows();
+    }, {rootMargin: "800px 0px"});
+    observer.observe(mark);
+}
+
 // The front page's rows of what's kept in the browser, drawn where they are as the page is read, before it's
 // first shown, so the rows below them don't move down when they come
 function showKeptRows() {
@@ -484,6 +518,7 @@ window.addEventListener("pageshow", function () {
     setupSeenButtons();
     markProgress();
     setupListFilters();
+    setupMoreRows();
     showContinueWatching();
     showFavorites();
     refreshFavorites();

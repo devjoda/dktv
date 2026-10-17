@@ -92,29 +92,7 @@ export async function cachedIfTime<T>(ctx: Ctx, key: string, maxAge: number, bui
 	return keep(ctx, key, maxAge, build, true);
 }
 
-/**
- * Like cachedIfTime, for what's made of other things a visit can do without, like all of a page's rows: when the
- * visit left some of them out while making it, it's only kept for a minute, so a later visit makes it whole.
- * Only for one at a time, since it's told by whether the visit left something out while it was being made.
- */
-export async function cachedIfWhole<T>(ctx: Ctx, key: string, maxAge: number, build: () => Promise<T>): Promise<T | undefined> {
-	let whole = true;
-	return keep(ctx, key, () => whole ? maxAge : RETRY_AFTER, async () => {
-		const before = ctx.incomplete;
-		ctx.incomplete = false;
-		try {
-			return await build();
-		} finally {
-			whole = !ctx.incomplete;
-			ctx.incomplete ||= before;
-		}
-	}, true);
-}
-
-// How long to keep something, in seconds, or a function that says, once it's made
-type MaxAge = number | (() => number);
-
-function keep<T>(ctx: Ctx, key: string, maxAge: MaxAge, build: () => Promise<T>, optional: boolean): Promise<T | undefined> {
+function keep<T>(ctx: Ctx, key: string, maxAge: number, build: () => Promise<T>, optional: boolean): Promise<T | undefined> {
 	// Parts of a page that need the same thing, like each row the live channels, wait for the same request
 	let pending = ctx.pending.get(key) as Promise<T | undefined> | undefined;
 	if (pending === undefined) {
@@ -124,7 +102,7 @@ function keep<T>(ctx: Ctx, key: string, maxAge: MaxAge, build: () => Promise<T>,
 	return pending;
 }
 
-async function keepNow<T>(ctx: Ctx, key: string, maxAge: MaxAge, build: () => Promise<T>, optional: boolean): Promise<T | undefined> {
+async function keepNow<T>(ctx: Ctx, key: string, maxAge: number, build: () => Promise<T>, optional: boolean): Promise<T | undefined> {
 	const now = Date.now();
 	let kept = memory.get(key) as Kept<T> | undefined;
 	if (kept === undefined) {
@@ -145,8 +123,7 @@ async function keepNow<T>(ctx: Ctx, key: string, maxAge: MaxAge, build: () => Pr
 	}
 	try {
 		const value = await build();
-		const seconds = typeof maxAge == "function" ? maxAge() : maxAge;
-		const fresh = {until: now + seconds * (0.8 + 0.4 * Math.random()) * 1000, value};
+		const fresh = {until: now + maxAge * (0.8 + 0.4 * Math.random()) * 1000, value};
 		remember(key, fresh);
 		toEdge(ctx, key, fresh);
 		return value;

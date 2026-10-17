@@ -1,0 +1,186 @@
+{
+ "images": {
+  "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540736'&Width=1920&Height=1080&ImageId='71778204'",
+  "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540736'&Width=1440&Height=2160&ImageId='71778206'",
+  "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540736'&Width=1920&Height=1080&ImageId='71778208'"
+ },
+ "advisoryText": "",
+ "copyright": "",
+ "credits": [],
+ "customMetadata": [],
+ "distributor": "",
+ "availableSeasonCount": 1,
+ "offers": [
+  {
+   "deliveryType": "None",
+   "endDate": "2027-03-01T22:59:00Z",
+   "scopes": [
+    "540736"
+   ],
+   "exclusionRules": [],
+   "resolution": "Unknown",
+   "id": "ID0EUB",
+   "name": "D468078_Show Free  Show",
+   "availability": "Available",
+   "ownership": "Free",
+   "price": 0,
+   "startDate": "2025-09-01T04:00:00Z"
+  }
+ ],
+ "trailers": [],
+ "scopes": [
+  "540736"
+ ],
+ "categories": [
+  "fiktionsserie",
+  "gensyn",
+  "dr gensyn",
+  "acc_audio_description",
+  "acc_spoken_subtitles"
+ ],
+ "channelPath": "",
+ "customFields": {
+  "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn",
+  "BrandingChannelShort": "TVG",
+  "BrandingChannelDisplayName": "DR Gensyn",
+  "DisplayCategory": "Fiktionsserie,Gensyn",
+  "TargetAudience": "Adults",
+  "RatingSegment": "DRTV",
+  "PrimaryContentUniverse": "DRTV",
+  "ClassificationRating": "MRAM-ALL",
+  "PresentationTypeCode": "Show",
+  "IsGeoRestricted": "False",
+  "IsSeriesDRMPlayoutRequired": "False",
+  "PageTitle": "Matador",
+  "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+  "TitleExtraDetails": "DR Gensyn | 1 SÆSON",
+  "PathIdSegment": "matador_540736",
+  "ContentUniverses": [
+   "drtv"
+  ]
+ },
+ "customId": "urn:dr:ocs:tv:content:series:1344431885000",
+ "genres": [
+  "ukendt"
+ ],
+ "id": "540736",
+ "type": "show",
+ "keywords": [
+  "editorialptaxtop_serier",
+  "editorialptaxsub_historisk drama",
+  "mood_feel good/hyggelig",
+  "culturalorigin_dansk"
+ ],
+ "description": "Klassikeren over alle danske dramaklassikere.",
+ "shortDescription": "Klassikeren over alle danske dramaklassikere.",
+ "contextualTitle": "",
+ "sports": [],
+ "subtype": "",
+ "themes": [],
+ "title": "Matador",
+ "vodItemWatchPath": "",
+ "path": "/serie/matador_540736",
+ "genrePaths": [],
+ "totalUserRatings": 0,
+ "seasons": {
+  "id": "540736-seasons",
+  "path": "",
+  "items": [
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540737'&Width=1920&Height=1080&ImageId='71778211'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540737'&Width=1440&Height=2160&ImageId='71778213'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='540737'&Width=1920&Height=1080&ImageId='71778215'"
+    },
+    "releaseYear": 1978,
+    "availableEpisodeCount": 24,
+    "seasonNumber": 1,
+    "showId": "540736",
+    "episodeCount": 24,
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "540737"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "540737"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "gensyn",
+     "dr gensyn",
+     "acc_audio_description",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Gensyn,DR Gensyn",
+     "BrandingChannelShort": "TVG",
+     "BrandingChannelDisplayName": "DR Gensyn",
+     "DisplayCategory": "Fiktionsserie,Gensyn",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-ALL",
+     "IsGeoRestricted": "False",
+     "PresentationTypeCode": "Show",
+     "IsSeasonDRMPlayoutRequired": "False",
+     "PageTitle": "Matador: Sæson 1",
+     "ExtraDetails": "Fiktionsserie | SÆSON 1",
+     "OfferDateTimeRanges": [
+      {
+       "From": "2025-09-01T04:00:00Z",
+       "To": "2027-03-01T22:59:00Z",
+       "SegmentationTags": [
+        "DRTV"
+       ]
+      }
+     ],
+     "PathIdSegment": "matador_540737",
+     "ShortVideoUrl": "https://drod23b.akamaized.net/all/clear/none/27/5dd7b7f36187a4181859eb27/5dd7b74f6187a4181859eb23/stream_fmp4/master_manifest.m3u8",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:season:1344434573000",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "540737",
+    "type": "season",
+    "keywords": [
+     "editorialptaxtop_serier"
+    ],
+    "shortDescription": "Klassikeren over alle danske dramaklassikere.",
+    "contextualTitle": "",
+    "sports": [],
+    "subtype": "",
+    "tagline": "1. december | Det er snart jul… og tid til Matador",
+    "themes": [],
+    "title": "Matador",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/saeson/matador_540737"
+   }
+  ],
+  "size": 1,
+  "paging": {
+   "total": 1,
+   "page": 1,
+   "size": 200,
+   "options": {
+    "pageSize": 200
+   }
+  }
+ }
+}

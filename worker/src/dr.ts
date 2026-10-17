@@ -18,6 +18,13 @@ export interface Env {
 /** DR doesn't have it, or it isn't anything here */
 export class NotFound extends Error {}
 
+/** DR doesn't have a series or a programme any more, or a series' episode, whose page then says so */
+export class Gone extends NotFound {
+	constructor(message: string, readonly kind: "serie" | "program", readonly show?: {title: string; url: string}) {
+		super(message);
+	}
+}
+
 /** DR didn't answer, or answered with an error of its own */
 export class DRUnavailable extends Error {}
 

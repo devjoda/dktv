@@ -3,10 +3,13 @@
 // ../../../tests/fixtures, with the live channels' schedules moved to now, Rejseholdet's last season
 // out in the last few days, so it has new episodes, and every programme and
 // live channel plays the test video in ./video, which
-// `node scripts/test-video.mjs` makes. Only with ./wrangler.jsonc, which is never deployed;
+// `node scripts/test-video.mjs` makes. /testkatalog runs the catalogue's cron until it has gone through
+// the fixtures' letters of DR's list from A to Å. Only with ./wrangler.jsonc, which is never deployed;
 // and even then, it only answers on localhost.
 
+import * as catalogue from "../../src/catalogue";
 import {app} from "../../src/index";
+import {Budget} from "../../src/dr";
 import type {Env} from "../../src/dr";
 import {fixtureName} from "../fixtures";
 import items_362031 from "../../../tests/fixtures/items_362031.json";
@@ -15,10 +18,19 @@ import items_503606 from "../../../tests/fixtures/items_503606.json";
 import items_503607 from "../../../tests/fixtures/items_503607.json";
 import items_503611 from "../../../tests/fixtures/items_503611.json";
 import items_503612 from "../../../tests/fixtures/items_503612.json";
+import items_540736 from "../../../tests/fixtures/items_540736.json";
+import items_540737 from "../../../tests/fixtures/items_540737.json";
 import items_540744 from "../../../tests/fixtures/items_540744.json";
+import items_617585 from "../../../tests/fixtures/items_617585.json";
+import items_617586 from "../../../tests/fixtures/items_617586.json";
+import items_619917 from "../../../tests/fixtures/items_619917.json";
 import lists_155156 from "../../../tests/fixtures/lists_155156.json";
+import lists_348_l from "../../../tests/fixtures/lists_348_l.json";
+import lists_348_m from "../../../tests/fixtures/lists_348_m.json";
+import lists_348_r from "../../../tests/fixtures/lists_348_r.json";
 import lists_376779 from "../../../tests/fixtures/lists_376779.json";
 import page_front from "../../../tests/fixtures/page_front.json";
+import page_kategorier_a_aa from "../../../tests/fixtures/page_kategorier_a-aa.json";
 import page_kategorier_fiktionsserier from "../../../tests/fixtures/page_kategorier_fiktionsserier.json";
 import schedules from "../../../tests/fixtures/schedules.json";
 import searched from "../../../tests/fixtures/search.json";
@@ -37,10 +49,19 @@ const FIXTURES: Record<string, unknown> = {
 	"items_503607.json": items_503607,
 	"items_503611.json": items_503611,
 	"items_503612.json": items_503612,
+	"items_540736.json": items_540736,
+	"items_540737.json": items_540737,
 	"items_540744.json": items_540744,
+	"items_617585.json": items_617585,
+	"items_617586.json": items_617586,
+	"items_619917.json": items_619917,
 	"lists_155156.json": lists_155156,
+	"lists_348_l.json": lists_348_l,
+	"lists_348_m.json": lists_348_m,
+	"lists_348_r.json": lists_348_r,
 	"lists_376779.json": lists_376779,
 	"page_front.json": page_front,
+	"page_kategorier_a-aa.json": page_kategorier_a_aa,
 	"page_kategorier_fiktionsserier.json": page_kategorier_fiktionsserier,
 	"schedules.json": schedules,
 };
@@ -172,6 +193,13 @@ export default {
 		}
 		if (url.pathname.startsWith("/testvideo/")) {
 			return testVideo(request, url.pathname.slice("/testvideo/".length));
+		}
+		if (url.pathname == "/testkatalog") {
+			// As many runs as a sweep of the fixtures takes, and the front page's own rows after it
+			for (let i = 0; i < 80; i++) {
+				await catalogue.run({env, budget: new Budget(), refreshes: 0, incomplete: false, pending: new Map(), waitUntil: p => ctx.waitUntil(p), origin: url.origin});
+			}
+			return Response.json(await catalogue.status({env, budget: new Budget(), refreshes: 0, incomplete: false, pending: new Map(), waitUntil: p => ctx.waitUntil(p), origin: url.origin}));
 		}
 		const response = await app.fetch(request, env, ctx);
 		return (response.headers.get("Content-Type") ?? "").startsWith("text/html") ? withTestVideo.transform(response) : response;

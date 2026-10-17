@@ -6,7 +6,7 @@ import re
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
-from drtvrss import discover, drtv, pick
+from drtvrss import discover, drtv
 from drtvrss import models as dr
 
 from .conftest import load
@@ -300,11 +300,14 @@ def test_favorites_page(get):
 
 
 def test_unknown_show(get):
+    # One DR doesn't have any more, or never had
     r = get("/findes-ikke_1/")
     assert r.status_code == 404
-    assert "Siden findes ikke" in r.text
+    assert "Kan ikke længere ses" in r.text
     assert 'action="/search/"' in r.text
-    assert get("/ikke-et-tal/").status_code == 404
+    not_one = get("/ikke-et-tal/")
+    assert not_one.status_code == 404
+    assert "Siden findes ikke" in not_one.text
     # A program isn't a show
     assert get("/lise-noergaard_-ikke-kun-en-pige_362031/").status_code == 404
 
@@ -765,34 +768,7 @@ def test_what_dr_says_a_programme_is_like_without_its_channels_people_and_how_it
     assert film.minutes == 91
 
 
-def test_what_is_picked_from_is_series_films_documentaries_and_programmes_but_not_news_sport_or_episodes():
-    card = lambda **extra: discover.Card(**{"title": "", "url": "/", **extra})
-    assert pick.kind_of(card(show_id="rejseholdet_1", tags=["fiktionsserie", "krimi"])) == "serie"
-    assert pick.kind_of(card(film_id="doc_2", tags=["film", "dokumentar"])) == "dokumentar"
-    assert pick.kind_of(card(film_id="jagten_3", tags=["film"])) == "film"
-    assert pick.kind_of(card(show_id="bagedyst_4", tags=["underholdning", "mad"])) == "program"
-    assert pick.kind_of(card(show_id="tvavisen_5", tags=["nyheder"])) is None
-    assert pick.kind_of(card(series_id="rejseholdet_1", video_id="7", tags=["fiktionsserie"])) is None
-    page = discover.DiscoverPage("Serier", rows=[
-        discover.Row("Netop tilføjet", [card(title="A", url="/a_1/", show_id="1", tags=["fiktionsserie"])]),
-        discover.Row("Krimiserier", [card(title="B", url="/b_2/", show_id="b_2", tags=["fiktionsserie", "krimi"])]),
-    ])
-    found = pick.picks(page)
-    assert [(p["title"], p.get("fresh")) for p in found] == [("A", True), ("B", None)]
-    merged = pick.merge([found, [{"title": "A", "url": "/a_1/", "showId": "a_1", "kind": "serie", "tags": ["fiktionsserie", "drama"]}]])
-    assert len(merged) == 2
-    assert merged[0]["url"] == "/a_1/" and merged[0]["showId"] == "a_1" and merged[0]["tags"] == ["fiktionsserie", "drama"]
-
-
-def test_vaelg_for_mig_has_dr_s_series_each_once_and_its_page_and_the_ways_to_it(get):
-    r = get("/vaelg.json")
-    assert r.status_code == 200
-    found = json.loads(r.text)
-    assert len(found) > 20
-    assert len({p["url"] for p in found}) == len(found)
-    assert all(p["kind"] in ("serie", "film", "dokumentar", "program") and isinstance(p["tags"], list) for p in found)
-    assert any(p["kind"] == "serie" and "krimi" in p["tags"] for p in found)
-    assert any(p.get("fresh") for p in found)
+def test_vaelg_for_mig_has_its_page_and_the_ways_to_it(get):
     page = get("/vaelg/").text
     assert "<h1>Vælg for mig</h1>" in page
     assert '<a class="pick-link" href="/vaelg/" aria-label="Vælg for mig" title="Vælg for mig" aria-current="page">' in page

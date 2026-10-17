@@ -1,9 +1,10 @@
 // The building blocks of the pages
 
+import type {Entry} from "../catalogue";
 import type {Card} from "../discover";
 import {channelStyle, type LiveChannel, percentDone, type Programme, whatsOn} from "../live";
 import {allEpisodes, playlist, type Show, thumbnail} from "../show";
-import {clockTime, danishDate, duration, isNew, leavingLabel} from "../time";
+import {clock, clockTime, danishDate, duration, isNew, leavingLabel} from "../time";
 import {attr, each, html, type Html} from "./html";
 
 const icons = new Map<string, Html>();
@@ -63,8 +64,8 @@ export function tile({href, image, title, meta, tags = [], videoId, episodeIds, 
 	tags.length ? html`<div class="tile-badges">${badges(tags)}</div>` : ""}${SEEN_MARK}${
 	minutes ? html`<span class="tile-duration">${duration(minutes)}</span>` : ""}<span class="tile-play">${icon("play")}</span>${PROGRESS_BAR}</div>
 <h3 class="tile-title">${title}</h3></a>
-<p class="tile-meta"><span class="js-meta">${meta || ""}</span>${
-	showId ? favoriteButton(showId, title, image, {compact: true}) : filmId ? favoriteButton(filmId, title, image, {compact: true, kind: "film"}) : ""}</p>${
+<p class="tile-meta"><span class="js-meta">${meta || ""}</span>${action !== undefined ? action
+	: showId ? favoriteButton(showId, title, image, {compact: true}) : filmId ? favoriteButton(filmId, title, image, {compact: true, kind: "film"}) : ""}</p>${
 	description ? html`<p class="tile-desc">${description}</p>` : ""}
 </article>`;
 }
@@ -86,6 +87,16 @@ export function cardFavorite(c: Card, compact = false): Html | "" {
 /** One of DR's programmes */
 export function cardTile(c: Card): Html {
 	return tile({href: c.url, image: c.image, title: c.title, meta: c.category, tags: c.live ? [["live", "Direkte"]] : [], videoId: c.videoId, action: cardFavorite(c, true)});
+}
+
+export const KIND_NAMES: Record<string, string> = {serie: "Serie", film: "Film", dokumentar: "Dokumentar", program: "Program"};
+
+/** One of the catalogue's titles, with its kind below it, or `meta` */
+export function entryTile(e: Entry, meta?: string): Html {
+	const show = e.u.endsWith("/");
+	const slug = e.u.replace(/^\/(program\/)?|\/$/g, "");
+	return tile({href: e.u, image: e.i, title: e.t, meta: meta ?? KIND_NAMES[e.k], videoId: show ? undefined : e.id,
+		showId: show ? slug : undefined, filmId: show ? undefined : slug});
 }
 
 /** A live channel, with what's on it now */
@@ -144,8 +155,11 @@ ${icon("play")}
 </a>`;
 }
 
-/** When something leaves DR: a tag when it's soon, and otherwise the date, if DR says */
+/** When something leaves DR: a tag when it's soon, or has, and otherwise the date, if DR says */
 export function leaving(at: number | undefined, quiet = false): Html | "" {
+	if (at && at <= clock.now()) {
+		return html`<span class="tag tag-leaving">Kan ikke længere ses</span>`;
+	}
 	const label = leavingLabel(at);
 	if (label) {
 		return html`<span class="tag tag-leaving">${label}</span>`;

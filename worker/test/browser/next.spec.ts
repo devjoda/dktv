@@ -24,6 +24,11 @@ async function toTheEnd(page: Page) {
 	await expect.poll(() => page.locator("#video").evaluate((video: Video) => video.paused)).toBe(true);
 }
 
+// Without the catalogue, "Hvad nu?" has the server's own suggestions, which most of these tests are about
+test.beforeEach(async ({context}) => {
+	await context.route("**/katalog.json", route => route.fulfill({json: {version: 1, facets: [], titles: []}}));
+});
+
 test("plays the next episode in the same page, in full screen, with its title, address and sound", async ({page}) => {
 	await watch(page, EPISODE);
 	await markPage(page);
@@ -188,6 +193,25 @@ test("offers what to watch now after the last episode, from the viewer's favouri
 	expect(await page.evaluate("document.activeElement === document.body || !document.activeElement.closest('#what-next')")).toBe(true);
 	await page.keyboard.press("Escape");
 	await expect(card).toHaveCount(0);
+});
+
+test("offers what's most like the series from the catalogue, by what they share, without asking the server", async ({page}) => {
+	const asked: string[] = [];
+	page.on("request", request => request.url().includes("/forslag/") && asked.push(request.url()));
+	const entry = (id: string, title: string, f: Record<string, string[]>) => ({id, t: title, u: `/${id}_${id}/`, k: "serie", f: {type: ["serie"], ...f}});
+	await page.route("**/katalog.json", route => route.fulfill({json: {version: 1, facets: [{id: "genre", label: "Genre", values: [{id: "krimi", label: "Krimi"}]}], titles: [
+		entry("503605", "Rejseholdet", {genre: ["krimi"], stemning: ["spaending"], land: ["danmark"]}),
+		entry("1001", "Ørnen", {genre: ["krimi"], stemning: ["spaending"]}),
+		entry("1002", "Forbrydelsen", {genre: ["krimi"], land: ["danmark"]}),
+		entry("1003", "Bagedysten", {genre: ["mad"]}),
+	]}}));
+	await watch(page, LAST_EPISODE);
+	await toTheEnd(page);
+	const card = whatNext(page);
+	await expect(card).toBeVisible();
+	await expect(card.locator(".what-next-name")).toHaveText(["Ørnen", "Forbrydelsen"]);
+	await expect(card.locator(".what-next-label").first()).toHaveText("Krimi");
+	expect(asked).toEqual([]);
 });
 
 test("offers what to watch now after a film, in full screen too, and goes away as it plays again", async ({page}) => {

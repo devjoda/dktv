@@ -1,0 +1,173 @@
+{
+ "images": {
+  "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617585'&Width=1920&Height=1080&ImageId='80793623'",
+  "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617585'&Width=1440&Height=2160&ImageId='80793625'",
+  "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617585'&Width=1920&Height=1080&ImageId='80793627'"
+ },
+ "advisoryText": "",
+ "copyright": "",
+ "credits": [],
+ "customMetadata": [],
+ "distributor": "",
+ "availableSeasonCount": 1,
+ "offers": [
+  {
+   "deliveryType": "None",
+   "endDate": "2027-05-18T21:59:00Z",
+   "scopes": [
+    "617585"
+   ],
+   "exclusionRules": [],
+   "resolution": "Unknown",
+   "id": "ID0EUB",
+   "name": "D468078_Show Free  Show",
+   "availability": "Available",
+   "ownership": "Free",
+   "price": 0,
+   "startDate": "2026-09-15T19:50:41Z"
+  }
+ ],
+ "trailers": [],
+ "scopes": [
+  "617585"
+ ],
+ "categories": [
+  "fiktionsserie",
+  "krimi",
+  "dr1",
+  "acc_spoken_subtitles"
+ ],
+ "channelPath": "",
+ "customFields": {
+  "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+  "BrandingChannelShort": "DR1",
+  "BrandingChannelDisplayName": "DR1",
+  "DisplayCategory": "Fiktionsserie,Krimi",
+  "TargetAudience": "Adults",
+  "RatingSegment": "DRTV",
+  "PrimaryContentUniverse": "DRTV",
+  "ClassificationRating": "MRAM-15",
+  "PresentationTypeCode": "Show",
+  "IsGeoRestricted": "True",
+  "IsSeriesDRMPlayoutRequired": "False",
+  "PageTitle": "Maria Wern",
+  "ExtraDetails": "Fiktionsserie | 1 SÆSON",
+  "TitleExtraDetails": "DR1 | 1 SÆSON",
+  "PathIdSegment": "maria-wern_617585",
+  "ContentUniverses": [
+   "drtv"
+  ]
+ },
+ "customId": "urn:dr:ocs:tv:content:series:754512168000",
+ "genres": [
+  "ukendt"
+ ],
+ "id": "617585",
+ "type": "show",
+ "keywords": [
+  "editorialptaxtop_serier",
+  "editorialptaxsub_krimi",
+  "mood_nervepirrende",
+  "culturalorigin_ikke-dansk"
+ ],
+ "description": "Maria Wern er enlig mor til to og vicekommissær på den svenske ø Gotland. Og så er hun hovedperson i den svenske krimserie 'Maria Wern', der bygger på romaner af Anna Jansson.",
+ "shortDescription": "Maria Wern er enlig mor til to og vicekommissær på den svenske ø Gotland. Og så er hun hovedperson i den svenske krimserie 'Maria Wern', der bygger på romaner af Anna Jansson.",
+ "contextualTitle": "",
+ "sports": [],
+ "themes": [],
+ "title": "Maria Wern",
+ "vodItemWatchPath": "",
+ "path": "/serie/maria-wern_617585",
+ "genrePaths": [],
+ "totalUserRatings": 0,
+ "seasons": {
+  "id": "617585-seasons",
+  "path": "",
+  "items": [
+   {
+    "images": {
+     "wallpaper": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617586'&Width=1920&Height=1080&ImageId='80793633'",
+     "poster": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617586'&Width=1440&Height=2160&ImageId='80793635'",
+     "tile": "https://prod95-static.dr-massive.com/api/shain/v1/dataservice/ResizeImage/$value?Format='jpg'&Quality=85&EntityType='Item'&EntityId='617586'&Width=1920&Height=1080&ImageId='80793637'"
+    },
+    "releaseYear": 2023,
+    "availableEpisodeCount": 1,
+    "seasonNumber": 9,
+    "showId": "617585",
+    "episodeCount": 4,
+    "offers": [
+     {
+      "deliveryType": "StreamOrDownload",
+      "scopes": [
+       "617586"
+      ],
+      "resolution": "HD-1080",
+      "availability": "Available",
+      "ownership": "Free",
+      "price": 0
+     }
+    ],
+    "scopes": [
+     "617586"
+    ],
+    "categories": [
+     "fiktionsserie",
+     "krimi",
+     "dr1",
+     "acc_spoken_subtitles"
+    ],
+    "channelPath": "",
+    "customFields": {
+     "OwnedCategory": "Fiktionsserie,Krimi,DR1",
+     "BrandingChannelShort": "DR1",
+     "BrandingChannelDisplayName": "DR1",
+     "DisplayCategory": "Fiktionsserie,Krimi",
+     "TargetAudience": "Adults",
+     "RatingSegment": "DRTV",
+     "PrimaryContentUniverse": "DRTV",
+     "ClassificationRating": "MRAM-15",
+     "IsGeoRestricted": "True",
+     "PresentationTypeCode": "Show",
+     "IsSeasonDRMPlayoutRequired": "False",
+     "PageTitle": "Maria Wern: Sæson 9",
+     "ExtraDetails": "Fiktionsserie | SÆSON 9",
+     "PathIdSegment": "maria-wern_617586",
+     "ContentUniverses": [
+      "drtv"
+     ]
+    },
+    "customId": "urn:dr:ocs:tv:content:season:3663701227000",
+    "genres": [
+     "ukendt"
+    ],
+    "id": "617586",
+    "type": "season",
+    "keywords": [],
+    "shortDescription": "Maria Wern er enlig mor til to og vicekommissær på den svenske ø Gotland. Og så er hun hovedperson i den svenske krimserie 'Maria Wern', der bygger på romaner af Anna Jansson.",
+    "contextualTitle": "",
+    "sports": [],
+    "themes": [],
+    "title": "Maria Wern",
+    "vodItemWatchPath": "",
+    "classification": {
+     "code": "DR-Voksen",
+     "name": "Voksen"
+    },
+    "path": "/saeson/maria-wern_617586"
+   }
+  ],
+  "size": 1,
+  "paging": {
+   "total": 1,
+   "page": 1,
+   "size": 200,
+   "options": {
+    "pageSize": 200
+   }
+  }
+ },
+ "nextEpisode": {
+  "available": "20. NOV 2026 | 6:00",
+  "availableUTC": "1795150800"
+ }
+}

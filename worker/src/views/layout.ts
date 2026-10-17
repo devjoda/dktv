@@ -139,6 +139,7 @@ ${head}
 <script src="${staticURL("ui.js")}"></script>
 <script src="${staticURL("account.js")}"></script>
 <script src="${staticURL("news.js")}"></script>
+<script src="${staticURL("catalogue.js")}"></script>
 ${scripts}
 </head>
 <body class="${bodyClass || ""}">

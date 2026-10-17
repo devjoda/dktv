@@ -9,6 +9,9 @@ An unofficial frontend for DRTV. The interface is in Danish; reply in Danish whe
 - `drtvrss/`: the original Python app (Quart), with its tests in `tests/`.
 - Both use the browser files in `drtvrss/static`, which `npm run build` copies to `worker/public`.
   When a page changes, change `worker/src/views` and `drtvrss/templates` alike, so both stay the same.
+- The catalogue of all of DR's titles (`worker/src/catalogue.ts`, `drtvrss/catalogue.py`) is made from DR's list from
+  A to Å, with the filters in `drtvrss/facets.json`, which both read. Vælg for mig, Alle titler, the search field's
+  suggestions, Hvad nu? and the front page's own rows use it, as `/katalog.json`.
 
 ## Tests
 
@@ -16,10 +19,13 @@ An unofficial frontend for DRTV. The interface is in Danish; reply in Danish whe
   fixtures of DR's answers, so they need no network.
 - Browser: `npm run test:browser` runs `test/browser/*.spec.ts` in Playwright's Chromium against `wrangler dev`
   with `test/browser/wrangler.jsonc`: DR's answers from the fixtures, and the test video in `test/browser/video`
-  instead of DR's streams (`npm run dev:test` for trying it by hand). That server only answers on localhost,
+  instead of DR's streams (`npm run dev:test` for trying it by hand). `/testkatalog` there runs the catalogue's cron
+  through the fixtures' letters of DR's list. That server only answers on localhost,
   and `player.js` only plays the test video there; keep it so, and never deploy that config.
   `npm run test-video` makes the video again, with ffmpeg; it's VP9, since Playwright's Chromium has no H.264.
 - Python: `uv run pytest` (or `nix develop --command pytest`). Tests against DR itself need `DRTV_LIVE_TESTS=1`.
+- Both make the same entries of the catalogue, which `tests/fixtures/catalogue_entries.json` holds: after changing the
+  filters, write it again with `UPDATE_ENTRIES=1 npm test`, and check that `uv run pytest` agrees.
 - Run both before committing a change to `drtvrss/static`.
 
 ## The free Cloudflare plan
@@ -31,6 +37,9 @@ The site must stay on the free plan, which allows 10 ms of CPU per request (and 
 - Each visit does little: pages and DR's data are kept in Cloudflare's cache (`worker/src/cache.ts`),
   a visit refreshes at most two stale things, and a request budget (`Budget` in `worker/src/dr.ts`) leaves the rest.
 - The cron (`worker/src/alerts.ts`) does at most 6 units of work per run.
+- The catalogue's cron (`worker/src/catalogue.ts`) runs on its own every other minute: a step of the day's sweep of DR's
+  list a run, a few titles looked up, and their entries made, writing only what changed, as D1's limits are the whole
+  site's. Keep each step well under 10 ms; what's heavy, like choosing the front page's rows, the database does.
 - `npm run bench` measures CPU in Node; after deploying, `wrangler tail dktv --format json` shows the real `cpuTime`,
   which needs a Cloudflare login, so only the user's machine can run it.
 
