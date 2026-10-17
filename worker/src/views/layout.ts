@@ -2,6 +2,7 @@
 
 import versions from "../static-versions.json";
 import {attr, each, html, type Html} from "./html";
+import {previewText, thumbnail} from "../show";
 import {ICONS} from "./icons";
 import {icon} from "./ui";
 
@@ -12,6 +13,8 @@ export interface Site {
 	path: string;
 	// What was searched for, for the header's search field
 	query?: string;
+	// Where the site is, like https://dktv.joachim-144.workers.dev, for what's linked to from elsewhere
+	origin: string;
 }
 
 /** The URL of one of our static files, which changes along with the file */
@@ -77,17 +80,41 @@ function logo(name: string): Html {
 		: html`<span class="logo-word">${word.slice(0, i)}<span class="logo-i">ı</span>${word.slice(i + 1)}</span>`;
 }
 
+/** What a link to a page shows where it's shared, as in a chat: its name, a little of what it's about, and its picture */
+export interface Preview {
+	title: string;
+	description?: string;
+	// One of DR's pictures, which are wide; without one, the site's icon
+	image?: string;
+	type?: "video.tv_show" | "video.episode" | "video.other";
+}
+
 export interface PageProps {
 	// The window's title, before the site's name
 	title?: string;
 	// Or the whole of it, without the site's name
 	windowTitle?: string;
+	// Without one, a link to the page shows the site's name and icon
+	preview?: Preview;
 	head?: Html;
 	scripts?: Html;
 	bodyClass?: string;
 }
 
-export function layout(site: Site, {title, windowTitle, head, scripts, bodyClass}: PageProps, content: Html): Html {
+/** The page's Open Graph tags, which chats and social media make a link's preview from */
+function previewTags(site: Site, preview: Preview | undefined): Html {
+	const description = preview?.description ? previewText(preview.description) : "";
+	return html`<meta property="og:site_name" content="${site.serviceName}">
+<meta property="og:title" content="${preview?.title ?? site.serviceName}">
+<meta property="og:type" content="${preview?.type ?? "website"}">
+<meta property="og:locale" content="da_DK">
+${description ? html`<meta name="description" content="${description}">
+<meta property="og:description" content="${description}">
+` : ""}<meta property="og:image" content="${preview?.image ? thumbnail(preview.image, 1280) : `${site.origin}/static/icons/icon-512.png`}">
+<meta name="twitter:card" content="${preview?.image ? "summary_large_image" : "summary"}">`;
+}
+
+export function layout(site: Site, {title, windowTitle, preview, head, scripts, bodyClass}: PageProps, content: Html): Html {
 	return html`<!doctype html>
 <html lang="da" data-bs-theme="dark">
 <head>
@@ -97,6 +124,7 @@ export function layout(site: Site, {title, windowTitle, head, scripts, bodyClass
 <meta name="theme-color" content="#0b0c10">
 <meta name="application-name" content="${site.serviceName}">
 <title>${windowTitle ?? (title ? `${title} - ${site.serviceName}` : site.serviceName)}</title>
+${previewTags(site, preview)}
 ${head}
 <link href="${LIBRARIES.bootstrap.href}" rel="stylesheet" integrity="${LIBRARIES.bootstrap.integrity}">
 <link href="/static/vendor/schibsted-grotesk-5.3.0-latin.woff2" rel="preload" as="font" type="font/woff2" crossorigin>

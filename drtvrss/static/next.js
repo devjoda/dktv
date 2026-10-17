@@ -409,6 +409,7 @@ function showWhatNext(video, chosen = false) {
             });
             parts.push(element("div", {class: "what-next-actions"}, again, element("a", {class: "button button-secondary", href: "/"}, "Til forsiden")));
         }
+        parts.push(whatNextShare(video));
         card.replaceChildren(...parts);
         return items.length;
     };
@@ -428,6 +429,15 @@ function showWhatNext(video, chosen = false) {
             suggested.then(late => late && card.isConnected && render(late));
         }
     });
+}
+
+// At the end of "Hvad nu?", where what was watched is over: a quiet button to share it, the series, not the episode
+function whatNextShare(video) {
+    const name = video.dataset.show || video.dataset.title;
+    const series = video.dataset.show ? `/${location.pathname.split("/")[1]}/` : location.pathname;
+    const button = element("button", {type: "button", class: "button button-quiet what-next-share"}, icon("share"), `Del ${name}`);
+    button.addEventListener("click", () => shareLink({title: name, url: location.origin + series}));
+    return button;
 }
 
 // A small "Hvad nu?" in the corner as a film's credits start, which doesn't cover them

@@ -217,6 +217,55 @@ describe("every page", () => {
 	});
 });
 
+describe("a link's preview, where it's shared", () => {
+	/** The page's Open Graph tags, by name */
+	async function preview(path: string) {
+		const r = await get(path);
+		return Object.fromEntries([...r.text.matchAll(/<meta (?:property|name)="((?:og|twitter):[^"]+|description)" content="([^"]*)">/g)].map(m => [m[1], m[2]]));
+	}
+
+	test("of a series: its name, its description and its wide picture", async () => {
+		const tags = await preview("/rejseholdet_503605/");
+		expect(tags).toMatchObject({"og:site_name": "Flimmerkassen", "og:title": "Rejseholdet", "og:type": "video.tv_show", "og:locale": "da_DK", "twitter:card": "summary_large_image"});
+		expect(tags["og:image"]).toMatch(/^https:\/\/.*Width=1280/);
+		expect(tags["og:description"]!.length).toBeGreaterThan(20);
+		expect(tags["og:description"]!.length).toBeLessThanOrEqual(201);
+		expect(tags.description).toBe(tags["og:description"]);
+	});
+
+	test("of an episode, which has its series' name, and of a programme on its own", async () => {
+		expect(await preview("/rejseholdet_503605/rejseholdet_503615")).toMatchObject({"og:title": "Rejseholdet: 1. episode", "og:type": "video.episode"});
+		const film = await preview("/program/lise-noergaard_-ikke-kun-en-pige_362031");
+		expect(film).toMatchObject({"og:title": "Lise Nørgaard: Ikke kun en pige", "og:type": "video.other", "twitter:card": "summary_large_image"});
+		expect(film["og:description"]).toBeTruthy();
+	});
+
+	test("of the front page, Vælg for mig, a category and a channel: what they are, without naming DR, with the site's icon", async () => {
+		for (const [path, title] of [["/", "Flimmerkassen"], ["/vaelg/", "Vælg for mig"], ["/kategorier/fiktionsserier/", "Serier"], ["/live/DR2", "DR2"]]) {
+			const tags = await preview(path);
+			expect(tags["og:title"], path).toBe(title);
+			expect(tags["og:description"], path).not.toMatch(/\bDR\b|DRTV/);
+			expect(tags["og:image"], path).toBe("http://localhost/static/icons/icon-512.png");
+			expect(tags["twitter:card"], path).toBe("summary");
+		}
+	});
+
+	test("of other pages, the site's name and icon", async () => {
+		const tags = await preview("/favoritter/");
+		expect(tags).toMatchObject({"og:title": "Flimmerkassen", "og:type": "website", "og:image": "http://localhost/static/icons/icon-512.png"});
+		expect(tags["og:description"]).toBeUndefined();
+	});
+
+	test("cuts a long description after its last sentence that fits, or a word", async () => {
+		const {previewText} = await import("../src/show");
+		expect(previewText("Kort.")).toBe("Kort.");
+		const sentences = `${"En sætning om noget. ".repeat(12)}`;
+		expect(previewText(sentences)).toBe("En sætning om noget. ".repeat(9).trim());
+		const words = "ord ".repeat(80);
+		expect(previewText(words)).toMatch(/^(ord ){49}ord…$/);
+	});
+});
+
 describe("the browser's files", () => {
 	test("are copied to be served, with the service worker at the root", () => {
 		for (const path of ["static/player.js", "static/ui.js", "static/vendor/bootstrap-5.3.3.min.css", "static/vendor/hls-1.7.3.min.js",
@@ -258,6 +307,8 @@ describe("a show", () => {
 		expect(episodes).not.toContain("Width=1920");
 		expect(episodes).toContain("Width=640");
 		expect(r.text).toContain('1920w" sizes="100vw"');
+		// It can be shared from its page, like a video
+		expect(r.text).toContain('<button type="button" class="button button-secondary js-share-page" data-share-title="Rejseholdet">');
 		// All but the big picture at the top, which is seen right away
 		expect(count(r.text, 'loading="lazy"')).toBe(count(r.text, "<img") - 1);
 		expect(r.text).toContain("Width=1280");

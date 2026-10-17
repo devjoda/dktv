@@ -53,8 +53,19 @@ function channelTiles(channels: Channels, schedules: Schedules): Html {
 	return each(Object.entries(channels), ([slug, channel]) => channelTile(slug, channel, schedules[channel.id] ?? []));
 }
 
+// What links to these pages say of them, where they're shared
+const FRONT_PAGE_TEXT = "Serier, film, dokumentarer og direkte TV. Se videre, hvor du slap, gem dine favoritter, og se sammen med andre.";
+const LIVE_TEXT = "Direkte TV, med hvad der sendes nu og senere.";
+const PICK_TEXT = "Ved du ikke, hvad du vil se? Svar på et par spørgsmål, og få et forslag til en serie, film eller dokumentar.";
+
+/** A button that shares the page: with the phone's share sheet, or by copying its address; see shareLink() in ui.js */
+function shareButton(title: string): Html {
+	return html`<button type="button" class="button button-secondary js-share-page" data-share-title="${title}">${icon("share")} Del</button>`;
+}
+
 export function indexPage(site: Site, {page, featured, shows, channels, schedules}: {page?: DiscoverPage; featured: Card[]; shows: Show[]; channels: Channels; schedules: Schedules}): Html {
 	return layout(site, {
+		preview: {title: site.serviceName, description: FRONT_PAGE_TEXT},
 		bodyClass: featured.length ? "has-hero" : "",
 		// For the featured programmes' clips, along with the page instead of after it
 		scripts: featured.length ? html`<link href="${LIBRARIES.hls.href}" rel="preload" as="script" integrity="${LIBRARIES.hls.integrity}">` : undefined,
@@ -127,7 +138,7 @@ function episodeItem(e: Episode, show: Show): Html {
  */
 export function showPage(site: Site, show: Show): Html {
 	const tabs = show.seasons.length > 1;
-	return layout(site, {title: show.title, head: feedLink(show), bodyClass: "has-hero"}, html`<section class="hero">
+	return layout(site, {title: show.title, preview: {title: show.title, description: show.description, image: show.wallpaper, type: "video.tv_show"}, head: feedLink(show), bodyClass: "has-hero"}, html`<section class="hero">
 <div class="hero-backdrop">${widePicture(show.wallpaper)}</div>
 <div class="hero-content">
 <h1 class="hero-title${show.title.length > 20 ? " is-long" : ""}">${show.title}</h1>
@@ -137,6 +148,7 @@ ${show.nextEpisode ? html`<p class="hero-note">${icon("calendar")} Nyt afsnit ${
 <div class="actions">
 ${playButton(show)}
 ${favoriteButton(show.url, show.title, show.wallpaper)}
+${shareButton(show.title)}
 </div>
 </div>
 </section>
@@ -222,7 +234,8 @@ ${each(season.episodes, n => html`<li><a class="episode-row" href="${n.url}" dat
 /** Plays an episode of a show, or a programme on its own, like a film */
 export function videoPage(site: Site, {show, e, description, previous, next, segments, season}: {show?: Show; e: Episode | Program; description: string; previous?: Neighbour; next?: Neighbour; segments?: Segments; season?: SeasonList}): Html {
 	const film = show === undefined ? (e as Program) : undefined;
-	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title, head: show ? feedLink(show) : undefined, scripts: VIDEO_SCRIPTS, bodyClass: season ? "video-page has-episodes" : "video-page"}, html`${CINEMA_FIRST}<div class="stage">
+	return layout(site, {windowTitle: show ? `${show.title} - ${e.title}` : e.title,
+		preview: {title: show ? `${show.title}: ${e.title}` : e.title, description, image: e.wallpaper, type: show ? "video.episode" : "video.other"}, head: show ? feedLink(show) : undefined, scripts: VIDEO_SCRIPTS, bodyClass: season ? "video-page has-episodes" : "video-page"}, html`${CINEMA_FIRST}<div class="stage">
 <video id="video" controls crossorigin="anonymous" data-episode-id="${e.videoId}"${attr("data-suggest", show ? `/forslag/serie/${show.url}` : `/forslag/program/${(e as Program).url.split("/").at(-1)}`)}${attr("poster", thumbnail(e.wallpaper, 1280))}${attr("data-next-url", next?.url)}${attr("data-next-title", next?.title)}${attr("data-previous-url", previous?.url)} data-title="${e.title}"${attr("data-show", show?.title)}${attr("data-image", thumbnail(e.wallpaper))}${attr("data-expires", e.expires)}${attr("data-segments", segments ? JSON.stringify(segments) : undefined)}></video>
 </div>
 <div class="watch">
@@ -297,7 +310,7 @@ export function livePage(site: Site, {slug, channels, schedules}: {slug: string;
 		plan,
 	};
 	const programmes = plan[slug];
-	return layout(site, {title: channel.title, scripts: LIVE_SCRIPTS, bodyClass: "live-page"}, html`<div class="stage">
+	return layout(site, {title: channel.title, preview: {title: channel.title, description: LIVE_TEXT}, scripts: LIVE_SCRIPTS, bodyClass: "live-page"}, html`<div class="stage">
 <video id="video" controls crossorigin="anonymous" data-channel="${slug}"></video>
 </div>
 <nav class="channel-guide" id="channel-guide" aria-label="Kanaler">
@@ -403,7 +416,7 @@ function pickResult(): Html {
 
 /** "Vælg for mig": a few questions about what DR has, which pick.js asks, with what's left below them */
 export function pickPage(site: Site): Html {
-	return layout(site, {title: "Vælg for mig", scripts: PICK_SCRIPT}, html`${pageHead("Vælg for mig")}
+	return layout(site, {title: "Vælg for mig", preview: {title: "Vælg for mig", description: PICK_TEXT}, scripts: PICK_SCRIPT}, html`${pageHead("Vælg for mig")}
 <section class="pick wrap js-pick" aria-labelledby="pick-question" hidden>
 <p class="pick-step js-pick-step"></p>
 <h2 class="pick-question js-pick-question" id="pick-question" tabindex="-1"></h2>
@@ -436,7 +449,7 @@ ${each(sorted, c => html`<li><a class="category" href="${c.url}"><span class="ca
 }
 
 export function categoryPage(site: Site, {category, page}: {category: Category; page: DiscoverPage}): Html {
-	return layout(site, {title: category.title, scripts: page.rows.length ? PICK_SCRIPT : undefined}, html`<div class="page-head wrap">
+	return layout(site, {title: category.title, preview: {title: category.title, description: `Serier, film og programmer under ${category.title}, samlet i rækker.`}, scripts: page.rows.length ? PICK_SCRIPT : undefined}, html`<div class="page-head wrap">
 <h1>${category.title}</h1>${page.rows.length ? html`
 <button type="button" class="button button-secondary js-pick-surprise" hidden>${icon("dice")} Overrask mig</button>` : ""}
 </div>

@@ -55,6 +55,23 @@ def whole_sentences(text: Optional[str]) -> Optional[str]:
     return before[: ends[-1].end()]
 
 
+# How long a link's preview's text is at most, where it's shared, as in a chat
+PREVIEW_LENGTH = 200
+
+
+def preview_text(text: Optional[str]) -> str:
+    """A description, short enough for a link's preview: its whole sentences that fit, or else cut after a word.
+    Like the Worker's previewText()."""
+    whole = re.sub(r"\s+", " ", whole_sentences((text or "").strip()) or "")
+    if len(whole) <= PREVIEW_LENGTH:
+        return whole
+    start = whole[:PREVIEW_LENGTH]
+    ends = list(re.finditer(r"[.!?][\"'”»)]?(?=\s)", start))
+    if ends and ends[-1].end() >= WHOLE_SENTENCES_FROM:
+        return start[: ends[-1].end()]
+    return re.sub(r"[,;:–-]+$", "", start[: start.rfind(" ")]) + "…"
+
+
 def video_id(url: str) -> str:
     """DR's id for a video, from its URL, which ends in it"""
     return url.split("_")[-1]

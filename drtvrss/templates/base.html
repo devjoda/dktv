@@ -11,6 +11,19 @@
         {% block head %}
         <title>{{ SERVICE_NAME }}</title>
         {% endblock %}
+        {# What a link to the page shows where it's shared, as in a chat, from the og_ variables the page sets, like the
+           Worker's previewTags(): without them, the site's name and icon #}
+        {% set og_text = og_description|preview_text if og_description else "" %}
+        <meta property="og:site_name" content="{{ SERVICE_NAME }}">
+        <meta property="og:title" content="{{ og_title or SERVICE_NAME }}">
+        <meta property="og:type" content="{{ og_type or 'website' }}">
+        <meta property="og:locale" content="da_DK">
+        {% if og_text %}
+        <meta name="description" content="{{ og_text }}">
+        <meta property="og:description" content="{{ og_text }}">
+        {% endif %}
+        <meta property="og:image" content="{{ og_image|thumbnail(1280) if og_image else request.host_url.rstrip('/') ~ '/static/icons/icon-512.png' }}">
+        <meta name="twitter:card" content="{{ 'summary_large_image' if og_image else 'summary' }}">
         <link href="/static/vendor/bootstrap-5.3.3.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH">
         <link href="/static/vendor/schibsted-grotesk-5.3.0-latin.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
         <link href="{{ static_url('style.css') }}" rel="stylesheet">

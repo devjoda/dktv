@@ -93,6 +93,23 @@ export function wholeSentences(text: string): string {
 	return before.slice(0, last.index + last[0].length);
 }
 
+// How long a link's preview's text is at most, where it's shared, as in a chat
+const PREVIEW_LENGTH = 200;
+
+/** A description, short enough for a link's preview: its whole sentences that fit, or else cut after a word */
+export function previewText(text: string): string {
+	const all = wholeSentences(text.trim()).replace(/\s+/g, " ");
+	if (all.length <= PREVIEW_LENGTH) {
+		return all;
+	}
+	const start = all.slice(0, PREVIEW_LENGTH);
+	const last = [...start.matchAll(/[.!?]["'”»)]?(?=\s)/g)].at(-1);
+	if (last !== undefined && last.index + last[0].length >= WHOLE_SENTENCES_FROM) {
+		return start.slice(0, last.index + last[0].length);
+	}
+	return `${start.slice(0, start.lastIndexOf(" ")).replace(/[,;:–-]+$/, "")}…`;
+}
+
 /** DR's id for a video, from its URL, which ends in it */
 export function videoId(url: string): string {
 	return url.split("_").at(-1)!;

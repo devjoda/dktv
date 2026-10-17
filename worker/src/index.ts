@@ -57,6 +57,7 @@ function site(c: Context<App>, query?: string): Site {
 		sourceURL: c.env.SOURCE_URL || DEFAULT_SOURCE_URL,
 		path: c.req.path,
 		query,
+		origin: new URL(c.req.url).origin,
 	};
 }
 

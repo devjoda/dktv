@@ -308,6 +308,35 @@ function shelfPage(track, direction) {
     return first && first.start < track.scrollLeft - 1 ? first.start : Math.max(0, track.scrollLeft - view);
 }
 
+// Shares a link: with the phone's own share sheet, or else by copying it, and saying so with `copied`; where neither
+// works, `otherwise` shows it to be copied by hand
+async function shareLink({title, url, copied = "Linket er kopieret", otherwise = () => prompt("Kopiér linket:", url)}) {
+    if (navigator.share && matchMedia("(pointer: coarse)").matches) {
+        try {
+            await navigator.share({title, url});
+            return;
+        } catch (error) {
+            if (error.name == "AbortError") {
+                return;
+            }
+        }
+    }
+    try {
+        await navigator.clipboard.writeText(url);
+        announce(copied);
+    } catch (error) {
+        otherwise();
+    }
+}
+
+// The Del buttons of the pages that have one, like a series': each shares the page
+function setupShareButtons() {
+    for (const button of document.querySelectorAll(".js-share-page:not([data-ready])")) {
+        button.dataset.ready = "true";
+        button.addEventListener("click", () => shareLink({title: button.dataset.shareTitle, url: location.origin + location.pathname}));
+    }
+}
+
 // Buttons to scroll rows sideways, for those without a touchpad
 function setupShelves() {
     for (const shelf of document.querySelectorAll(".shelf")) {
@@ -465,4 +494,5 @@ window.addEventListener("pageshow", function () {
     selectPlayingSeason();
     setupFeatured();
     setupShelves();
+    setupShareButtons();
 });

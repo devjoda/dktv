@@ -818,3 +818,46 @@ def test_what_to_watch_next_is_what_is_most_like_it_first(fake_dr):
     assert "krimi" in show.tags
     assert "følelsesladet" not in tags_of[unsorted["cards"][0]["url"]]
     assert "følelsesladet" in tags_of[moved["cards"][0]["url"]]
+
+
+def preview(get, path):
+    """The page's Open Graph tags, by name, like the Worker's test"""
+    text = get(path).text
+    return dict(re.findall(r'<meta (?:property|name)="((?:og|twitter):[^"]+|description)" content="([^"]*)">', text))
+
+
+def test_a_series_preview_has_its_name_description_and_picture(get):
+    tags = preview(get, "/rejseholdet_503605/")
+    assert tags["og:site_name"] == "Flimmerkassen"
+    assert tags["og:title"] == "Rejseholdet"
+    assert tags["og:type"] == "video.tv_show"
+    assert tags["twitter:card"] == "summary_large_image"
+    assert re.match(r"https://.*Width=1280", tags["og:image"])
+    assert 20 < len(tags["og:description"]) <= 201
+    assert tags["description"] == tags["og:description"]
+
+
+def test_an_episodes_preview_has_its_series_name(get):
+    assert preview(get, "/rejseholdet_503605/rejseholdet_503615")["og:title"] == "Rejseholdet: 1. episode"
+    assert preview(get, "/rejseholdet_503605/rejseholdet_503615")["og:type"] == "video.episode"
+    assert preview(get, "/program/lise-noergaard_-ikke-kun-en-pige_362031")["og:type"] == "video.other"
+
+
+def test_other_pages_previews_say_what_they_are_with_the_sites_icon(get):
+    for path, title in [("/", "Flimmerkassen"), ("/vaelg/", "Vælg for mig"), ("/favoritter/", "Flimmerkassen")]:
+        tags = preview(get, path)
+        assert tags["og:title"] == title, path
+        assert tags["og:image"] == "http://localhost/static/icons/icon-512.png", path
+        assert tags["twitter:card"] == "summary", path
+        assert not re.search(r"\bDR\b|DRTV", tags.get("og:description", "")), path
+
+
+def test_a_series_can_be_shared_from_its_page(get):
+    assert '<button type="button" class="button button-secondary js-share-page" data-share-title="Rejseholdet">' in get("/rejseholdet_503605/").text
+
+
+def test_preview_text_is_whole_sentences_that_fit_or_cut_after_a_word():
+    from drtvrss.show import preview_text
+    assert preview_text("Kort.") == "Kort."
+    assert preview_text("En sætning om noget. " * 12) == ("En sætning om noget. " * 9).strip()
+    assert re.fullmatch(r"(ord ){49}ord…", preview_text("ord " * 80))

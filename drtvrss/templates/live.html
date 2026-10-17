@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set og_title, og_description = channel.title, "Direkte TV, med hvad der sendes nu og senere." %}
 {% from "_ui.html" import icon %}
 {% block head %}
 <title>{{ channel.title }} - {{ SERVICE_NAME }}</title>
